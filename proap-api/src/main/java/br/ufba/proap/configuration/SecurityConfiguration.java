@@ -1,4 +1,4 @@
-package br.ufba.proap.security;
+package br.ufba.proap.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +15,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import br.ufba.proap.authentication.service.UserService;
+import br.ufba.proap.security.JwtAuthenticationEntryPoint;
+import br.ufba.proap.security.JwtAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -48,9 +50,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.cors().and().csrf().disable().exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
-				.antMatchers("/authentication/**").permitAll().antMatchers("/parametros/lista").permitAll()
-				.antMatchers("/actuator/**").permitAll().anyRequest().authenticated().and().logout()
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+				.authorizeRequests()
+				.antMatchers("/authentication/**").permitAll()
+				.antMatchers("/actuator/**").permitAll()
+				.anyRequest().authenticated().and().logout()
 				.logoutUrl("/proap-api/authentication/logout");
 
 		http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

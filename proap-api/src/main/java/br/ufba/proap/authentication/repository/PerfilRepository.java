@@ -10,7 +10,7 @@ import br.ufba.proap.authentication.domain.Perfil;
 public interface PerfilRepository extends JpaRepository<Perfil, Long> {
 
 	@Query(value = "SELECT  * FROM AUT_PERFIL PERFIL " + "LEFT JOIN AUT_USER_PERFIL USERPERFIL "
-			+ "ON (USERPERFIL.PERFIL_ID = PERFIL.ID) " + "WHERE USERPERFIL.USER_ID = :ID", nativeQuery = true)
+			+ "ON (USERPERFIL.PERFIL_ID = PERFIL.ID) " + "WHERE USERPERFIL.USER_ID = :id", nativeQuery = true)
 	List<Perfil> findByIdUser(Long id);
 
 }

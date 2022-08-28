@@ -153,14 +153,6 @@ public class User implements UserDetails {
 		return type;
 	}
 
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
 	@Override
 	public String getUsername() {
 		return this.login;
