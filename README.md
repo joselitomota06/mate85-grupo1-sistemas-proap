@@ -80,12 +80,18 @@ Lucas Yan
 
 **Desenvolvedores:**
 
-Airton Serra 
+Airton Serra
+
 Felipe Araújo 
+
 Iure Vieira 
+
 Itamar Joire Oliveira
+
 João Pedro Brito
+
 Júlio César 
+
 Matheus Sandes 
 
 
