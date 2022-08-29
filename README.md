@@ -27,9 +27,10 @@ A cada nova funcionalidade (incremento), o stakeholder deve validar o refinament
 Este sistema segue a metodologia ágil para gestão e planejamento de projetos de software, com utilização de conceitos como Scrum: reuniões semanais(weekly meeting), quadro Kanban, conceitos como Extreme Programming (XP), dentre outros.
 
 # **Stakeholders**
-|**Nome**                          |**Descrição**                         |
-|----------------|-------------------------------|-----------------------------|
-|Instituto de Computação da Universidade Federal da Bahia|Instituto responsável por cursos de graduação e pós-graduação de Computação na Universidade Federal da Bahia. O sistema deve apoiar alunos que possuam artigos ou periódicos aceitos em conferências qualificadas, professores e funcionários que estão responsáveis pela gerência do programa da Pós-Graduação.|     
+
+| **Nome** | **Descrição** |
+|--|--|
+| Instituto de Computação da Universidade Federal da Bahia | Instituto responsável por cursos de graduação e pós-graduação de Computação na Universidade Federal da Bahia. O sistema deve apoiar alunos que possuam artigos ou periódicos aceitos em conferências qualificadas, professores e funcionários que estão responsáveis pela gerência do programa da Pós-Graduação. |
 
 
 ## **Stakeholder Requests**
