@@ -55,6 +55,9 @@ Este sistema segue a metodologia ágil para gestão e planejamento de projetos d
 
 [3. Diagrama do sistema e suas entidades](https://lucid.app/lucidchart/5cbcb706-400f-424b-b785-d208385853b4/edit?viewport_loc=-172%2C-270%2C1910%2C1554%2C0_0&invitationId=inv_daec2f49-66e4-4959-bf80-d3cdc1f55ec2#)
 
+[4. Link para documentação da API](https://proap-api.herokuapp.com/proap-api/swagger-ui.html#/)
+
+
 # Infraestrutura Tecnológica
 
 O sistema de apoio ao **PROAP - Programa de Apoio à Pós-Graduação do Instituto de Computação da Universidade Federal da Bahia** opera em um sistema Web responsivo hospedados em nuvem. As informações poderão ser acessadas a partir de computadores e smartphones com acesso a internet.
@@ -101,5 +104,3 @@ Configuração adicional para geração das tabelas de forma automática:
 
 * spring.jpa.hibernate.ddl-auto=update
 * spring.jpa.hibernate.generateDdl=true
-
-### [Link para documentação da API](https://proap-api.herokuapp.com/proap-api/swagger-ui.html#/)
