@@ -1,5 +1,6 @@
 package br.ufba.proap.authentication.domain;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -10,12 +11,16 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import br.ufba.proap.authentication.domain.enums.EnumUserType;
 
@@ -49,9 +54,6 @@ public class User implements UserDetails {
 	@Column(nullable = false)
 	private String registration;
 
-	@Column(nullable = false)
-	private String institution;
-
 	private String phone;
 
 	private String alternativePhone;
@@ -61,6 +63,12 @@ public class User implements UserDetails {
 
 	@Enumerated(EnumType.STRING)
 	private EnumUserType type;
+
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
+	private LocalDateTime createdAt;
+
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
+	private LocalDateTime updatedAt;
 
 	public User() {}
 
@@ -125,14 +133,6 @@ public class User implements UserDetails {
 		this.registration = registration;
 	}
 
-	public String getInstitution() {
-		return institution;
-	}
-
-	public void setInstitution(String institution) {
-		this.institution = institution;
-	}
-
 	public String getPhone() {
 		return phone;
 	}
@@ -188,5 +188,31 @@ public class User implements UserDetails {
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return new ArrayList<>();
 	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public LocalDateTime getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(LocalDateTime updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
+	@PrePersist
+    public void prePersist() {
+		setCreatedAt(LocalDateTime.now());
+    }
+
+    @PreUpdate
+    public void preUdate() {
+		setUpdatedAt(LocalDateTime.now());
+    }
 
 }

@@ -1,6 +1,7 @@
 package br.ufba.proap.authentication.domain;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -11,8 +12,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Version;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import br.ufba.proap.authentication.domain.enums.EnumPerfilType;
 
@@ -38,7 +43,11 @@ public class Perfil implements Serializable {
     @Version
     private int version;
 
-	public Perfil() {}
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
+	private LocalDateTime createdAt;
+
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
+	private LocalDateTime updatedAt;
 
 	public Long getId() {
 		return id;
@@ -80,16 +89,35 @@ public class Perfil implements Serializable {
 		this.permissions = permissions;
 	}
 
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
 	@Override
 	public String toString() {
 		return "Perfil [name=" + name + ", description=" + description + "]";
 	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public LocalDateTime getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(LocalDateTime updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
+	@PrePersist
+    public void prePersist() {
+		setCreatedAt(LocalDateTime.now());
+    }
+
+    @PreUpdate
+    public void preUdate() {
+		setUpdatedAt(LocalDateTime.now());
+    }
+
 }

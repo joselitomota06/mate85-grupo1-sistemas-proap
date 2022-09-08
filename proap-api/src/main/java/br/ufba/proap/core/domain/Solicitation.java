@@ -50,8 +50,6 @@ public class Solicitation {
 	@Version
 	private int version;
 	
-	public Solicitation() {}
-
 	public BigDecimal getDailyValue() {
 		return dailyValue;
 	}

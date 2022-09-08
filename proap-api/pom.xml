@@ -92,9 +92,8 @@
 
 		<!-- Dependências relacionadas a banco de dados -->
 		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<scope>runtime</scope>
+		  <groupId>org.postgresql</groupId>
+		  <artifactId>postgresql</artifactId>
 		</dependency>
 
 		<!-- Dependências relacionadas a segurança -->
