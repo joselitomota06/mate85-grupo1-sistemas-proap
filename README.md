@@ -101,8 +101,8 @@ Matheus Sandes
 
 No arquivo `src/main/resources/application.propoerties` adicione as declarações abaixo:
 
-* spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
-* spring.datasource.url=jdbc:mysql://url_db
+* spring.datasource.driver-class-name=org.postgresql.Driver
+* spring.datasource.url=jdbc:postgresql://url_db:port_db/schema
 * spring.datasource.username=nome\_usuario\_db
 * spring.datasource.password=senha_db
 
@@ -110,3 +110,13 @@ Configuração adicional para geração das tabelas de forma automática:
 
 * spring.jpa.hibernate.ddl-auto=update
 * spring.jpa.hibernate.generateDdl=true
+
+### Comandos para deploy no heroku
+
+- Primeiro gere uma nova build na raiz do projeto da api:
+
+`mvn clean package`
+
+- Execute o comando abaixo para subir no Heroku o novo .war gerado.
+
+`heroku deploy:jar target/*.war --app proap-api`
