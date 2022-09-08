@@ -31,9 +31,9 @@ public class UserController {
 	private UserService service;
 
 	@PostMapping("/create")
-	public ResponseEntity<User> create(@RequestBody User request) {
+	public ResponseEntity<User> create(@RequestBody User user) {
 		try {
-			return ResponseEntity.ok().body(service.create(request));
+			return ResponseEntity.ok().body(service.create(user));
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -41,9 +41,9 @@ public class UserController {
 	}
 
 	@PutMapping("/update")
-	public ResponseEntity<User> update(@RequestBody User request) {
+	public ResponseEntity<User> update(@RequestBody User user) {
 		try {
-			return ResponseEntity.ok().body(service.update(request));
+			return ResponseEntity.ok().body(service.update(user));
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

@@ -53,6 +53,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 				.authorizeRequests()
 				.antMatchers("/authentication/**").permitAll()
+				.antMatchers("/user/create").permitAll()
 				.antMatchers("/actuator/**").permitAll()
 				.anyRequest().authenticated().and().logout()
 				.logoutUrl("/proap-api/authentication/logout");

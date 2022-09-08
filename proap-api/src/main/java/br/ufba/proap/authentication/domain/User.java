@@ -21,6 +21,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import br.ufba.proap.authentication.domain.enums.EnumUserType;
 
@@ -80,6 +83,8 @@ public class User implements UserDetails {
 		this.type = type;
 	}
 
+	@JsonIgnore
+	@JsonProperty(access = Access.WRITE_ONLY)
 	public Long getId() {
 		return id;
 	}
@@ -154,6 +159,7 @@ public class User implements UserDetails {
 	}
 
 	@Override
+	@JsonIgnore
 	public String getUsername() {
 		return this.login;
 	}
@@ -165,26 +171,32 @@ public class User implements UserDetails {
 	}
 
 	@Override
+	@JsonIgnore
 	public boolean isAccountNonExpired() {
 		return true;
 	}
 
 	@Override
+	@JsonIgnore
 	public boolean isAccountNonLocked() {
 		return true;
 	}
 
 	@Override
+	@JsonIgnore
 	public boolean isCredentialsNonExpired() {
 		return true;
 	}
 
 	@Override
+	@JsonIgnore
 	public boolean isEnabled() {
 		return true;
 	}
 
 	@Override
+	@JsonIgnore
+	@JsonProperty(access = Access.WRITE_ONLY)
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return new ArrayList<>();
 	}
