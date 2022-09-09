@@ -1,0 +1,82 @@
+// Colors
+$color-background: #F2F3F6;
+$color-primary: #184A7F;
+
+$color-text-label: #191D23;
+$color-border: #D0D5DD;
+
+$color-success: #1FB251;
+$color-error: #DC2626 ;     
+
+$color-text-disabled: #4D5E77;
+$color-background-disabled: #E5EAF1;
+
+// Fonts
+$font-type: 'Inter', sans-serif;
+
+// Space
+$padding: .8rem;
+
+// Components
+@mixin flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@mixin inputs(){
+    label{
+        font: 400 1.4rem $font-type; 
+        color: $color-text-label;
+    }
+
+    input:not(input[type="submit"]){
+        height: 4.8rem;
+        width: 34.5rem;
+        
+        margin-top: .4rem;
+        padding: 1.2rem;
+
+        border: 1px solid $color-border;
+        border-radius: 6px;
+    }
+
+    input:not(input[type="submit"]):focus{
+        outline-color: $color-primary;
+    }
+}
+
+@mixin button-type($type){ 
+    font: 700 1.6rem $font-type;
+    letter-spacing: 0.04em;
+
+    height: 4.8rem;
+    width: 34.5rem;
+
+    border: none;
+    border-radius: 6px;
+
+    transition: opacity 200ms;
+    
+    @if $type == 'primary'{
+        color: #fff;
+        background-color: $color-primary;
+
+        &:hover{
+            opacity: .7;
+            cursor: pointer;
+        }
+    }
+
+    @else if $type == 'disabled'{
+        color: $color-text-disabled;
+        background-color: $color-background-disabled;
+
+        &:hover{
+            cursor: not-allowed;
+        }
+    }
+}
+
+// Responsive
+

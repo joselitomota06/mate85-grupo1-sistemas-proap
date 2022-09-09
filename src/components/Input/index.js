@@ -1,15 +1,21 @@
-import React from "react";
-import * as C from "./styles";
+import React from 'react'
+import * as C from './styles'
+import './styles.scss'
 
 const Input = ({ type, placeholder, value, onChange }) => {
   return (
-    <C.Input
-      value={value}
-      onChange={onChange}
-      type={type}
-      placeholder={placeholder}
-    />
-  );
-};
+    <>
+      <C.Input
+        // className="container-input"
+        value={value}
+        onChange={onChange}
+        type={type}
+        placeholder={placeholder}
+      />
 
-export default Input;
+      <button>Enviar</button>
+    </>
+  )
+}
+
+export default Input

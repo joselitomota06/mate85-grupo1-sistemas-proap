@@ -1,0 +1,5 @@
+@import '../style-guide.scss';
+
+button{
+  @include button-type(primary);
+}
