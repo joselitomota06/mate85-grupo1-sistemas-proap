@@ -6,14 +6,11 @@ const Input = ({ type, placeholder, value, onChange }) => {
   return (
     <>
       <C.Input
-        // className="container-input"
         value={value}
         onChange={onChange}
         type={type}
         placeholder={placeholder}
       />
-
-      <button>Enviar</button>
     </>
   )
 }
