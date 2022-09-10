@@ -1,10 +1,7 @@
+import { AppRoutes } from './components/routing'
+
 function App() {
-  return (
-    <>
-      <h1>Test</h1>
-      <h2>Another test</h2>
-    </>
-  )
+  return <AppRoutes />
 }
 
 export default App
