@@ -84,8 +84,6 @@ Airton Serra
 
 Felipe Araújo 
 
-Iure Vieira 
-
 Itamar Joire Oliveira
 
 João Pedro Brito
