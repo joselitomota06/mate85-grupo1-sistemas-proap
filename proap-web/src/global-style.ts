@@ -6,6 +6,7 @@ export default css`
   body {
     margin: 0;
     padding: 0;
+    background-color: #f2f3f6;
   }
 
   html,

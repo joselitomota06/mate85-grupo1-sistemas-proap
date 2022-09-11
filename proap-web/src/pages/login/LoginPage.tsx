@@ -4,12 +4,7 @@ import { LoginGrid, LoginPaperContainer } from './LoginPage.style'
 
 export default function LoginPage() {
   return (
-    <LoginGrid
-      container
-      justifyContent='center'
-      alignItems='center'
-      style={{ height: '100%' }}
-    >
+    <LoginGrid container justifyContent='center' alignItems='center'>
       <Grid item xs={10} md={4}>
         <LoginPaperContainer elevation={2}>
           <Typography

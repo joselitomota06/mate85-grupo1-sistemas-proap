@@ -1,6 +1,5 @@
-import { Typography } from '@mui/material'
+import { Typography, Button } from '@mui/material'
 import { styled } from '@mui/system'
-import { Link } from 'react-router-dom'
 
 export const PasswordRecoveryTypography = styled(Typography)(({ theme }) => ({
   marginBottom: '0.5rem',
@@ -23,3 +22,7 @@ export const RegisterLinkTypography = styled(Typography)(({ theme }) => ({
     fontWeight: '500',
   },
 }))
+
+export const LoginButton = styled(Button)`
+  width: 100%;
+`
