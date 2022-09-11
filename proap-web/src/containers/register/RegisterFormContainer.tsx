@@ -1,6 +1,9 @@
 import { Grid, TextField } from '@mui/material'
 import { Field, Form, Formik } from 'formik'
 import { useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { registerUser } from '../../services/authService'
+import { useAppDispatch } from '../../store'
 import { RegisterButton } from './RegisterFormContainer.style'
 import {
   INITIAL_FORM_VALUES,
@@ -9,9 +12,15 @@ import {
 } from './RegisterFormSchema'
 
 export default function RegisterFormContainer() {
-  const handleSubmit = useCallback((values: RegisterFormValues) => {
-    console.log('onSubmit:', values)
-  }, [])
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+
+  const handleSubmit = useCallback(
+    (values: RegisterFormValues) => {
+      dispatch(registerUser(values)).then(() => navigate('/'))
+    },
+    [dispatch]
+  )
 
   return (
     <Formik

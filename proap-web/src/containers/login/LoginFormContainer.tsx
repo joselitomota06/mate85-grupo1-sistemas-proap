@@ -8,6 +8,8 @@ import {
 import { Field, Form, Formik } from 'formik'
 import { useCallback } from 'react'
 import { Link } from 'react-router-dom'
+import { signIn } from '../../services/authService'
+import { useAppDispatch } from '../../store'
 import {
   LoginButton,
   PasswordRecoveryTypography,
@@ -20,9 +22,16 @@ import {
 } from './LoginFormSchema'
 
 export default function LoginFormContainer() {
-  const handleSubmit = useCallback((values: LoginFormValues) => {
-    console.log('handleSubmitLogin', values)
-  }, [])
+  const dispatch = useAppDispatch()
+
+  const handleSubmit = useCallback(
+    (values: LoginFormValues) => {
+      dispatch(signIn(values)).then(() => {
+        console.log('ASDUUASHD')
+      })
+    },
+    [dispatch]
+  )
 
   return (
     <Formik
@@ -36,10 +45,10 @@ export default function LoginFormContainer() {
           <Grid container direction='column' paddingTop={2} paddingBottom={2}>
             <Field
               as={TextField}
-              label='E-mail'
-              name='email'
-              error={Boolean(touched.email && errors.email)}
-              helperText={touched.email && errors.email}
+              label='Nome de usuário'
+              name='username'
+              error={Boolean(touched.username && errors.username)}
+              helperText={touched.username && errors.username}
             />
             <Field
               as={TextField}
