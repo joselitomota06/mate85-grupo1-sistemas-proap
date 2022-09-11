@@ -12,6 +12,10 @@ export const registerFormSchema = Yup.object({
     .test('same-password', 'A senhas não coincidem', function (value) {
       return this.parent.password == value
     }),
+  cpf: Yup.string().required('Campo obrigatório'),
+  login: Yup.string().required('Campo obrigatório'),
+  name: Yup.string().required('Campo obrigatório'),
+  registration: Yup.string().required('Campo obrigatório'),
 })
 
 export interface RegisterFormValues {
@@ -19,6 +23,12 @@ export interface RegisterFormValues {
   phone: string
   password: string
   confirmPassword: string
+  alternativePhone: string
+  cpf: string
+  login: string
+  name: string
+  registration: string
+  type: 'Comum' | 'Administrador'
 }
 
 export const INITIAL_FORM_VALUES: RegisterFormValues = {
@@ -26,4 +36,10 @@ export const INITIAL_FORM_VALUES: RegisterFormValues = {
   phone: '',
   password: '',
   confirmPassword: '',
+  alternativePhone: '',
+  cpf: '',
+  login: '',
+  name: '',
+  registration: '',
+  type: 'Comum',
 }

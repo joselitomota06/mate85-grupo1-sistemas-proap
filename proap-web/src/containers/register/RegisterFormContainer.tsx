@@ -51,6 +51,34 @@ export default function RegisterFormContainer() {
               error={Boolean(touched.confirmPassword && errors.confirmPassword)}
               helperText={touched.confirmPassword && errors.confirmPassword}
             />
+            <Field
+              as={TextField}
+              label='CPF'
+              name='cpf'
+              error={Boolean(touched.cpf && errors.cpf)}
+              helperText={touched.cpf && errors.cpf}
+            />
+            <Field
+              as={TextField}
+              label='Login'
+              name='login'
+              error={Boolean(touched.login && errors.login)}
+              helperText={touched.login && errors.login}
+            />
+            <Field
+              as={TextField}
+              label='Nome'
+              name='name'
+              error={Boolean(touched.name && errors.name)}
+              helperText={touched.name && errors.name}
+            />
+            <Field
+              as={TextField}
+              label='Matrícula'
+              name='registration'
+              error={Boolean(touched.registration && errors.registration)}
+              helperText={touched.registration && errors.registration}
+            />
           </Grid>
           <RegisterButton variant='contained' type='submit'>
             Criar
