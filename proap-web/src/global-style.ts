@@ -34,9 +34,6 @@ export const defaultTheme = createTheme({
       default: '#f2f3f6',
     },
   },
-})
-
-const customFieldLabelTheme = createTheme({
   components: {
     MuiLink: {
       defaultProps: {
@@ -45,9 +42,43 @@ const customFieldLabelTheme = createTheme({
         },
       },
     },
+  },
+})
+
+const customFieldLabelTheme = createTheme({
+  components: {
+    MuiTextField: {
+      defaultProps: {
+        margin: 'normal',
+      },
+    },
+    MuiFormHelperText: {
+      styleOverrides: {
+        root: {
+          marginLeft: '2px',
+        },
+      },
+    },
     MuiInputLabel: {
       defaultProps: {
-        shrink: true,
+        shrink: false,
+      },
+      styleOverrides: {
+        root: {
+          transform: 'translate(2px, -8px) scale(0.75)',
+        },
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          'label + &': {
+            marginTop: '16px',
+          },
+          '& .MuiOutlinedInput-notchedOutline': {
+            display: 'none',
+          },
+        },
       },
     },
     MuiInputBase: {
@@ -56,6 +87,10 @@ const customFieldLabelTheme = createTheme({
           'label + &': {
             marginTop: defaultTheme.spacing(3),
           },
+          '&.Mui-error .MuiInputBase-input, &.Mui-error .MuiInputBase-input:focus':
+            {
+              borderColor: '#dc2323',
+            },
           '& .MuiInputBase-input': {
             borderRadius: 4,
             position: 'relative',

@@ -1,4 +1,10 @@
-import { FormControl, Grid, InputBase, InputLabel } from '@mui/material'
+import {
+  FormControl,
+  Grid,
+  InputBase,
+  InputLabel,
+  TextField,
+} from '@mui/material'
 import { Link } from 'react-router-dom'
 import {
   LoginButton,
@@ -10,14 +16,8 @@ export default function LoginFormContainer() {
   return (
     <>
       <Grid container direction='column' paddingTop={2} paddingBottom={2}>
-        <FormControl variant='standard' margin='normal'>
-          <InputLabel>E-mail</InputLabel>
-          <InputBase id='email-input' />
-        </FormControl>
-        <FormControl variant='standard' margin='normal'>
-          <InputLabel>Senha</InputLabel>
-          <InputBase id='password-input' />
-        </FormControl>
+        <TextField label='E-mail' name='email' />
+        <TextField label='Senha' name='password' />
         <PasswordRecoveryTypography>
           <Link to='test'>Recuperar senha</Link>
         </PasswordRecoveryTypography>
