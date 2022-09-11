@@ -4,7 +4,10 @@ import { useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { registerUser } from '../../services/authService'
 import { useAppDispatch } from '../../store'
-import { RegisterButton } from './RegisterFormContainer.style'
+import {
+  RegisterButton,
+  RegisterCircularProgress,
+} from './RegisterFormContainer.style'
 import {
   INITIAL_FORM_VALUES,
   registerFormSchema,
@@ -17,7 +20,7 @@ export default function RegisterFormContainer() {
 
   const handleSubmit = useCallback(
     (values: RegisterFormValues) => {
-      dispatch(registerUser(values)).then(() => navigate('/'))
+      return dispatch(registerUser(values)).then(() => navigate('/'))
     },
     [dispatch]
   )
@@ -29,7 +32,7 @@ export default function RegisterFormContainer() {
       validateOnChange={false}
       onSubmit={handleSubmit}
     >
-      {({ touched, errors }) => (
+      {({ touched, errors, isSubmitting }) => (
         <Form>
           <Grid container direction='column' paddingTop={2} paddingBottom={2}>
             <Field
@@ -89,7 +92,14 @@ export default function RegisterFormContainer() {
               helperText={touched.registration && errors.registration}
             />
           </Grid>
-          <RegisterButton variant='contained' type='submit'>
+          <RegisterButton
+            variant='contained'
+            type='submit'
+            disabled={isSubmitting}
+          >
+            {isSubmitting && (
+              <RegisterCircularProgress color='info' size={25} />
+            )}
             Criar
           </RegisterButton>
         </Form>

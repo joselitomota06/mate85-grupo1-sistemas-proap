@@ -1,4 +1,4 @@
-import { Typography, Button } from '@mui/material'
+import { Typography, Button, CircularProgress } from '@mui/material'
 import { styled } from '@mui/system'
 
 export const PasswordRecoveryTypography = styled(Typography)(({ theme }) => ({
@@ -25,4 +25,9 @@ export const RegisterLinkTypography = styled(Typography)(({ theme }) => ({
 
 export const LoginButton = styled(Button)`
   width: 100%;
+  display: flex;
+`
+
+export const LoginCircularProgress = styled(CircularProgress)`
+  margin-right: 4px;
 `
