@@ -120,3 +120,8 @@ Configuração adicional para geração das tabelas de forma automática:
 - Execute o comando abaixo para subir no Heroku o novo .war gerado.
 
 `heroku deploy:jar target/*.war --app proap-api`
+
+### Comandos para rodar o projeto REACT
+
+`npm install`
+`npm run dev`
