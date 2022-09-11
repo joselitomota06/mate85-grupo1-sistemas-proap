@@ -7,4 +7,6 @@ export const LoginGrid = styled(Grid)`
 
 export const LoginPaperContainer = styled(Paper)`
   padding: 2rem 1rem;
+  max-width: 400px;
+  margin: auto;
 `
