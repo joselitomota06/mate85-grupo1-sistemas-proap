@@ -51,7 +51,7 @@ Este sistema segue a metodologia ágil para gestão e planejamento de projetos d
 
 [1. Documento de visão e Requisitos](https://docs.google.com/document/d/1m9wSqd6X_1-cIYyQlSkXVTLkZj8PFWPeTRYjBZ5t95s/edit?usp=sharing)
 
-[2. Prototipação do Sistema](https://www.figma.com/proto/nQ0GpxrbdcIztxa0ZLD0EM/Proap?page-id=29%3A397&node-id=29%3A564&viewport=1703%2C588%2C0.51&scaling=min-zoom&starting-point-node-id=29%3A564)
+[2. Prototipação do Sistema](https://www.figma.com/proto/nQ0GpxrbdcIztxa0ZLD0EM/Proap?page-id=0%3A1&node-id=290%3A1000&viewport=1302%2C684%2C0.23&scaling=min-zoom)
 
 [3. Diagrama do sistema e suas entidades](https://lucid.app/lucidchart/5cbcb706-400f-424b-b785-d208385853b4/edit?viewport_loc=-172%2C-270%2C1910%2C1554%2C0_0&invitationId=inv_daec2f49-66e4-4959-bf80-d3cdc1f55ec2#)
 
