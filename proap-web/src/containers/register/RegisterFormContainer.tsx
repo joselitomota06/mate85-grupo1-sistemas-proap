@@ -20,11 +20,12 @@ export default function RegisterFormContainer() {
 
   const handleSubmit = useCallback(
     (values: RegisterFormValues) => {
+      values.login = values.email;
       return dispatch(registerUser(values)).then(() => navigate('/'))
     },
     [dispatch]
   )
-
+  
   return (
     <Formik
       initialValues={INITIAL_FORM_VALUES}
@@ -37,31 +38,17 @@ export default function RegisterFormContainer() {
           <Grid container direction='column' paddingTop={2} paddingBottom={2}>
             <Field
               as={TextField}
+              label='Nome'
+              name='name'
+              error={Boolean(touched.name && errors.name)}
+              helperText={touched.name && errors.name}
+            />
+            <Field
+              as={TextField}
               label='E-mail'
               name='email'
               error={Boolean(touched.email && errors.email)}
               helperText={touched.email && errors.email}
-            />
-            <Field
-              as={TextField}
-              label='Telefone'
-              name='phone'
-              error={Boolean(touched.phone && errors.phone)}
-              helperText={touched.phone && errors.phone}
-            />
-            <Field
-              as={TextField}
-              label='Senha'
-              name='password'
-              error={Boolean(touched.password && errors.password)}
-              helperText={touched.password && errors.password}
-            />
-            <Field
-              as={TextField}
-              label='Confirmar senha'
-              name='confirmPassword'
-              error={Boolean(touched.confirmPassword && errors.confirmPassword)}
-              helperText={touched.confirmPassword && errors.confirmPassword}
             />
             <Field
               as={TextField}
@@ -72,17 +59,26 @@ export default function RegisterFormContainer() {
             />
             <Field
               as={TextField}
-              label='Login'
-              name='login'
-              error={Boolean(touched.login && errors.login)}
-              helperText={touched.login && errors.login}
+              label='Telefone'
+              name='phone'
+              error={Boolean(touched.phone && errors.phone)}
+              helperText={touched.phone && errors.phone}
             />
             <Field
               as={TextField}
-              label='Nome'
-              name='name'
-              error={Boolean(touched.name && errors.name)}
-              helperText={touched.name && errors.name}
+              type='password'
+              label='Senha'
+              name='password'
+              error={Boolean(touched.password && errors.password)}
+              helperText={touched.password && errors.password}
+            />
+            <Field
+              as={TextField}
+              type='password'
+              label='Confirmar senha'
+              name='confirmPassword'
+              error={Boolean(touched.confirmPassword && errors.confirmPassword)}
+              helperText={touched.confirmPassword && errors.confirmPassword}
             />
             <Field
               as={TextField}
