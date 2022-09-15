@@ -22,7 +22,6 @@ export default function LoginFormContainer() {
 
   const handleSubmit = useCallback(
     (values: LoginFormValues, actions: FormikHelpers<LoginFormValues>) => {
-      console.log(actions)
       return dispatch(signIn(values)).catch(({ response: { status } }) => {
         if (status == 401) actions.setFieldError('password', 'Senha incorreta')
       })

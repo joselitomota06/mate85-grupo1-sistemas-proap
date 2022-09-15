@@ -13,6 +13,7 @@ export default function RegisterPage() {
             component='h1'
             variant='h4'
             fontWeight='bold'
+            marginBottom='1rem'
           >
             Cadastre-se
           </Typography>
