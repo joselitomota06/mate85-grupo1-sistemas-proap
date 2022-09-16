@@ -34,7 +34,6 @@ export const registerFormSchema = Yup.object({
       if (Resto != parseInt(value.substring(10, 11))) return false;
       return true;
     }),
-  login: Yup.string().required('Campo obrigatório'),
   name: Yup.string().required('Campo obrigatório'),
   registration: Yup.string().required('Campo obrigatório'),
 })
