@@ -12,6 +12,11 @@ export interface FormStep {
 interface StepperFormProps<T> extends FormikConfig<T> {
   steps: FormStep[]
   activeStep: number
+  labels: {
+    previous?: string
+    submit?: string
+    next?: string
+  }
 }
 
 export default function StepperForm<FormValuesType>(
@@ -20,6 +25,7 @@ export default function StepperForm<FormValuesType>(
   const {
     activeStep: initialActiveStep,
     onSubmit,
+    labels,
     steps,
     ...formikProps
   } = props
@@ -34,6 +40,16 @@ export default function StepperForm<FormValuesType>(
   const isLastStep = useMemo(
     () => activeStep === steps.length - 1,
     [activeStep]
+  )
+
+  const componentLabels = useMemo(
+    () => ({
+      previous: 'Anterior',
+      submit: 'Enviar',
+      next: 'Próximo',
+      ...labels,
+    }),
+    []
   )
 
   const handleClickPreviousStep = useCallback(() => {
@@ -79,7 +95,7 @@ export default function StepperForm<FormValuesType>(
                 variant='outlined'
                 type='button'
               >
-                Anterior
+                {componentLabels.previous}
               </Button>
               <Button
                 variant='contained'
@@ -87,7 +103,7 @@ export default function StepperForm<FormValuesType>(
                 form='stepper-form'
                 disabled={isSubmitting}
               >
-                {isLastStep ? 'Enviar' : 'Próximo'}
+                {!isLastStep ? componentLabels.next : componentLabels.submit}
               </Button>
             </Grid>
           </Form>

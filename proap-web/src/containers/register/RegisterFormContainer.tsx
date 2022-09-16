@@ -59,6 +59,9 @@ export default function RegisterFormContainer() {
       steps={registerFormSteps}
       onSubmit={handleSubmit}
       validateOnChange={false}
+      labels={{
+        submit: 'Cadastrar',
+      }}
     />
   )
 }
