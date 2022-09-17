@@ -20,12 +20,12 @@ export default function RegisterFormContainer() {
 
   const handleSubmit = useCallback(
     (values: RegisterFormValues) => {
-      values.login = values.email;
+      values.login = values.email
       return dispatch(registerUser(values)).then(() => navigate('/'))
     },
     [dispatch]
   )
-  
+
   return (
     <Formik
       initialValues={INITIAL_FORM_VALUES}
