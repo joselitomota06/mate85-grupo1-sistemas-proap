@@ -2,6 +2,7 @@ import { Button, Grid, Step, StepLabel, Stepper } from '@mui/material'
 import { Form, Formik, FormikConfig, FormikHelpers, FormikValues } from 'formik'
 import React, { useCallback, useMemo, useState } from 'react'
 import { AnySchema } from 'yup'
+import { StepperCircularProgress } from './StepperForm.style'
 
 export interface FormStep {
   component: React.FC
@@ -101,6 +102,9 @@ export default function StepperForm(props: StepperFormProps<FormikValues>) {
                 form='stepper-form'
                 disabled={isSubmitting}
               >
+                {isSubmitting && (
+                  <StepperCircularProgress color='info' size={25} />
+                )}
                 {!isLastStep ? componentLabels.next : componentLabels.submit}
               </Button>
             </Grid>

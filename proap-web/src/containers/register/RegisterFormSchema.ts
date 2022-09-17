@@ -1,8 +1,13 @@
 import * as Yup from 'yup'
+import { validateCPF } from '../../helpers/validation'
 
 export const personalDataFormSchema = Yup.object({
   name: Yup.string().required('Campo obrigatório'),
-  cpf: Yup.string().required('Campo obrigatório'),
+  cpf: Yup.string()
+    .required('Campo obrigatório')
+    .test('validation-cpf', 'CPF inválido', function (cpf) {
+      return validateCPF(cpf)
+    }),
   registration: Yup.string().required('Campo obrigatório'),
 })
 
@@ -24,24 +29,26 @@ export const passwordFormSchema = Yup.object({
 
 export interface RegisterFormValues {
   name: string
-  cpf: string
-  registration: string
   email: string
+  cpf: string
   phone: string
-  alternativePhone: string
   password: string
   confirmPassword: string
+  registration: string
+  alternativePhone: string
+  login: string
   type: 'Comum' | 'Administrador'
 }
 
 export const INITIAL_FORM_VALUES: RegisterFormValues = {
   name: '',
-  cpf: '',
-  registration: '',
   email: '',
+  cpf: '',
   phone: '',
-  alternativePhone: '',
   password: '',
   confirmPassword: '',
+  registration: '',
+  alternativePhone: '',
+  login: '',
   type: 'Comum',
 }

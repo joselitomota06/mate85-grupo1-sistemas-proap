@@ -27,7 +27,8 @@ export default function RegisterFormContainer() {
   const navigate = useNavigate()
 
   const handleSubmit = useCallback(
-    async (values: FormikValues) => {
+    (values: FormikValues) => {
+      values.login = values.email
       return dispatch(registerUser(values as RegisterFormValues)).then(() =>
         navigate('/')
       )

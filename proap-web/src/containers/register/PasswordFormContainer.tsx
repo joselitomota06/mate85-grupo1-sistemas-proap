@@ -14,6 +14,7 @@ export default function PasswordFormContainer() {
         as={TextField}
         label='Senha'
         name='password'
+        type='password'
         error={Boolean(touched.password && errors.password)}
         helperText={touched.password && errors.password}
         required
@@ -22,6 +23,7 @@ export default function PasswordFormContainer() {
         as={TextField}
         label='Confirmar senha'
         name='confirmPassword'
+        type='password'
         error={Boolean(touched.confirmPassword && errors.confirmPassword)}
         helperText={touched.confirmPassword && errors.confirmPassword}
         required
