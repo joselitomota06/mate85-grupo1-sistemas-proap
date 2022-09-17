@@ -1,5 +1,5 @@
 import { Button, Grid, Step, StepLabel, Stepper } from '@mui/material'
-import { Form, Formik, FormikConfig, FormikHelpers } from 'formik'
+import { Form, Formik, FormikConfig, FormikHelpers, FormikValues } from 'formik'
 import React, { useCallback, useMemo, useState } from 'react'
 import { AnySchema } from 'yup'
 
@@ -19,9 +19,7 @@ interface StepperFormProps<T> extends FormikConfig<T> {
   }
 }
 
-export default function StepperForm<FormValuesType>(
-  props: StepperFormProps<FormValuesType>
-) {
+export default function StepperForm(props: StepperFormProps<FormikValues>) {
   const {
     activeStep: initialActiveStep,
     onSubmit,
@@ -57,7 +55,7 @@ export default function StepperForm<FormValuesType>(
   }, [activeStep])
 
   const handleClickSubmit = useCallback(
-    (values: FormValuesType, helpers: FormikHelpers<FormValuesType>) => {
+    (values: FormikValues, helpers: FormikHelpers<FormikValues>) => {
       if (isLastStep) return onSubmit(values, helpers)
       else {
         setActiveStep(Math.min(activeStep + 1, steps.length))

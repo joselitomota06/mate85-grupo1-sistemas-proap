@@ -20,14 +20,17 @@ import {
   contactDataFormSchema,
   passwordFormSchema,
 } from './RegisterFormSchema'
+import { FormikValues } from 'formik'
 
 export default function RegisterFormContainer() {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
   const handleSubmit = useCallback(
-    async (values: RegisterFormValues) => {
-      return dispatch(registerUser(values)).then(() => navigate('/'))
+    async (values: FormikValues) => {
+      return dispatch(registerUser(values as RegisterFormValues)).then(() =>
+        navigate('/')
+      )
     },
     [dispatch]
   )
