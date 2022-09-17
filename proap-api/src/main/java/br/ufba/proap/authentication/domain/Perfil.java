@@ -19,8 +19,6 @@ import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import br.ufba.proap.authentication.domain.enums.EnumPerfilType;
-
 @Entity
 @Table(name = "aut_perfil", schema = "proap")
 public class Perfil implements Serializable {
@@ -33,9 +31,6 @@ public class Perfil implements Serializable {
 
     private String name;
     private String description;
-
-    @Enumerated(EnumType.STRING)
-    private EnumPerfilType type;
 
     @OneToMany(targetEntity = Permission.class, mappedBy = "perfil", cascade = {CascadeType.REMOVE})
     private List<Permission> permissions;
@@ -71,14 +66,6 @@ public class Perfil implements Serializable {
 
 	public void setDescription(String descricao) {
 		this.description = descricao;
-	}
-
-	public EnumPerfilType getType() {
-		return type;
-	}
-
-	public void setTipo(EnumPerfilType type) {
-		this.type = type;
 	}
 
 	public List<Permission> getPermissions() {
