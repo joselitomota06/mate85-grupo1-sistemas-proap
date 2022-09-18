@@ -4,16 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-import javax.persistence.Version;
+import javax.persistence.*;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -56,6 +47,18 @@ public class User implements UserDetails {
 	private String phone;
 
 	private String alternativePhone;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "perfil_id")
+	private Perfil perfil;
+
+	public Perfil getPerfil() {
+		return perfil;
+	}
+
+	public void setPerfil(Perfil perfil) {
+		this.perfil = perfil;
+	}
 
 	@Version
 	private int version;
@@ -211,7 +214,7 @@ public class User implements UserDetails {
     }
 
     @PreUpdate
-    public void preUdate() {
+    public void preUpdate() {
 		setUpdatedAt(LocalDateTime.now());
     }
 

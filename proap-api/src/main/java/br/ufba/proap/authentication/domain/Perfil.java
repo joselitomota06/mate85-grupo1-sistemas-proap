@@ -2,16 +2,9 @@ package br.ufba.proap.authentication.domain;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
-import javax.persistence.Version;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -28,14 +21,11 @@ public class Perfil implements Serializable {
 	private boolean enable;
 	private boolean admin;
 
-	@ManyToOne
-	private Perfil perfil;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "perfil")
+	private List<Permission> permissions;
 
-	@ManyToOne
-	private User user;
-
-	@Version
-	private int version;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "perfil")
+	private List<User> users;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
 	private LocalDateTime createdAt;
@@ -45,20 +35,17 @@ public class Perfil implements Serializable {
 
 	public Perfil() { }
 
-	public Perfil(Long id, int version, boolean enable, boolean admin, Perfil perfil, User user) {
+	public Perfil(Long id, boolean enable, boolean admin, List<Permission> permissions, User user) {
 		this.id = id;
-		this.version = version;
 		this.enable = enable;
 		this.admin = admin;
-		this.perfil = perfil;
-		this.user = user;
+		this.permissions = permissions;
 	}
 
-	public Perfil(boolean enable, boolean admin, Perfil perfil, User user) {
+	public Perfil(boolean enable, boolean admin, List<Permission> permissions, User user) {
 		this.enable = enable;
 		this.admin = admin;
-		this.perfil = perfil;
-		this.user = user;
+		this.permissions = permissions;
 	}
 
 	public Long getId() {
@@ -85,20 +72,12 @@ public class Perfil implements Serializable {
 		this.admin = admin;
 	}
 
-	public Perfil getPerfil() {
-		return perfil;
+	public List<Permission> getPermissons() {
+		return permissions;
 	}
 
-	public void setPerfil(Perfil perfil) {
-		this.perfil = perfil;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
+	public void setPermissions(List<Permission> permissions) {
+		this.permissions = permissions;
 	}
 
 	public LocalDateTime getCreatedAt() {
