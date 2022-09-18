@@ -3,44 +3,40 @@ package br.ufba.proap.authentication.service;
 import java.util.List;
 import java.util.Optional;
 
+import br.ufba.proap.authentication.domain.Perfil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.ufba.proap.authentication.domain.Perfil;
-import br.ufba.proap.authentication.repository.PerfilRepository;
+import br.ufba.proap.authentication.repository.UserPerfilRepository;
 
 @Service
 public class PerfilService {
 
 	@Autowired
-	private PerfilRepository perfilRepository;
+	private UserPerfilRepository userPhotoRepository;
 
-	public Perfil create(Perfil perfil) {
-		return perfilRepository.saveAndFlush(perfil);
+	public Perfil create(Perfil userPhoto) {
+		return userPhotoRepository.saveAndFlush(userPhoto);
 	}
 
-	public Perfil update(Perfil perfil) {
-		return perfilRepository.save(perfil);
-	}
-
-	public void updatePerfil(Perfil perfil) {
-		perfilRepository.save(perfil);
+	public Perfil update(Perfil userPhoto) {
+		return userPhotoRepository.save(userPhoto);
 	}
 
 	public List<Perfil> findAll() {
-		return perfilRepository.findAll();
+		return userPhotoRepository.findAll();
 	}
 
 	public Optional<Perfil> findById(Long id) {
-		return perfilRepository.findById(id);
+		return userPhotoRepository.findById(id);
 	}
 
-	public List<Perfil> findByIdUser(Long id) {
-		return perfilRepository.findByIdUser(id);
+	public List<Perfil> findByUserId(Long id) {
+		return userPhotoRepository.findByUserId(id);
 	}
 
-	public void remove(Perfil perfil) {
-		perfilRepository.delete(perfil);
+	public void remove(Perfil userPhoto) {
+		userPhotoRepository.delete(userPhoto);
 	}
 
 }

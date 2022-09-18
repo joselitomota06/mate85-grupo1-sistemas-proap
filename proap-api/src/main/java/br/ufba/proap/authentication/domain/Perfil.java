@@ -2,14 +2,12 @@ package br.ufba.proap.authentication.domain;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -21,26 +19,47 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @Table(name = "aut_perfil", schema = "proap")
 public class Perfil implements Serializable {
 
-	private static final long serialVersionUID = 2845975304143585010L;
+	private static final long serialVersionUID = 6718249363254821367L;
 
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    private String name;
-    private String description;
+	private boolean enable;
+	private boolean admin;
 
-    @OneToMany(targetEntity = Permission.class, mappedBy = "perfil", cascade = {CascadeType.REMOVE})
-    private List<Permission> permissions;
+	@ManyToOne
+	private Perfil perfil;
 
-    @Version
-    private int version;
+	@ManyToOne
+	private User user;
+
+	@Version
+	private int version;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
 	private LocalDateTime createdAt;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
 	private LocalDateTime updatedAt;
+
+	public Perfil() { }
+
+	public Perfil(Long id, int version, boolean enable, boolean admin, Perfil perfil, User user) {
+		this.id = id;
+		this.version = version;
+		this.enable = enable;
+		this.admin = admin;
+		this.perfil = perfil;
+		this.user = user;
+	}
+
+	public Perfil(boolean enable, boolean admin, Perfil perfil, User user) {
+		this.enable = enable;
+		this.admin = admin;
+		this.perfil = perfil;
+		this.user = user;
+	}
 
 	public Long getId() {
 		return id;
@@ -50,33 +69,36 @@ public class Perfil implements Serializable {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public boolean isEnable() {
+		return enable;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setEnable(boolean enable) {
+		this.enable = enable;
 	}
 
-	public String getDescription() {
-		return description;
+	public boolean isAdmin() {
+		return admin;
 	}
 
-	public void setDescription(String descricao) {
-		this.description = descricao;
+	public void setAdmin(boolean admin) {
+		this.admin = admin;
 	}
 
-	public List<Permission> getPermissions() {
-		return permissions;
+	public Perfil getPerfil() {
+		return perfil;
 	}
 
-	public void serPermissions(List<Permission> permissions) {
-		this.permissions = permissions;
+	public void setPerfil(Perfil perfil) {
+		this.perfil = perfil;
 	}
 
-	@Override
-	public String toString() {
-		return "Perfil [name=" + name + ", description=" + description + "]";
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	public LocalDateTime getCreatedAt() {
@@ -101,7 +123,7 @@ public class Perfil implements Serializable {
     }
 
     @PreUpdate
-    public void preUdate() {
+    public void preUpdate() {
 		setUpdatedAt(LocalDateTime.now());
     }
 
