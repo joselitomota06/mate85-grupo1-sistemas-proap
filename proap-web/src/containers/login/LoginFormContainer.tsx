@@ -22,7 +22,6 @@ export default function LoginFormContainer() {
 
   const handleSubmit = useCallback(
     (values: LoginFormValues, actions: FormikHelpers<LoginFormValues>) => {
-      console.log(actions)
       return dispatch(signIn(values)).catch(({ response: { status } }) => {
         if (status == 401) actions.setFieldError('password', 'Senha incorreta')
       })
@@ -38,7 +37,7 @@ export default function LoginFormContainer() {
       onSubmit={handleSubmit}
     >
       {({ errors, touched, isSubmitting }) => (
-        <Form>
+        <Form noValidate>
           <Grid container direction='column' paddingTop={2} paddingBottom={2}>
             <Field
               as={TextField}
@@ -46,6 +45,7 @@ export default function LoginFormContainer() {
               name='username'
               error={Boolean(touched.username && errors.username)}
               helperText={touched.username && errors.username}
+              required
             />
             <Field
               as={TextField}
@@ -54,6 +54,7 @@ export default function LoginFormContainer() {
               type='password'
               error={Boolean(touched.password && errors.password)}
               helperText={touched.password && errors.password}
+              required
             />
             <PasswordRecoveryTypography>
               <Link to='recover-password'>Recuperar senha</Link>
