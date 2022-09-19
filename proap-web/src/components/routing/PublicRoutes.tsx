@@ -8,8 +8,8 @@ export default function PublicRoutes() {
   return (
     <Routes>
       <Route path='register' element={<RegisterPage />} />
-      <Route path='*' element={<LoginPage />} />
       <Route path='recover-password' element={<RecoverPassword />} />
+      <Route path='*' element={<LoginPage />} />
     </Routes>
   )
 }

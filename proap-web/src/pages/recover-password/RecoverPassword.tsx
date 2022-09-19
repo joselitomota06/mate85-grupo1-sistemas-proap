@@ -1,12 +1,12 @@
 import { Grid, Paper, Typography } from '@mui/material'
-import RecoverPasswordContainer from '../../containers/recover-password/RecoverPasswordContainer'
-import { LoginGrid, LoginPaperContainer } from './RecoverPassword.style'
+import RecoverPasswordFormContainer from '../../containers/recover-password/RecoverPasswordContainer'
+import { RecoverPasswordGrid, RecoverPasswordPaperContainer } from './RecoverPassword.style'
 
 export default function RecoverPassword() {
   return (
-    <LoginGrid container justifyContent='center' alignItems='center'>
+    <RecoverPasswordGrid container justifyContent='center' alignItems='center'>
       <Grid item xs={10} md={4}>
-        <LoginPaperContainer elevation={2}>
+        <RecoverPasswordPaperContainer elevation={2}>
           <Typography
             color='primary'
             component='h1'
@@ -15,9 +15,9 @@ export default function RecoverPassword() {
           >
             Proap
           </Typography>
-          <RecoverPasswordContainer />
-        </LoginPaperContainer>
+          <RecoverPasswordFormContainer />
+        </RecoverPasswordPaperContainer>
       </Grid>
-    </LoginGrid>
+    </RecoverPasswordGrid>
   )
 }

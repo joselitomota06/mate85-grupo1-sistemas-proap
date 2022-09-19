@@ -14,7 +14,7 @@ export const PasswordRecoveryTypography = styled(Typography)(({ theme }) => ({
   },
 }))
 
-export const RegisterLinkTypography = styled(Typography)(({ theme }) => ({
+export const RecoverPasswordLinkTypography = styled(Typography)(({ theme }) => ({
   margin: '1rem 0',
   textAlign: 'left',
   color: 'rgba(0, 0, 0, 0.6)',
@@ -25,11 +25,11 @@ export const RegisterLinkTypography = styled(Typography)(({ theme }) => ({
   },
 }))
 
-export const LoginButton = styled(Button)`
+export const RecoverPasswordButton = styled(Button)`
   width: 100%;
   display: flex;
 `
 
-export const LoginCircularProgress = styled(CircularProgress)`
+export const RecoverPasswordCircularProgress = styled(CircularProgress)`
   margin-right: 4px;
 `

@@ -1,16 +1,13 @@
 import * as Yup from 'yup'
 
-export interface LoginFormValues {
+export interface RecoverPasswordFormValues {
   email: string
-  // password: string
 }
 
-export const INITIAL_FORM_VALUES: LoginFormValues = {
+export const INITIAL_FORM_VALUES: RecoverPasswordFormValues = {
   email: '',
-  // password: '',
 }
 
-export const loginFormSchema = Yup.object({
-  username: Yup.string().required('Campo obrigatório'),
-  password: Yup.string().required('Campo obrigatório'),
+export const recoverPasswordFormSchema = Yup.object({
+  email: Yup.string().required('Campo obrigatório'),
 })
