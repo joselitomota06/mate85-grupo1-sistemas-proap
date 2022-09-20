@@ -2,7 +2,7 @@ import { RegisterFormValues } from '../containers/register/RegisterFormSchema'
 import { LoginFormValues } from '../containers/login/LoginFormSchema'
 import { authenticate } from '../store/slices/auth-slice/authSlice'
 import { AppDispatch } from '../store'
-import { api } from '.'
+import api from '.'
 
 interface SignInResponse {
   accessToken: string
