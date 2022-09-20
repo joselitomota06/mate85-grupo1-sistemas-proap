@@ -2,17 +2,7 @@ package br.ufba.proap.authentication.domain;
 
 import java.io.Serializable;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Version;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "aut_permission", schema = "proap")
@@ -24,12 +14,12 @@ public class Permission implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String component;
     private boolean enable;
     private boolean shortcut;
     private boolean readOnly;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "perfil_id")
     private Perfil perfil;
     
     @Version
@@ -37,19 +27,17 @@ public class Permission implements Serializable {
 
     public Permission() { }
 
-	public Permission(Long id, int version, String component, boolean enable, boolean shortcut, boolean readOnly,
+	public Permission(Long id, int version, boolean enable, boolean shortcut, boolean readOnly,
 			Perfil perfil) {
 		this.id = id;
 		this.version = version;
-		this.component = component;
 		this.enable = enable;
 		this.shortcut = shortcut;
 		this.readOnly = readOnly;
 		this.perfil = perfil;
 	}
 
-	public Permission(String component, boolean enable, boolean shortcut, boolean readOnly, Perfil perfil) {
-		this.component = component;
+	public Permission(boolean enable, boolean shortcut, boolean readOnly, Perfil perfil) {
 		this.enable = enable;
 		this.shortcut = shortcut;
 		this.readOnly = readOnly;
@@ -62,14 +50,6 @@ public class Permission implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getComponent() {
-		return component;
-	}
-
-	public void setComponent(String component) {
-		this.component = component;
 	}
 
 	public boolean isEnable() {
@@ -96,8 +76,6 @@ public class Permission implements Serializable {
 		this.readOnly = readyOnly;
 	}
 
-	@JsonIgnore
-	@JsonProperty(access = Access.WRITE_ONLY)
 	public Perfil getPerfil() {
 		return perfil;
 	}
@@ -116,7 +94,7 @@ public class Permission implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Permission [component=" + component + ", enable=" + enable + ", perfil=" + perfil + "]";
+		return "Permission [enable=" + enable + ", perfil=" + perfil + "]";
 	}
 
 }

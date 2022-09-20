@@ -4,18 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-import javax.persistence.Version;
+import javax.persistence.*;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,8 +13,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
-
-import br.ufba.proap.authentication.domain.enums.EnumUserType;
 
 @Entity
 @Table(name = "aut_user", schema = "proap", uniqueConstraints = {
@@ -61,11 +48,20 @@ public class User implements UserDetails {
 
 	private String alternativePhone;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "perfil_id")
+	private Perfil perfil;
+
+	public Perfil getPerfil() {
+		return perfil;
+	}
+
+	public void setPerfil(Perfil perfil) {
+		this.perfil = perfil;
+	}
+
 	@Version
 	private int version;
-
-	@Enumerated(EnumType.STRING)
-	private EnumUserType type;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
 	private LocalDateTime createdAt;
@@ -75,12 +71,11 @@ public class User implements UserDetails {
 
 	public User() {}
 
-	public User(String name, String email, String login, String password, EnumUserType type) {
+	public User(String name, String email, String login, String password) {
 		this.name = name;
 		this.email = email;
 		this.login = login;
 		this.password = password;
-		this.type = type;
 	}
 
 	@JsonIgnore
@@ -154,10 +149,6 @@ public class User implements UserDetails {
 		this.alternativePhone = alternativePhone;
 	}
 
-	public EnumUserType getType() {
-		return type;
-	}
-
 	@Override
 	@JsonIgnore
 	public String getUsername() {
@@ -167,7 +158,7 @@ public class User implements UserDetails {
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", version=" + version + ", name=" + name + ", email=" + email + ", login=" + login
-				+ ", password=" + password + ", type=" + type + "]";
+				+ ", password=" + password + "]";
 	}
 
 	@Override
@@ -223,7 +214,7 @@ public class User implements UserDetails {
     }
 
     @PreUpdate
-    public void preUdate() {
+    public void preUpdate() {
 		setUpdatedAt(LocalDateTime.now());
     }
 
