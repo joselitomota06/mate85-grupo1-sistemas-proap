@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { LocalStorageToken } from '../../../helpers/validation/auth'
 
 const authSlice = createSlice({
   name: 'authentication',
@@ -10,9 +11,12 @@ const authSlice = createSlice({
     authenticate: (state, action: PayloadAction<string>) => {
       state.isAuthenticated = true
       state.token = action.payload
+
+      LocalStorageToken.save(action.payload)
     },
     logout: (state) => {
       state.isAuthenticated = false
+      LocalStorageToken.clear()
     },
   },
 })
