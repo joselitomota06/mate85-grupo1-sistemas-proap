@@ -4,7 +4,6 @@ import { Provider } from 'react-redux'
 
 import { AppRoutes } from './components/routing'
 import globalStyle, { theme } from './global-style'
-import './helpers/validation'
 import store from './store'
 
 function App() {

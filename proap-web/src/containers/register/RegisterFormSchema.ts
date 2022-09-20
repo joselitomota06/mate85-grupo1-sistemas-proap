@@ -1,5 +1,5 @@
 import * as Yup from 'yup'
-import { validateCPF } from '../../helpers/validation'
+import { validateCPF } from '../../helpers'
 
 export const personalDataFormSchema = Yup.object({
   name: Yup.string().required('Campo obrigatório'),

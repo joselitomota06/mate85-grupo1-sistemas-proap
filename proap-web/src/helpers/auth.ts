@@ -1,3 +1,14 @@
+import jwt_decode from 'jwt-decode'
+
+interface DecodedToken {
+  email: string
+  exp: number
+  iat: number
+  id: number
+  login: string
+  name: string
+}
+
 export const LOCAL_STORAGE_TOKEN_KEY = 'token'
 
 export const LocalStorageToken = {
@@ -20,4 +31,17 @@ export const getInitialAuthSliceState = () => {
     token,
     isAuthenticated: Boolean(token),
   }
+}
+
+export const decodeToken = (token: string): DecodedToken => {
+  return token
+    ? jwt_decode(token)
+    : {
+        email: '',
+        login: '',
+        name: '',
+        exp: 0,
+        iat: 0,
+        id: 0,
+      }
 }

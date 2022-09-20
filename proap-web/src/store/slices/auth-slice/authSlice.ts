@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { LocalStorageToken } from '../../../helpers/validation/auth'
+import axios from 'axios'
+import { LocalStorageToken } from '../../../helpers/auth'
 
 const authSlice = createSlice({
   name: 'authentication',
@@ -13,6 +14,9 @@ const authSlice = createSlice({
       state.token = action.payload
 
       LocalStorageToken.save(action.payload)
+      axios.defaults.headers.common[
+        'Authorization'
+      ] = `Bearer ${action.payload}`
     },
     logout: (state) => {
       state.isAuthenticated = false

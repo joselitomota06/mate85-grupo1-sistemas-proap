@@ -1,7 +1,7 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
-import { LoginPage } from '../../pages'
-import RegisterPage from '../../pages/register/RegisterPage'
+
+import { RegisterPage, LoginPage } from '../../pages'
 
 export default function PublicRoutes() {
   return (

@@ -1,7 +1,7 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import { useDispatch } from 'react-redux'
 
-import { getInitialAuthSliceState } from '../helpers/validation/auth'
+import { getInitialAuthSliceState } from '../helpers/auth'
 import { authSlice } from './slices'
 
 const rootReducer = combineReducers({
