@@ -1,5 +1,7 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import { useDispatch } from 'react-redux'
+
+import { getInitialAuthSliceState } from '../helpers/auth'
 import { authSlice } from './slices'
 
 const rootReducer = combineReducers({
@@ -8,6 +10,9 @@ const rootReducer = combineReducers({
 
 const store = configureStore({
   reducer: rootReducer,
+  preloadedState: {
+    auth: getInitialAuthSliceState(),
+  },
 })
 
 export type IRootState = ReturnType<typeof rootReducer>

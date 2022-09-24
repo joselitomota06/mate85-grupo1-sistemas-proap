@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Grid, Paper } from '@mui/material'
+import { Grid, Paper, Typography } from '@mui/material'
 
 export const RegisterGrid = styled(Grid)`
   height: 100%;

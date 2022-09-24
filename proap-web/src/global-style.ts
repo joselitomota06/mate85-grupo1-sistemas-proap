@@ -47,6 +47,11 @@ export const defaultTheme = createTheme({
 
 const customFieldLabelTheme = createTheme({
   components: {
+    MuiButton: {
+      defaultProps: {
+        disableRipple: true,
+      },
+    },
     MuiTextField: {
       defaultProps: {
         margin: 'normal',
@@ -77,6 +82,15 @@ const customFieldLabelTheme = createTheme({
           },
           '& .MuiOutlinedInput-notchedOutline': {
             display: 'none',
+          },
+        },
+      },
+    },
+    MuiFormLabel: {
+      styleOverrides: {
+        root: {
+          '& .MuiFormLabel-asterisk': {
+            color: 'red',
           },
         },
       },

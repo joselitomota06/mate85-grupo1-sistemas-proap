@@ -1,24 +1,30 @@
 import * as Yup from 'yup'
-import { validateCPF } from '../../helpers/validation'
+import { validateCPF } from '../../helpers'
 
-export const registerFormSchema = Yup.object({
-  email: Yup.string()
-    .email('Insira um e-mail válido')
-    .required('Campo obrigatório'),
-  phone: Yup.string().required('Campo obrigatório'),
-  password: Yup.string().required('Campo obrigatório'),
-  confirmPassword: Yup.string()
-    .required('Campo obrigatório')
-    .test('same-password', 'A senhas não coincidem', function (value) {
-      return this.parent.password == value
-    }),
+export const personalDataFormSchema = Yup.object({
+  name: Yup.string().required('Campo obrigatório'),
   cpf: Yup.string()
     .required('Campo obrigatório')
     .test('validation-cpf', 'CPF inválido', function (cpf) {
       return validateCPF(cpf)
     }),
-  name: Yup.string().required('Campo obrigatório'),
   registration: Yup.string().required('Campo obrigatório'),
+})
+
+export const contactDataFormSchema = Yup.object({
+  email: Yup.string()
+    .email('Insira um e-mail válido')
+    .required('Campo obrigatório'),
+  phone: Yup.string().required('Campo obrigatório'),
+})
+
+export const passwordFormSchema = Yup.object({
+  password: Yup.string().required('Campo obrigatório'),
+  confirmPassword: Yup.string()
+    .required('Campo obrigatório')
+    .test('same-password', 'As senhas não coincidem', function (value) {
+      return this.parent.password == value
+    }),
 })
 
 export interface RegisterFormValues {
