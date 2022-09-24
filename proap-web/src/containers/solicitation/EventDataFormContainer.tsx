@@ -28,7 +28,7 @@ export default function ContactDataFormContainer() {
   return (
     <Grid container paddingTop={2} paddingBottom={2}>
       {/* Primeira Coluna */}
-      <Grid container item xs={6}>
+      <Grid container item md={6} xs={12}>
         {/* Datas */}
         <Grid container direction="row" spacing={2}>
           <Grid item>
@@ -84,7 +84,7 @@ export default function ContactDataFormContainer() {
       </Grid>
 
       {/* Segunda Coluna - Informe o Qualis */}
-      <Grid container item xs={6}>
+      <Grid container item md={6} xs={12}>
         <FormControl>
           <FormLabel required>Informe o Qualis do seu evento</FormLabel>
           <RadioGroup row>

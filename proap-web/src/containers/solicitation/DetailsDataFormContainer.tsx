@@ -29,7 +29,7 @@ export default function ContactDataFormContainer() {
       justifyContent="space-between"
     >
       {/* Primeira Coluna - Email ... */}
-      <Grid item xs={3}>
+      <Grid item md={3} xs={12}>
         <StyledData>
           <Typography>Email</Typography>
           <Typography style={{ color: "gray" }} variant="subtitle2">
@@ -73,7 +73,7 @@ export default function ContactDataFormContainer() {
         </StyledData>
       </Grid>
       {/* Segunda Coluna - Solicitou ... */}
-      <Grid item xs={3}>
+      <Grid item md={3} xs={12}>
         <StyledData>
           <Typography>
             Solicitou apoia para esse artigo em outro programa de pós-graduação
@@ -95,7 +95,7 @@ export default function ContactDataFormContainer() {
         </StyledData>
       </Grid>
       {/* Terceira Coluna Datas ... */}
-      <Grid item xs={3}>
+      <Grid item md={3} xs={12}>
         <StyledData>
           <Typography>
             Data de início<span style={{ color: "red" }}>*</span>
@@ -156,7 +156,7 @@ export default function ContactDataFormContainer() {
         </StyledData>
       </Grid>
       {/* Footer com termo De acordo */}
-      <Grid item xs={12}>
+      <Grid item md={12} xs={12}>
         <FormLabel>
           {" "}
           <Typography variant="subtitle1" style={{ color: "gray" }}>

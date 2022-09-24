@@ -12,6 +12,7 @@ import {
   FormControl,
   Button,
   InputLabel,
+  InputAdornment,
 } from "@mui/material";
 import {
   StyledTextField,
@@ -47,7 +48,7 @@ export default function ContactDataFormContainer() {
           </RadioGroup>
         </FormControl>
       </Grid>
-      {/* Vaolor Solicitado */}
+      {/* Valor Solicitado */}
       <Grid item>
         <Field
           as={StyledTextField}
@@ -88,7 +89,7 @@ export default function ContactDataFormContainer() {
             <Field
               as={StyledTextField}
               label="Nome da agência de formento"
-              name="valueSolicitantion"
+              name="agencyname"
               disabled
               required
             />
@@ -97,7 +98,7 @@ export default function ContactDataFormContainer() {
             <Field
               as={TextField}
               label="Valor solicitado"
-              name="valueSolicitantion"
+              name="valueSolicitantion2"
               disabled
               required
             />
