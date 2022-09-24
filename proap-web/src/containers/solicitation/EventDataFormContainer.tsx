@@ -87,18 +87,26 @@ export default function ContactDataFormContainer() {
       <Grid container item md={6} xs={12}>
         <FormControl>
           <FormLabel required>Informe o Qualis do seu evento</FormLabel>
-          <RadioGroup row>
-            <FormControlLabel value="A1" control={<Radio />} label="A1" />
-            <FormControlLabel value="A2" control={<Radio />} label="A2" />
-            <FormControlLabel value="A3" control={<Radio />} label="A3" />
-            <FormControlLabel value="A4" control={<Radio />} label="A4" />
-          </RadioGroup>
-          <RadioGroup row>
-            <FormControlLabel value="B1" control={<Radio />} label="B1" />
-            <FormControlLabel value="B2" control={<Radio />} label="B2" />
-            <FormControlLabel value="B3" control={<Radio />} label="B3" />
-            <FormControlLabel value="B4" control={<Radio />} label="B4" />
-            <FormControlLabel value="outro" control={<Radio />} label="Outro" />
+          <RadioGroup>
+            <Grid container>
+              <Grid item container direction="row">
+                <FormControlLabel value="A1" control={<Radio />} label="A1" />
+                <FormControlLabel value="A2" control={<Radio />} label="A2" />
+                <FormControlLabel value="A3" control={<Radio />} label="A3" />
+                <FormControlLabel value="A4" control={<Radio />} label="A4" />
+              </Grid>
+              <Grid item container direction="row">
+                <FormControlLabel value="B1" control={<Radio />} label="B1" />
+                <FormControlLabel value="B2" control={<Radio />} label="B2" />
+                <FormControlLabel value="B3" control={<Radio />} label="B3" />
+                <FormControlLabel value="B4" control={<Radio />} label="B4" />
+                <FormControlLabel
+                  value="outro"
+                  control={<Radio />}
+                  label="Outro"
+                />
+              </Grid>
+            </Grid>
           </RadioGroup>
           <Link style={{ color: "royalblue" }} href="#" underline="none">
             {`Visualiza Qualis atualizado`}
