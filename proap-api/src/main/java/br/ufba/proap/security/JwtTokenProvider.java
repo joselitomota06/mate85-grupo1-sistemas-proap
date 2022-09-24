@@ -40,7 +40,6 @@ public class JwtTokenProvider {
 
 		claims.put("id", userPrincipal.getId());
 		claims.put("name", userPrincipal.getName());
-		claims.put("login", userPrincipal.getLogin());
 		claims.put("email", userPrincipal.getEmail());
 		// claims.put("perfis", perfis);
 
