@@ -11,6 +11,7 @@ import {
   PasswordRecoveryTypography,
   RecoverPasswordLinkTypography,
 } from './RecoverPasswordContainer.style'
+
 import {
   INITIAL_FORM_VALUES,
   recoverPasswordFormSchema,
@@ -21,12 +22,10 @@ export default function RecoverPasswordFormContainer() {
   const dispatch = useAppDispatch()
 
   const handleSubmit = useCallback(
-    (values: RecoverPasswordFormValues, actions: FormikHelpers<RecoverPasswordFormValues>) => {
-      console.log(actions)
-      return dispatch(signIn(values)).catch(({ response: { status } }) => {
-        if (status == 401) actions.setFieldError('password', 'Senha incorreta')
-      })
-    },
+    (
+      values: RecoverPasswordFormValues,
+      actions: FormikHelpers<RecoverPasswordFormValues>
+    ) => {},
     [dispatch]
   )
 
@@ -40,25 +39,22 @@ export default function RecoverPasswordFormContainer() {
       {({ errors, touched, isSubmitting }) => (
         <Form>
           <Grid container direction='column' paddingTop={2} paddingBottom={2}>
-          <RecoverPasswordLinkTypography>
-            Para recuperar seu acesso, preencha o campo com o seu e-mail de cadastro.
-          </RecoverPasswordLinkTypography>
-          <Field
-              as={TextField}
-              label='E-mail'
-              name='email'
-          />
-           
+            <RecoverPasswordLinkTypography>
+              Para recuperar seu acesso, preencha o campo com o seu e-mail de
+              cadastro.
+            </RecoverPasswordLinkTypography>
+            <Field as={TextField} label='E-mail' name='email' />
           </Grid>
           <RecoverPasswordButton
             variant='contained'
             type='submit'
             disabled={isSubmitting}
           >
-            {isSubmitting && <RecoverPasswordCircularProgress color='info' size={25} />}
+            {isSubmitting && (
+              <RecoverPasswordCircularProgress color='info' size={25} />
+            )}
             Enviar
           </RecoverPasswordButton>
-          
         </Form>
       )}
     </Formik>
