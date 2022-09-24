@@ -41,7 +41,7 @@ export default function LoginFormContainer() {
           <Grid container direction='column' paddingTop={2} paddingBottom={2}>
             <Field
               as={TextField}
-              label='Nome de usuário'
+              label='E-mail'
               name='username'
               error={Boolean(touched.username && errors.username)}
               helperText={touched.username && errors.username}
