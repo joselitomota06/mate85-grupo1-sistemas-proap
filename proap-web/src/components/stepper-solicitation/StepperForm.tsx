@@ -61,28 +61,19 @@ export default function StepperForm(props: StepperFormProps<FormikValues>) {
     setActiveStep(Math.max(activeStep - 1, 0));
   }, [activeStep]);
 
-  // # HandleClick Protótipo
-  const handleClickNextStep = useCallback(() => {
-    setActiveStep(Math.max(activeStep + 1, 0));
-  }, [activeStep]);
-
-  // # HandleClick Próximo-Submit
-  // const handleClickSubmit = useCallback(
-  //   (values: FormikValues, helpers: FormikHelpers<FormikValues>) => {
-  //     setActiveStep(Math.min(activeStep + 1, steps.length));
-  //     helpers.setSubmitting(false);
-  //     if (isLastStep) return onSubmit(values, helpers);
-  //     else {
-  //       setActiveStep(Math.min(activeStep + 1, steps.length));
-  //       helpers.setSubmitting(false);
-  //     }
-  //   },
-  //   [isLastStep, activeStep, onSubmit]
-  // );
+  const handleClickSubmit = useCallback(
+    (values: FormikValues, helpers: FormikHelpers<FormikValues>) => {
+      if (isLastStep) return onSubmit(values, helpers);
+      else {
+        setActiveStep(Math.min(activeStep + 1, steps.length));
+        helpers.setSubmitting(false);
+      }
+    },
+    [isLastStep, activeStep, onSubmit]
+  );
 
   return (
     <>
-      {/* Head do stepper */}
       <Stepper activeStep={activeStep}>
         {steps.map((step, index) => (
           <Step key={`step-${index}`}>
@@ -90,11 +81,9 @@ export default function StepperForm(props: StepperFormProps<FormikValues>) {
           </Step>
         ))}
       </Stepper>
-
-      {/* Body do stepper */}
       <Formik
         validationSchema={currentValidationSchema}
-        // onSubmit={handleClickSubmit}
+        onSubmit={handleClickSubmit}
         {...formikProps}
       >
         {({ isSubmitting }) => (
@@ -104,10 +93,7 @@ export default function StepperForm(props: StepperFormProps<FormikValues>) {
                 <FormComponent />
               </div>
             ))}
-
-            {/* Botões */}
             <Grid container justifyContent="space-between">
-              {/* Botão Anterior */}
               <Button
                 onClick={handleClickPreviousStep}
                 disabled={isSubmitting || activeStep === 0}
@@ -116,17 +102,7 @@ export default function StepperForm(props: StepperFormProps<FormikValues>) {
               >
                 {componentLabels.previous}
               </Button>
-              {/* Botão Próximo Protótipo */}
               <Button
-                onClick={handleClickNextStep}
-                variant="outlined"
-                type="button"
-              >
-                {componentLabels.next}
-              </Button>
-
-              {/* Botão Próximo-Submit */}
-              {/* <Button
                 variant="contained"
                 type="submit"
                 form="stepper-form"
@@ -136,7 +112,7 @@ export default function StepperForm(props: StepperFormProps<FormikValues>) {
                   <StepperCircularProgress color="info" size={25} />
                 )}
                 {!isLastStep ? componentLabels.next : componentLabels.submit}
-              </Button> */}
+              </Button>
             </Grid>
           </Form>
         )}

@@ -28,16 +28,15 @@ export default function SolicitationFormContainer() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const handleSubmit = useCallback(() => {
-    return dispatch().then(() => navigate("/"));
-  }, [dispatch]);
+  const handleSubmit = () => {
+    console.log("handleSubmit");
+  };
 
   const registerFormSteps: FormStep[] = useMemo(
     () => [
       {
         label: "Solicitante",
         component: SolicitantDataFormContainer,
-        schema: SolicitantDataFormSchema,
       },
       {
         label: "Financiamento",
