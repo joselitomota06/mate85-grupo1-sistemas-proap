@@ -11,6 +11,8 @@ export const INITIAL_FORM_VALUES: LoginFormValues = {
 }
 
 export const loginFormSchema = Yup.object({
-  username: Yup.string().required('Campo obrigatório'),
+  username: Yup.string()
+    .required('Campo obrigatório')
+    .email('Insira um e-mail válido'),
   password: Yup.string().required('Campo obrigatório'),
 })
