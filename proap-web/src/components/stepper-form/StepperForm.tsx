@@ -87,15 +87,20 @@ export default function StepperForm(props: StepperFormProps<FormikValues>) {
                 <FormComponent />
               </div>
             ))}
-            <Grid container justifyContent='space-between'>
-              <Button
-                onClick={handleClickPreviousStep}
-                disabled={isSubmitting || activeStep === 0}
-                variant='outlined'
-                type='button'
-              >
-                {componentLabels.previous}
-              </Button>
+            <Grid
+              container
+              justifyContent={activeStep === 0 ? 'end' : 'space-between'}
+            >
+              {activeStep > 0 && (
+                <Button
+                  onClick={handleClickPreviousStep}
+                  disabled={isSubmitting || activeStep === 0}
+                  variant='outlined'
+                  type='button'
+                >
+                  {componentLabels.previous}
+                </Button>
+              )}
               <Button
                 variant='contained'
                 type='submit'
