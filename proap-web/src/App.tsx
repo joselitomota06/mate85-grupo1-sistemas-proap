@@ -2,9 +2,8 @@ import { Global } from '@emotion/react'
 import { ThemeProvider } from '@mui/material'
 import { Provider } from 'react-redux'
 
-import { AppRoutes } from './components/routing'
 import globalStyle, { theme } from './global-style'
-import './helpers/validation'
+import { AppRoutes } from './components/routing'
 import store from './store'
 
 function App() {
