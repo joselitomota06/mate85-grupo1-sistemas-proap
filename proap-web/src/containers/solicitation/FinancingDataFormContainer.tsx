@@ -1,7 +1,10 @@
-import React from "react";
+import React from 'react'
 
-import { FinancingDataFormSchema } from "./SolicitationFormSchema";
-import { Field, useFormikContext } from "formik";
+import {
+  FinancingDataFormSchema,
+  SolicitationFormValues,
+} from './SolicitationFormSchema'
+import { Field, useFormikContext } from 'formik'
 import {
   Grid,
   TextField,
@@ -13,20 +16,20 @@ import {
   Button,
   InputLabel,
   InputAdornment,
-} from "@mui/material";
+} from '@mui/material'
 import {
   StyledTextField,
   StyledDataInput,
-} from "./SolicitationFormContainer.style";
-import UploadFileIcon from "@mui/icons-material/UploadFile";
+} from './SolicitationFormContainer.style'
+import UploadFileIcon from '@mui/icons-material/UploadFile'
 
 export default function ContactDataFormContainer() {
-  const { errors, touched } = useFormikContext<FinancingDataFormSchema>();
+  const { errors, touched } = useFormikContext<SolicitationFormValues>()
 
   return (
     <Grid
       container
-      direction="column"
+      direction='column'
       spacing={1}
       paddingTop={2}
       paddingBottom={2}
@@ -34,17 +37,17 @@ export default function ContactDataFormContainer() {
       {/* Pergunta Seletor  */}
       <Grid item>
         <FormControl>
-          <FormLabel required id="demo-row-radio-buttons-group-label">
+          <FormLabel required id='demo-row-radio-buttons-group-label'>
             Solicitou apoio para esse artigo em um outro programa <br /> de pos
             graduação?
           </FormLabel>
           <RadioGroup
             row
-            aria-labelledby="demo-row-radio-buttons-group-label"
-            name="row-radio-buttons-group"
+            aria-labelledby='demo-row-radio-buttons-group-label'
+            name='row-radio-buttons-group'
           >
-            <FormControlLabel value="nao" control={<Radio />} label="Não" />
-            <FormControlLabel value="outro" control={<Radio />} label="Outro" />
+            <FormControlLabel value='nao' control={<Radio />} label='Não' />
+            <FormControlLabel value='outro' control={<Radio />} label='Outro' />
           </RadioGroup>
         </FormControl>
       </Grid>
@@ -52,8 +55,8 @@ export default function ContactDataFormContainer() {
       <Grid item>
         <Field
           as={StyledTextField}
-          label="Valor solicitado"
-          name="valueSolicitantion"
+          label='Valor solicitado'
+          name='valueSolicitantion'
           required
         />
       </Grid>
@@ -62,13 +65,9 @@ export default function ContactDataFormContainer() {
         <InputLabel required>
           Envie a carta de aceite do seu artigo (em PDF)
         </InputLabel>
-        <StyledDataInput
-          variant="contained"
-          component="label"
-          startIcon={<UploadFileIcon />}
-        >
+        <StyledDataInput variant='contained' startIcon={<UploadFileIcon />}>
           Adicionar Arquivo
-          <input type="file" hidden />
+          <input type='file' hidden />
         </StyledDataInput>
       </Grid>
       {/* Pergunta Seletor 2 + Inputs relacionados  */}
@@ -79,8 +78,8 @@ export default function ContactDataFormContainer() {
             <br /> de financiamento?
           </FormLabel>
           <RadioGroup row>
-            <FormControlLabel value="nao" control={<Radio />} label="Não" />
-            <FormControlLabel value="outro" control={<Radio />} label="Outro" />
+            <FormControlLabel value='nao' control={<Radio />} label='Não' />
+            <FormControlLabel value='outro' control={<Radio />} label='Outro' />
           </RadioGroup>
         </FormControl>
 
@@ -88,8 +87,8 @@ export default function ContactDataFormContainer() {
           <Grid item>
             <Field
               as={StyledTextField}
-              label="Nome da agência de formento"
-              name="agencyname"
+              label='Nome da agência de formento'
+              name='agencyname'
               disabled
               required
             />
@@ -97,8 +96,8 @@ export default function ContactDataFormContainer() {
           <Grid item>
             <Field
               as={TextField}
-              label="Valor solicitado"
-              name="valueSolicitantion2"
+              label='Valor solicitado'
+              name='valueSolicitantion2'
               disabled
               required
             />
@@ -106,5 +105,5 @@ export default function ContactDataFormContainer() {
         </Grid>
       </Grid>
     </Grid>
-  );
+  )
 }

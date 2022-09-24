@@ -1,118 +1,112 @@
-import React from "react";
+import React from 'react'
 
-import { EventDataFormSchema } from "./SolicitationFormSchema";
-import { Field, useFormikContext } from "formik";
+import {
+  EventDataFormSchema,
+  SolicitationFormValues,
+} from './SolicitationFormSchema'
+import { Field, useFormikContext } from 'formik'
 import {
   Grid,
   TextField,
-  Button,
   InputLabel,
   FormLabel,
   FormControl,
   FormControlLabel,
-  Radio,
   RadioGroup,
   Link,
-  Select,
-} from "@mui/material";
+  Radio,
+} from '@mui/material'
 import {
   StyledTextField,
   StyledDataInput,
-} from "./SolicitationFormContainer.style";
-import UploadFileIcon from "@mui/icons-material/UploadFile";
-import LaunchIcon from "@mui/icons-material/Launch";
+} from './SolicitationFormContainer.style'
+
+import UploadFileIcon from '@mui/icons-material/UploadFile'
 
 export default function ContactDataFormContainer() {
-  const { errors, touched } = useFormikContext<EventDataFormSchema>();
+  const { errors, touched } = useFormikContext<SolicitationFormValues>()
 
   return (
     <Grid container paddingTop={2} paddingBottom={2}>
       {/* Primeira Coluna */}
       <Grid container item md={6} xs={12}>
-        {/* Datas */}
-        <Grid container direction="row" spacing={2}>
+        <Grid container direction='row' spacing={2}>
           <Grid item>
             <Field
               as={TextField}
-              label="Data de início"
-              name="initialdate"
+              label='Data de início'
+              name='initialdate'
               required
             />
           </Grid>
           <Grid item>
             <Field
               as={TextField}
-              label="Data de termino"
-              name="finishingdate"
+              label='Data de termino'
+              name='finishingdate'
               required
             />
           </Grid>
         </Grid>
 
-        {/* Coluna de Inputs - Link, País, Cidade, Valor */}
-        <Grid container item direction="column">
+        <Grid container item direction='column'>
           <Field
             as={StyledTextField}
-            label="Link homepage"
-            name="homepagelink"
+            label='Link homepage'
+            name='homepagelink'
             required
           />
 
-          <Field as={StyledTextField} label="País" name="country" required />
+          <Field as={StyledTextField} label='País' name='country' required />
 
-          <Field as={StyledTextField} label="Cidade" name="city" required />
+          <Field as={StyledTextField} label='Cidade' name='city' required />
 
           <Field
             as={StyledTextField}
-            label="Valor da inscrição/publicação"
-            name="subscriptionvalue"
+            label='Valor da inscrição/publicação'
+            name='subscriptionvalue'
             required
           />
 
-          <InputLabel style={{ marginTop: "1rem" }} required>
+          <InputLabel style={{ marginTop: '1rem' }} required>
             Envie a carta de aceite do seu artigo (em PDF)
           </InputLabel>
-          <StyledDataInput
-            variant="contained"
-            component="label"
-            startIcon={<UploadFileIcon />}
-          >
+          <StyledDataInput variant='contained' startIcon={<UploadFileIcon />}>
             Adicionar Arquivo
-            <input type="file" hidden />
+            <input type='file' hidden />
           </StyledDataInput>
         </Grid>
       </Grid>
 
-      {/* Segunda Coluna - Informe o Qualis */}
       <Grid container item md={6} xs={12}>
         <FormControl>
           <FormLabel required>Informe o Qualis do seu evento</FormLabel>
           <RadioGroup>
             <Grid container>
-              <Grid item container direction="row">
-                <FormControlLabel value="A1" control={<Radio />} label="A1" />
-                <FormControlLabel value="A2" control={<Radio />} label="A2" />
-                <FormControlLabel value="A3" control={<Radio />} label="A3" />
-                <FormControlLabel value="A4" control={<Radio />} label="A4" />
+              <Grid item container direction='row'>
+                <FormControlLabel value='A1' control={<Radio />} label='A1' />
+                <FormControlLabel value='A2' control={<Radio />} label='A2' />
+                <FormControlLabel value='A3' control={<Radio />} label='A3' />
+                <FormControlLabel value='A4' control={<Radio />} label='A4' />
               </Grid>
-              <Grid item container direction="row">
-                <FormControlLabel value="B1" control={<Radio />} label="B1" />
-                <FormControlLabel value="B2" control={<Radio />} label="B2" />
-                <FormControlLabel value="B3" control={<Radio />} label="B3" />
-                <FormControlLabel value="B4" control={<Radio />} label="B4" />
+              <Grid item container direction='row'>
+                <FormControlLabel value='B1' control={<Radio />} label='B1' />
+                <FormControlLabel value='B2' control={<Radio />} label='B2' />
+                <FormControlLabel value='B3' control={<Radio />} label='B3' />
+                <FormControlLabel value='B4' control={<Radio />} label='B4' />
                 <FormControlLabel
-                  value="outro"
+                  value='outro'
                   control={<Radio />}
-                  label="Outro"
+                  label='Outro'
                 />
               </Grid>
             </Grid>
           </RadioGroup>
-          <Link style={{ color: "royalblue" }} href="#" underline="none">
+          <Link style={{ color: 'royalblue' }} href='#' underline='none'>
             {`Visualiza Qualis atualizado`}
           </Link>
         </FormControl>
       </Grid>
     </Grid>
-  );
+  )
 }
