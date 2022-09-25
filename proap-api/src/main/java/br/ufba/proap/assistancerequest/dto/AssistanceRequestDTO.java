@@ -1,6 +1,6 @@
 package br.ufba.proap.assistancerequest.dto;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 public class AssistanceRequestDTO {
@@ -25,10 +27,12 @@ public class AssistanceRequestDTO {
 	private Boolean aceiteFinal;
 	
 	@Column(nullable = false)
-	private Date dataInicio;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
+	private LocalDateTime dataInicio;
 	
 	@Column(nullable = false)
-	private Date dataFim;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
+	private LocalDateTime dataFim;
 	
 	@Column(nullable = false)
 	private String linkHomepage;
@@ -113,19 +117,19 @@ public class AssistanceRequestDTO {
 		this.aceiteFinal = aceiteFinal;
 	}
 
-	public Date getDataInicio() {
+	public LocalDateTime getDataInicio() {
 		return dataInicio;
 	}
 	
-	public void setDataInicio(Date dataInicio) {
+	public void setDataInicio(LocalDateTime dataInicio) {
 		this.dataInicio = dataInicio;
 	}
 	
-	public Date getDataFim() {
+	public LocalDateTime getDataFim() {
 		return dataFim;
 	}
 	
-	public void setDataFim(Date dataFim) {
+	public void setDataFim(LocalDateTime dataFim) {
 		this.dataFim = dataFim;
 	}
 	
