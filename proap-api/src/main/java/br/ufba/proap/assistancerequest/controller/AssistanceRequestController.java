@@ -44,12 +44,12 @@ public class AssistanceRequestController {
 	}
 	
 	@GetMapping("/listById/{id}")
-	public List<AssistanceRequestDTO> listById(@PathVariable Long id) {	
+	public Optional<AssistanceRequestDTO> listById(@PathVariable Long id) {	
 		try {
-			return service.findAll();
+			return service.findById(id);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
-			return Collections.emptyList();
+			return Optional.empty();
 		}
 	}
 	
