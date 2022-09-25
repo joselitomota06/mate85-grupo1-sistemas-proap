@@ -16,7 +16,7 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
 @Table(name = "aut_user", schema = "proap", uniqueConstraints = {
-		@UniqueConstraint(name = "login_unique", columnNames = { "login" }),
+		@UniqueConstraint(name = "email_unique", columnNames = { "email" }),
 		@UniqueConstraint(name = "cpf_unique", columnNames = { "cpf" }) })
 public class User implements UserDetails {
 
