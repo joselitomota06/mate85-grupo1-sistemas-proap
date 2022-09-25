@@ -16,7 +16,7 @@ public class AssistanceRequestDTO {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@Column(nullable = false)
 	private String email;
 	
@@ -91,6 +91,13 @@ public class AssistanceRequestDTO {
 			return false;
 		AssistanceRequestDTO other = (AssistanceRequestDTO) obj;
 		return Objects.equals(id, other.id);
+	}
+	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
 	}
 	
 	public String getEmail() {
