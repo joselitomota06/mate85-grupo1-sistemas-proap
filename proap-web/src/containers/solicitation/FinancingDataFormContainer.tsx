@@ -1,9 +1,6 @@
 import React from 'react'
 
-import {
-  FinancingDataFormSchema,
-  SolicitationFormValues,
-} from './SolicitationFormSchema'
+import { SolicitationFormValues } from './SolicitationFormSchema'
 import { Field, useFormikContext } from 'formik'
 import {
   Grid,
@@ -13,9 +10,8 @@ import {
   RadioGroup,
   FormLabel,
   FormControl,
-  Button,
   InputLabel,
-  InputAdornment,
+  FormHelperText,
 } from '@mui/material'
 import {
   StyledTextField,
@@ -24,8 +20,9 @@ import {
 import UploadFileIcon from '@mui/icons-material/UploadFile'
 
 export default function ContactDataFormContainer() {
-  const { errors, touched } = useFormikContext<SolicitationFormValues>()
+  const { values, errors, touched } = useFormikContext<SolicitationFormValues>()
 
+  console.log(errors, touched, values)
   return (
     <Grid
       container
@@ -34,62 +31,73 @@ export default function ContactDataFormContainer() {
       paddingTop={2}
       paddingBottom={2}
     >
-      {/* Pergunta Seletor  */}
       <Grid item>
-        <FormControl>
-          <FormLabel required id='demo-row-radio-buttons-group-label'>
+        <FormControl
+          error={Boolean(touched.solicitacaoApoio && errors.solicitacaoApoio)}
+        >
+          <FormLabel required>
             Solicitou apoio para esse artigo em um outro programa <br /> de pos
             graduação?
           </FormLabel>
-          <RadioGroup
-            row
+          <Field
+            as={RadioGroup}
             aria-labelledby='demo-row-radio-buttons-group-label'
-            name='row-radio-buttons-group'
+            name='solicitacaoApoio'
+            row
           >
-            <FormControlLabel value='nao' control={<Radio />} label='Não' />
-            <FormControlLabel value='outro' control={<Radio />} label='Outro' />
-          </RadioGroup>
+            <FormControlLabel value='false' control={<Radio />} label='Não' />
+            <FormControlLabel value='true' control={<Radio />} label='Outro' />
+          </Field>
+          {touched.solicitacaoApoio && errors.solicitacaoApoio && (
+            <FormHelperText>{errors.solicitacaoApoio}</FormHelperText>
+          )}
         </FormControl>
       </Grid>
-      {/* Valor Solicitado */}
       <Grid item>
         <Field
           as={StyledTextField}
           label='Valor solicitado'
-          name='valueSolicitantion'
+          name='valorSolicitado'
+          type='number'
+          error={Boolean(touched.valorSolicitado && errors.valorSolicitado)}
+          helperText={touched.valorSolicitado && errors.valorSolicitado}
           required
         />
       </Grid>
-      {/* Input do arquivo */}
       <Grid item>
-        <InputLabel required>
-          Envie a carta de aceite do seu artigo (em PDF)
-        </InputLabel>
-        <StyledDataInput variant='contained' startIcon={<UploadFileIcon />}>
-          Adicionar Arquivo
-          <input type='file' hidden />
-        </StyledDataInput>
-      </Grid>
-      {/* Pergunta Seletor 2 + Inputs relacionados  */}
-      <Grid item>
-        <FormControl>
+        <FormControl
+          error={Boolean(
+            touched.solicitacaoAuxilioOutrasFontes &&
+              errors.solicitacaoAuxilioOutrasFontes
+          )}
+        >
           <FormLabel required>
             Solicitou apoio para esse artigo de outras formas
             <br /> de financiamento?
           </FormLabel>
-          <RadioGroup row>
-            <FormControlLabel value='nao' control={<Radio />} label='Não' />
-            <FormControlLabel value='outro' control={<Radio />} label='Outro' />
-          </RadioGroup>
+          <Field as={RadioGroup} name='solicitacaoAuxilioOutrasFontes' row>
+            <FormControlLabel value='false' control={<Radio />} label='Não' />
+            <FormControlLabel value='true' control={<Radio />} label='Outro' />
+          </Field>
+          {touched.solicitacaoAuxilioOutrasFontes &&
+            errors.solicitacaoAuxilioOutrasFontes && (
+              <FormHelperText>
+                {errors.solicitacaoAuxilioOutrasFontes}
+              </FormHelperText>
+            )}
         </FormControl>
-
         <Grid item container spacing={2}>
           <Grid item>
             <Field
               as={StyledTextField}
               label='Nome da agência de formento'
-              name='agencyname'
-              disabled
+              name='nomeAgenciaFomento'
+              error={Boolean(
+                touched.nomeAgenciaFomento && errors.nomeAgenciaFomento
+              )}
+              helperText={
+                touched.nomeAgenciaFomento && errors.nomeAgenciaFomento
+              }
               required
             />
           </Grid>
@@ -97,8 +105,16 @@ export default function ContactDataFormContainer() {
             <Field
               as={TextField}
               label='Valor solicitado'
-              name='valueSolicitantion2'
-              disabled
+              name='valorSolicitadoAgenciaFormento'
+              type='number'
+              error={Boolean(
+                touched.valorSolicitadoAgenciaFormento &&
+                  errors.valorSolicitadoAgenciaFormento
+              )}
+              helperText={
+                touched.valorSolicitadoAgenciaFormento &&
+                errors.valorSolicitadoAgenciaFormento
+              }
               required
             />
           </Grid>

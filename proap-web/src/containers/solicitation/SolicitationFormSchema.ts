@@ -10,7 +10,20 @@ export const solicitantDataFormSchema = Yup.object({
   autores: Yup.string().required('Campo obrigatório'),
 })
 
-export const FinancingDataFormSchema = Yup.object({})
+export const financingDataFormSchema = Yup.object({
+  solicitacaoApoio: Yup.boolean().nullable().required('Campo obrigatório'),
+  valorSolicitado: Yup.number()
+    .nullable()
+    .required('Campo obrigatório')
+    .min(1, 'Insira um valor válido'),
+  solicitacaoAuxilioOutrasFontes: Yup.boolean()
+    .nullable()
+    .required('Campo obrigatório'),
+  nomeAgenciaFomento: Yup.string().required('Campo obrigatório'),
+  valorSolicitadoAgenciaFormento: Yup.number()
+    .required('Campo obrigatório')
+    .min(1, 'Insira um valor válido'),
+})
 
 export const EventDataFormSchema = Yup.object({})
 
@@ -23,42 +36,45 @@ export interface SolicitationFormValues {
   doi: string
   autores: string
 
-  aceiteFinal: boolean
+  solicitacaoApoio: boolean | null
+  valorSolicitado: number | string
   cartaAceite: string
+  solicitacaoAuxilioOutrasFontes: boolean | null
+  nomeAgenciaFomento: string
+  valorSolicitadoAgenciaFormento: number | string
+
   cidade: string
   comprovantePagamento: string
   dataFim: string
   dataInicio: string
   linkHomepage: string
-  nomeAgenciaFomento: string
   nomeCompleto: string
   pais: string
-  solicitacaoApoio: boolean
-  solicitacaoAuxilioOutrasFontes: boolean
   valorInscricao: number
-  valorSolicitado: number
-  valorSolicitadoAgenciaFormento: string
+  aceiteFinal: boolean
 }
 
 export const INITIAL_FORM_VALUES: SolicitationFormValues = {
   email: '',
   nome: '',
   titulo: '',
-  aceiteFinal: false,
+  doi: '',
   autores: '',
+
+  solicitacaoApoio: null,
+  valorSolicitado: '',
   cartaAceite: '',
+  solicitacaoAuxilioOutrasFontes: null,
+  nomeAgenciaFomento: '',
+  valorSolicitadoAgenciaFormento: '',
+
+  aceiteFinal: false,
   cidade: '',
   comprovantePagamento: '',
   dataFim: '',
   dataInicio: '',
-  doi: '',
   linkHomepage: '',
-  nomeAgenciaFomento: '',
   nomeCompleto: '',
   pais: '',
-  solicitacaoApoio: false,
-  solicitacaoAuxilioOutrasFontes: false,
   valorInscricao: 0,
-  valorSolicitado: 0,
-  valorSolicitadoAgenciaFormento: '',
 }

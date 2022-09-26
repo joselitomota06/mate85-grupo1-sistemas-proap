@@ -68,13 +68,14 @@ export default function ContactDataFormContainer() {
             required
           />
 
-          <InputLabel style={{ marginTop: '1rem' }} required>
-            Envie a carta de aceite do seu artigo (em PDF)
-          </InputLabel>
-          <StyledDataInput variant='contained' startIcon={<UploadFileIcon />}>
-            Adicionar Arquivo
-            <input type='file' hidden />
-          </StyledDataInput>
+          <Field
+            as={StyledTextField}
+            label='Carta de aceite'
+            name='cartaAceite'
+            error={Boolean(touched.cartaAceite && errors.cartaAceite)}
+            helperText={touched.cartaAceite && errors.cartaAceite}
+            required
+          />
         </Grid>
       </Grid>
 
