@@ -1,8 +1,9 @@
 import axios from 'axios'
+import { BASE_API_URL } from '../helpers/api'
 import { LocalStorageToken } from '../helpers/auth'
 
 const api = axios.create({
-  baseURL: 'https://proap-api.herokuapp.com/proap-api',
+  baseURL: BASE_API_URL,
 })
 
 api.interceptors.request.use(
@@ -13,7 +14,7 @@ api.interceptors.request.use(
         ...config,
         headers: {
           ...config.headers,
-          Authorization: `Bearer ${token}`,
+          'x-access-token': `Bearer ${token}`,
         },
       }
 

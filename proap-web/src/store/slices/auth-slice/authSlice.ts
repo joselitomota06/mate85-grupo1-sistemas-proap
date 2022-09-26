@@ -15,7 +15,7 @@ const authSlice = createSlice({
 
       LocalStorageToken.save(action.payload)
       axios.defaults.headers.common[
-        'Authorization'
+        'x-access-token'
       ] = `Bearer ${action.payload}`
     },
     logout: (state) => {
