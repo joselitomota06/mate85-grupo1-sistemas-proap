@@ -1,30 +1,96 @@
-import * as Yup from "yup";
+import * as Yup from 'yup'
 
-export const SolicitantDataFormSchema = Yup.object({
+export const solicitantDataFormSchema = Yup.object({
+  nomeCompleto: Yup.string().required('Campo obrigatório'),
   email: Yup.string()
-    .email("Insira um e-mail válido")
-    .required("Campo obrigatório"),
-  name: Yup.string().required("Campo obrigatório"),
-  title: Yup.string().required("Campo obrigatório"),
-  coautor: Yup.string().required("Campo obrigatório"),
-});
+    .required('Campo obrigatório')
+    .email('Insira um e-mail válido'),
+  titulo: Yup.string().required('Campo obrigatório'),
+  doi: Yup.string().notRequired(),
+  autores: Yup.string().required('Campo obrigatório'),
+})
 
-export const FinancingDataFormSchema = Yup.object({});
+export const financingDataFormSchema = Yup.object({
+  solicitacaoApoio: Yup.boolean().nullable().required('Campo obrigatório'),
+  valorSolicitado: Yup.number()
+    .nullable()
+    .required('Campo obrigatório')
+    .min(1, 'Insira um valor válido'),
+  solicitacaoAuxilioOutrasFontes: Yup.boolean()
+    .nullable()
+    .required('Campo obrigatório'),
+  nomeAgenciaFomento: Yup.string().required('Campo obrigatório'),
+  valorSolicitadoAgenciaFomento: Yup.number()
+    .required('Campo obrigatório')
+    .min(1, 'Insira um valor válido'),
+})
 
-export const EventDataFormSchema = Yup.object({});
+export const eventDataFormSchema = Yup.object({
+  dataInicio: Yup.string().required('Campo obrigatório'),
+  dataFim: Yup.string().required('Campo obrigatório'),
+  pais: Yup.string().required('Campo obrigatório'),
+  cidade: Yup.string().required('Campo obrigatório'),
+  linkHomepage: Yup.string().required('Campo obrigatório'),
+  valorInscricao: Yup.number()
+    .nullable()
+    .required('Campo obrigatório')
+    .min(1, 'Insira um valor válido'),
+  cartaAceite: Yup.string().required('Campo obrigatório'),
+})
 
-export const DetailsEventDataFormSchema = Yup.object({});
+export const detailsEventDataFormSchema = Yup.object({
+  aceiteFinal: Yup.boolean()
+    .nullable()
+    .required('É necessário aceitar os termos para continuar')
+    .isTrue('É necessário aceitar os termos para continuar'),
+})
 
 export interface SolicitationFormValues {
-  name: string;
-  email: string;
-  title: string;
-  coautor: string;
+  email: string
+  nomeCompleto: string
+  titulo: string
+  doi: string
+  autores: string
+
+  solicitacaoApoio: boolean | null
+  valorSolicitado: number | string
+  solicitacaoAuxilioOutrasFontes: boolean | null
+  nomeAgenciaFomento: string
+  valorSolicitadoAgenciaFomento: number | string
+
+  dataInicio: string
+  dataFim: string
+  linkHomepage: string
+  pais: string
+  cidade: string
+  valorInscricao: number | null
+  cartaAceite: string
+
+  aceiteFinal: boolean | null
+  comprovantePagamento: string
 }
 
 export const INITIAL_FORM_VALUES: SolicitationFormValues = {
-  name: "",
-  email: "",
-  title: "",
-  coautor: "",
-};
+  email: '',
+  nomeCompleto: '',
+  titulo: '',
+  doi: '',
+  autores: '',
+
+  solicitacaoApoio: null,
+  valorSolicitado: '',
+  solicitacaoAuxilioOutrasFontes: null,
+  nomeAgenciaFomento: '',
+  valorSolicitadoAgenciaFomento: '',
+
+  dataInicio: '',
+  dataFim: '',
+  linkHomepage: '',
+  pais: '',
+  cidade: '',
+  valorInscricao: null,
+  comprovantePagamento: '',
+  cartaAceite: '',
+
+  aceiteFinal: null,
+}
