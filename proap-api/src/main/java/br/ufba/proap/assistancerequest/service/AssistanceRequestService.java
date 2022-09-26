@@ -3,8 +3,8 @@ package br.ufba.proap.assistancerequest.service;
 import java.util.List;
 import java.util.Optional;
 
-import org.jvnet.hk2.annotations.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import br.ufba.proap.assistancerequest.dto.AssistanceRequestDTO;
 import br.ufba.proap.assistancerequest.repository.AssistanteRequestRepository;
