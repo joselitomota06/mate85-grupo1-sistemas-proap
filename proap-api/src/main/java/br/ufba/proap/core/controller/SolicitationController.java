@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.ufba.proap.authentication.domain.User;
+import br.ufba.proap.authentication.service.UserService;
 import br.ufba.proap.core.domain.Solicitation;
 import br.ufba.proap.core.service.SolicitationService;
 
@@ -26,7 +28,10 @@ import br.ufba.proap.core.service.SolicitationService;
 public class SolicitationController {
 
 	private static final Logger logger = LoggerFactory.getLogger(SolicitationController.class);
-
+	
+	@Autowired
+	private UserService serviceUser;
+	
 	@Autowired
 	private SolicitationService service;
 
@@ -52,11 +57,29 @@ public class SolicitationController {
 
 	@GetMapping("/list")
 	public List<Solicitation> list() {
+		User currentUser = serviceUser.getLoggedUser();
+		
+		if(currentUser == null) {
+			return Collections.emptyList();
+		}
+		
+		
 		try {
-			return service.findAll();
+			if(currentUser.getPerfil().isAdmin()) {
+				return service.findAll();
+				
+				
+				
+			}
+		
 		} catch (Exception e) {
 			return Collections.emptyList();
 		}
+		
+		
+		return null;
+			
+		
 	}
 
 	@DeleteMapping("/remove/{id}")

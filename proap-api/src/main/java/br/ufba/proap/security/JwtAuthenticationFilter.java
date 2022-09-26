@@ -33,8 +33,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		String jwt = getJwtFromRequest(request);
 
 		if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
-			String username = tokenProvider.getUsernameFromJwt(jwt);
-			UserDetails userDetails = userService.loadUserByUsername(username);
+			String email = tokenProvider.getEmailFromJwt(jwt);
+			
+			UserDetails userDetails = userService.loadUserByUsername(email);
 
 			UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,
 					null, userDetails.getAuthorities());
@@ -48,6 +49,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	private String getJwtFromRequest(HttpServletRequest request) {
 		String bearerToken = request.getHeader("x-access-token");
+		
 		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
 			return bearerToken.substring(7);
 		}
