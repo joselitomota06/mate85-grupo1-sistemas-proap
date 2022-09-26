@@ -25,7 +25,7 @@ import br.ufba.proap.authentication.domain.User;
 import br.ufba.proap.authentication.service.UserService;
 
 @RestController
-@RequestMapping("/assistancerequest")
+@RequestMapping("assistancerequest")
 public class AssistanceRequestController {
 
 	private static final Logger logger = LoggerFactory.getLogger(UserController.class);

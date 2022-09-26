@@ -9,12 +9,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import br.ufba.proap.authentication.domain.User;
 
 @Entity
+@Table(name = "proap_assistancerequest", schema = "proap")
 public class AssistanceRequestDTO {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
