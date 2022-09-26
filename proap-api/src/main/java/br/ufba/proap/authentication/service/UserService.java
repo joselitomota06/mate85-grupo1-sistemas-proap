@@ -24,12 +24,16 @@ public class UserService implements UserDetailsService {
 	private PasswordEncoder passwordEncoder;
 
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = userRepository.findByName(username);
-		if (user == null) {
-			throw new UsernameNotFoundException("User: " + username + " not found");
+	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+		Optional<User> user = userRepository.findByEmail(email);
+		
+		if(user.isPresent()) {
+			return user.get();
+			
+		}else {
+			throw new UsernameNotFoundException("Email user: " + email + " not found");
+			
 		}
-		return user;
 	}
 
 	public User getLoggedUser() {
