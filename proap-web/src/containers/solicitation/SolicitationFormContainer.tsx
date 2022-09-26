@@ -7,15 +7,29 @@ import FinancingDataFormContainer from './FinancingDataFormContainer'
 import EventDataFormContainer from './EventDataFormContainer'
 import DetailsDataFormContainer from './DetailsDataFormContainer'
 
-import { INITIAL_FORM_VALUES } from './SolicitationFormSchema'
+import { submitSolicitation } from '../../services/solicitationService'
+import { FormikValues } from 'formik'
+
+import { INITIAL_FORM_VALUES, SolicitationFormValues } from './SolicitationFormSchema'
 import StepperForm, {
   FormStep,
 } from '../../components/stepper-form/StepperForm'
 
+import { useAppDispatch } from '../../store'
+
+
 export default function SolicitationFormContainer() {
-  const handleSubmitSolicitation = useCallback(() => {
-    console.log('handleSubmit')
-  }, [])
+
+  const dispatch = useAppDispatch()
+  
+  const handleSubmitSolicitation = useCallback(
+    (values: FormikValues) => {
+      return dispatch(submitSolicitation(values as SolicitationFormValues)).catch(({ response: { status } }) => {
+        console.log(status)
+      })
+    },
+    [dispatch]
+  )
 
   const registerFormSteps: FormStep[] = useMemo(
     () => [

@@ -13,7 +13,8 @@ api.interceptors.request.use(
         ...config,
         headers: {
           ...config.headers,
-          Authorization: `Bearer ${token}`,
+          "x-access-token": `Bearer ${token}`,
+          
         },
       }
 
