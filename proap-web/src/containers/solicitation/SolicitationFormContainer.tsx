@@ -1,14 +1,18 @@
 import { useCallback, useMemo } from 'react'
 
+import { submitSolicitation } from '../../services/solicitationService'
 import SolicitantDataFormContainer from './SolicitantDataFormContainer'
 import FinancingDataFormContainer from './FinancingDataFormContainer'
-import EventDataFormContainer from './EventDataFormContainer'
 import DetailsDataFormContainer from './DetailsDataFormContainer'
+import EventDataFormContainer from './EventDataFormContainer'
 
-import { submitSolicitation } from '../../services/solicitationService'
 import { FormikValues } from 'formik'
 
-import { INITIAL_FORM_VALUES, SolicitationFormValues } from './SolicitationFormSchema'
+import {
+  INITIAL_FORM_VALUES,
+  solicitantDataFormSchema,
+  SolicitationFormValues,
+} from './SolicitationFormSchema'
 import StepperForm, {
   FormStep,
 } from '../../components/stepper-form/StepperForm'
@@ -16,14 +20,14 @@ import { Typography } from '@mui/material'
 
 import { useAppDispatch } from '../../store'
 
-
 export default function SolicitationFormContainer() {
-
   const dispatch = useAppDispatch()
-  
+
   const handleSubmitSolicitation = useCallback(
     (values: FormikValues) => {
-      return dispatch(submitSolicitation(values as SolicitationFormValues)).catch(({ response: { status } }) => {
+      return dispatch(
+        submitSolicitation(values as SolicitationFormValues)
+      ).catch(({ response: { status } }) => {
         console.log(status)
       })
     },
@@ -35,6 +39,7 @@ export default function SolicitationFormContainer() {
       {
         label: 'Solicitante',
         component: SolicitantDataFormContainer,
+        schema: solicitantDataFormSchema,
       },
       {
         label: 'Financiamento',
