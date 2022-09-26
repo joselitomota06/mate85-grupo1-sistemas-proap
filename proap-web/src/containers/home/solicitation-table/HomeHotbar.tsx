@@ -18,7 +18,7 @@ export default function HomeHotbar() {
         <Grid item xs={12} lg={3} paddingTop={1} paddingBottom={2}>
           <HomeHotbarLink to='solicitation/create'>
             <Button variant='outlined' size='large' startIcon={<AddIcon />}>
-              Solicitar auxílio
+              Criar solicitação
             </Button>
           </HomeHotbarLink>
         </Grid>
