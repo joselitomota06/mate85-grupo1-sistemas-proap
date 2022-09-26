@@ -7,6 +7,8 @@ import {
   FormLabel,
   Radio,
   FormControlLabel,
+  Checkbox,
+  Box,
 } from '@mui/material'
 import { useFormikContext } from 'formik'
 
@@ -154,7 +156,6 @@ export default function ContactDataFormContainer() {
           </Typography>
         </StyledData>
       </Grid>
-      {/* Footer com termo De acordo */}
       <Grid item md={12} xs={12}>
         <FormLabel>
           {' '}
@@ -166,7 +167,9 @@ export default function ContactDataFormContainer() {
             recursos financeiros
           </Typography>
         </FormLabel>
-        <FormControlLabel control={<Radio />} label='De acordo' />
+        <Box sx={{ display: 'flex', justifyContent: 'end' }}>
+          <FormControlLabel control={<Checkbox />} label='Estou de acordo' />
+        </Box>
       </Grid>
     </Grid>
   )

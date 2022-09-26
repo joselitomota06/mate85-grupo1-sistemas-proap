@@ -1,7 +1,5 @@
 import { useCallback, useMemo } from 'react'
 
-import { useNavigate } from 'react-router-dom'
-
 import SolicitantDataFormContainer from './SolicitantDataFormContainer'
 import FinancingDataFormContainer from './FinancingDataFormContainer'
 import EventDataFormContainer from './EventDataFormContainer'
@@ -11,6 +9,7 @@ import { INITIAL_FORM_VALUES } from './SolicitationFormSchema'
 import StepperForm, {
   FormStep,
 } from '../../components/stepper-form/StepperForm'
+import { Typography } from '@mui/material'
 
 export default function SolicitationFormContainer() {
   const handleSubmitSolicitation = useCallback(() => {
@@ -40,14 +39,24 @@ export default function SolicitationFormContainer() {
   )
 
   return (
-    <StepperForm
-      initialValues={INITIAL_FORM_VALUES}
-      steps={registerFormSteps}
-      onSubmit={handleSubmitSolicitation}
-      validateOnChange={false}
-      labels={{
-        submit: 'Enviar solicitação',
-      }}
-    />
+    <>
+      <Typography
+        variant='h4'
+        color='primary'
+        fontWeight='bold'
+        marginBottom={2}
+      >
+        Nova solicitação de auxílio
+      </Typography>
+      <StepperForm
+        initialValues={INITIAL_FORM_VALUES}
+        steps={registerFormSteps}
+        onSubmit={handleSubmitSolicitation}
+        validateOnChange={false}
+        labels={{
+          submit: 'Enviar solicitação',
+        }}
+      />
+    </>
   )
 }
