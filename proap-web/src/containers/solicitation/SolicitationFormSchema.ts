@@ -1,7 +1,7 @@
 import * as Yup from 'yup'
 
 export const solicitantDataFormSchema = Yup.object({
-  nome: Yup.string().required('Campo obrigatório'),
+  nomeCompleto: Yup.string().required('Campo obrigatório'),
   email: Yup.string()
     .required('Campo obrigatório')
     .email('Insira um e-mail válido'),
@@ -20,7 +20,7 @@ export const financingDataFormSchema = Yup.object({
     .nullable()
     .required('Campo obrigatório'),
   nomeAgenciaFomento: Yup.string().required('Campo obrigatório'),
-  valorSolicitadoAgenciaFormento: Yup.number()
+  valorSolicitadoAgenciaFomento: Yup.number()
     .required('Campo obrigatório')
     .min(1, 'Insira um valor válido'),
 })
@@ -38,7 +38,12 @@ export const eventDataFormSchema = Yup.object({
   cartaAceite: Yup.string().required('Campo obrigatório'),
 })
 
-export const DetailsEventDataFormSchema = Yup.object({})
+export const detailsEventDataFormSchema = Yup.object({
+  aceiteFinal: Yup.boolean()
+    .nullable()
+    .required('É necessário aceitar os termos para continuar')
+    .isTrue('É necessário aceitar os termos para continuar'),
+})
 
 export interface SolicitationFormValues {
   email: string
@@ -51,7 +56,7 @@ export interface SolicitationFormValues {
   valorSolicitado: number | string
   solicitacaoAuxilioOutrasFontes: boolean | null
   nomeAgenciaFomento: string
-  valorSolicitadoAgenciaFormento: number | string
+  valorSolicitadoAgenciaFomento: number | string
 
   dataInicio: string
   dataFim: string
@@ -61,7 +66,7 @@ export interface SolicitationFormValues {
   valorInscricao: number | null
   cartaAceite: string
 
-  aceiteFinal: boolean
+  aceiteFinal: boolean | null
   comprovantePagamento: string
 }
 
@@ -76,7 +81,7 @@ export const INITIAL_FORM_VALUES: SolicitationFormValues = {
   valorSolicitado: '',
   solicitacaoAuxilioOutrasFontes: null,
   nomeAgenciaFomento: '',
-  valorSolicitadoAgenciaFormento: '',
+  valorSolicitadoAgenciaFomento: '',
 
   dataInicio: '',
   dataFim: '',
@@ -87,5 +92,5 @@ export const INITIAL_FORM_VALUES: SolicitationFormValues = {
   comprovantePagamento: '',
   cartaAceite: '',
 
-  aceiteFinal: false,
+  aceiteFinal: null,
 }

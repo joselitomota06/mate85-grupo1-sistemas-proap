@@ -75,6 +75,7 @@ export default function ContactDataFormContainer() {
             as={StyledTextField}
             label='Valor da inscrição/publicação'
             name='valorInscricao'
+            type='number'
             error={Boolean(touched.valorInscricao && errors.valorInscricao)}
             helperText={touched.valorInscricao && errors.valorInscricao}
             required

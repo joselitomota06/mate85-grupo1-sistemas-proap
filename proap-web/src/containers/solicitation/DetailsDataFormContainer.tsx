@@ -4,13 +4,13 @@ import styled from '@emotion/styled'
 import {
   Grid,
   Typography,
-  FormLabel,
-  Radio,
   FormControlLabel,
+  FormHelperText,
+  FormControl,
   Checkbox,
   Box,
 } from '@mui/material'
-import { useFormikContext } from 'formik'
+import { Field, useFormikContext } from 'formik'
 
 import { SolicitationFormValues } from './SolicitationFormSchema'
 
@@ -157,18 +157,28 @@ export default function ContactDataFormContainer() {
         </StyledData>
       </Grid>
       <Grid item md={12} xs={12}>
-        <FormLabel>
-          {' '}
-          <Typography variant='subtitle1' style={{ color: 'gray' }}>
-            Confirmo que a solicitação é para um artigo aceito (artigos em
-            revisão não serão analisados) e que as informações enviadas serão
-            analisadas pelo colegiado do PGCOMP com base nas regras de
-            financiamento definidas por esse colegiado e na disponiblidade de
-            recursos financeiros
-          </Typography>
-        </FormLabel>
-        <Box sx={{ display: 'flex', justifyContent: 'end' }}>
-          <FormControlLabel control={<Checkbox />} label='Estou de acordo' />
+        <Typography variant='subtitle1' style={{ color: 'gray' }}>
+          Confirmo que a solicitação é para um artigo aceito (artigos em revisão
+          não serão analisados) e que as informações enviadas serão analisadas
+          pelo colegiado do PGCOMP com base nas regras de financiamento
+          definidas por esse colegiado e na disponiblidade de recursos
+          financeiros
+        </Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'start' }}>
+          <FormControl
+            error={Boolean(touched.aceiteFinal && errors.aceiteFinal)}
+            sx={{ display: 'flex', alignItems: 'start' }}
+          >
+            <Field
+              as={FormControlLabel}
+              control={<Checkbox />}
+              label='Estou de acordo'
+              name='aceiteFinal'
+            />
+            {touched.aceiteFinal && errors.aceiteFinal && (
+              <FormHelperText>{errors.aceiteFinal}</FormHelperText>
+            )}
+          </FormControl>
         </Box>
       </Grid>
     </Grid>

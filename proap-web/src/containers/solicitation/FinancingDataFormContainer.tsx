@@ -90,7 +90,7 @@ export default function ContactDataFormContainer() {
           <Grid item>
             <Field
               as={StyledTextField}
-              label='Nome da agência de formento'
+              label='Nome da agência de fomento'
               name='nomeAgenciaFomento'
               error={Boolean(
                 touched.nomeAgenciaFomento && errors.nomeAgenciaFomento
@@ -105,15 +105,15 @@ export default function ContactDataFormContainer() {
             <Field
               as={TextField}
               label='Valor solicitado'
-              name='valorSolicitadoAgenciaFormento'
+              name='valorSolicitadoAgenciaFomento'
               type='number'
               error={Boolean(
-                touched.valorSolicitadoAgenciaFormento &&
-                  errors.valorSolicitadoAgenciaFormento
+                touched.valorSolicitadoAgenciaFomento &&
+                  errors.valorSolicitadoAgenciaFomento
               )}
               helperText={
-                touched.valorSolicitadoAgenciaFormento &&
-                errors.valorSolicitadoAgenciaFormento
+                touched.valorSolicitadoAgenciaFomento &&
+                errors.valorSolicitadoAgenciaFomento
               }
               required
             />

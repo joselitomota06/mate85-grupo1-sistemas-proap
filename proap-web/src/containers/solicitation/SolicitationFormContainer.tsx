@@ -9,6 +9,7 @@ import EventDataFormContainer from './EventDataFormContainer'
 import { FormikValues } from 'formik'
 
 import {
+  detailsEventDataFormSchema,
   eventDataFormSchema,
   financingDataFormSchema,
   INITIAL_FORM_VALUES,
@@ -38,16 +39,16 @@ export default function SolicitationFormContainer() {
 
   const registerFormSteps: FormStep[] = useMemo(
     () => [
-      // {
-      //   label: 'Solicitante',
-      //   component: SolicitantDataFormContainer,
-      //   schema: solicitantDataFormSchema,
-      // },
-      // {
-      //   label: 'Financiamento',
-      //   component: FinancingDataFormContainer,
-      //   schema: financingDataFormSchema,
-      // },
+      {
+        label: 'Solicitante',
+        component: SolicitantDataFormContainer,
+        schema: solicitantDataFormSchema,
+      },
+      {
+        label: 'Financiamento',
+        component: FinancingDataFormContainer,
+        schema: financingDataFormSchema,
+      },
       {
         label: 'Evento',
         component: EventDataFormContainer,
@@ -56,6 +57,7 @@ export default function SolicitationFormContainer() {
       {
         label: 'Detalhes',
         component: DetailsDataFormContainer,
+        schema: detailsEventDataFormSchema,
       },
     ],
     []
