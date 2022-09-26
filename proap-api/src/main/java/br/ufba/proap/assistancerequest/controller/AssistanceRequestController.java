@@ -19,28 +19,48 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.ufba.proap.assistancerequest.dto.AssistanceRequestDTO;
-import br.ufba.proap.assistancerequest.repository.AssistanteRequestRepository;
+import br.ufba.proap.assistancerequest.service.AssistanceRequestService;
 import br.ufba.proap.authentication.controller.UserController;
+import br.ufba.proap.authentication.domain.User;
+import br.ufba.proap.authentication.service.UserService;
 
 @RestController
 @RequestMapping("assistancerequest")
-
 public class AssistanceRequestController {
 
 	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
 	@Autowired
-	private AssistanteRequestRepository service;
+	private AssistanceRequestService service;
+	
+	@Autowired
+	private UserService serviceUser;
+	
+	
 	
 	@GetMapping("/list")
 	public List<AssistanceRequestDTO> list() {
 		
-		try {
-			return service.findAll();
-		} catch (Exception e) {
-			logger.error(e.getMessage());
+		User currentUser = serviceUser.getLoggedUser();
+		
+		if(currentUser == null) {
 			return Collections.emptyList();
 		}
+		
+		try {
+			if(currentUser.getPerfil().isAdmin()) {
+				return service.findAll();
+			
+			} else {
+				
+				return service.getAssistanteRequestRepository(currentUser);
+				
+			}
+		
+		} catch (Exception e) {
+			return Collections.emptyList();
+		}
+	
 	}
 	
 	@GetMapping("/listById/{id}")

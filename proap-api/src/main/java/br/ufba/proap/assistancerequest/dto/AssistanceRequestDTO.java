@@ -8,20 +8,20 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+
+import br.ufba.proap.authentication.domain.User;
 
 @Entity
 public class AssistanceRequestDTO {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
-
-	@Column(nullable = false)
-	private String email;
 	
-	@Column(nullable = false)
-	private String nomeDoSolicitante;
+	@ManyToOne
+	private User user;
 	
 	@Column(nullable = false)
 	private Boolean aceiteFinal;
@@ -100,20 +100,12 @@ public class AssistanceRequestDTO {
 		this.id = id;
 	}
 	
-	public String getEmail() {
-		return email;
+	public User getUser() {
+		return this.user;
 	}
 	
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	
-	public String getNomeDoSolicitante() {
-		return nomeDoSolicitante;
-	}
-	
-	public void setNomeDoSolicitante(String nomeDoSolicitante) {
-		this.nomeDoSolicitante = nomeDoSolicitante;
+	public void setUser(User user) {
+		this.user = user;
 	}	
 	
 	public Boolean getAceiteFinal() {
