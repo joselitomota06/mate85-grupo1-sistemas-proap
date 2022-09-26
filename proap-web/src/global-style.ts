@@ -125,6 +125,26 @@ const customFieldLabelTheme = createTheme({
         },
       },
     },
+    MuiListItem: {
+      styleOverrides: {
+        root: {
+          color: defaultTheme.palette.grey[700],
+          borderRadius: '.5rem',
+
+          '& .MuiListItemButton-root': {
+            borderRadius: '.5rem',
+            padding: '.25rem 0 .25rem .5rem',
+          },
+          '& .MuiButtonBase-root.active': {
+            color: defaultTheme.palette.primary.main,
+            backgroundColor: '#d6eaff',
+          },
+          '& .MuiListItemText-root': {
+            marginLeft: '.5rem',
+          },
+        },
+      },
+    },
   },
 })
 
