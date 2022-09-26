@@ -39,15 +39,17 @@ public class AssistanceRequestController {
 	
 	@GetMapping("/list")
 	public List<AssistanceRequestDTO> list() {
-		
+		/*
 		User currentUser = serviceUser.getLoggedUser();
 		
 		if(currentUser == null) {
 			return Collections.emptyList();
 		}
+		*/
 		
 		try {
-			if(currentUser.getPerfil().isAdmin()) {
+			/*
+			 if(currentUser.getPerfil().isAdmin()) {
 				return service.findAll();
 			
 			} else {
@@ -55,6 +57,10 @@ public class AssistanceRequestController {
 				return service.getAssistanteRequestRepository(currentUser);
 				
 			}
+			
+			*/
+			
+			return service.findAll();
 		
 		} catch (Exception e) {
 			return Collections.emptyList();
@@ -96,19 +102,27 @@ public class AssistanceRequestController {
 	
 	@DeleteMapping("/remove/{id}")
 	public ResponseEntity<String> remove(@PathVariable Long id) {
-		try {
-			Optional<AssistanceRequestDTO> assistanceReques = service.findById(id);
-
-			if (assistanceReques.isPresent()) {
-				service.delete(assistanceReques.get());
-				return ResponseEntity.ok().body("Successfully removed");
+		
+		User currentUser = serviceUser.getLoggedUser();
+		
+		if(currentUser.getPerfil().isAdmin()) {
+		
+			try {
+				Optional<AssistanceRequestDTO> assistanceReques = service.findById(id);
+	
+				if (assistanceReques.isPresent()) {
+					service.delete(assistanceReques.get());
+					return ResponseEntity.ok().body("Successfully removed");
+				}
+	
+				return ResponseEntity.notFound().build();
+	
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 			}
-
-			return ResponseEntity.notFound().build();
-
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
+		
+		return null;
 	}
 }
