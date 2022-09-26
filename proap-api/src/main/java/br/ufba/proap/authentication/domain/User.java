@@ -16,7 +16,7 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
 @Table(name = "aut_user", schema = "proap", uniqueConstraints = {
-		@UniqueConstraint(name = "login_unique", columnNames = { "login" }),
+		@UniqueConstraint(name = "email_unique", columnNames = { "email" }),
 		@UniqueConstraint(name = "cpf_unique", columnNames = { "cpf" }) })
 public class User implements UserDetails {
 
@@ -34,9 +34,6 @@ public class User implements UserDetails {
 
 	@Column(nullable = false)
 	private String cpf;
-
-	@Column(nullable = false)
-	private String login;
 
 	@Column(nullable = false)
 	private String password;
@@ -71,10 +68,9 @@ public class User implements UserDetails {
 
 	public User() {}
 
-	public User(String name, String email, String login, String password) {
+	public User(String name, String email, String password) {
 		this.name = name;
 		this.email = email;
-		this.login = login;
 		this.password = password;
 	}
 
@@ -106,14 +102,6 @@ public class User implements UserDetails {
 
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
-	}
-
-	public String getLogin() {
-		return login;
-	}
-
-	public void setLogin(String login) {
-		this.login = login;
 	}
 
 	@Override
@@ -152,13 +140,12 @@ public class User implements UserDetails {
 	@Override
 	@JsonIgnore
 	public String getUsername() {
-		return this.login;
+		return this.email;
 	}
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", version=" + version + ", name=" + name + ", email=" + email + ", login=" + login
-				+ ", password=" + password + "]";
+		return "User [id=" + id + ", version=" + version + ", name=" + name + ", email=" + email + ", password=" + password + "]";
 	}
 
 	@Override

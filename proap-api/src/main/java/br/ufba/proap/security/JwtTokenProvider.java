@@ -40,8 +40,8 @@ public class JwtTokenProvider {
 
 		claims.put("id", userPrincipal.getId());
 		claims.put("name", userPrincipal.getName());
-		claims.put("login", userPrincipal.getLogin());
 		claims.put("email", userPrincipal.getEmail());
+		
 		// claims.put("perfis", perfis);
 
 		return Jwts.builder().setSubject(userPrincipal.getName()).setClaims(claims)
@@ -50,9 +50,9 @@ public class JwtTokenProvider {
 				.compact();
 	}
 
-	String getUsernameFromJwt(String token) {
+	String getEmailFromJwt(String token) {
 		Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
-		return String.valueOf(claims.get("login"));
+		return String.valueOf(claims.get("email"));
 	}
 
 	boolean validateToken(String authToken) {

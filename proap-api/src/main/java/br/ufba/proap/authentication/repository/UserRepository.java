@@ -10,8 +10,8 @@ import br.ufba.proap.authentication.domain.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-	@Query("SELECT m FROM User m WHERE m.login = :username")
+	@Query("SELECT m FROM User m WHERE m.name = :username")
 	User findByName(String username);
 
-	Optional<User>findByLogin(String login);
+	Optional<User>findByEmail(String email);
 }
