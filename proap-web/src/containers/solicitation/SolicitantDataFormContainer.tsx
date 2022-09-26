@@ -22,8 +22,8 @@ export default function ContactDataFormContainer() {
         as={StyledTextField}
         label='Nome do solicitante'
         name='nome'
-        error={Boolean(touched.nome && errors.nome)}
-        helperText={touched.nome && errors.nome}
+        error={Boolean(touched.nomeCompleto && errors.nomeCompleto)}
+        helperText={touched.nomeCompleto && errors.nomeCompleto}
         required
       />
       <Field

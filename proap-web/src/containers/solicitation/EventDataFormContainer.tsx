@@ -1,14 +1,10 @@
 import React from 'react'
 
-import {
-  EventDataFormSchema,
-  SolicitationFormValues,
-} from './SolicitationFormSchema'
+import { SolicitationFormValues } from './SolicitationFormSchema'
 import { Field, useFormikContext } from 'formik'
 import {
   Grid,
   TextField,
-  InputLabel,
   FormLabel,
   FormControl,
   FormControlLabel,
@@ -16,26 +12,22 @@ import {
   Link,
   Radio,
 } from '@mui/material'
-import {
-  StyledTextField,
-  StyledDataInput,
-} from './SolicitationFormContainer.style'
-
-import UploadFileIcon from '@mui/icons-material/UploadFile'
+import { StyledTextField } from './SolicitationFormContainer.style'
 
 export default function ContactDataFormContainer() {
   const { errors, touched } = useFormikContext<SolicitationFormValues>()
 
   return (
     <Grid container paddingTop={2} paddingBottom={2}>
-      {/* Primeira Coluna */}
       <Grid container item md={6} xs={12}>
         <Grid container direction='row' spacing={2}>
           <Grid item>
             <Field
               as={TextField}
               label='Data de início'
-              name='initialdate'
+              name='dataInicio'
+              error={Boolean(touched.dataInicio && errors.dataInicio)}
+              helperText={touched.dataInicio && errors.dataInicio}
               required
             />
           </Grid>
@@ -43,7 +35,9 @@ export default function ContactDataFormContainer() {
             <Field
               as={TextField}
               label='Data de termino'
-              name='finishingdate'
+              name='dataFim'
+              error={Boolean(touched.dataFim && errors.dataFim)}
+              helperText={touched.dataFim && errors.dataFim}
               required
             />
           </Grid>
@@ -53,18 +47,36 @@ export default function ContactDataFormContainer() {
           <Field
             as={StyledTextField}
             label='Link homepage'
-            name='homepagelink'
+            name='linkHomepage'
+            error={Boolean(touched.linkHomepage && errors.linkHomepage)}
+            helperText={touched.linkHomepage && errors.linkHomepage}
             required
           />
 
-          <Field as={StyledTextField} label='País' name='country' required />
+          <Field
+            as={StyledTextField}
+            label='País'
+            name='pais'
+            error={Boolean(touched.pais && errors.pais)}
+            helperText={touched.pais && errors.pais}
+            required
+          />
 
-          <Field as={StyledTextField} label='Cidade' name='city' required />
+          <Field
+            as={StyledTextField}
+            label='Cidade'
+            name='cidade'
+            error={Boolean(touched.cidade && errors.cidade)}
+            helperText={touched.cidade && errors.cidade}
+            required
+          />
 
           <Field
             as={StyledTextField}
             label='Valor da inscrição/publicação'
-            name='subscriptionvalue'
+            name='valorInscricao'
+            error={Boolean(touched.valorInscricao && errors.valorInscricao)}
+            helperText={touched.valorInscricao && errors.valorInscricao}
             required
           />
 

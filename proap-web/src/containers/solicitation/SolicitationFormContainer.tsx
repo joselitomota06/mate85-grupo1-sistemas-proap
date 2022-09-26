@@ -9,6 +9,7 @@ import EventDataFormContainer from './EventDataFormContainer'
 import { FormikValues } from 'formik'
 
 import {
+  eventDataFormSchema,
   financingDataFormSchema,
   INITIAL_FORM_VALUES,
   solicitantDataFormSchema,
@@ -50,6 +51,7 @@ export default function SolicitationFormContainer() {
       {
         label: 'Evento',
         component: EventDataFormContainer,
+        schema: eventDataFormSchema,
       },
       {
         label: 'Detalhes',
