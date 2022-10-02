@@ -32,22 +32,12 @@ public class UserController {
 
 	@PostMapping("/create")
 	public ResponseEntity<User> create(@RequestBody User user) {
-		try {
-			return ResponseEntity.ok().body(service.create(user));
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-		}
+		return ResponseEntity.ok().body(service.create(user));
 	}
 
 	@PutMapping("/update")
 	public ResponseEntity<User> update(@RequestBody User user) {
-		try {
-			return ResponseEntity.ok().body(service.update(user));
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-		}
+		return ResponseEntity.ok().body(service.update(user));
 	}
 
 	@GetMapping("/list")

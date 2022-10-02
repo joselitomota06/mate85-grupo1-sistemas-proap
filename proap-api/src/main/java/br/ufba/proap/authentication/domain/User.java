@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,18 +27,23 @@ public class User implements UserDetails {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@NotBlank(message = "Nome é obrigatório")
 	@Column(nullable = false)
 	private String name;
 
+	@NotBlank(message = "E-mail é obrigatório")
 	@Column(nullable = false)
 	private String email;
 
+	@NotBlank(message = "CPF é obrigatório")
 	@Column(nullable = false)
 	private String cpf;
 
+	@NotBlank(message = "Senha é obrigatória")
 	@Column(nullable = false)
 	private String password;
 
+	// TODO : Remover prop registration
 	@Column(nullable = false)
 	private String registration;
 
