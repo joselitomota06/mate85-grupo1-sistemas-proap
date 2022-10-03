@@ -4,6 +4,24 @@
 
 [1. Aplicação PROAP Produção](https://proap-ufba.netlify.app/)
 
+[2. Documento de visão e Requisitos](https://docs.google.com/document/d/1m9wSqd6X_1-cIYyQlSkXVTLkZj8PFWPeTRYjBZ5t95s/edit?usp=sharing)
+
+[3. Prototipação do Sistema](https://www.figma.com/proto/nQ0GpxrbdcIztxa0ZLD0EM/Proap?page-id=0%3A1&node-id=290%3A1000&viewport=1302%2C684%2C0.23&scaling=min-zoom)
+
+[4. Diagrama do sistema e suas entidades](https://lucid.app/lucidchart/5cbcb706-400f-424b-b785-d208385853b4/edit?viewport_loc=-172%2C-270%2C1910%2C1554%2C0_0&invitationId=inv_daec2f49-66e4-4959-bf80-d3cdc1f55ec2#)
+
+[5. Link para documentação da API](https://proap-api.herokuapp.com/proap-api/swagger-ui.html#/)
+
+[6. Arquitetura do Sistema (LucidChart APP)](https://lucid.app/lucidchart/9e336cb5-476b-4b6b-8d8e-bcbee53be0ab/edit?viewport_loc=-122%2C89%2C2644%2C1332%2CmXwzAnnOLpm1&invitationId=inv_10c0940b-489c-4fdc-a77a-a7173932755a#)
+
+[7. Arquitetura do Sistema em PDF](https://drive.google.com/file/d/1AvlhRFKUu8rSzCmouFG8u_YqGIyDIi6V/view?usp=sharing)
+
+[8. Apresentação da Arquitetura do Sistema (Google Presentations) ](https://docs.google.com/presentation/d/1rCWHSiNIVMi2uF6oHXvBIwXVCX2Too7507bGWWanKEg/edit?usp=sharing)
+
+[(Novo!) 9. Apresentação da Proposta de testes (Google Presentations) ](https://docs.google.com/presentation/d/1YG3kOrOG42Dwau_zdIOeLCRMOD-lBFp8cvYUFTiBOwQ/edit?usp=sharing)
+
+[(Novo!) 10. Documento de casos de testes ](https://docs.google.com/document/d/1YWfuetyzL69glq9oR3SIV29IY8PG3ArdnG8PBTJkpfc/edit?usp=sharing)
+
 O sistema para apoio ao **PROAP - Programa de Apoio à Pós-Graduação** está inserido em um dos sistemas utilizados pelo **Instituto de Computação da Universidade Federal da Bahia** para auxiliar estudantes, professores e funcionários que atuam na gerência de recursos oriundos da Pós-Graduação. A solicitação deste sistema foi realizada com o intuito de organizar, automatizar e gerar celeridade nos processos de cadastros, solicitações e acompanhamento de recursos voltados para publicações em eventos ou periódicos do programa de Pós-graduação do instituto.
 
 ## Descrição do cenário
@@ -50,24 +68,6 @@ Este sistema segue a metodologia ágil para gestão e planejamento de projetos d
 -   Deve possuir tela para acompanhamento de processo.
     
 -   Deve ser um sistema web hospedado em nuvem.
-
-## Documentos
-
-[1. Aplicação PROAP Produção](https://proap-ufba.netlify.app/)
-
-[2. Documento de visão e Requisitos](https://docs.google.com/document/d/1m9wSqd6X_1-cIYyQlSkXVTLkZj8PFWPeTRYjBZ5t95s/edit?usp=sharing)
-
-[3. Prototipação do Sistema](https://www.figma.com/proto/nQ0GpxrbdcIztxa0ZLD0EM/Proap?page-id=0%3A1&node-id=290%3A1000&viewport=1302%2C684%2C0.23&scaling=min-zoom)
-
-[4. Diagrama do sistema e suas entidades](https://lucid.app/lucidchart/5cbcb706-400f-424b-b785-d208385853b4/edit?viewport_loc=-172%2C-270%2C1910%2C1554%2C0_0&invitationId=inv_daec2f49-66e4-4959-bf80-d3cdc1f55ec2#)
-
-[5. Link para documentação da API](https://proap-api.herokuapp.com/proap-api/swagger-ui.html#/)
-
-[6. Arquitetura do Sistema (LucidChart APP)](https://lucid.app/lucidchart/9e336cb5-476b-4b6b-8d8e-bcbee53be0ab/edit?viewport_loc=-122%2C89%2C2644%2C1332%2CmXwzAnnOLpm1&invitationId=inv_10c0940b-489c-4fdc-a77a-a7173932755a#)
-
-[(Novo!) 7. Arquitetura do Sistema em PDF](https://drive.google.com/file/d/1AvlhRFKUu8rSzCmouFG8u_YqGIyDIi6V/view?usp=sharing)
-
-[(Novo!) 8. Apresentação da Arquitetura do Sistema (Google Presentations) ](https://docs.google.com/presentation/d/1rCWHSiNIVMi2uF6oHXvBIwXVCX2Too7507bGWWanKEg/edit?usp=sharing)
 
 # Infraestrutura Tecnológica
 
