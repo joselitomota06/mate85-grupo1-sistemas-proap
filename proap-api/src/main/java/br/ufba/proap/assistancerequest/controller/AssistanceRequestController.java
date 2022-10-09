@@ -39,26 +39,14 @@ public class AssistanceRequestController {
 	
 	@GetMapping("/list")
 	public List<AssistanceRequestDTO> list() {
-		/*
+		
 		User currentUser = serviceUser.getLoggedUser();
 		
 		if(currentUser == null) {
 			return Collections.emptyList();
 		}
-		*/
 		
 		try {
-			/*
-			 if(currentUser.getPerfil().isAdmin()) {
-				return service.findAll();
-			
-			} else {
-				
-				return service.getAssistanteRequestRepository(currentUser);
-				
-			}
-			
-			*/
 			
 			return service.findAll();
 		
