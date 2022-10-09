@@ -22,17 +22,23 @@ import StepperForm, {
 import { Typography } from '@mui/material'
 
 import { useAppDispatch } from '../../store'
+import { dateToLocalDate } from '../../helpers/conversion'
 
 export default function SolicitationFormContainer() {
   const dispatch = useAppDispatch()
 
   const handleSubmitSolicitation = useCallback(
     (values: FormikValues) => {
-      return dispatch(
-        submitSolicitation(values as SolicitationFormValues)
-      ).catch(({ response: { status } }) => {
-        console.log(status)
-      })
+      const valuesWithCorrectDates: SolicitationFormValues = {
+        ...(values as SolicitationFormValues),
+        dataInicio: dateToLocalDate(new Date(values.dataInicio)),
+        dataFim: dateToLocalDate(new Date(values.dataFim)),
+      }
+      return dispatch(submitSolicitation(valuesWithCorrectDates)).catch(
+        ({ response: { status } }) => {
+          console.log(status)
+        }
+      )
     },
     [dispatch]
   )

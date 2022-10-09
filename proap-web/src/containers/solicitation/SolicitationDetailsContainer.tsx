@@ -4,7 +4,7 @@ import { Grid, Typography } from '@mui/material'
 import styled from '@emotion/styled'
 
 import { Solicitation } from './SolicitationFormSchema'
-import { booleanToYesOrNo } from '../../helpers/validation/conversion'
+import { booleanToYesOrNo } from '../../helpers/conversion'
 
 interface SolicitationDetailsContainerProps {
   solicitation: Solicitation
@@ -17,7 +17,6 @@ const StyledData = styled.div`
 export default function SolicitationDetailsContainer({
   solicitation,
 }: SolicitationDetailsContainerProps) {
-  console.log(solicitation)
   return (
     <>
       <Grid item md={3} xs={12}>
