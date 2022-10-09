@@ -28,6 +28,7 @@ export default function ContactDataFormContainer() {
               name='dataInicio'
               error={Boolean(touched.dataInicio && errors.dataInicio)}
               helperText={touched.dataInicio && errors.dataInicio}
+              type='date'
               required
             />
           </Grid>
@@ -38,6 +39,7 @@ export default function ContactDataFormContainer() {
               name='dataFim'
               error={Boolean(touched.dataFim && errors.dataFim)}
               helperText={touched.dataFim && errors.dataFim}
+              type='date'
               required
             />
           </Grid>
