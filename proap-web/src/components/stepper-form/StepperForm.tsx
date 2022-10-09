@@ -61,6 +61,7 @@ export default function StepperForm(props: StepperFormProps<FormikValues>) {
       else {
         setActiveStep(Math.min(activeStep + 1, steps.length))
         helpers.setSubmitting(false)
+        helpers.setTouched({})
       }
     },
     [isLastStep, activeStep, onSubmit]
