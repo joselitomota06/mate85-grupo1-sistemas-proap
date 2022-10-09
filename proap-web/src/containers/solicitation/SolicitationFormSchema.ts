@@ -46,6 +46,7 @@ export const eventDataFormSchema = Yup.object({
     .required('Campo obrigatório')
     .min(1, 'Insira um valor válido'),
   cartaAceite: Yup.string().required('Campo obrigatório'),
+  qualis: Yup.string().required('Campo obrigatório'),
 })
 
 export const detailsEventDataFormSchema = Yup.object({
@@ -55,7 +56,7 @@ export const detailsEventDataFormSchema = Yup.object({
     .isTrue('É necessário aceitar os termos para continuar'),
 })
 
-export interface SolicitationFormValues {
+export interface Solicitation {
   email: string
   nomeCompleto: string
   titulo: string
@@ -75,9 +76,13 @@ export interface SolicitationFormValues {
   cidade: string
   valorInscricao: number | undefined
   cartaAceite: string
+  qualis: string
 
-  aceiteFinal: boolean | undefined
   comprovantePagamento: string
+}
+
+export interface SolicitationFormValues extends Solicitation {
+  aceiteFinal: boolean | undefined
 }
 
 export const INITIAL_FORM_VALUES: SolicitationFormValues = {
@@ -101,6 +106,7 @@ export const INITIAL_FORM_VALUES: SolicitationFormValues = {
   valorInscricao: undefined,
   comprovantePagamento: '',
   cartaAceite: '',
+  qualis: '',
 
   aceiteFinal: false,
 }

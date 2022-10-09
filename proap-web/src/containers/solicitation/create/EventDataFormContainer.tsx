@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { SolicitationFormValues } from './SolicitationFormSchema'
+import { SolicitationFormValues } from '../SolicitationFormSchema'
 import { Field, useFormikContext } from 'formik'
 import {
   Grid,
@@ -11,8 +11,9 @@ import {
   RadioGroup,
   Link,
   Radio,
+  FormHelperText,
 } from '@mui/material'
-import { StyledTextField } from './SolicitationFormContainer.style'
+import { StyledTextField } from '../SolicitationFormContainer.style'
 
 export default function ContactDataFormContainer() {
   const { errors, touched } = useFormikContext<SolicitationFormValues>()
@@ -94,35 +95,33 @@ export default function ContactDataFormContainer() {
         </Grid>
       </Grid>
 
-      <Grid container item md={6} xs={12}>
-        <FormControl>
-          <FormLabel required>Informe o Qualis do seu evento</FormLabel>
-          <RadioGroup>
-            <Grid container>
-              <Grid item container direction='row'>
-                <FormControlLabel value='A1' control={<Radio />} label='A1' />
-                <FormControlLabel value='A2' control={<Radio />} label='A2' />
-                <FormControlLabel value='A3' control={<Radio />} label='A3' />
-                <FormControlLabel value='A4' control={<Radio />} label='A4' />
-              </Grid>
-              <Grid item container direction='row'>
-                <FormControlLabel value='B1' control={<Radio />} label='B1' />
-                <FormControlLabel value='B2' control={<Radio />} label='B2' />
-                <FormControlLabel value='B3' control={<Radio />} label='B3' />
-                <FormControlLabel value='B4' control={<Radio />} label='B4' />
-                <FormControlLabel
-                  value='outro'
-                  control={<Radio />}
-                  label='Outro'
-                />
-              </Grid>
+      <FormControl error={Boolean(touched.qualis && errors.qualis)}>
+        <FormLabel required>Informe o Qualis do seu evento</FormLabel>
+        <Field as={RadioGroup} name='qualis' row>
+          <Grid container>
+            <Grid item container direction='row'>
+              <FormControlLabel value='A1' control={<Radio />} label='A1' />
+              <FormControlLabel value='A2' control={<Radio />} label='A2' />
+              <FormControlLabel value='A3' control={<Radio />} label='A3' />
+              <FormControlLabel value='A4' control={<Radio />} label='A4' />
             </Grid>
-          </RadioGroup>
-          <Link style={{ color: 'royalblue' }} href='#' underline='none'>
-            {`Visualiza Qualis atualizado`}
-          </Link>
-        </FormControl>
-      </Grid>
+            <Grid item container direction='row'>
+              <FormControlLabel value='B1' control={<Radio />} label='B1' />
+              <FormControlLabel value='B2' control={<Radio />} label='B2' />
+              <FormControlLabel value='B3' control={<Radio />} label='B3' />
+              <FormControlLabel value='B4' control={<Radio />} label='B4' />
+              <FormControlLabel
+                value='outro'
+                control={<Radio />}
+                label='Outro'
+              />
+            </Grid>
+          </Grid>
+        </Field>
+        {touched.qualis && errors.qualis && (
+          <FormHelperText>{errors.qualis}</FormHelperText>
+        )}
+      </FormControl>
     </Grid>
   )
 }

@@ -12,14 +12,11 @@ import {
 } from '@mui/material'
 import { Field, useFormikContext } from 'formik'
 
-import { SolicitationFormValues } from './SolicitationFormSchema'
+import { SolicitationFormValues } from '../SolicitationFormSchema'
+import SolicitationDetailsContainer from '../SolicitationDetailsContainer'
 
-export default function ContactDataFormContainer() {
-  const { errors, touched } = useFormikContext<SolicitationFormValues>()
-
-  const StyledData = styled.div`
-    padding: 0.2rem;
-  `
+export default function DetailsDataFormContainer() {
+  const { values, errors, touched } = useFormikContext<SolicitationFormValues>()
 
   return (
     <Grid
@@ -29,8 +26,9 @@ export default function ContactDataFormContainer() {
       paddingBottom={2}
       justifyContent='space-between'
     >
+      <SolicitationDetailsContainer solicitation={values} />
       {/* Primeira Coluna - Email ... */}
-      <Grid item md={3} xs={12}>
+      {/* <Grid item md={3} xs={12}>
         <StyledData>
           <Typography>Email</Typography>
           <Typography style={{ color: 'gray' }} variant='subtitle2'>
@@ -72,9 +70,9 @@ export default function ContactDataFormContainer() {
             Lorem Ipson
           </Typography>
         </StyledData>
-      </Grid>
+      </Grid> */}
       {/* Segunda Coluna - Solicitou ... */}
-      <Grid item md={3} xs={12}>
+      {/* <Grid item md={3} xs={12}>
         <StyledData>
           <Typography>
             Solicitou apoia para esse artigo em outro programa de pós-graduação
@@ -94,9 +92,9 @@ export default function ContactDataFormContainer() {
             Não
           </Typography>
         </StyledData>
-      </Grid>
+      </Grid> */}
       {/* Terceira Coluna Datas ... */}
-      <Grid item md={3} xs={12}>
+      {/* <Grid item md={3} xs={12}>
         <StyledData>
           <Typography>
             Data de início<span style={{ color: 'red' }}>*</span>
@@ -155,7 +153,7 @@ export default function ContactDataFormContainer() {
             A1
           </Typography>
         </StyledData>
-      </Grid>
+      </Grid> */}
       <Grid item md={12} xs={12}>
         <Typography variant='subtitle1' style={{ color: 'gray' }}>
           Confirmo que a solicitação é para um artigo aceito (artigos em revisão

@@ -1,10 +1,10 @@
 import { useCallback, useMemo } from 'react'
 
 import { submitSolicitation } from '../../services/solicitationService'
-import SolicitantDataFormContainer from './SolicitantDataFormContainer'
-import FinancingDataFormContainer from './FinancingDataFormContainer'
-import DetailsDataFormContainer from './DetailsDataFormContainer'
-import EventDataFormContainer from './EventDataFormContainer'
+import SolicitantDataFormContainer from './create/SolicitantDataFormContainer'
+import FinancingDataFormContainer from './create/FinancingDataFormContainer'
+import DetailsDataFormContainer from './create/DetailsDataFormContainer'
+import EventDataFormContainer from './create/EventDataFormContainer'
 
 import { FormikValues } from 'formik'
 

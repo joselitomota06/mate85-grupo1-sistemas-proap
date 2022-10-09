@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { SolicitationFormValues } from './SolicitationFormSchema'
+import { SolicitationFormValues } from '../SolicitationFormSchema'
 import { Field, useFormikContext } from 'formik'
 import {
   Grid,
@@ -16,7 +16,7 @@ import {
 import {
   StyledTextField,
   StyledDataInput,
-} from './SolicitationFormContainer.style'
+} from '../SolicitationFormContainer.style'
 import UploadFileIcon from '@mui/icons-material/UploadFile'
 
 export default function ContactDataFormContainer() {
