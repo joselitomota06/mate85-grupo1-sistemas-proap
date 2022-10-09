@@ -25,10 +25,8 @@ public class AssistanceRequestDTO {
 	@ManyToOne
 	private User user;
 	
-	@Column(nullable = false)
 	private Boolean aceiteFinal;
 	
-	@Column(nullable = false)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
 	private LocalDateTime dataInicio;
 	
@@ -36,7 +34,6 @@ public class AssistanceRequestDTO {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
 	private LocalDateTime dataFim;
 	
-	@Column(nullable = false)
 	private String linkHomepage;
 	
 	@Column(nullable = false)
@@ -45,37 +42,26 @@ public class AssistanceRequestDTO {
 	@Column(nullable = false)
 	private String cidade;
 	
-	@Column(nullable = false)
 	private Float valorInscricao;
 	
-	@Column(nullable = false)
 	private String cartaAceite;
 	
-	@Column(nullable = false)
 	private Boolean solicitacaoApoio;
 	
-	@Column(nullable = false)
 	private Float valorSolicitado;
 	
-	@Column(nullable = false)
 	private String comprovantePagamento;
 	
-	@Column(nullable = false)
 	private Boolean solicitacaoAuxilioOutrasFontes;
 	
-	@Column(nullable = false)
 	private String nomeAgenciaFomento;
 	
-	@Column(nullable = false)
 	private String valorSolicitadoAgenciaFormento;
 	
-	@Column(nullable = false)
 	private String nomeCompleto;
 	
-	@Column(nullable = false)
 	private String doi;
 	
-	@Column(nullable = false)
 	private String autores;
 	
 	

@@ -93,24 +93,24 @@ public class AssistanceRequestController {
 		
 		User currentUser = serviceUser.getLoggedUser();
 		
-		if(currentUser.getPerfil().isAdmin()) {
-		
-			try {
-				Optional<AssistanceRequestDTO> assistanceReques = service.findById(id);
-	
-				if (assistanceReques.isPresent()) {
-					service.delete(assistanceReques.get());
-					return ResponseEntity.ok().body("Successfully removed");
-				}
-	
-				return ResponseEntity.notFound().build();
-	
-			} catch (Exception e) {
-				logger.error(e.getMessage());
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-			}
+		if(currentUser == null) {
+			return (ResponseEntity<String>) Collections.emptyList();
 		}
 		
-		return null;
+		
+		try {
+			Optional<AssistanceRequestDTO> assistanceReques = service.findById(id);
+	
+			if (assistanceReques.isPresent()) {
+				service.delete(assistanceReques.get());
+				return ResponseEntity.ok().body("Successfully removed");
+			}
+	
+			return ResponseEntity.notFound().build();
+	
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		}
 	}
 }
