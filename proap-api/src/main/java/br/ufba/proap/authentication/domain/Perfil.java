@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "aut_perfil", schema = "proap")
@@ -24,6 +25,7 @@ public class Perfil implements Serializable {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "perfil")
 	private List<Permission> permissions;
 
+	@JsonManagedReference
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "perfil")
 	private List<User> users;
 
