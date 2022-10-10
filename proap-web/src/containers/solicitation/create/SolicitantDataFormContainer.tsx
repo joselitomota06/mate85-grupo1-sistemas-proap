@@ -1,9 +1,9 @@
 import React from 'react'
 
-import { SolicitationFormValues } from './SolicitationFormSchema'
+import { SolicitationFormValues } from '../SolicitationFormSchema'
 import { Field, useFormikContext } from 'formik'
 import { Grid, TextField } from '@mui/material'
-import { StyledTextField } from './SolicitationFormContainer.style'
+import { StyledTextField } from '../SolicitationFormContainer.style'
 
 export default function ContactDataFormContainer() {
   const { errors, touched } = useFormikContext<SolicitationFormValues>()

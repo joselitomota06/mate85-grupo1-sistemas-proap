@@ -12,17 +12,27 @@ export const solicitantDataFormSchema = Yup.object({
 
 export const financingDataFormSchema = Yup.object({
   solicitacaoApoio: Yup.boolean().nullable().required('Campo obrigatório'),
-  valorSolicitado: Yup.number()
-    .nullable()
-    .required('Campo obrigatório')
-    .min(1, 'Insira um valor válido'),
+  valorSolicitado: Yup.number().when('solicitacaoApoio', {
+    is: 'true',
+    then: (schema) => schema.required('Campo obrigatório'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
   solicitacaoAuxilioOutrasFontes: Yup.boolean()
     .nullable()
     .required('Campo obrigatório'),
-  nomeAgenciaFomento: Yup.string().required('Campo obrigatório'),
-  valorSolicitadoAgenciaFomento: Yup.number()
-    .required('Campo obrigatório')
-    .min(1, 'Insira um valor válido'),
+  nomeAgenciaFomento: Yup.string().when('solicitacaoAuxilioOutrasFontes', {
+    is: true,
+    then: (schema) => schema.required('Campo obrigatório'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  valorSolicitadoAgenciaFomento: Yup.number().when(
+    'solicitacaoAuxilioOutrasFontes',
+    {
+      is: true,
+      then: (schema) => schema.required('Campo obrigatório'),
+      otherwise: (schema) => schema.notRequired(),
+    }
+  ),
 })
 
 export const eventDataFormSchema = Yup.object({
@@ -36,6 +46,7 @@ export const eventDataFormSchema = Yup.object({
     .required('Campo obrigatório')
     .min(1, 'Insira um valor válido'),
   cartaAceite: Yup.string().required('Campo obrigatório'),
+  qualis: Yup.string().required('Campo obrigatório'),
 })
 
 export const detailsEventDataFormSchema = Yup.object({
@@ -45,16 +56,16 @@ export const detailsEventDataFormSchema = Yup.object({
     .isTrue('É necessário aceitar os termos para continuar'),
 })
 
-export interface SolicitationFormValues {
+export interface Solicitation {
   email: string
   nomeCompleto: string
   titulo: string
   doi: string
   autores: string
 
-  solicitacaoApoio: boolean | null
+  solicitacaoApoio: string | undefined
   valorSolicitado: number | string
-  solicitacaoAuxilioOutrasFontes: boolean | null
+  solicitacaoAuxilioOutrasFontes: string | undefined
   nomeAgenciaFomento: string
   valorSolicitadoAgenciaFomento: number | string
 
@@ -63,11 +74,15 @@ export interface SolicitationFormValues {
   linkHomepage: string
   pais: string
   cidade: string
-  valorInscricao: number | null
+  valorInscricao: number | undefined
   cartaAceite: string
+  qualis: string
 
-  aceiteFinal: boolean | null
   comprovantePagamento: string
+}
+
+export interface SolicitationFormValues extends Solicitation {
+  aceiteFinal: boolean | undefined
 }
 
 export const INITIAL_FORM_VALUES: SolicitationFormValues = {
@@ -77,9 +92,9 @@ export const INITIAL_FORM_VALUES: SolicitationFormValues = {
   doi: '',
   autores: '',
 
-  solicitacaoApoio: null,
+  solicitacaoApoio: '',
   valorSolicitado: '',
-  solicitacaoAuxilioOutrasFontes: null,
+  solicitacaoAuxilioOutrasFontes: '',
   nomeAgenciaFomento: '',
   valorSolicitadoAgenciaFomento: '',
 
@@ -88,9 +103,10 @@ export const INITIAL_FORM_VALUES: SolicitationFormValues = {
   linkHomepage: '',
   pais: '',
   cidade: '',
-  valorInscricao: null,
+  valorInscricao: undefined,
   comprovantePagamento: '',
   cartaAceite: '',
+  qualis: '',
 
-  aceiteFinal: null,
+  aceiteFinal: false,
 }

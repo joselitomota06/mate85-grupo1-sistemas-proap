@@ -61,6 +61,7 @@ export default function StepperForm(props: StepperFormProps<FormikValues>) {
       else {
         setActiveStep(Math.min(activeStep + 1, steps.length))
         helpers.setSubmitting(false)
+        helpers.setTouched({})
       }
     },
     [isLastStep, activeStep, onSubmit]
@@ -82,11 +83,12 @@ export default function StepperForm(props: StepperFormProps<FormikValues>) {
       >
         {({ isSubmitting }) => (
           <Form id='stepper-form' noValidate>
-            {steps.map(({ component: FormComponent }, index) => (
-              <div key={`form-wrapper-${index}`} hidden={index !== activeStep}>
-                <FormComponent />
-              </div>
-            ))}
+            {steps.map(
+              ({ component: FormComponent }, index) =>
+                index === activeStep && (
+                  <FormComponent key={`form-wrapper-${index}`} />
+                )
+            )}
             <Grid
               container
               justifyContent={activeStep === 0 ? 'end' : 'space-between'}

@@ -1,10 +1,10 @@
 import { useCallback, useMemo } from 'react'
 
 import { submitSolicitation } from '../../services/solicitationService'
-import SolicitantDataFormContainer from './SolicitantDataFormContainer'
-import FinancingDataFormContainer from './FinancingDataFormContainer'
-import DetailsDataFormContainer from './DetailsDataFormContainer'
-import EventDataFormContainer from './EventDataFormContainer'
+import SolicitantDataFormContainer from './create/SolicitantDataFormContainer'
+import FinancingDataFormContainer from './create/FinancingDataFormContainer'
+import DetailsDataFormContainer from './create/DetailsDataFormContainer'
+import EventDataFormContainer from './create/EventDataFormContainer'
 
 import { FormikValues } from 'formik'
 
@@ -22,17 +22,23 @@ import StepperForm, {
 import { Typography } from '@mui/material'
 
 import { useAppDispatch } from '../../store'
+import { dateToLocalDate } from '../../helpers/conversion'
 
 export default function SolicitationFormContainer() {
   const dispatch = useAppDispatch()
 
   const handleSubmitSolicitation = useCallback(
     (values: FormikValues) => {
-      return dispatch(
-        submitSolicitation(values as SolicitationFormValues)
-      ).catch(({ response: { status } }) => {
-        console.log(status)
-      })
+      const valuesWithCorrectDates: SolicitationFormValues = {
+        ...(values as SolicitationFormValues),
+        dataInicio: dateToLocalDate(new Date(values.dataInicio)),
+        dataFim: dateToLocalDate(new Date(values.dataFim)),
+      }
+      return dispatch(submitSolicitation(valuesWithCorrectDates)).catch(
+        ({ response: { status } }) => {
+          console.log(status)
+        }
+      )
     },
     [dispatch]
   )

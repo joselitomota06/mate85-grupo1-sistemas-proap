@@ -1,9 +1,8 @@
 import { CircularProgress, Grid, TextField } from '@mui/material'
 import { Field, Form, Formik, FormikHelpers } from 'formik'
 import { useCallback } from 'react'
-import { Link } from 'react-router-dom'
-
-import { signIn } from '../../services/authService'
+import { Link, useNavigate } from 'react-router-dom'
+import { recoverPassword } from '../../services/recoverPasswordService'
 import { useAppDispatch } from '../../store'
 import {
   RecoverPasswordButton,
@@ -11,7 +10,6 @@ import {
   PasswordRecoveryTypography,
   RecoverPasswordLinkTypography,
 } from './RecoverPasswordContainer.style'
-
 import {
   INITIAL_FORM_VALUES,
   recoverPasswordFormSchema,
@@ -20,12 +18,17 @@ import {
 
 export default function RecoverPasswordFormContainer() {
   const dispatch = useAppDispatch()
+  const navigate = useNavigate()
 
   const handleSubmit = useCallback(
     (
       values: RecoverPasswordFormValues,
       actions: FormikHelpers<RecoverPasswordFormValues>
-    ) => {},
+    ) => {
+      return dispatch(recoverPassword(values)).then(() =>
+        navigate('/')
+      )
+    },
     [dispatch]
   )
 
@@ -33,17 +36,49 @@ export default function RecoverPasswordFormContainer() {
     <Formik
       initialValues={INITIAL_FORM_VALUES}
       validationSchema={recoverPasswordFormSchema}
-      validateOnChange={false}
+      validateOnChange={true}
       onSubmit={handleSubmit}
     >
       {({ errors, touched, isSubmitting }) => (
         <Form>
           <Grid container direction='column' paddingTop={2} paddingBottom={2}>
             <RecoverPasswordLinkTypography>
-              Para recuperar seu acesso, preencha o campo com o seu e-mail de
-              cadastro.
+              Para recuperar seu acesso, preencha o e-mail e o CPF informados no cadastrados.
             </RecoverPasswordLinkTypography>
-            <Field as={TextField} label='E-mail' name='email' />
+            <Field
+              as={TextField}
+              label='E-mail'
+              name='email'
+              error={Boolean(touched.email && errors.email)}
+              helperText={touched.email && errors.email}
+              required
+            />
+            <Field
+              as={TextField}
+              label='CPF'
+              name='cpf'
+              error={Boolean(touched.cpf && errors.cpf)}
+              helperText={touched.cpf && errors.cpf}
+              required
+            />
+            <Field
+              as={TextField}
+              label='Nova senha'
+              name='password'
+              type='password'
+              error={Boolean(touched.password && errors.password)}
+              helperText={touched.password && errors.password}
+              required
+            />
+            <Field
+              as={TextField}
+              label='Confirmar senha'
+              name='confirmPassword'
+              type='password'
+              error={Boolean(touched.confirmPassword && errors.confirmPassword)}
+              helperText={touched.confirmPassword && errors.confirmPassword}
+              required
+            />
           </Grid>
           <RecoverPasswordButton
             variant='contained'

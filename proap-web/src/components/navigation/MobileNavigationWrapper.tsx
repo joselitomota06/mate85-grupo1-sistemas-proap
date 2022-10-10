@@ -92,7 +92,7 @@ export const MobileNavigationWrapper = ({
           open={isDrawerOpen}
           onClose={handleDrawerClose}
           PaperProps={{
-            sx: { width: '60%' },
+            sx: { width: '60%', maxWidth: '300px' },
           }}
         >
           <List>

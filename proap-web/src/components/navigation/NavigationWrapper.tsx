@@ -4,7 +4,6 @@ import { useMediaQuery, useTheme } from '@mui/material'
 import HomeIcon from '@mui/icons-material/Home'
 
 import MobileNavigationWrapper from './MobileNavigationWrapper'
-import DesktopNavigationWrapper from './DesktopNavigationWrapper'
 
 export interface NavigationItem {
   label: string
@@ -25,17 +24,9 @@ export const NavigationWrapper = ({ children }: PropsWithChildren) => {
   ]
 
   return (
-    <>
-      {isMobile ? (
-        <MobileNavigationWrapper items={navigationItems}>
-          {children}
-        </MobileNavigationWrapper>
-      ) : (
-        <DesktopNavigationWrapper items={navigationItems}>
-          {children}
-        </DesktopNavigationWrapper>
-      )}
-    </>
+    <MobileNavigationWrapper items={navigationItems}>
+      {children}
+    </MobileNavigationWrapper>
   )
 }
 

@@ -1,40 +1,29 @@
 import React from 'react'
+
+import { Grid, Typography } from '@mui/material'
 import styled from '@emotion/styled'
 
-import {
-  Grid,
-  Typography,
-  FormControlLabel,
-  FormHelperText,
-  FormControl,
-  Checkbox,
-  Box,
-} from '@mui/material'
-import { Field, useFormikContext } from 'formik'
+import { Solicitation } from './SolicitationFormSchema'
+import { booleanToYesOrNo } from '../../helpers/conversion'
 
-import { SolicitationFormValues } from './SolicitationFormSchema'
+interface SolicitationDetailsContainerProps {
+  solicitation: Solicitation
+}
 
-export default function ContactDataFormContainer() {
-  const { errors, touched } = useFormikContext<SolicitationFormValues>()
+const StyledData = styled.div`
+  padding: 0.2rem;
+`
 
-  const StyledData = styled.div`
-    padding: 0.2rem;
-  `
-
+export default function SolicitationDetailsContainer({
+  solicitation,
+}: SolicitationDetailsContainerProps) {
   return (
-    <Grid
-      container
-      direction='row'
-      paddingTop={2}
-      paddingBottom={2}
-      justifyContent='space-between'
-    >
-      {/* Primeira Coluna - Email ... */}
+    <>
       <Grid item md={3} xs={12}>
         <StyledData>
           <Typography>Email</Typography>
           <Typography style={{ color: 'gray' }} variant='subtitle2'>
-            contato@ufba.br
+            {solicitation.email}
           </Typography>
         </StyledData>
 
@@ -43,7 +32,7 @@ export default function ContactDataFormContainer() {
             Nome do solicitante<span style={{ color: 'red' }}>*</span>
           </Typography>
           <Typography style={{ color: 'gray' }} variant='subtitle2'>
-            Lorem
+            {solicitation.nomeCompleto}
           </Typography>
         </StyledData>
 
@@ -53,14 +42,14 @@ export default function ContactDataFormContainer() {
             <span style={{ color: 'red' }}>*</span>
           </Typography>
           <Typography style={{ color: 'gray' }} variant='subtitle2'>
-            Título
+            {solicitation.titulo}
           </Typography>
         </StyledData>
 
         <StyledData>
           <Typography>DOI (se disponível)</Typography>
           <Typography style={{ color: 'gray' }} variant='subtitle2'>
-            Lorem Ipson
+            {solicitation.doi}
           </Typography>
         </StyledData>
         <StyledData>
@@ -69,7 +58,7 @@ export default function ContactDataFormContainer() {
             <span style={{ color: 'red' }}>*</span>
           </Typography>
           <Typography style={{ color: 'gray' }} variant='subtitle2'>
-            Lorem Ipson
+            {solicitation.autores}
           </Typography>
         </StyledData>
       </Grid>
@@ -81,7 +70,7 @@ export default function ContactDataFormContainer() {
             <span style={{ color: 'red' }}>*</span>
           </Typography>
           <Typography style={{ color: 'gray' }} variant='subtitle2'>
-            Não
+            {booleanToYesOrNo(Boolean(solicitation.solicitacaoApoio))}
           </Typography>
         </StyledData>
 
@@ -91,7 +80,9 @@ export default function ContactDataFormContainer() {
             financiamento?<span style={{ color: 'red' }}>*</span>
           </Typography>
           <Typography style={{ color: 'gray' }} variant='subtitle2'>
-            Não
+            {booleanToYesOrNo(
+              Boolean(solicitation.solicitacaoAuxilioOutrasFontes)
+            )}
           </Typography>
         </StyledData>
       </Grid>
@@ -102,7 +93,7 @@ export default function ContactDataFormContainer() {
             Data de início<span style={{ color: 'red' }}>*</span>
           </Typography>
           <Typography style={{ color: 'gray' }} variant='subtitle2'>
-            08/09/22
+            {solicitation.dataInicio}
           </Typography>
         </StyledData>
         <StyledData>
@@ -110,7 +101,7 @@ export default function ContactDataFormContainer() {
             Data de término<span style={{ color: 'red' }}>*</span>
           </Typography>
           <Typography style={{ color: 'gray' }} variant='subtitle2'>
-            12/12/22
+            {solicitation.dataFim}
           </Typography>
         </StyledData>
         <StyledData>
@@ -118,7 +109,7 @@ export default function ContactDataFormContainer() {
             Link homepage<span style={{ color: 'red' }}>*</span>
           </Typography>
           <Typography style={{ color: 'gray' }} variant='subtitle2'>
-            Link
+            {solicitation.linkHomepage}
           </Typography>
         </StyledData>
         <StyledData>
@@ -126,7 +117,7 @@ export default function ContactDataFormContainer() {
             País<span style={{ color: 'red' }}>*</span>
           </Typography>
           <Typography style={{ color: 'gray' }} variant='subtitle2'>
-            Brasil
+            {solicitation.pais}
           </Typography>
         </StyledData>
         <StyledData>
@@ -134,7 +125,7 @@ export default function ContactDataFormContainer() {
             Cidade<span style={{ color: 'red' }}>*</span>
           </Typography>
           <Typography style={{ color: 'gray' }} variant='subtitle2'>
-            Salvador
+            {solicitation.cidade}
           </Typography>
         </StyledData>
         <StyledData>
@@ -143,7 +134,7 @@ export default function ContactDataFormContainer() {
             <span style={{ color: 'red' }}>*</span>
           </Typography>
           <Typography style={{ color: 'gray' }} variant='subtitle2'>
-            R$200,00
+            R$ {solicitation.valorInscricao}
           </Typography>
         </StyledData>
         <StyledData>
@@ -152,35 +143,10 @@ export default function ContactDataFormContainer() {
             <span style={{ color: 'red' }}>*</span>
           </Typography>
           <Typography style={{ color: 'gray' }} variant='subtitle2'>
-            A1
+            {solicitation.qualis}
           </Typography>
         </StyledData>
       </Grid>
-      <Grid item md={12} xs={12}>
-        <Typography variant='subtitle1' style={{ color: 'gray' }}>
-          Confirmo que a solicitação é para um artigo aceito (artigos em revisão
-          não serão analisados) e que as informações enviadas serão analisadas
-          pelo colegiado do PGCOMP com base nas regras de financiamento
-          definidas por esse colegiado e na disponiblidade de recursos
-          financeiros
-        </Typography>
-        <Box sx={{ display: 'flex', justifyContent: 'start' }}>
-          <FormControl
-            error={Boolean(touched.aceiteFinal && errors.aceiteFinal)}
-            sx={{ display: 'flex', alignItems: 'start' }}
-          >
-            <Field
-              as={FormControlLabel}
-              control={<Checkbox />}
-              label='Estou de acordo'
-              name='aceiteFinal'
-            />
-            {touched.aceiteFinal && errors.aceiteFinal && (
-              <FormHelperText>{errors.aceiteFinal}</FormHelperText>
-            )}
-          </FormControl>
-        </Box>
-      </Grid>
-    </Grid>
+    </>
   )
 }
