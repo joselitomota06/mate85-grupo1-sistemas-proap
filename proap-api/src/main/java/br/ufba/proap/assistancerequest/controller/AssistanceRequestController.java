@@ -69,7 +69,17 @@ public class AssistanceRequestController {
 	
 	@PostMapping("/create")
 	public ResponseEntity<AssistanceRequestDTO> create(@RequestBody AssistanceRequestDTO assistanceReques) {
+		
+		User currentUser = serviceUser.getLoggedUser();
+		
+		if(currentUser == null) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		}
+		
+		
 		try {
+			assistanceReques.setUser(currentUser);
+			
 			return ResponseEntity.ok().body(service.save(assistanceReques));
 		} catch (Exception e) {
 			logger.error(e.getMessage());

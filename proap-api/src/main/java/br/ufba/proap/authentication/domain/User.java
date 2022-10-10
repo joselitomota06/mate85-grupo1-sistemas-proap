@@ -32,19 +32,16 @@ public class User implements UserDetails {
 	@Column(nullable = false)
 	private String email;
 
-	@Column(nullable = false)
 	private String cpf;
 
-	@Column(nullable = false)
 	private String password;
 
-	@Column(nullable = false)
 	private String registration;
 
 	private String phone;
 
 	private String alternativePhone;
-
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "perfil_id")
 	private Perfil perfil;
