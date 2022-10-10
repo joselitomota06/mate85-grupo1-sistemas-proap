@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.springframework.integration.annotation.Default;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -53,6 +55,7 @@ public class AssistanceRequestDTO {
 	
 	private Float valorSolicitado;
 	
+	@Column(nullable = true)
 	private String comprovantePagamento;
 	
 	private Boolean solicitacaoAuxilioOutrasFontes;
@@ -66,6 +69,7 @@ public class AssistanceRequestDTO {
 	private String doi;
 	
 	private String autores;
+	
 	
 	
 	@Override
