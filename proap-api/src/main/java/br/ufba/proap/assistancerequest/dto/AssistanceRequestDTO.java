@@ -35,7 +35,7 @@ public class AssistanceRequestDTO {
 	
 	@Column(nullable = false)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-	private LocalDateTime dataFim;
+	private LocalDate dataFim;
 	
 	private String linkHomepage;
 	
@@ -115,11 +115,11 @@ public class AssistanceRequestDTO {
 		this.dataInicio = dataInicio;
 	}
 	
-	public LocalDateTime getDataFim() {
+	public LocalDate getDataFim() {
 		return dataFim;
 	}
 	
-	public void setDataFim(LocalDateTime dataFim) {
+	public void setDataFim(LocalDate dataFim) {
 		this.dataFim = dataFim;
 	}
 	
