@@ -53,15 +53,19 @@ public class AssistanceRequestDTO {
 	
 	private Boolean solicitacaoApoio;
 	
+	@Column(nullable = true)
 	private Float valorSolicitado;
 	
 	@Column(nullable = true)
 	private String comprovantePagamento;
 	
+	@Column(nullable = true)
 	private Boolean solicitacaoAuxilioOutrasFontes;
 	
+	@Column(nullable = true)
 	private String nomeAgenciaFomento;
 	
+	@Column(nullable = true)
 	private String valorSolicitadoAgenciaFormento;
 	
 	private String nomeCompleto;
@@ -69,8 +73,6 @@ public class AssistanceRequestDTO {
 	private String doi;
 	
 	private String autores;
-	
-	
 	
 	@Override
 	public int hashCode() {
