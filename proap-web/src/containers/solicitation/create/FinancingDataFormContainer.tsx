@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { SolicitationFormValues } from './SolicitationFormSchema'
+import { SolicitationFormValues } from '../SolicitationFormSchema'
 import { Field, useFormikContext } from 'formik'
 import {
   Grid,
@@ -16,13 +16,12 @@ import {
 import {
   StyledTextField,
   StyledDataInput,
-} from './SolicitationFormContainer.style'
+} from '../SolicitationFormContainer.style'
 import UploadFileIcon from '@mui/icons-material/UploadFile'
 
 export default function ContactDataFormContainer() {
   const { values, errors, touched } = useFormikContext<SolicitationFormValues>()
 
-  console.log(errors, touched, values)
   return (
     <Grid
       container
@@ -53,17 +52,19 @@ export default function ContactDataFormContainer() {
           )}
         </FormControl>
       </Grid>
-      <Grid item>
-        <Field
-          as={StyledTextField}
-          label='Valor solicitado'
-          name='valorSolicitado'
-          type='number'
-          error={Boolean(touched.valorSolicitado && errors.valorSolicitado)}
-          helperText={touched.valorSolicitado && errors.valorSolicitado}
-          required
-        />
-      </Grid>
+      {values.solicitacaoApoio === 'true' && (
+        <Grid item>
+          <Field
+            as={StyledTextField}
+            label='Valor solicitado'
+            name='valorSolicitado'
+            type='number'
+            error={Boolean(touched.valorSolicitado && errors.valorSolicitado)}
+            helperText={touched.valorSolicitado && errors.valorSolicitado}
+            required
+          />
+        </Grid>
+      )}
       <Grid item>
         <FormControl
           error={Boolean(
@@ -86,39 +87,41 @@ export default function ContactDataFormContainer() {
               </FormHelperText>
             )}
         </FormControl>
-        <Grid item container spacing={2}>
-          <Grid item>
-            <Field
-              as={StyledTextField}
-              label='Nome da agência de fomento'
-              name='nomeAgenciaFomento'
-              error={Boolean(
-                touched.nomeAgenciaFomento && errors.nomeAgenciaFomento
-              )}
-              helperText={
-                touched.nomeAgenciaFomento && errors.nomeAgenciaFomento
-              }
-              required
-            />
-          </Grid>
-          <Grid item>
-            <Field
-              as={TextField}
-              label='Valor solicitado'
-              name='valorSolicitadoAgenciaFomento'
-              type='number'
-              error={Boolean(
-                touched.valorSolicitadoAgenciaFomento &&
+        {values.solicitacaoAuxilioOutrasFontes === 'true' && (
+          <Grid item container spacing={2}>
+            <Grid item>
+              <Field
+                as={StyledTextField}
+                label='Nome da agência de fomento'
+                name='nomeAgenciaFomento'
+                error={Boolean(
+                  touched.nomeAgenciaFomento && errors.nomeAgenciaFomento
+                )}
+                helperText={
+                  touched.nomeAgenciaFomento && errors.nomeAgenciaFomento
+                }
+                required
+              />
+            </Grid>
+            <Grid item>
+              <Field
+                as={TextField}
+                label='Valor solicitado'
+                name='valorSolicitadoAgenciaFomento'
+                type='number'
+                error={Boolean(
+                  touched.valorSolicitadoAgenciaFomento &&
+                    errors.valorSolicitadoAgenciaFomento
+                )}
+                helperText={
+                  touched.valorSolicitadoAgenciaFomento &&
                   errors.valorSolicitadoAgenciaFomento
-              )}
-              helperText={
-                touched.valorSolicitadoAgenciaFomento &&
-                errors.valorSolicitadoAgenciaFomento
-              }
-              required
-            />
+                }
+                required
+              />
+            </Grid>
           </Grid>
-        </Grid>
+        )}
       </Grid>
     </Grid>
   )
