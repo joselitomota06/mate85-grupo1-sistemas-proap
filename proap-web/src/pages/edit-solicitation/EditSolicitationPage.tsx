@@ -12,6 +12,7 @@ import {
   SolicitationFormValues,
 } from "../../containers/solicitation/SolicitationFormSchema";
 import Toast from "../../helpers/notification";
+import AdminSolicitationFormContainer from "../../containers/solicitation/AdminSolicitationFormContainer";
 
 export default function EditSolicitationPage() {
   const { id } = useParams();
@@ -36,8 +37,18 @@ export default function EditSolicitationPage() {
       {isLoading && <LinearProgress />}
       {!isLoading && !hasError && (
         <>
-          {!isAdmin ? (
-            <span>TODO</span>
+          {isAdmin ? (
+            <AdminSolicitationFormContainer
+              onSubmit={handleEditSolicitationSubmit}
+              initialValues={{
+                ...INITIAL_FORM_VALUES,
+                ...solicitation,
+              }}
+              title="Avaliar solicitação de auxílio"
+              labels={{
+                submit: "Finalizar análise",
+              }}
+            />
           ) : (
             <SolicitationFormContainer
               onSubmit={handleEditSolicitationSubmit}
@@ -46,7 +57,10 @@ export default function EditSolicitationPage() {
                 ...solicitation,
                 aceiteFinal: false,
               }}
-              title="Editar solicitação"
+              title="Editar solicitação de auxílio"
+              labels={{
+                submit: "Editar solicitação",
+              }}
             />
           )}
         </>

@@ -10,7 +10,7 @@ export interface FormStep {
   label: string
 }
 
-interface StepperFormProps<T> extends FormikConfig<T> {
+export interface StepperFormProps<T> extends FormikConfig<T> {
   steps: FormStep[]
   activeStep: number
   labels: {
