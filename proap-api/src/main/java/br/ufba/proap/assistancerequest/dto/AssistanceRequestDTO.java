@@ -26,7 +26,6 @@ public class AssistanceRequestDTO {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
-	@JsonIgnore
 	@ManyToOne
 	private User user;
 	
