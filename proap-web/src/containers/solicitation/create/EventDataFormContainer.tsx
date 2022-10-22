@@ -1,7 +1,7 @@
-import React from 'react'
+import React from "react";
 
-import { SolicitationFormValues } from '../SolicitationFormSchema'
-import { Field, useFormikContext } from 'formik'
+import { SolicitationFormValues } from "../SolicitationFormSchema";
+import { Field, useFormikContext } from "formik";
 import {
   Grid,
   TextField,
@@ -9,48 +9,49 @@ import {
   FormControl,
   FormControlLabel,
   RadioGroup,
-  Link,
   Radio,
   FormHelperText,
-} from '@mui/material'
-import { StyledTextField } from '../SolicitationFormContainer.style'
+} from "@mui/material";
+import InputAdornment from "@mui/material/InputAdornment";
+
+import { StyledTextField } from "../SolicitationFormContainer.style";
 
 export default function ContactDataFormContainer() {
-  const { errors, touched } = useFormikContext<SolicitationFormValues>()
+  const { errors, touched } = useFormikContext<SolicitationFormValues>();
 
   return (
     <Grid container paddingTop={2} paddingBottom={2}>
       <Grid container item md={6} xs={12}>
-        <Grid container direction='row' spacing={2}>
+        <Grid container direction="row" spacing={2}>
           <Grid item>
             <Field
               as={TextField}
-              label='Data de início'
-              name='dataInicio'
+              label="Data de início"
+              name="dataInicio"
               error={Boolean(touched.dataInicio && errors.dataInicio)}
               helperText={touched.dataInicio && errors.dataInicio}
-              type='date'
+              type="date"
               required
             />
           </Grid>
           <Grid item>
             <Field
               as={TextField}
-              label='Data de termino'
-              name='dataFim'
+              label="Data de termino"
+              name="dataFim"
               error={Boolean(touched.dataFim && errors.dataFim)}
               helperText={touched.dataFim && errors.dataFim}
-              type='date'
+              type="date"
               required
             />
           </Grid>
         </Grid>
 
-        <Grid container item direction='column'>
+        <Grid container item direction="column">
           <Field
             as={StyledTextField}
-            label='Link homepage'
-            name='linkHomepage'
+            label="Link homepage"
+            name="linkHomepage"
             error={Boolean(touched.linkHomepage && errors.linkHomepage)}
             helperText={touched.linkHomepage && errors.linkHomepage}
             required
@@ -58,8 +59,8 @@ export default function ContactDataFormContainer() {
 
           <Field
             as={StyledTextField}
-            label='País'
-            name='pais'
+            label="País"
+            name="pais"
             error={Boolean(touched.pais && errors.pais)}
             helperText={touched.pais && errors.pais}
             required
@@ -67,18 +68,17 @@ export default function ContactDataFormContainer() {
 
           <Field
             as={StyledTextField}
-            label='Cidade'
-            name='cidade'
+            label="Cidade"
+            name="cidade"
             error={Boolean(touched.cidade && errors.cidade)}
             helperText={touched.cidade && errors.cidade}
             required
           />
-
           <Field
             as={StyledTextField}
-            label='Valor da inscrição/publicação'
-            name='valorInscricao'
-            type='number'
+            label="Valor da inscrição/publicação (em dólares)"
+            name="valorInscricao"
+            type="number"
             error={Boolean(touched.valorInscricao && errors.valorInscricao)}
             helperText={touched.valorInscricao && errors.valorInscricao}
             required
@@ -86,8 +86,8 @@ export default function ContactDataFormContainer() {
 
           <Field
             as={StyledTextField}
-            label='Carta de aceite'
-            name='cartaAceite'
+            label="Carta de aceite"
+            name="cartaAceite"
             error={Boolean(touched.cartaAceite && errors.cartaAceite)}
             helperText={touched.cartaAceite && errors.cartaAceite}
             required
@@ -97,23 +97,23 @@ export default function ContactDataFormContainer() {
 
       <FormControl error={Boolean(touched.qualis && errors.qualis)}>
         <FormLabel required>Informe o Qualis do seu evento</FormLabel>
-        <Field as={RadioGroup} name='qualis' row>
+        <Field as={RadioGroup} name="qualis" row>
           <Grid container>
-            <Grid item container direction='row'>
-              <FormControlLabel value='A1' control={<Radio />} label='A1' />
-              <FormControlLabel value='A2' control={<Radio />} label='A2' />
-              <FormControlLabel value='A3' control={<Radio />} label='A3' />
-              <FormControlLabel value='A4' control={<Radio />} label='A4' />
+            <Grid item container direction="row">
+              <FormControlLabel value="A1" control={<Radio />} label="A1" />
+              <FormControlLabel value="A2" control={<Radio />} label="A2" />
+              <FormControlLabel value="A3" control={<Radio />} label="A3" />
+              <FormControlLabel value="A4" control={<Radio />} label="A4" />
             </Grid>
-            <Grid item container direction='row'>
-              <FormControlLabel value='B1' control={<Radio />} label='B1' />
-              <FormControlLabel value='B2' control={<Radio />} label='B2' />
-              <FormControlLabel value='B3' control={<Radio />} label='B3' />
-              <FormControlLabel value='B4' control={<Radio />} label='B4' />
+            <Grid item container direction="row">
+              <FormControlLabel value="B1" control={<Radio />} label="B1" />
+              <FormControlLabel value="B2" control={<Radio />} label="B2" />
+              <FormControlLabel value="B3" control={<Radio />} label="B3" />
+              <FormControlLabel value="B4" control={<Radio />} label="B4" />
               <FormControlLabel
-                value='outro'
+                value="outro"
                 control={<Radio />}
-                label='Outro'
+                label="Outro"
               />
             </Grid>
           </Grid>
@@ -123,5 +123,5 @@ export default function ContactDataFormContainer() {
         )}
       </FormControl>
     </Grid>
-  )
+  );
 }

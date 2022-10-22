@@ -1,6 +1,6 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
-import { HomePage, NotFoundPage, SolicitationPage } from '../../pages'
+import { HomePage, NotFoundPage, SolicitationPage, EditSolicitationPage } from '../../pages'
 import NavigationWrapper from '../navigation/NavigationWrapper'
 
 export default function PrivateRoutes() {
@@ -9,6 +9,7 @@ export default function PrivateRoutes() {
       <Routes>
         <Route path='/' element={<HomePage />} />
         <Route path='/solicitation/create' element={<SolicitationPage />} />
+        <Route path='/solicitation/edit/:id' element={<EditSolicitationPage />} />
         <Route path='*' element={<NotFoundPage />} />
       </Routes>
     </NavigationWrapper>
