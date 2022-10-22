@@ -18,10 +18,12 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { Link, useNavigate } from "react-router-dom";
 import { Box } from "@mui/system";
 import { IconButton } from "@mui/material";
+import { useAuth } from "../../../hooks";
 
 export default function SolicitationTable() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { isAdmin } = useAuth()
 
   const { requests } = useSelector(
     (state: IRootState) => state.assistanceRequestSlice
@@ -43,7 +45,7 @@ export default function SolicitationTable() {
         fontWeight="bold"
         paddingBottom={2}
       >
-        Solicitações
+        {isAdmin ? "Solicitações cadastradas" : "Minhas solicitações"}
       </Typography>
       <TableContainer sx={{ maxHeight: "500px" }}>
         <Table stickyHeader>
