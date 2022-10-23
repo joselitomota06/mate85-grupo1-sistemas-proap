@@ -36,13 +36,11 @@ public class JwtTokenProvider {
 		User userPrincipal = (User) authentication.getPrincipal();
 		OffsetDateTime expiryDate = OffsetDateTime.now().plus(jwtExpirationInMs, ChronoUnit.MILLIS);
 		Map<String, Object> claims = new HashMap<>();
-		//List<Perfil> perfis = perfilService.findByIdUser(userPrincipal.getId());
 
 		claims.put("id", userPrincipal.getId());
 		claims.put("name", userPrincipal.getName());
 		claims.put("email", userPrincipal.getEmail());
-		
-		// claims.put("perfis", perfis);
+		claims.put("isAdmin", userPrincipal.getPerfil() != null ? userPrincipal.getPerfil().isAdmin() : false);
 
 		return Jwts.builder().setSubject(userPrincipal.getName()).setClaims(claims)
 				.setIssuedAt(Date.from(OffsetDateTime.now().toInstant()))
