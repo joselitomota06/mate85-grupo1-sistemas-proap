@@ -1,14 +1,13 @@
 package br.ufba.proap.assistancerequest.service;
 
-import br.ufba.proap.assistancerequest.dto.AssistanceRequestDTO;
-import br.ufba.proap.assistancerequest.dto.Review;
-import br.ufba.proap.assistancerequest.dto.dto.ReviewDTO;
-import br.ufba.proap.assistancerequest.dto.enums.ReviewSituacao;
+import br.ufba.proap.assistancerequest.domain.AssistanceRequestDTO;
+import br.ufba.proap.assistancerequest.domain.Review;
+import br.ufba.proap.assistancerequest.domain.dto.ReviewDTO;
+import br.ufba.proap.assistancerequest.domain.enums.ReviewSituacao;
 import br.ufba.proap.assistancerequest.repository.ReviewServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;

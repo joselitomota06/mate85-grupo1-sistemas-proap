@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.ufba.proap.assistancerequest.dto.AssistanceRequestDTO;
+import br.ufba.proap.assistancerequest.domain.AssistanceRequestDTO;
 import br.ufba.proap.assistancerequest.repository.AssistanteRequestRepository;
 import br.ufba.proap.authentication.domain.User;
 

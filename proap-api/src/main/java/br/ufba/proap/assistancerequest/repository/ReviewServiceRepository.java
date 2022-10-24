@@ -1,8 +1,7 @@
 package br.ufba.proap.assistancerequest.repository;
 
-import br.ufba.proap.assistancerequest.dto.AssistanceRequestDTO;
-import br.ufba.proap.assistancerequest.dto.Review;
-import br.ufba.proap.authentication.domain.User;
+import br.ufba.proap.assistancerequest.domain.AssistanceRequestDTO;
+import br.ufba.proap.assistancerequest.domain.Review;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

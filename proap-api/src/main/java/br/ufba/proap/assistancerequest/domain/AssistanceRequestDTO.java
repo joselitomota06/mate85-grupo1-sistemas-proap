@@ -1,12 +1,9 @@
-package br.ufba.proap.assistancerequest.dto;
+package br.ufba.proap.assistancerequest.domain;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 import javax.persistence.*;
-
-import org.springframework.integration.annotation.Default;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;

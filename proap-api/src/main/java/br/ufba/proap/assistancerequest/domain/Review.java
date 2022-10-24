@@ -1,4 +1,4 @@
-package br.ufba.proap.assistancerequest.dto;
+package br.ufba.proap.assistancerequest.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 

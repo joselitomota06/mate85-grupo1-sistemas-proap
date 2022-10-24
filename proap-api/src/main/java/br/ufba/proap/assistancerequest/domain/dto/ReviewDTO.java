@@ -1,4 +1,4 @@
-package br.ufba.proap.assistancerequest.dto.dto;
+package br.ufba.proap.assistancerequest.domain.dto;
 
 public class ReviewDTO {
     public String numeroAta;

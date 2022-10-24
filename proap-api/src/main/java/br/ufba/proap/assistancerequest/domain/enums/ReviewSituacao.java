@@ -1,4 +1,4 @@
-package br.ufba.proap.assistancerequest.dto.enums;
+package br.ufba.proap.assistancerequest.domain.enums;
 
 public class ReviewSituacao {
     public static final int REPROVADO = 0;
