@@ -1,8 +1,10 @@
 package br.ufba.proap.assistancerequest.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -16,7 +18,7 @@ public class Review {
     @Column(nullable = false)
     private String numeroAta;
 
-    private Date dataAprovacao;
+    private LocalDateTime dataAprovacao;
 
     @Column(nullable = false)
     private int numeroDiariasAprovadas;
@@ -25,6 +27,12 @@ public class Review {
 
     @Column(nullable = false)
     private int situacao;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
+    private LocalDateTime createdAt;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
+    private LocalDateTime updatedAt;
 
     @JsonIgnore
     @OneToOne(mappedBy = "review")
@@ -54,11 +62,11 @@ public class Review {
         this.numeroAta = numeroAta;
     }
 
-    public Date getDataAprovacao() {
+    public LocalDateTime getDataAprovacao() {
         return dataAprovacao;
     }
 
-    public void setDataAprovacao(Date dataAprovacao) {
+    public void setDataAprovacao(LocalDateTime dataAprovacao) {
         this.dataAprovacao = dataAprovacao;
     }
 
@@ -84,5 +92,31 @@ public class Review {
 
     public void setSituacao(int situacao) {
         this.situacao = situacao;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        setCreatedAt(LocalDateTime.now());
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        setUpdatedAt(LocalDateTime.now());
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

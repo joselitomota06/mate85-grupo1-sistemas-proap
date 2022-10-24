@@ -8,6 +8,7 @@ import br.ufba.proap.assistancerequest.repository.ReviewServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -45,7 +46,7 @@ public class ReviewService {
     public Review approve(ReviewDTO reviewDTO) {
         Review review = createReview(reviewDTO);
 
-        review.setDataAprovacao(new Date());
+        review.setDataAprovacao(LocalDateTime.now());
         review.setSituacao(ReviewSituacao.APROVADO);
 
         return reviewServiceRepository.save(review);
