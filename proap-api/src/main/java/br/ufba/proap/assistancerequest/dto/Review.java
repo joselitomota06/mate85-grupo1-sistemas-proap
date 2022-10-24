@@ -23,6 +23,9 @@ public class Review {
 
     private String observacao;
 
+    @Column(nullable = false)
+    private int situacao;
+
     @JsonIgnore
     @OneToOne(mappedBy = "review")
     private AssistanceRequestDTO assistanceRequestDTO;
@@ -55,6 +58,10 @@ public class Review {
         return dataAprovacao;
     }
 
+    public void setDataAprovacao(Date dataAprovacao) {
+        this.dataAprovacao = dataAprovacao;
+    }
+
     public int getNumeroDiariasAprovadas() {
         return numeroDiariasAprovadas;
     }
@@ -69,5 +76,13 @@ public class Review {
 
     public void setObservacao(String observacao) {
         this.observacao = observacao;
+    }
+
+    public int getSituacao() {
+        return situacao;
+    }
+
+    public void setSituacao(int situacao) {
+        this.situacao = situacao;
     }
 }
