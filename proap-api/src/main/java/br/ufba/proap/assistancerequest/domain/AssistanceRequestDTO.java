@@ -3,7 +3,13 @@ package br.ufba.proap.assistancerequest.domain;
 import java.time.LocalDate;
 import java.util.Objects;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -17,7 +23,6 @@ public class AssistanceRequestDTO {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
-	@JsonIgnore
 	@ManyToOne
 	private User user;
 	
@@ -64,10 +69,6 @@ public class AssistanceRequestDTO {
 	private String doi;
 	
 	private String autores;
-
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "review_id", referencedColumnName = "id")
-	private Review review;
 	
 	@Override
 	public int hashCode() {
