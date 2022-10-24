@@ -5,11 +5,9 @@ import { FormikValues } from "formik";
 
 import SolicitantDataFormContainer from "./create/SolicitantDataFormContainer";
 import FinancingDataFormContainer from "./create/FinancingDataFormContainer";
-import DetailsDataFormContainer from "./create/DetailsDataFormContainer";
 import EventDataFormContainer from "./create/EventDataFormContainer";
 
 import {
-  detailsEventDataFormSchema,
   eventDataFormSchema,
   financingDataFormSchema,
   INITIAL_FORM_VALUES,
@@ -31,12 +29,12 @@ interface SolicitationFormContainerProps {
   };
 }
 
-export default function SolicitationFormContainer(
+export default function AdminSolicitationFormContainer(
   props: SolicitationFormContainerProps
 ) {
   const { title, initialValues, labels, onSubmit } = props;
 
-  const registerFormSteps: FormStep[] = useMemo(
+  const evaluateFormSteps: FormStep[] = useMemo(
     () => [
       {
         label: "Solicitante",
@@ -54,9 +52,8 @@ export default function SolicitationFormContainer(
         schema: eventDataFormSchema,
       },
       {
-        label: "Detalhes",
-        component: DetailsDataFormContainer,
-        schema: detailsEventDataFormSchema,
+        label: "Conclusão",
+        component: () => <span>To be defined</span>,
       },
     ],
     []
@@ -75,11 +72,11 @@ export default function SolicitationFormContainer(
       <StepperForm
         initialValues={initialValues as FormikValues}
         onSubmit={onSubmit}
-        steps={registerFormSteps}
+        steps={evaluateFormSteps}
         validateOnChange={false}
         labels={
           labels || {
-            submit: "Enviar solicitação",
+            submit: "Editar solicitação",
           }
         }
       />
@@ -87,10 +84,10 @@ export default function SolicitationFormContainer(
   );
 }
 
-SolicitationFormContainer.defaultProps = {
-  title: "Nova solicitação de auxílio",
+AdminSolicitationFormContainer.defaultProps = {
+  title: "Editar solicitação de auxílio",
   initialValues: INITIAL_FORM_VALUES,
   labels: {
-    submit: "Enviar solicitação",
+    submit: "Editar solicitação",
   },
 };

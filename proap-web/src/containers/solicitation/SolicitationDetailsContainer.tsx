@@ -134,7 +134,7 @@ export default function SolicitationDetailsContainer({
             <span style={{ color: 'red' }}>*</span>
           </Typography>
           <Typography style={{ color: 'gray' }} variant='subtitle2'>
-            R$ {solicitation.valorInscricao}
+            $ {solicitation.valorInscricao}
           </Typography>
         </StyledData>
         <StyledData>

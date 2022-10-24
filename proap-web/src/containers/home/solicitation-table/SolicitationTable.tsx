@@ -1,5 +1,4 @@
 import {
-  Paper,
   Table,
   TableBody,
   TableCell,
@@ -7,67 +6,81 @@ import {
   TableHead,
   TableRow,
   Typography,
-} from '@mui/material'
-import React, { useEffect } from 'react'
-import { useSelector } from 'react-redux'
+} from "@mui/material";
+import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
 
-import { getAssistanceRequests } from '../../../services/assistanceRequestService'
-import { IRootState, useAppDispatch } from '../../../store'
+import { getAssistanceRequests } from "../../../services/assistanceRequestService";
+import { IRootState, useAppDispatch } from "../../../store";
 
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
-import ModeEditIcon from '@mui/icons-material/ModeEdit'
-import DeleteIcon from '@mui/icons-material/Delete'
-import { Box } from '@mui/system'
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { Link, useNavigate } from "react-router-dom";
+import { Box } from "@mui/system";
+import { IconButton } from "@mui/material";
+import { useAuth } from "../../../hooks";
 
 export default function SolicitationTable() {
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const { isAdmin } = useAuth()
 
   const { requests } = useSelector(
     (state: IRootState) => state.assistanceRequestSlice
-  )
+  );
 
   useEffect(() => {
-    dispatch(getAssistanceRequests())
-  }, [dispatch])
+    dispatch(getAssistanceRequests());
+  }, [dispatch]);
+
+  const handleClickEditRequest = (id: number) => {
+    navigate(`/solicitation/edit/${id}`);
+  };
 
   return (
     <>
       <Typography
-        variant='h4'
-        color='primary'
-        fontWeight='bold'
+        variant="h4"
+        color="primary"
+        fontWeight="bold"
         paddingBottom={2}
       >
-        Solicitações
+        {isAdmin ? "Solicitações cadastradas" : "Minhas solicitações"}
       </Typography>
-      <TableContainer sx={{ maxHeight: '500px' }}>
+      <TableContainer sx={{ maxHeight: "500px" }}>
         <Table stickyHeader>
           <TableHead>
-            <TableCell>Solicitante</TableCell>
-            <TableCell>Status</TableCell>
-            <TableCell>Valor aprovado (integral)</TableCell>
-            <TableCell>Data de solicitação</TableCell>
-            <TableCell />
+            <TableCell align="center">Solicitante</TableCell>
+            <TableCell align="center">Status</TableCell>
+            <TableCell align="center">Valor aprovado</TableCell>
+            <TableCell align="center">Data de solicitação</TableCell>
+            <TableCell align="center">Ações</TableCell>
           </TableHead>
           <TableBody>
             {requests.length === 0 && (
               <TableRow>
                 <TableCell colSpan={5}>
-                  <Typography align='center' color='gray'>
-                    Nenhuma solicitação de auxílio encontrada
+                  <Typography align="center" color="gray">
+                    Nenhuma solicitação de auxílio encontrada.
                   </Typography>
                 </TableCell>
               </TableRow>
             )}
             {requests.length > 0 &&
-              requests.map(({ id, doi }) => (
-                <TableRow key={id}>
-                  <TableCell>{id}</TableCell>
-                  <TableCell>
+              requests.map(({ id, nomeCompleto }) => (
+                <TableRow key={nomeCompleto}>
+                  <TableCell align="center">{nomeCompleto}</TableCell>
+                  <TableCell align="center">-</TableCell>
+                  <TableCell align="center">-</TableCell>
+                  <TableCell align="center">-</TableCell>
+                  <TableCell align="center">
                     <Box>
-                      <RemoveRedEyeIcon />
-                      <ModeEditIcon />
-                      <DeleteIcon />
+                      <IconButton onClick={() => handleClickEditRequest(id)}>
+                        <ModeEditIcon />
+                      </IconButton>
+                      <IconButton>
+                        <DeleteIcon />
+                      </IconButton>
                     </Box>
                   </TableCell>
                 </TableRow>
@@ -76,5 +89,5 @@ export default function SolicitationTable() {
         </Table>
       </TableContainer>
     </>
-  )
+  );
 }
