@@ -4,6 +4,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import br.ufba.proap.assistancerequest.domain.Review;
+import br.ufba.proap.assistancerequest.domain.dto.ReviewDTO;
+import br.ufba.proap.assistancerequest.service.ReviewService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.ufba.proap.assistancerequest.dto.AssistanceRequestDTO;
+import br.ufba.proap.assistancerequest.domain.AssistanceRequestDTO;
 import br.ufba.proap.assistancerequest.service.AssistanceRequestService;
 import br.ufba.proap.authentication.controller.UserController;
 import br.ufba.proap.authentication.domain.User;
@@ -31,6 +34,9 @@ public class AssistanceRequestController {
 	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 	@Autowired
 	private AssistanceRequestService service;
+
+	@Autowired
+	private ReviewService reviewService;
 	
 	@Autowired
 	private UserService serviceUser;
@@ -121,6 +127,46 @@ public class AssistanceRequestController {
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		}
+	}
+
+	@PutMapping("/approve/{requestId}")
+	public ResponseEntity<Review> approveRequest(
+			@PathVariable String requestId,
+			@RequestBody ReviewDTO reviewDTO
+			) {
+		User currentUser = serviceUser.getLoggedUser();
+
+		if(currentUser == null) {
+			return ResponseEntity.badRequest().build();
+		}
+		// TODO : Validar se o usuario pode aprovar
+
+		try {
+			return ResponseEntity.ok().body(reviewService.approve(reviewDTO));
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return ResponseEntity.badRequest().build();
+		}
+	}
+
+	@PutMapping("/reprove/{requestId}")
+	public ResponseEntity<Review> reproveRequest(
+			@PathVariable String requestId,
+			@RequestBody ReviewDTO reviewDTO
+	) {
+		User currentUser = serviceUser.getLoggedUser();
+
+		if(currentUser == null) {
+			return ResponseEntity.badRequest().build();
+		}
+		// TODO : Validar se o usuario pode aprovar
+
+		try {
+			return ResponseEntity.ok().body(reviewService.reprove(reviewDTO));
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return ResponseEntity.badRequest().build();
 		}
 	}
 }
