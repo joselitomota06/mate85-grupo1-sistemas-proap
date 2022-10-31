@@ -18,9 +18,13 @@
 
 [8. Apresentação da Arquitetura do Sistema (Google Presentations) ](https://docs.google.com/presentation/d/1rCWHSiNIVMi2uF6oHXvBIwXVCX2Too7507bGWWanKEg/edit?usp=sharing)
 
-[(Novo!) 9. Apresentação da Proposta de testes (Google Presentations) ](https://docs.google.com/presentation/d/1YG3kOrOG42Dwau_zdIOeLCRMOD-lBFp8cvYUFTiBOwQ/edit?usp=sharing)
+[9. Apresentação da Proposta de testes (Google Presentations) ](https://docs.google.com/presentation/d/1YG3kOrOG42Dwau_zdIOeLCRMOD-lBFp8cvYUFTiBOwQ/edit?usp=sharing)
 
-[(Novo!) 10. Documento de casos de testes ](https://docs.google.com/document/d/1YWfuetyzL69glq9oR3SIV29IY8PG3ArdnG8PBTJkpfc/edit?usp=sharing)
+[10. Documento de casos de testes ](https://docs.google.com/document/d/1YWfuetyzL69glq9oR3SIV29IY8PG3ArdnG8PBTJkpfc/edit?usp=sharing)
+
+
+[(Novo!) 11. Documento de Implantação ](https://docs.google.com/document/d/1s95v6LkgihnHYdhcw4fwv4T_kCOZ0uAHL6VEFEJDQew/edit?usp=sharing)
+
 
 O sistema para apoio ao **PROAP - Programa de Apoio à Pós-Graduação** está inserido em um dos sistemas utilizados pelo **Instituto de Computação da Universidade Federal da Bahia** para auxiliar estudantes, professores e funcionários que atuam na gerência de recursos oriundos da Pós-Graduação. A solicitação deste sistema foi realizada com o intuito de organizar, automatizar e gerar celeridade nos processos de cadastros, solicitações e acompanhamento de recursos voltados para publicações em eventos ou periódicos do programa de Pós-graduação do instituto.
 
