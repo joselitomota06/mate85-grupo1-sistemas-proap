@@ -52,6 +52,7 @@ export default function SolicitationTable() {
           <TableHead>
             <TableCell align="center">Solicitante</TableCell>
             <TableCell align="center">Status</TableCell>
+            <TableCell align="center">Valor solicitado</TableCell>
             <TableCell align="center">Valor aprovado</TableCell>
             <TableCell align="center">Data de solicitação</TableCell>
             <TableCell align="center">Ações</TableCell>
@@ -67,12 +68,17 @@ export default function SolicitationTable() {
               </TableRow>
             )}
             {requests.length > 0 &&
-              requests.map(({ id, nomeCompleto }) => (
+              requests.map(({ id, nomeCompleto, valorInscricao, review, user }) => (
                 <TableRow key={nomeCompleto}>
                   <TableCell align="center">{nomeCompleto}</TableCell>
+                  {review === null && (<TableCell align="center">Não aprovada</TableCell>)}
+
+                  {review !== null && (<TableCell align="center">Aprovada</TableCell>)}
+                  <TableCell align="center">R$ {valorInscricao}</TableCell>
+                  <TableCell align="center">R$</TableCell>
                   <TableCell align="center">-</TableCell>
-                  <TableCell align="center">-</TableCell>
-                  <TableCell align="center">-</TableCell>
+                  
+   
                   <TableCell align="center">
                     <Box>
                       <IconButton onClick={() => handleClickEditRequest(id)}>
