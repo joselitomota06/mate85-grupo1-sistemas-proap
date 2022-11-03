@@ -56,6 +56,16 @@ export const detailsEventDataFormSchema = Yup.object({
     .isTrue('É necessário aceitar os termos para continuar'),
 })
 
+export const reviewDataFormSchema = Yup.object({
+  situacao: Yup.boolean().nullable().required('Campo obrigatório'),
+  dataAprovacao: Yup.string().required('Campo obrigatório'),
+  numeroAta: Yup.number(),
+  numeroDiariasAprovadas: Yup.number(),
+  obs: Yup.string().required('Campo obrigatório')
+
+})
+
+
 export interface Solicitation {
   email: string
   nomeCompleto: string
@@ -79,6 +89,12 @@ export interface Solicitation {
   qualis: string
 
   comprovantePagamento: string
+
+  situacao: boolean
+  dataAprovacao: string
+  numeroAta: number
+  numeroDiariasAprovadas: number
+  obs: string
 }
 
 export interface SolicitationFormValues extends Solicitation {
@@ -109,4 +125,10 @@ export const INITIAL_FORM_VALUES: SolicitationFormValues = {
   qualis: '',
 
   aceiteFinal: false,
+
+  situacao: false,
+  dataAprovacao: '',
+  numeroAta: 0,
+  numeroDiariasAprovadas: 0,
+  obs: ''
 }
