@@ -12,18 +12,18 @@ export default function ContactDataFormContainer() {
     <Grid container direction='column' paddingTop={2} paddingBottom={2}>
       <Field
         as={StyledTextField}
-        label='E-mail'
-        name='email'
-        error={Boolean(touched.email && errors.email)}
-        helperText={touched.email && errors.email}
-        required
-      />
-      <Field
-        as={StyledTextField}
         label='Nome do solicitante'
         name='nomeCompleto'
         error={Boolean(touched.nomeCompleto && errors.nomeCompleto)}
         helperText={touched.nomeCompleto && errors.nomeCompleto}
+        required
+      />
+      <Field
+        as={StyledTextField}
+        label='E-mail'
+        name='email'
+        error={Boolean(touched.email && errors.email)}
+        helperText={touched.email && errors.email}
         required
       />
       <Field
