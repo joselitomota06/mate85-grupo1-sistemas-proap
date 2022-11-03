@@ -20,6 +20,10 @@ public class AssistanceRequestDTO {
 	@ManyToOne
 	private User user;
 	
+	private String nomeSolicitante;
+	
+	private String emailSolicitacao;
+	
 	private Boolean aceiteFinal;
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
@@ -241,5 +245,18 @@ public class AssistanceRequestDTO {
 
 	public void setReview(Review review) {
 		this.review = review;
+	}
+	
+	public String getNomeSolicitante() {
+		return nomeSolicitante;
+	}
+	public void setNomeSolicitante(String nomeSolicitante) {
+		this.nomeSolicitante = nomeSolicitante;
+	}
+	public String getEmailSolicitacao() {
+		return emailSolicitacao;
+	}
+	public void setEmailSolicitacao(String emailSolicitacao) {
+		this.emailSolicitacao = emailSolicitacao;
 	}
 }
