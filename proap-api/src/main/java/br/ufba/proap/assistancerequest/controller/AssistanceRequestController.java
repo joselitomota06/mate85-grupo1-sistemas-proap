@@ -78,6 +78,7 @@ public class AssistanceRequestController {
 		
 		User currentUser = serviceUser.getLoggedUser();
 		
+	
 		if(currentUser == null) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
@@ -85,6 +86,13 @@ public class AssistanceRequestController {
 		
 		try {
 			assistanceReques.setUser(currentUser);
+			
+			String nomeUsuario = currentUser.getName();
+			String emailUsuario = currentUser.getEmail();
+			
+			
+			assistanceReques.setNomeSolicitante(nomeUsuario);
+			assistanceReques.setEmailSolicitacao(emailUsuario);
 			
 			return ResponseEntity.ok().body(service.save(assistanceReques));
 		} catch (Exception e) {
