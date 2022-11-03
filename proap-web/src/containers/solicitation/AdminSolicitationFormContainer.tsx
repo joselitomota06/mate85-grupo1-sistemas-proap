@@ -6,12 +6,14 @@ import { FormikValues } from "formik";
 import SolicitantDataFormContainer from "./create/SolicitantDataFormContainer";
 import FinancingDataFormContainer from "./create/FinancingDataFormContainer";
 import EventDataFormContainer from "./create/EventDataFormContainer";
+import ReviewDataFormContainer from "./create/ReviewDataFormContainer";
 
 import {
   eventDataFormSchema,
   financingDataFormSchema,
   INITIAL_FORM_VALUES,
   solicitantDataFormSchema,
+  reviewDataFormSchema,
   SolicitationFormValues,
 } from "./SolicitationFormSchema";
 import StepperForm, {
@@ -52,8 +54,9 @@ export default function AdminSolicitationFormContainer(
         schema: eventDataFormSchema,
       },
       {
-        label: "Conclusão",
-        component: () => <span>To be defined</span>,
+        label: "Avaliação",
+        component: ReviewDataFormContainer,
+        schema: reviewDataFormSchema,
       },
     ],
     []
