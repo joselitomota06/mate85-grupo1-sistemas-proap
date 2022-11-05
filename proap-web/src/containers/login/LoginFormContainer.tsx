@@ -1,19 +1,13 @@
-import { CircularProgress, Grid, TextField } from "@mui/material";
+import { CircularProgress, Grid, Input, TextField, IconButton, InputAdornment, InputProps } from "@mui/material";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import { useCallback, useState } from "react";
 import { Link } from "react-router-dom";
-
-import InputAdornment from "@mui/material/InputAdornment";
-import IconButton from "@mui/material/IconButton";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-
+import React from 'react';
 import { signIn } from "../../services/authService";
 import { useAppDispatch } from "../../store";
 import {
   LoginButton,
   LoginCircularProgress,
-  PasswordRecoveryTypography,
   RegisterLinkTypography,
 } from "./LoginFormContainer.style";
 import {
@@ -25,8 +19,14 @@ import {
 import Toast from "../../helpers/notification";
 import { StyledTextField } from "./LoginFormContainer.style";
 
+import Visibility from '@mui/icons-material/Visibility'
+import { Label } from "@mui/icons-material";
+
+
 export default function LoginFormContainer() {
   const dispatch = useAppDispatch();
+  const [showPassword, setShowPassword] = React.useState(false)
+  const [rightIcon, setRightIcon] = React.useState('eye');
 
   const handleSubmit = useCallback(
     (values: LoginFormValues, actions: FormikHelpers<LoginFormValues>) => {
@@ -37,22 +37,15 @@ export default function LoginFormContainer() {
     [dispatch]
   );
 
-  const [values, setValues] = useState({
-    password: "",
-    showPassword: false,
-  });
-
-  const handleClickShowPassword = () => {
-    setValues({ ...values, showPassword: !values.showPassword });
-  };
-
-  const handleMouseDownPassword = (event: any) => {
-    event.preventDefault();
-  };
-
-  const handlePasswordChange = (prop: any) => (event: any) => {
-    setValues({ ...values, [prop]: event.target.value });
-  };
+  function onMouseDown() {
+    setShowPassword(true)
+    setRightIcon('eye');
+  }
+  
+  function onMouseUp() {
+    setShowPassword(false)
+    setRightIcon('eye-off');
+  }
 
   return (
     <Formik
@@ -76,26 +69,30 @@ export default function LoginFormContainer() {
               as={StyledTextField}
               label="Senha"
               name="password"
-              type={values.showPassword ? "text" : "password"}
+              type={showPassword?"text":"password"}
+              onMouseDown={onMouseDown}
+              onMouseUp={onMouseUp}
               error={Boolean(touched.password && errors.password)}
               helperText={touched.password && errors.password}
               required
-              InputProps={{
-                endAdornment: (
+              InputProps = {{
+
+              
+              endAdornment:
+                <InputAdornment position="end">
                   <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                    style={{ position: "absolute", right: "0" }}
-                  >
-                    {values.showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                ),
+                      size='small'
+                      
+                      aria-label='toggle password visibility'
+                      
+                      onMouseDown={onMouseDown}
+                      onMouseUp={onMouseUp}
+                  > <Visibility /> </IconButton>
+                </InputAdornment>
               }}
             />
-            <PasswordRecoveryTypography>
-              <Link to="recover-password">Recuperar senha</Link>
-            </PasswordRecoveryTypography>
+            
+              
           </Grid>
           <LoginButton
             variant="contained"
@@ -108,6 +105,13 @@ export default function LoginFormContainer() {
           <RegisterLinkTypography>
             Não tem uma conta? <Link to="register">Cadastre-se</Link>
           </RegisterLinkTypography>
+
+          <RegisterLinkTypography>
+            Problemas ao entrar na conta? <Link to="recover-password">Recuperar senha</Link>
+          </RegisterLinkTypography>
+
+
+          
         </Form>
       )}
     </Formik>
