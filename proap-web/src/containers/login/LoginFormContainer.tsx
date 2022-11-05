@@ -1,7 +1,12 @@
 import { CircularProgress, Grid, TextField } from "@mui/material";
 import { Field, Form, Formik, FormikHelpers } from "formik";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { Link } from "react-router-dom";
+
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 import { signIn } from "../../services/authService";
 import { useAppDispatch } from "../../store";
@@ -18,23 +23,36 @@ import {
 } from "./LoginFormSchema";
 
 import Toast from "../../helpers/notification";
+import { StyledTextField } from "./LoginFormContainer.style";
 
 export default function LoginFormContainer() {
   const dispatch = useAppDispatch();
 
   const handleSubmit = useCallback(
     (values: LoginFormValues, actions: FormikHelpers<LoginFormValues>) => {
-      return dispatch(signIn(values))
-        .then(() => Toast.success("Login realizado com sucesso!"))
-        .catch(({ response: { status } }) => {
-          if (status == 401)
-            actions.setFieldError("password", "Senha incorreta");
-          else
-            Toast.error("Serviço indisponível.")
-        });
+      return dispatch(signIn(values)).catch(({ response: { status } }) => {
+        if (status == 401) actions.setFieldError("password", "Senha incorreta");
+      });
     },
     [dispatch]
   );
+
+  const [values, setValues] = useState({
+    password: "",
+    showPassword: false,
+  });
+
+  const handleClickShowPassword = () => {
+    setValues({ ...values, showPassword: !values.showPassword });
+  };
+
+  const handleMouseDownPassword = (event: any) => {
+    event.preventDefault();
+  };
+
+  const handlePasswordChange = (prop: any) => (event: any) => {
+    setValues({ ...values, [prop]: event.target.value });
+  };
 
   return (
     <Formik
@@ -55,13 +73,25 @@ export default function LoginFormContainer() {
               required
             />
             <Field
-              as={TextField}
+              as={StyledTextField}
               label="Senha"
               name="password"
-              type="password"
+              type={values.showPassword ? "text" : "password"}
               error={Boolean(touched.password && errors.password)}
               helperText={touched.password && errors.password}
               required
+              InputProps={{
+                endAdornment: (
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                    style={{ position: "absolute", right: "0" }}
+                  >
+                    {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                ),
+              }}
             />
             <PasswordRecoveryTypography>
               <Link to="recover-password">Recuperar senha</Link>
