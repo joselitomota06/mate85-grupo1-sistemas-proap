@@ -13,11 +13,13 @@ export const solicitantDataFormSchema = Yup.object({
 
 export const financingDataFormSchema = Yup.object({
   solicitacaoApoio: Yup.boolean().nullable().required("Campo obrigatório"),
-  valorSolicitado: Yup.number().when("solicitacaoApoio", {
-    is: "true",
-    then: (schema) => schema.required("Campo obrigatório"),
-    otherwise: (schema) => schema.notRequired(),
-  }),
+  valorSolicitado: Yup.number()
+    .nullable()
+    .when("solicitacaoApoio", {
+      is: true,
+      then: (schema) => schema.required("Campo obrigatório"),
+      otherwise: (schema) => schema.notRequired(),
+    }),
   solicitacaoAuxilioOutrasFontes: Yup.boolean()
     .nullable()
     .required("Campo obrigatório"),
@@ -59,10 +61,10 @@ export const detailsEventDataFormSchema = Yup.object({
 
 export const reviewDataFormSchema = Yup.object({
   situacao: Yup.boolean().nullable().required("Campo obrigatório"),
-  dataAprovacao: Yup.string().required("Campo obrigatório"),
+  dataAprovacao: Yup.string(),
   numeroAta: Yup.number(),
   numeroDiariasAprovadas: Yup.number(),
-  obs: Yup.string().required("Campo obrigatório"),
+  obs: Yup.string(),
 });
 
 export interface Solicitation {
