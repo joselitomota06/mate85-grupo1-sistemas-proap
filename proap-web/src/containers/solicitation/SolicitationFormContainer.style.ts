@@ -11,7 +11,7 @@ export const RegisterCircularProgress = styled(CircularProgress)`
 `;
 
 export const StyledTextField = styled(TextField)`
-  max-width: 400px;
+  max-width: 800px;
 
   div {
     padding: 0 !important;
