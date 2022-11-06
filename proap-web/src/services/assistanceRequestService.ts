@@ -15,5 +15,5 @@ export const getAssistanceRequests = () => (dispatch: AppDispatch) => {
 }
 
 export const getAssistanceRequestById = (id: number | string) => {
-  return api.get<SolicitationFormValues>(`assistancerequest/listById/${id}`)
+  return api.get<SolicitationFormValues>(`assistancerequest/find/${id}`)
 }
