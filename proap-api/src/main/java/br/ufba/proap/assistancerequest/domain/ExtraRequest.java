@@ -42,10 +42,10 @@ public class ExtraRequest {
 	private Boolean solicitacaoApoio;
 	private Boolean solicitacaoAuxilioOutrasFontes;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	private LocalDateTime createdAt;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	private LocalDateTime updatedAt;
 
 	@OneToOne(cascade = CascadeType.ALL)
