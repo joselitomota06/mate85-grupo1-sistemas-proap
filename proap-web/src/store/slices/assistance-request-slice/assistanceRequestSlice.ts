@@ -5,7 +5,9 @@ export interface AssistanceRequest {
   doi: string
   nomeCompleto: string
   valorSolicitado: number
-  valorInscricao: number
+  valorInscricao: number,
+  createdAt: string,
+  updatedAt: string,
   review : {
     createdAt: string,
     dataAprovacao: string,

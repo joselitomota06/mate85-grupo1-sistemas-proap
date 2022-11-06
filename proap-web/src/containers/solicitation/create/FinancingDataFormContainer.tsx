@@ -35,8 +35,7 @@ export default function ContactDataFormContainer() {
           error={Boolean(touched.solicitacaoApoio && errors.solicitacaoApoio)}
         >
           <FormLabel required>
-            Solicitou apoio para esse artigo em um outro programa <br /> de pos
-            graduação?
+            Solicitou apoio para esse artigo em um outro programa <br /> de pós-graduação?
           </FormLabel>
           <Field
             as={RadioGroup}

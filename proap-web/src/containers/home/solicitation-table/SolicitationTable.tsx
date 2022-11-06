@@ -68,7 +68,7 @@ export default function SolicitationTable() {
               </TableRow>
             )}
             {requests.length > 0 &&
-              requests.map(({ id, nomeCompleto, valorInscricao, review, user }) => (
+              requests.map(({ id, nomeCompleto, valorInscricao, createdAt, review, user }) => (
                 <TableRow key={nomeCompleto}>
                   <TableCell align="center">{nomeCompleto}</TableCell>
                   {review === null && (<TableCell align="center">Não aprovada</TableCell>)}
@@ -76,7 +76,7 @@ export default function SolicitationTable() {
                   {review !== null && (<TableCell align="center">Aprovada</TableCell>)}
                   <TableCell align="center">R$ {valorInscricao}</TableCell>
                   <TableCell align="center">R$</TableCell>
-                  <TableCell align="center">-</TableCell>
+                  <TableCell align="center">{createdAt}</TableCell>
                   
    
                   <TableCell align="center">
