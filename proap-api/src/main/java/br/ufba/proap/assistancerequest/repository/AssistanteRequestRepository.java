@@ -10,6 +10,5 @@ import br.ufba.proap.authentication.domain.User;
 
 @Repository
 public interface AssistanteRequestRepository extends JpaRepository<AssistanceRequestDTO, Long>{
-	
-	List<AssistanceRequestDTO>findByUser(User user);
+	List<AssistanceRequestDTO> findByUser(User user);
 }

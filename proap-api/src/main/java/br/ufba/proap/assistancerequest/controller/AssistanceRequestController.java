@@ -4,9 +4,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import br.ufba.proap.assistancerequest.domain.Review;
-import br.ufba.proap.assistancerequest.domain.dto.ReviewDTO;
-import br.ufba.proap.assistancerequest.service.ReviewService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.ufba.proap.assistancerequest.domain.AssistanceRequestDTO;
+import br.ufba.proap.assistancerequest.domain.Review;
+import br.ufba.proap.assistancerequest.domain.dto.ReviewDTO;
 import br.ufba.proap.assistancerequest.service.AssistanceRequestService;
-import br.ufba.proap.authentication.controller.UserController;
+import br.ufba.proap.assistancerequest.service.ReviewService;
 import br.ufba.proap.authentication.domain.User;
 import br.ufba.proap.authentication.service.UserService;
 
@@ -31,76 +30,102 @@ import br.ufba.proap.authentication.service.UserService;
 @RequestMapping("assistancerequest")
 public class AssistanceRequestController {
 
-	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+	private static final Logger logger = LoggerFactory.getLogger(AssistanceRequestController.class);
+
 	@Autowired
 	private AssistanceRequestService service;
 
 	@Autowired
 	private ReviewService reviewService;
-	
+
 	@Autowired
 	private UserService serviceUser;
-	
-	
-	
+
 	@GetMapping("/list")
 	public List<AssistanceRequestDTO> list() {
-		
+
 		User currentUser = serviceUser.getLoggedUser();
-		
-		if(currentUser == null) {
+
+		if (currentUser == null) {
 			return Collections.emptyList();
 		}
-		
+
 		try {
-			
 			return service.findAll();
-		
 		} catch (Exception e) {
 			return Collections.emptyList();
 		}
-	
+
 	}
-	
-	@GetMapping("/listById/{id}")
-	public Optional<AssistanceRequestDTO> listById(@PathVariable Long id) {	
+
+	@GetMapping("/list/{userId}")
+	public List<AssistanceRequestDTO> listById(@PathVariable Long userId) {
+		User currentUser = serviceUser.getLoggedUser();
+
+		if (currentUser == null)
+			return Collections.emptyList();
+
+		if(!currentUser.getId().equals(userId))
+			return Collections.emptyList();
+
 		try {
-			return service.findById(id);
+			return service.findByUser(currentUser);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return Collections.emptyList();
+		}
+	}
+
+	@GetMapping("/find/{id}")
+	public Optional<AssistanceRequestDTO> findById(@PathVariable Long id) {
+		User currentUser = serviceUser.getLoggedUser();
+
+		if (currentUser == null)
+			return Optional.empty();
+
+		try {
+			Optional<AssistanceRequestDTO> request = service.findById(id);
+
+			boolean isValid = currentUser.getPerfil() == null ||
+				(!currentUser.getPerfil().isAdmin() &&
+				request.isPresent() && !request.get()
+				.getUser().getId().equals(currentUser.getId()));
+
+			if(isValid)
+				return Optional.empty();
+
+			return request;
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return Optional.empty();
 		}
 	}
-	
-	
+
 	@PostMapping("/create")
 	public ResponseEntity<AssistanceRequestDTO> create(@RequestBody AssistanceRequestDTO assistanceReques) {
-		
+
 		User currentUser = serviceUser.getLoggedUser();
-		
-	
-		if(currentUser == null) {
+
+		if (currentUser == null) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
-		
-		
+
 		try {
 			assistanceReques.setUser(currentUser);
-			
+
 			String nomeUsuario = currentUser.getName();
 			String emailUsuario = currentUser.getEmail();
-			
-			
+
 			assistanceReques.setNomeSolicitante(nomeUsuario);
 			assistanceReques.setEmailSolicitacao(emailUsuario);
-			
+
 			return ResponseEntity.ok().body(service.save(assistanceReques));
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
 	}
-	
+
 	@PutMapping("/update")
 	public ResponseEntity<AssistanceRequestDTO> update(@RequestBody AssistanceRequestDTO assistanceReques) {
 		try {
@@ -110,28 +135,24 @@ public class AssistanceRequestController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
 	}
-	
-	
+
 	@DeleteMapping("/remove/{id}")
 	public ResponseEntity<String> remove(@PathVariable Long id) {
-		
 		User currentUser = serviceUser.getLoggedUser();
-		
-		if(currentUser == null) {
-			return (ResponseEntity<String>) Collections.emptyList();
-		}
-		
-		
+
+		if (currentUser == null)
+			return ResponseEntity.badRequest().build();
+
 		try {
 			Optional<AssistanceRequestDTO> assistanceReques = service.findById(id);
-	
+
 			if (assistanceReques.isPresent()) {
 				service.delete(assistanceReques.get());
 				return ResponseEntity.ok().body("Successfully removed");
 			}
-	
+
 			return ResponseEntity.notFound().build();
-	
+
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -139,13 +160,10 @@ public class AssistanceRequestController {
 	}
 
 	@PutMapping("/approve/{requestId}")
-	public ResponseEntity<Review> approveRequest(
-			@PathVariable String requestId,
-			@RequestBody ReviewDTO reviewDTO
-			) {
+	public ResponseEntity<Review> approveRequest(@PathVariable String requestId, @RequestBody ReviewDTO reviewDTO) {
 		User currentUser = serviceUser.getLoggedUser();
 
-		if(currentUser == null) {
+		if (currentUser == null) {
 			return ResponseEntity.badRequest().build();
 		}
 		// TODO : Validar se o usuario pode aprovar
@@ -159,13 +177,10 @@ public class AssistanceRequestController {
 	}
 
 	@PutMapping("/reprove/{requestId}")
-	public ResponseEntity<Review> reproveRequest(
-			@PathVariable String requestId,
-			@RequestBody ReviewDTO reviewDTO
-	) {
+	public ResponseEntity<Review> reproveRequest(@PathVariable String requestId, @RequestBody ReviewDTO reviewDTO) {
 		User currentUser = serviceUser.getLoggedUser();
 
-		if(currentUser == null) {
+		if (currentUser == null) {
 			return ResponseEntity.badRequest().build();
 		}
 		// TODO : Validar se o usuario pode aprovar

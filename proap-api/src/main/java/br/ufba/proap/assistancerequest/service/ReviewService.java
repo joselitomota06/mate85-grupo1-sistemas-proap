@@ -1,46 +1,39 @@
 package br.ufba.proap.assistancerequest.service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import br.ufba.proap.assistancerequest.domain.AssistanceRequestDTO;
 import br.ufba.proap.assistancerequest.domain.Review;
 import br.ufba.proap.assistancerequest.domain.dto.ReviewDTO;
 import br.ufba.proap.assistancerequest.domain.enums.ReviewSituacao;
-import br.ufba.proap.assistancerequest.repository.ReviewServiceRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import br.ufba.proap.assistancerequest.repository.ReviewRepository;
 
 @Service
 public class ReviewService {
 
     @Autowired
-    private ReviewServiceRepository reviewServiceRepository;
+    private ReviewRepository reviewRepository;
 
     public List<Review> getReviewServices(AssistanceRequestDTO assistanceRequestDTO) {
-        return reviewServiceRepository.findByAssistanceRequestDTO(assistanceRequestDTO);
-
-    }
-
-    public void setReviewServiceRepository(ReviewServiceRepository reviewServiceRepository) {
-        this.reviewServiceRepository = reviewServiceRepository;
+        return reviewRepository.findByAssistanceRequestDTO(assistanceRequestDTO);
     }
 
     public List<Review> findAll() {
-        // TODO Auto-generated method stub
-        return reviewServiceRepository.findAll();
+        return reviewRepository.findAll();
     }
 
     public Optional<Review> findById(Long id) {
-        // TODO Auto-generated method stub
-        return reviewServiceRepository.findById(id);
+        return reviewRepository.findById(id);
     }
 
     public Review save(Review review) {
         review.setSituacao(ReviewSituacao.EM_ANALISE);
-        return reviewServiceRepository.save(review);
+        return reviewRepository.save(review);
     }
 
     public Review approve(ReviewDTO reviewDTO) {
@@ -49,7 +42,7 @@ public class ReviewService {
         review.setDataAprovacao(LocalDateTime.now());
         review.setSituacao(ReviewSituacao.APROVADO);
 
-        return reviewServiceRepository.save(review);
+        return reviewRepository.save(review);
     }
 
     public Review reprove(ReviewDTO reviewDTO) {
@@ -57,7 +50,7 @@ public class ReviewService {
 
         review.setSituacao(ReviewSituacao.REPROVADO);
 
-        return reviewServiceRepository.save(review);
+        return reviewRepository.save(review);
     }
 
     public Review createReview(ReviewDTO reviewDTO) {
@@ -70,6 +63,6 @@ public class ReviewService {
     }
 
     public void delete(Review review) {
-        reviewServiceRepository.delete(review);
+        reviewRepository.delete(review);
     }
 }

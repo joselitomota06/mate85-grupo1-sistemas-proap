@@ -12,33 +12,23 @@ import br.ufba.proap.authentication.domain.User;
 
 @Service
 public class AssistanceRequestService{
-	
+
 	@Autowired
 	private AssistanteRequestRepository assistanteRequestRepository;
 
-	
-	
-	public List<AssistanceRequestDTO> getAssistanteRequestRepository(User user) {
-		return assistanteRequestRepository.findByUser(user);
-		
-	}
-
-	public void setAssistanteRequestRepository(AssistanteRequestRepository assistanteRequestRepository) {
-		this.assistanteRequestRepository = assistanteRequestRepository;
-	}
-
 	public List<AssistanceRequestDTO> findAll() {
-		// TODO Auto-generated method stub
 		return assistanteRequestRepository.findAll();
 	}
 
+	public List<AssistanceRequestDTO> findByUser(User user) {
+		return assistanteRequestRepository.findByUser(user);
+	}
+	
 	public Optional<AssistanceRequestDTO> findById(Long id) {
-		// TODO Auto-generated method stub
 		return assistanteRequestRepository.findById(id);
 	}
 
 	public AssistanceRequestDTO save(AssistanceRequestDTO assistanceReques) {
-		// TODO Auto-generated method stub
 		return assistanteRequestRepository.save(assistanceReques);
 	}
 
