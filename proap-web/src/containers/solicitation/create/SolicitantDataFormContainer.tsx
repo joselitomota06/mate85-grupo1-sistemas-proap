@@ -21,29 +21,19 @@ export default function ContactDataFormContainer() {
       <Field
         as={StyledTextField}
         label="E-mail"
-        name="email"
-        error={Boolean(touched.email && errors.email)}
-        helperText={touched.email && errors.email}
+        name="emailSolicitacao"
+        error={Boolean(touched.emailSolicitacao && errors.emailSolicitacao)}
+        helperText={touched.emailSolicitacao && errors.emailSolicitacao}
         required
         style={{ padding: "none" }}
         multiline
       />
       <Field
         as={StyledTextField}
-        label="Nome do solicitante"
+        label="Título completo da publicação a ser apoiada"
         name="nomeCompleto"
-        style={{ display: "inline-grid" }}
         error={Boolean(touched.nomeCompleto && errors.nomeCompleto)}
         helperText={touched.nomeCompleto && errors.nomeCompleto}
-        required
-        multiline
-      />
-      <Field
-        as={StyledTextField}
-        label="Título completo da publicação a ser apoiada"
-        name="titulo"
-        error={Boolean(touched.titulo && errors.titulo)}
-        helperText={touched.titulo && errors.titulo}
         required
         multiline
       />
