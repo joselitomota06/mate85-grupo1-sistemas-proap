@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 export interface AssistanceRequest {
   id: number
   doi: string
-  nomeCompleto: string
+  nomeSolicitante: string
   valorSolicitado: number
   valorInscricao: number,
   createdAt: string,
