@@ -1,11 +1,8 @@
 import * as Yup from "yup";
 
 export const solicitantDataFormSchema = Yup.object({
-  nomeCompleto: Yup.string().required("Campo obrigatório"),
-  email: Yup.string()
-    .required("Campo obrigatório")
-    .email("Insira um e-mail válido"),
-  titulo: Yup.string().required("Campo obrigatório"),
+  nomeCompleto: Yup.string(),
+  emailSolicitacao: Yup.string().required("Campo obrigatório").email("Insira um e-mail válido"),
   doi: Yup.string().notRequired(),
   autores: Yup.string().required("Campo obrigatório"),
   alunoPGCOMP: Yup.string().required("Campo obrigatório"),
@@ -61,20 +58,18 @@ export const detailsEventDataFormSchema = Yup.object({
 
 export const reviewDataFormSchema = Yup.object({
   situacao: Yup.boolean().nullable().required("Campo obrigatório"),
-  dataAprovacao: Yup.string(),
-  numeroAta: Yup.number(),
-  numeroDiariasAprovadas: Yup.number(),
-  obs: Yup.string(),
+  dataAprovacao: Yup.string().required("Campo obrigatório"),
+  numeroAta: Yup.number().required("Campo obrigatório"),
+  numeroDiariasAprovadas: Yup.number().required("Campo obrigatório"),
+  observacao: Yup.string().required("Campo obrigatório"),
 });
 
 export interface Solicitation {
-  email: string;
   nomeCompleto: string;
-  titulo: string;
   doi: string;
   autores: string;
   alunoPGCOMP: string;
-
+  emailSolicitacao: string;
   solicitacaoApoio: string | undefined;
   valorSolicitado: number | string;
   solicitacaoAuxilioOutrasFontes: string | undefined;
@@ -96,7 +91,7 @@ export interface Solicitation {
   dataAprovacao: string;
   numeroAta: number;
   numeroDiariasAprovadas: number;
-  obs: string;
+  observacao: string;
 }
 
 export interface SolicitationFormValues extends Solicitation {
@@ -104,12 +99,12 @@ export interface SolicitationFormValues extends Solicitation {
 }
 
 export const INITIAL_FORM_VALUES: SolicitationFormValues = {
-  email: "",
+  emailSolicitacao:"",
+  nomeSolicitante:"",
   nomeCompleto: "",
-  titulo: "",
   doi: "",
   autores: "",
-  alunoPGCOMP: "",
+  alunoPGCOMP: "true",
 
   solicitacaoApoio: "",
   valorSolicitado: "",
@@ -125,7 +120,7 @@ export const INITIAL_FORM_VALUES: SolicitationFormValues = {
   valorInscricao: undefined,
   comprovantePagamento: "",
   cartaAceite: "",
-  qualis: "",
+  qualis: "A1",
 
   aceiteFinal: false,
 
@@ -133,5 +128,5 @@ export const INITIAL_FORM_VALUES: SolicitationFormValues = {
   dataAprovacao: "",
   numeroAta: 0,
   numeroDiariasAprovadas: 0,
-  obs: "",
+  observacao: "",
 };
