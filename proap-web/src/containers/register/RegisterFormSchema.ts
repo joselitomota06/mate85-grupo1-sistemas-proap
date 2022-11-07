@@ -4,10 +4,10 @@ import { validateCPF } from '../../helpers'
 export const personalDataFormSchema = Yup.object({
   name: Yup.string().required('Campo obrigatório'),
   cpf: Yup.string()
-    .required('Campo obrigatório')
-    .test('validation-cpf', 'CPF inválido', function (cpf) {
-      return validateCPF(cpf)
-    }),
+    .required('Campo obrigatório'),
+    //.test('validation-cpf', 'CPF inválido', function (cpf) {
+    //  return validateCPF(cpf)
+    //}),
   registration: Yup.string().required('Campo obrigatório'),
 })
 

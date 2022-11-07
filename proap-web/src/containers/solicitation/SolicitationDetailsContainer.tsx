@@ -23,7 +23,7 @@ export default function SolicitationDetailsContainer({
         <StyledData>
           <Typography>Email</Typography>
           <Typography style={{ color: "gray" }} variant="subtitle2">
-            {solicitation.email}
+            {solicitation.emailSolicitacao}
           </Typography>
         </StyledData>
 
@@ -42,7 +42,7 @@ export default function SolicitationDetailsContainer({
             <span style={{ color: "red" }}>*</span>
           </Typography>
           <Typography style={{ color: "gray" }} variant="subtitle2">
-            {solicitation.titulo}
+            {solicitation.nomeCompleto}
           </Typography>
         </StyledData>
 

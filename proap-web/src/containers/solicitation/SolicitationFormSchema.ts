@@ -99,8 +99,8 @@ export interface SolicitationFormValues extends Solicitation {
 }
 
 export const INITIAL_FORM_VALUES: SolicitationFormValues = {
-  emailSolicitacao:"",
-  nomeSolicitante:"",
+ 
+  
   nomeCompleto: "",
   doi: "",
   autores: "",
@@ -111,7 +111,7 @@ export const INITIAL_FORM_VALUES: SolicitationFormValues = {
   solicitacaoAuxilioOutrasFontes: "",
   nomeAgenciaFomento: "",
   valorSolicitadoAgenciaFomento: "",
-
+  emailSolicitacao: "",
   dataInicio: "",
   dataFim: "",
   linkHomepage: "",
@@ -121,7 +121,6 @@ export const INITIAL_FORM_VALUES: SolicitationFormValues = {
   comprovantePagamento: "",
   cartaAceite: "",
   qualis: "A1",
-
   aceiteFinal: false,
 
   situacao: false,
