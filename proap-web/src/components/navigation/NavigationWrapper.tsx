@@ -23,7 +23,7 @@ export const NavigationWrapper = ({ children }: PropsWithChildren) => {
       link: '/',
     },
     {
-      label: 'Teste',
+      label: 'Usuários cadastrados',
       icon: <AddRounded />,
       link: '/',
     },
