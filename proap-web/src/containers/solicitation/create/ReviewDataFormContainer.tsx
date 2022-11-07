@@ -24,7 +24,7 @@ export default function ReviewDataFormContainer() {
       <Field
         as={StyledTextField}
         label="Data de aprovação da solicitação"
-        name="dataaprovacao"
+        name="dataAprovacao"
         type="date"
         error={Boolean(touched.dataAprovacao && errors.dataAprovacao)}
         helperText={touched.dataAprovacao && errors.dataAprovacao}
@@ -40,7 +40,7 @@ export default function ReviewDataFormContainer() {
       />
       <Field
         as={StyledTextField}
-        label="Número de diárias aprovadas"
+        label="Valor aproovado"
         name="numerodiarias"
         type="number"
         error={Boolean(touched.numeroAta && errors.numeroAta)}
@@ -50,9 +50,9 @@ export default function ReviewDataFormContainer() {
       <Field
         as={StyledTextField}
         label="Observação"
-        name="obs"
-        error={Boolean(touched.titulo && errors.titulo)}
-        helperText={touched.titulo && errors.titulo}
+        name="observacao"
+        error={Boolean(touched.observacao && errors.observacao)}
+        helperText={touched.observacao && errors.observacao}
       />
     </Grid>
   );
