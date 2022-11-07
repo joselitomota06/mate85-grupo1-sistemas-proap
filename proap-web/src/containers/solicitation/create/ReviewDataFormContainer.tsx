@@ -40,7 +40,7 @@ export default function ReviewDataFormContainer() {
       />
       <Field
         as={StyledTextField}
-        label="Valor aproovado"
+        label="Valor aprovado"
         name="numerodiarias"
         type="number"
         error={Boolean(touched.numeroAta && errors.numeroAta)}
