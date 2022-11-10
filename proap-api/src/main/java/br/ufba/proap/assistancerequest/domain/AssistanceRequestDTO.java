@@ -81,6 +81,7 @@ public class AssistanceRequestDTO {
 	
 	private Boolean autoresPresentePGCOMP;
 	
+	@Column(nullable = true)
 	private Float coinVariation;
 
 	public Boolean getAutoresPresentePGCOMP() {
