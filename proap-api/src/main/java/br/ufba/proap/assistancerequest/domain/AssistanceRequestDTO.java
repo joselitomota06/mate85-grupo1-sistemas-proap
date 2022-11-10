@@ -83,6 +83,8 @@ public class AssistanceRequestDTO {
 	
 	@Column(nullable = true)
 	private Float coinVariation;
+	
+	private Boolean isDolar;
 
 	public Boolean getAutoresPresentePGCOMP() {
 		return autoresPresentePGCOMP;
