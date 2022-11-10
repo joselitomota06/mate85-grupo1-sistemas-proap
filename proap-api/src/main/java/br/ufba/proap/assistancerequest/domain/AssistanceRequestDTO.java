@@ -80,6 +80,16 @@ public class AssistanceRequestDTO {
 	private String autores;
 	
 	private Boolean autoresPresentePGCOMP;
+	
+	private Float coinVariation;
+
+	public Boolean getAutoresPresentePGCOMP() {
+		return autoresPresentePGCOMP;
+	}
+
+	public void setAutoresPresentePGCOMP(Boolean autoresPresentePGCOMP) {
+		this.autoresPresentePGCOMP = autoresPresentePGCOMP;
+	}
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "reviewId", referencedColumnName = "id")
