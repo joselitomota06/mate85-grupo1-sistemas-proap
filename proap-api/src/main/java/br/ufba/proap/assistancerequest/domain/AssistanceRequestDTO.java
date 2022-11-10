@@ -78,6 +78,8 @@ public class AssistanceRequestDTO {
 	private String doi;
 
 	private String autores;
+	
+	private Boolean autoresPresentePGCOMP;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "reviewId", referencedColumnName = "id")
