@@ -85,6 +85,33 @@ public class AssistanceRequestDTO {
 	private Float coinVariation;
 	
 	private Boolean isDolar;
+	
+	public Float getCoinVariation() {
+		return coinVariation;
+	}
+
+	public void setCoinVariation(Float coinVariation) {
+		this.coinVariation = coinVariation;
+	}
+
+	public Boolean getIsDolar() {
+		return isDolar;
+	}
+
+	public void setIsDolar(Boolean isDolar) {
+		this.isDolar = isDolar;
+	}
+
+	public String getAutomaticDecText() {
+		return automaticDecText;
+	}
+
+	public void setAutomaticDecText(String automaticDecText) {
+		this.automaticDecText = automaticDecText;
+	}
+
+	@Column(nullable = true)
+	private String automaticDecText;
 
 	public Boolean getAutoresPresentePGCOMP() {
 		return autoresPresentePGCOMP;
