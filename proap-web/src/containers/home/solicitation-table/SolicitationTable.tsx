@@ -13,11 +13,13 @@ import { useSelector } from "react-redux";
 import {
   getAssistanceRequests,
   removeAssistanceRequestById,
+  getDeclarationRequests,
 } from "../../../services/assistanceRequestService";
 import { IRootState, useAppDispatch } from "../../../store";
 
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import ReviewsIcon from '@mui/icons-material/Reviews';
 import { Link, useNavigate } from "react-router-dom";
 import { Box } from "@mui/system";
 import { IconButton } from "@mui/material";
@@ -56,16 +58,20 @@ export default function SolicitationTable() {
     });
   };
 
-  const [open, setOpen] = React.useState(false);
-  const [solicitationId, setSolicitationId] = React.useState(0);
+  const [openModelRemove, setOpenModalRemove] = React.useState(false);
+  const [openModalDeclaration, setOpenModalDeclaration] = React.useState(false);
 
-  const handleClickOpenModal = (id: number) => {
+  const [solicitationId, setSolicitationId] = React.useState(0);
+  const [backendTex, setBackendTex] = React.useState('');
+
+  const handleClickOpenModalRemove = (id: number) => {
     setSolicitationId(id);
-    setOpen(true);
+    setOpenModalRemove(true);
   };
 
   const handleClose = () => {
-    setOpen(false);
+    setOpenModalRemove(false);
+    setOpenModalDeclaration(false);
   };
 
   const handleRemoveSolicitation = () => {
@@ -73,7 +79,13 @@ export default function SolicitationTable() {
     setSolicitationId(0);
     handleClose();
   }
-  
+
+  const handleClickOpenModalDeclaration = (id: number) => {
+    let strBackendText = getDeclarationRequests(id);
+    setBackendTex(strBackendText);
+    setOpenModalDeclaration(true);
+  }
+
   return (
     <>
       <Typography
@@ -131,11 +143,14 @@ export default function SolicitationTable() {
 
                     <TableCell align="center">
                       <Box>
+                        <IconButton onClick={() => handleClickOpenModalDeclaration(id)}>
+                          <ReviewsIcon />
+                        </IconButton>
                         <IconButton onClick={() => handleClickEditRequest(id)}>
                           <ModeEditIcon />
                         </IconButton>
                         <IconButton
-                          onClick={() => handleClickOpenModal(id)}
+                          onClick={() => handleClickOpenModalRemove(id)}
                         >
                           <DeleteIcon />
                         </IconButton>
@@ -148,17 +163,18 @@ export default function SolicitationTable() {
         </Table>
       </TableContainer>
 
+      {/* Modal Remove*/}
       <Dialog
-        open={open}
+        open={openModelRemove}
         onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
+        aria-labelledby="alert-dialog-title-remove"
+        aria-describedby="alert-dialog-description-remove"
       >
-        <DialogTitle id="alert-dialog-title">
+        <DialogTitle id="alert-dialog-title-remove">
           {"Remoção de solicitação"}
         </DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
+          <DialogContentText id="alert-dialog-description-remove">
             <b>Deseja realmente remover esta solicitação?</b>
           </DialogContentText>
         </DialogContent>
@@ -170,6 +186,28 @@ export default function SolicitationTable() {
         </DialogActions>
       </Dialog>
 
+      {/* Modal declaration */}
+      <Dialog
+        open={openModalDeclaration}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title-declaration"
+        aria-describedby="alert-dialog-description-declaration"
+      >
+        <DialogTitle id="alert-dialog-title-declaration">
+          {"Declaração"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description-declaration">
+            <b>{backendTex}</b>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Não</Button>
+          <Button onClick={handleClose} autoFocus>
+            Sim
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

@@ -22,3 +22,9 @@ export const getAssistanceRequestById = (id: number | string) => {
 export const removeAssistanceRequestById = (id: number | string) => {
   return api.delete<SolicitationFormValues>(`assistancerequest/remove/${id}`)
 }
+
+
+export const getDeclarationRequests = (id: number | string) => {
+  // return api.get<SolicitationFormValues>(`assistancerequest/find/${id}`)
+  return "Texto do back-end.";
+}
