@@ -25,12 +25,12 @@ import { useAuth } from "../../../hooks";
 import { toast, ToastOptions } from "react-toastify";
 
 // Modal inports
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 
 export default function SolicitationTable() {
   const dispatch = useAppDispatch();
@@ -72,8 +72,8 @@ export default function SolicitationTable() {
     handleClickRemoveRequest(solicitationId);
     setSolicitationId(0);
     handleClose();
-  }
-  
+  };
+
   return (
     <>
       <Typography
@@ -122,7 +122,7 @@ export default function SolicitationTable() {
                     {review === null && (
                       <TableCell
                         align="center"
-                        style={{ backgroundColor: "red" }}
+                        style={{ backgroundColor: "lightcoral" }}
                       >
                         Não aprovada
                       </TableCell>
@@ -131,7 +131,7 @@ export default function SolicitationTable() {
                     {review !== null && (
                       <TableCell
                         align="center"
-                        style={{ backgroundColor: "green" }}
+                        style={{ backgroundColor: "lightgreen" }}
                       >
                         Aprovada
                       </TableCell>
@@ -146,9 +146,7 @@ export default function SolicitationTable() {
                         <IconButton onClick={() => handleClickEditRequest(id)}>
                           <ModeEditIcon />
                         </IconButton>
-                        <IconButton
-                          onClick={() => handleClickOpenModal(id)}
-                        >
+                        <IconButton onClick={() => handleClickOpenModal(id)}>
                           <DeleteIcon />
                         </IconButton>
                       </Box>
@@ -181,7 +179,6 @@ export default function SolicitationTable() {
           </Button>
         </DialogActions>
       </Dialog>
-
     </>
   );
 }
