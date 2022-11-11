@@ -24,6 +24,14 @@ import { IconButton } from "@mui/material";
 import { useAuth } from "../../../hooks";
 import { toast, ToastOptions } from "react-toastify";
 
+// Modal inports
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
 export default function SolicitationTable() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -48,6 +56,24 @@ export default function SolicitationTable() {
     });
   };
 
+  const [open, setOpen] = React.useState(false);
+  const [solicitationId, setSolicitationId] = React.useState(0);
+
+  const handleClickOpenModal = (id: number) => {
+    setSolicitationId(id);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleRemoveSolicitation = () => {
+    handleClickRemoveRequest(solicitationId);
+    setSolicitationId(0);
+    handleClose();
+  }
+  
   return (
     <>
       <Typography
@@ -74,7 +100,7 @@ export default function SolicitationTable() {
           <TableBody>
             {requests.length === 0 && (
               <TableRow>
-                <TableCell colSpan={5}>
+                <TableCell colSpan={7}>
                   <Typography align="center" color="gray">
                     Nenhuma solicitação de auxílio encontrada.
                   </Typography>
@@ -121,7 +147,7 @@ export default function SolicitationTable() {
                           <ModeEditIcon />
                         </IconButton>
                         <IconButton
-                          onClick={() => handleClickRemoveRequest(id)}
+                          onClick={() => handleClickOpenModal(id)}
                         >
                           <DeleteIcon />
                         </IconButton>
@@ -133,6 +159,29 @@ export default function SolicitationTable() {
           </TableBody>
         </Table>
       </TableContainer>
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Remoção de solicitação"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            <b>Deseja realmente remover esta solicitação?</b>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Não</Button>
+          <Button onClick={handleRemoveSolicitation} autoFocus>
+            Sim
+          </Button>
+        </DialogActions>
+      </Dialog>
+
     </>
   );
 }
