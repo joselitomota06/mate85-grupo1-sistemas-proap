@@ -23,6 +23,7 @@ export default function ReviewDataFormContainer() {
 
       <Field
         as={StyledTextField}
+        style={{ maxWidth: "170px" }}
         label="Data de aprovação da solicitação"
         name="dataAprovacao"
         type="date"
@@ -32,6 +33,7 @@ export default function ReviewDataFormContainer() {
 
       <Field
         as={StyledTextField}
+        style={{ maxWidth: "170px" }}
         label="Número da ATA"
         name="numeroATA"
         type="number"
@@ -40,6 +42,7 @@ export default function ReviewDataFormContainer() {
       />
       <Field
         as={StyledTextField}
+        style={{ maxWidth: "250px" }}
         label="Valor aprovado"
         name="numerodiarias"
         type="number"
@@ -53,6 +56,7 @@ export default function ReviewDataFormContainer() {
         name="observacao"
         error={Boolean(touched.observacao && errors.observacao)}
         helperText={touched.observacao && errors.observacao}
+        multiline
       />
     </Grid>
   );

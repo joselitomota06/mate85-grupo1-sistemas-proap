@@ -20,6 +20,16 @@ export default function ContactDataFormContainer() {
     <Grid container direction="column" paddingTop={2} paddingBottom={2}>
       <Field
         as={StyledTextField}
+        label="Nome"
+        name="nomeSolicitacao"
+        error={Boolean(touched.nomeSolicitacao && errors.nomeSolicitacao)}
+        helperText={touched.nomeSolicitacao && errors.nomeSolicitacao}
+        required
+        style={{ padding: "none" }}
+        multiline
+      />
+      <Field
+        as={StyledTextField}
         label="E-mail"
         name="emailSolicitacao"
         error={Boolean(touched.emailSolicitacao && errors.emailSolicitacao)}

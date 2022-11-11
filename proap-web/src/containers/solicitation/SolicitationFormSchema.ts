@@ -1,8 +1,11 @@
 import * as Yup from "yup";
 
 export const solicitantDataFormSchema = Yup.object({
+  nomeSolicitacao: Yup.string().required("Campo obrigatório"),
+  emailSolicitacao: Yup.string()
+    .required("Campo obrigatório")
+    .email("Insira um e-mail válido"),
   nomeCompleto: Yup.string(),
-  emailSolicitacao: Yup.string().required("Campo obrigatório").email("Insira um e-mail válido"),
   doi: Yup.string().notRequired(),
   autores: Yup.string().required("Campo obrigatório"),
   alunoPGCOMP: Yup.string().required("Campo obrigatório"),
@@ -69,6 +72,7 @@ export interface Solicitation {
   doi: string;
   autores: string;
   alunoPGCOMP: string;
+  nomeSolicitacao: string;
   emailSolicitacao: string;
   solicitacaoApoio: string | undefined;
   valorSolicitado: number | string;
@@ -99,8 +103,6 @@ export interface SolicitationFormValues extends Solicitation {
 }
 
 export const INITIAL_FORM_VALUES: SolicitationFormValues = {
- 
-  
   nomeCompleto: "",
   doi: "",
   autores: "",
@@ -111,6 +113,7 @@ export const INITIAL_FORM_VALUES: SolicitationFormValues = {
   solicitacaoAuxilioOutrasFontes: "",
   nomeAgenciaFomento: "",
   valorSolicitadoAgenciaFomento: "",
+  nomeSolicitacao: "",
   emailSolicitacao: "",
   dataInicio: "",
   dataFim: "",

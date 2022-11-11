@@ -50,7 +50,7 @@ export default function ContactDataFormContainer() {
         <Grid container item direction="column">
           <Field
             as={StyledTextField}
-            label="Link de incrição do evento"
+            label="Link de incrição do evento (constando os valores solicitados)"
             name="linkHomepage"
             error={Boolean(touched.linkHomepage && errors.linkHomepage)}
             helperText={touched.linkHomepage && errors.linkHomepage}

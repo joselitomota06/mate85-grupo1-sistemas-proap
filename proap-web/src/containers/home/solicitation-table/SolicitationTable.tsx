@@ -58,6 +58,7 @@ export default function SolicitationTable() {
       >
         {isAdmin ? "Solicitações cadastradas" : "Minhas solicitações"}
       </Typography>
+
       <TableContainer sx={{ maxHeight: "500px" }}>
         <Table stickyHeader>
           <TableHead>
@@ -69,6 +70,7 @@ export default function SolicitationTable() {
             <TableCell align="center">Data de aprovação</TableCell>
             <TableCell align="center">Ações</TableCell>
           </TableHead>
+
           <TableBody>
             {requests.length === 0 && (
               <TableRow>
@@ -92,11 +94,21 @@ export default function SolicitationTable() {
                   <TableRow key={nomeSolicitante}>
                     <TableCell align="center">{nomeSolicitante}</TableCell>
                     {review === null && (
-                      <TableCell align="center">Não aprovada</TableCell>
+                      <TableCell
+                        align="center"
+                        style={{ backgroundColor: "red" }}
+                      >
+                        Não aprovada
+                      </TableCell>
                     )}
 
                     {review !== null && (
-                      <TableCell align="center">Aprovada</TableCell>
+                      <TableCell
+                        align="center"
+                        style={{ backgroundColor: "green" }}
+                      >
+                        Aprovada
+                      </TableCell>
                     )}
                     <TableCell align="center">R$ {valorInscricao}</TableCell>
                     <TableCell align="center">R$</TableCell>
