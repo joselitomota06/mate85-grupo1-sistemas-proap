@@ -93,8 +93,8 @@ export interface Solicitation {
 
   situacao: boolean;
   dataAprovacao: string;
-  numeroAta: number;
-  numeroDiariasAprovadas: number;
+  numeroAta: string;
+  numeroDiariasAprovadas: string;
   observacao: string;
 }
 
@@ -128,7 +128,7 @@ export const INITIAL_FORM_VALUES: SolicitationFormValues = {
 
   situacao: false,
   dataAprovacao: "",
-  numeroAta: 0,
-  numeroDiariasAprovadas: 0,
+  numeroAta: "",
+  numeroDiariasAprovadas: "",
   observacao: "",
 };

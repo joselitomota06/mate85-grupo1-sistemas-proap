@@ -11,7 +11,7 @@ export const updateSolicitation = (values: SolicitationFormValues) =>
   api.put("assistancerequest/update", values);
 
 export const approveAssistanceRequestById = (id: number | string, values: SolicitationFormValues) => 
-  api.put("assistancerequest/approve/${id}", values)
+  api.put(`assistancerequest/approve/${id}`, values)
 
 export const reproveAssistanceRequestById = (id: number | string, values: SolicitationFormValues) => 
-  api.put("assistancerequest/reprove/${id}", values)
+  api.put(`assistancerequest/reprove/${id}`, values)

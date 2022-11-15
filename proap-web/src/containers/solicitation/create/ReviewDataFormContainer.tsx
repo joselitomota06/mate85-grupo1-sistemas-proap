@@ -35,7 +35,7 @@ export default function ReviewDataFormContainer() {
         as={StyledTextField}
         style={{ maxWidth: "170px" }}
         label="Número da ATA"
-        name="numeroATA"
+        name="numeroAta"
         type="number"
         error={Boolean(touched.numeroAta && errors.numeroAta)}
         helperText={touched.numeroAta && errors.numeroAta}
@@ -44,10 +44,10 @@ export default function ReviewDataFormContainer() {
         as={StyledTextField}
         style={{ maxWidth: "250px" }}
         label="Valor aprovado"
-        name="numerodiarias"
+        name="numeroDiariasAprovadas"
         type="number"
-        error={Boolean(touched.numeroAta && errors.numeroAta)}
-        helperText={touched.numeroAta && errors.numeroAta}
+        error={Boolean(touched.numeroDiariasAprovadas && errors.numeroDiariasAprovadas)}
+        helperText={touched.numeroDiariasAprovadas && errors.numeroDiariasAprovadas}
       />
 
       <Field
@@ -57,6 +57,7 @@ export default function ReviewDataFormContainer() {
         error={Boolean(touched.observacao && errors.observacao)}
         helperText={touched.observacao && errors.observacao}
         multiline
+        rows={4}
       />
     </Grid>
   );
