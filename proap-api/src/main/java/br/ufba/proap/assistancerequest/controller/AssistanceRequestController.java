@@ -49,9 +49,15 @@ public class AssistanceRequestController {
 		if (currentUser == null) {
 			return Collections.emptyList();
 		}
-
+		
 		try {
-			return service.findAll();
+			
+			if (currentUser.getPerfil().isAdmin()) {
+				return service.findAll();
+			}else {
+				return service.findByUser(currentUser);
+			}
+			
 		} catch (Exception e) {
 			return Collections.emptyList();
 		}
@@ -67,6 +73,8 @@ public class AssistanceRequestController {
 
 		if(!currentUser.getId().equals(userId))
 			return Collections.emptyList();
+		
+		
 
 		try {
 			return service.findByUser(currentUser);
