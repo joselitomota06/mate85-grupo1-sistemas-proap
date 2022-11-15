@@ -32,7 +32,7 @@ export default function EditSolicitationPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (hasError) navigate("not-found");
+    if (hasError) navigate("/not-found");
   }, [hasError]);
 
   const handleEditSolicitationSubmit = useCallback(
