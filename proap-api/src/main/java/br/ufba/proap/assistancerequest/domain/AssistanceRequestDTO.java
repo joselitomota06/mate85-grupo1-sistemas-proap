@@ -19,6 +19,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import br.ufba.proap.assistancerequest.domain.dto.ReviewDTO;
 import br.ufba.proap.authentication.domain.User;
 
 @Entity
@@ -80,6 +81,11 @@ public class AssistanceRequestDTO {
 	private String autores;
 	
 	private Boolean autoresPresentePGCOMP;
+	
+	@Column(nullable = true)
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "reviewId", referencedColumnName = "id")
+	private Review revisaoSolicitacao;
 	
 	@Column(nullable = true)
 	private Float coinVariation;
