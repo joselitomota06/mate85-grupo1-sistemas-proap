@@ -1,7 +1,7 @@
-import { SolicitationFormValues } from "../containers/solicitation/SolicitationFormSchema";
-import { LoginFormValues } from "../containers/login/LoginFormSchema";
-import { authenticate } from "../store/slices/auth-slice/authSlice";
-import { AppDispatch } from "../store";
+import {
+  AdminSolicitationFormValues,
+  SolicitationFormValues,
+} from "../containers/solicitation/SolicitationFormSchema";
 import api from ".";
 
 export const submitSolicitation = (values: SolicitationFormValues) =>
@@ -10,8 +10,12 @@ export const submitSolicitation = (values: SolicitationFormValues) =>
 export const updateSolicitation = (values: SolicitationFormValues) =>
   api.put("assistancerequest/update", values);
 
-export const approveAssistanceRequestById = (id: number | string, values: SolicitationFormValues) => 
-  api.put(`assistancerequest/approve/${id}`, values)
+export const approveAssistanceRequestById = (
+  id: number | string,
+  values: AdminSolicitationFormValues
+) => api.put(`assistancerequest/approve/${id}`, values);
 
-export const reproveAssistanceRequestById = (id: number | string, values: SolicitationFormValues) => 
-  api.put(`assistancerequest/reprove/${id}`, values)
+export const reproveAssistanceRequestById = (
+  id: number | string,
+  values: AdminSolicitationFormValues
+) => api.put(`assistancerequest/reprove/${id}`, values);

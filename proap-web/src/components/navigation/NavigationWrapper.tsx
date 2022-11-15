@@ -21,12 +21,7 @@ export const NavigationWrapper = ({ children }: PropsWithChildren) => {
       label: 'Página Inicial',
       icon: <HomeIcon />,
       link: '/',
-    },
-    {
-      label: 'Usuários cadastrados',
-      icon: <AddRounded />,
-      link: '/',
-    },
+    }
   ]
 
   return (

@@ -26,8 +26,5 @@ export default function useSolicitation(id: string | undefined) {
     }
   }, [id]);
 
-  console.log(solicitation);
-  
-
   return { solicitation, isLoading, hasError };
 }

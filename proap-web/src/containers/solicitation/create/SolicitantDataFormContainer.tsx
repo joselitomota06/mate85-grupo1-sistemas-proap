@@ -21,9 +21,9 @@ export default function ContactDataFormContainer() {
       <Field
         as={StyledTextField}
         label="Nome"
-        name="nomeSolicitacao"
-        error={Boolean(touched.nomeSolicitacao && errors.nomeSolicitacao)}
-        helperText={touched.nomeSolicitacao && errors.nomeSolicitacao}
+        name="nomeSolicitante"
+        error={Boolean(touched.nomeSolicitante && errors.nomeSolicitante)}
+        helperText={touched.nomeSolicitante && errors.nomeSolicitante}
         required
         style={{ padding: "none" }}
         multiline

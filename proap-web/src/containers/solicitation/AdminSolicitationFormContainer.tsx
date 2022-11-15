@@ -14,7 +14,7 @@ import {
   INITIAL_FORM_VALUES,
   solicitantDataFormSchema,
   reviewDataFormSchema,
-  SolicitationFormValues,
+  AdminSolicitationFormValues,
 } from "./SolicitationFormSchema";
 import StepperForm, {
   FormStep,
@@ -22,7 +22,7 @@ import StepperForm, {
 
 interface SolicitationFormContainerProps {
   onSubmit: (values: FormikValues) => void;
-  initialValues?: SolicitationFormValues;
+  initialValues?: AdminSolicitationFormValues;
   title?: string;
   labels?: {
     previous?: string;
