@@ -1,5 +1,6 @@
 package br.ufba.proap.assistancerequest.controller;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -85,28 +86,30 @@ public class AssistanceRequestController {
 	}
 
 	@GetMapping("/find/{id}")
-	public Optional<AssistanceRequestDTO> findById(@PathVariable Long id) {
+	public ResponseEntity<Optional<AssistanceRequestDTO>> findById(@PathVariable Long id) {
 		User currentUser = serviceUser.getLoggedUser();
 
 		if (currentUser == null)
-			return Optional.empty();
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
 		try {
+		
 			Optional<AssistanceRequestDTO> request = service.findById(id);
-
-			boolean isValid = currentUser.getPerfil() == null ||
-				(!currentUser.getPerfil().isAdmin() &&
-				request.isPresent() && !request.get()
-				.getUser().getId().equals(currentUser.getId()));
-
-			if(isValid)
-				return Optional.empty();
-
-			return request;
+			
+			if(request == null) 
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+			
+			
+			if(request.get().getUser() == currentUser) {
+				return ResponseEntity.ok().body(request);
+			}			
+	
 		} catch (Exception e) {
 			logger.error(e.getMessage());
-			return Optional.empty();
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
+		
+		return null;
 	}
 
 	@PostMapping("/create")
@@ -119,6 +122,7 @@ public class AssistanceRequestController {
 		}
 
 		try {
+			
 			assistanceReques.setUser(currentUser);
 
 			String nomeUsuario = currentUser.getName();

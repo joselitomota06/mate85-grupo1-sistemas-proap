@@ -10,16 +10,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import br.ufba.proap.assistancerequest.domain.dto.ReviewDTO;
 import br.ufba.proap.authentication.domain.User;
 
 @Entity
@@ -83,9 +80,59 @@ public class AssistanceRequestDTO {
 	private Boolean autoresPresentePGCOMP;
 	
 	@Column(nullable = true)
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "reviewId", referencedColumnName = "id")
-	private Review revisaoSolicitacao;
+	private String numeroAta;
+    
+    public String getNumeroAta() {
+		return numeroAta;
+	}
+
+	public void setNumeroAta(String numeroAta) {
+		this.numeroAta = numeroAta;
+	}
+
+	public LocalDateTime getDataAprovacao() {
+		return dataAprovacao;
+	}
+
+	public void setDataAprovacao(LocalDateTime dataAprovacao) {
+		this.dataAprovacao = dataAprovacao;
+	}
+
+	public int getNumeroDiariasAprovadas() {
+		return numeroDiariasAprovadas;
+	}
+
+	public void setNumeroDiariasAprovadas(int numeroDiariasAprovadas) {
+		this.numeroDiariasAprovadas = numeroDiariasAprovadas;
+	}
+
+	public String getObservacao() {
+		return observacao;
+	}
+
+	public void setObservacao(String observacao) {
+		this.observacao = observacao;
+	}
+
+	public int getSituacao() {
+		return situacao;
+	}
+
+	public void setSituacao(int situacao) {
+		this.situacao = situacao;
+	}
+
+	@Column(nullable = true)
+    private LocalDateTime dataAprovacao;
+
+    @Column(nullable = true)
+    private int numeroDiariasAprovadas;
+    
+    @Column(nullable = true)
+    private String observacao;
+    
+    @Column(nullable = true)
+    private int situacao;
 	
 	@Column(nullable = true)
 	private Float coinVariation;
@@ -126,10 +173,6 @@ public class AssistanceRequestDTO {
 	public void setAutoresPresentePGCOMP(Boolean autoresPresentePGCOMP) {
 		this.autoresPresentePGCOMP = autoresPresentePGCOMP;
 	}
-
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "reviewId", referencedColumnName = "id")
-	private Review review;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	private LocalDateTime createdAt;
@@ -305,15 +348,7 @@ public class AssistanceRequestDTO {
 	public void setAutores(String autores) {
 		this.autores = autores;
 	}
-
-	public Review getReview() {
-		return review;
-	}
-
-	public void setReview(Review review) {
-		this.review = review;
-	}
-
+	
 	public String getNomeSolicitante() {
 		return nomeSolicitante;
 	}
