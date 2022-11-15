@@ -135,6 +135,16 @@ public class AssistanceRequestController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
 	}
+	
+	@PutMapping("/reviewsolicitation")
+	public ResponseEntity<AssistanceRequestDTO> reviewsolicitation(@RequestBody AssistanceRequestDTO assistanceReques) {
+		try {
+			return ResponseEntity.ok().body(service.save(assistanceReques));
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		}
+	}
 
 	@DeleteMapping("/remove/{id}")
 	public ResponseEntity<String> remove(@PathVariable Long id) {
