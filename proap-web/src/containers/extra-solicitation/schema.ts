@@ -12,6 +12,10 @@ export interface ExtraSolicitation {
   valorSolicitadoAgenciaFomento: number | string;
 }
 
+export interface ExtraSolicitationFormValues extends ExtraSolicitation {
+  aceiteFinal: boolean
+}
+
 export const extraSolicitantDataSchema = Yup.object({
   nomeSolicitante: Yup.string().required("Campo obrigatório"),
   emailSolicitacao: Yup.string()
@@ -50,7 +54,7 @@ export const extraSolicitationFinancingSchema = Yup.object({
   ),
 });
 
-export const EXTRA_SOLICITATION_INITIAL_VALUES: ExtraSolicitation = {
+export const EXTRA_SOLICITATION_INITIAL_VALUES: ExtraSolicitationFormValues = {
   id: 0,
   nomeSolicitante: "",
   emailSolicitacao: "",
@@ -60,4 +64,5 @@ export const EXTRA_SOLICITATION_INITIAL_VALUES: ExtraSolicitation = {
   solicitacaoAuxilioOutrasFontes: false,
   nomeAgenciaFomento: "",
   valorSolicitadoAgenciaFomento: "",
+  aceiteFinal: false
 };

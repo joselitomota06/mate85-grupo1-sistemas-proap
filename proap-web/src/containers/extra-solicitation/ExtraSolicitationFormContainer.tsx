@@ -13,10 +13,11 @@ import {
   ExtraSolicitation,
   extraSolicitationFinancingSchema,
 } from "./schema";
+import { detailsEventDataFormSchema } from "../solicitation/SolicitationFormSchema";
 
 interface ExtraSolicitationFormContainerProps {
   initialValues: ExtraSolicitation;
-  onSubmit: () => void;
+  onSubmit: (values: FormikValues) => Promise<any>;
   labels?: object;
   title: string;
 }
@@ -41,7 +42,7 @@ export default function ExtraSolicitationFormContainer(
       {
         label: "Detalhes",
         component: ExtraSolicitationDetailsFormContainer,
-        // schema: detailsEventDataFormSchema,
+        schema: detailsEventDataFormSchema,
       },
     ],
     []
