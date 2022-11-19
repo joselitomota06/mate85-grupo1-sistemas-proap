@@ -1,27 +1,32 @@
-import React, { useMemo } from 'react'
-import StepperForm, { FormStep } from '../../components/stepper-form/StepperForm';
-import { Typography } from '@mui/material';
-import { FormikValues } from 'formik';
+import React, { useMemo } from "react";
+import StepperForm, {
+  FormStep,
+} from "../../components/stepper-form/StepperForm";
+import { Typography } from "@mui/material";
+import { FormikValues } from "formik";
 
-import {
-  detailsEventDataFormSchema,
-  financingDataFormSchema,
-} from "../solicitation/SolicitationFormSchema";
+import { detailsEventDataFormSchema } from "../solicitation/SolicitationFormSchema";
 
-import FinancingDataFormContainer from "../solicitation/create/FinancingDataFormContainer";
 import DetailsDataFormContainer from "../solicitation/create/DetailsDataFormContainer";
-import ExtraSolicitantDataContainer from './steps/ExtraSolicitantDataContainer';
-import { extraSolicitantDataSchema, ExtraSolicitation } from './schema';
+import ExtraSolicitantDataContainer from "./steps/ExtraSolicitantDataContainer";
+import {
+  extraSolicitantDataSchema,
+  ExtraSolicitation,
+  extraSolicitationFinancingSchema,
+} from "./schema";
+import ExtraSolicitationFinancingContainer from "./steps/ExtraSolicitationFinancingContainer";
 
 interface ExtraSolicitationFormContainerProps {
-  initialValues: ExtraSolicitation
-  onSubmit: () => void
-  labels?: object
-  title: string
+  initialValues: ExtraSolicitation;
+  onSubmit: () => void;
+  labels?: object;
+  title: string;
 }
 
-export default function ExtraSolicitationFormContainer(props: ExtraSolicitationFormContainerProps) {
-  const { title, initialValues, labels, onSubmit } = props
+export default function ExtraSolicitationFormContainer(
+  props: ExtraSolicitationFormContainerProps
+) {
+  const { title, initialValues, labels, onSubmit } = props;
 
   const extraSolicitationFormSteps: FormStep[] = useMemo(
     () => [
@@ -32,8 +37,8 @@ export default function ExtraSolicitationFormContainer(props: ExtraSolicitationF
       },
       {
         label: "Financiamento",
-        component: FinancingDataFormContainer,
-        schema: financingDataFormSchema,
+        component: ExtraSolicitationFinancingContainer,
+        schema: extraSolicitationFinancingSchema,
       },
       {
         label: "Detalhes",
