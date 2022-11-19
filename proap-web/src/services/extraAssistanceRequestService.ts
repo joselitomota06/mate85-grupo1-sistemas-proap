@@ -12,5 +12,11 @@ export const getExtraAssistanceRequests = () => (dispatch: AppDispatch) =>
 export const createExtraAssistanceRequest = (request: ExtraSolicitation) =>
   api.post("extrarequest/create", request);
 
+export const updateExtraAssistanceRequest = (request: ExtraSolicitation) =>
+  api.put("extrarequest/update", request);
+
+export const getExtraAssistanceRequestById = (id: number) =>
+  api.get<ExtraSolicitation>(`extrarequest/find/${id}`);
+
 export const deleteExtraAssistanceRequest = (id: number) =>
   api.delete(`extrarequest/remove/${id}`);
