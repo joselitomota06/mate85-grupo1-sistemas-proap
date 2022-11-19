@@ -102,15 +102,6 @@ export default function SolicitationTable() {
 
   return (
     <>
-      <Typography
-        variant="h4"
-        color="primary"
-        fontWeight="bold"
-        paddingBottom={2}
-      >
-        {isAdmin ? "Solicitações cadastradas" : "Minhas solicitações"}
-      </Typography>
-
       <TableContainer sx={{ maxHeight: "500px" }}>
         <Table stickyHeader>
           <TableHead>
