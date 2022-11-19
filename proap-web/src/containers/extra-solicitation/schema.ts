@@ -1,4 +1,5 @@
 import * as Yup from "yup";
+import { RequestReview } from "../../store/slices/assistance-request-slice/assistanceRequestSlice";
 
 export interface ExtraSolicitation {
   id: number;
@@ -10,6 +11,8 @@ export interface ExtraSolicitation {
   solicitacaoAuxilioOutrasFontes: boolean | string;
   nomeAgenciaFomento: string;
   valorSolicitadoAgenciaFomento: number | string;
+  review?: RequestReview
+  createdAt?: string
 }
 
 export interface ExtraSolicitationFormValues extends ExtraSolicitation {
