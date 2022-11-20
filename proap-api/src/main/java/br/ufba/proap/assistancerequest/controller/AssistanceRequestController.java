@@ -43,25 +43,18 @@ public class AssistanceRequestController {
 
 	@GetMapping("/list")
 	public List<AssistanceRequestDTO> list() {
-
 		User currentUser = serviceUser.getLoggedUser();
-		
-		//System.out.println(currentUser.getPerfil().isAdmin());
 
 		if (currentUser == null) {
 			return Collections.emptyList();
 		}
-		
+
 		try {
-			/*
-			List<AssistanceRequestDTO> request =  service.findByUser(currentUser);
-			
-			if (!currentUser.getPerfil().isAdmin()) {
+			if (currentUser.getPerfil() != null && currentUser.getPerfil().isAdmin()) {
 				return service.findAll();
 			}
-			*/
-		
-			return service.findAll();
+
+			return service.findByUser(currentUser);
 		} catch (Exception e) {
 			return Collections.emptyList();
 		}
@@ -89,22 +82,21 @@ public class AssistanceRequestController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
 		try {
-		
+
 			Optional<AssistanceRequestDTO> request = service.findById(id);
-			
-			if(request == null) 
+
+			if (request == null)
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-			
-			
-			if(request.get().getUser() == currentUser) {
+
+			if (request.get().getUser() == currentUser) {
 				return ResponseEntity.ok().body(request);
-			}			
-	
+			}
+
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
-		
+
 		return null;
 	}
 
@@ -118,9 +110,9 @@ public class AssistanceRequestController {
 		}
 
 		try {
-		
+
 			assistanceReques.setSituacao(0);
-			
+
 			return ResponseEntity.ok().body(service.save(assistanceReques));
 		} catch (Exception e) {
 			logger.error(e.getMessage());
@@ -137,7 +129,7 @@ public class AssistanceRequestController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
 	}
-	
+
 	@PutMapping("/reviewsolicitation")
 	public ResponseEntity<AssistanceRequestDTO> reviewsolicitation(@RequestBody AssistanceRequestDTO assistanceReques) {
 		User currentUser = serviceUser.getLoggedUser();
@@ -145,10 +137,10 @@ public class AssistanceRequestController {
 		if (currentUser == null) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
-		
+
 		try {
 			assistanceReques.setAutomaticDecText(" ");
-			
+
 			return ResponseEntity.ok().body(service.save(assistanceReques));
 		} catch (Exception e) {
 			logger.error(e.getMessage());
