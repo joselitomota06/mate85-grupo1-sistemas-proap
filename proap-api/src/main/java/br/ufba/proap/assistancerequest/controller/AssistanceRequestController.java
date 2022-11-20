@@ -68,18 +68,16 @@ public class AssistanceRequestController {
 	}
 
 	@GetMapping("/list/{userId}")
-	public Optional<AssistanceRequestDTO> listById(@PathVariable Long userId) {
+	public List<AssistanceRequestDTO> listById(@PathVariable Long userId) {
 		User currentUser = serviceUser.getLoggedUser();
 
 		if (currentUser == null)
-			return Optional.empty();
-
-		
+			return Collections.emptyList();
 		try {
-			return service.findById(userId);
+			return service.findByUser(currentUser);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
-			return Optional.empty();
+			return Collections.emptyList();
 		}
 	}
 
