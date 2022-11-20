@@ -106,32 +106,21 @@ public class AssistanceRequestDTO {
 	private String numeroAta;
 	
 	@Column(nullable = true)
-    private LocalDateTime dataAprovacao;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    private LocalDate dataAprovacao;
 
     @Column(nullable = true)
     private int numeroDiariasAprovadas;
     
     @Column(nullable = true)
-    private int valorAprovado;
+    private Float valorAprovado;
     
 	@Column(nullable = true)
     private String observacao;
 	
-	@Column(nullable = true)
-	private User responsavelAprovacao;
-    
 	// Apos aceite
-	@Column(nullable = true)
+	@Column(nullable = true, columnDefinition = "text")
 	private String automaticDecText;
-	
-	public User getResponsavelAprovacao() {
-		return responsavelAprovacao;
-	}
-
-	public void setResponsavelAprovacao(User responsavelAprovacao) {
-		this.responsavelAprovacao = responsavelAprovacao;
-	}
-	
 	
 	public String getNomeEvento() {
 		return nomeEvento;
@@ -158,11 +147,11 @@ public class AssistanceRequestDTO {
 	}
 	
 	
-	public int getValorAprovado() {
+	public Float getValorAprovado() {
 		return valorAprovado;
 	}
 
-	public void setValorAprovado(int valorAprovado) {
+	public void setValorAprovado(Float valorAprovado) {
 		this.valorAprovado = valorAprovado;
 	}
     
@@ -174,11 +163,11 @@ public class AssistanceRequestDTO {
 		this.numeroAta = numeroAta;
 	}
 
-	public LocalDateTime getDataAprovacao() {
+	public LocalDate getDataAprovacao() {
 		return dataAprovacao;
 	}
 
-	public void setDataAprovacao(LocalDateTime dataAprovacao) {
+	public void setDataAprovacao(LocalDate dataAprovacao) {
 		this.dataAprovacao = dataAprovacao;
 	}
 

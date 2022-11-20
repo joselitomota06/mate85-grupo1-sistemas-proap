@@ -123,14 +123,7 @@ public class AssistanceRequestController {
 		}
 
 		try {
-			
-			assistanceReques.setUser(currentUser);
-
-			String nomeUsuario = currentUser.getName();
-			String emailUsuario = currentUser.getEmail();
-
-			assistanceReques.setNomeSolicitante(nomeUsuario);
-			assistanceReques.setEmailSolicitacao(emailUsuario);
+		
 			assistanceReques.setSituacao(0);
 			
 			return ResponseEntity.ok().body(service.save(assistanceReques));
@@ -160,7 +153,6 @@ public class AssistanceRequestController {
 		
 		try {
 			assistanceReques.setAutomaticDecText(" ");
-			assistanceReques.setResponsavelAprovacao(currentUser);
 			
 			return ResponseEntity.ok().body(service.save(assistanceReques));
 		} catch (Exception e) {

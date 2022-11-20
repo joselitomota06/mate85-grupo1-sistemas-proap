@@ -112,6 +112,7 @@ public class ExtraRequestController {
 			extraRequest.setUser(currentUser);
 			extraRequest.setNomeSolicitante(currentUser.getName());
 			extraRequest.setEmailSolicitacao(currentUser.getEmail());
+			extraRequest.setSituacao(0);
 			return ResponseEntity.ok().body(service.save(extraRequest));
 		} catch (Exception e) {
 			logger.error(e.getMessage());
@@ -146,6 +147,24 @@ public class ExtraRequestController {
 
 			return ResponseEntity.notFound().build();
 
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		}
+	}
+	
+	@PutMapping("/extrareviewsolicitation")
+	public ResponseEntity<ExtraRequest> reviewextrasolicitation(@RequestBody ExtraRequest extraRequest) {
+		User currentUser = serviceUser.getLoggedUser();
+
+		if (currentUser == null) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		}
+		
+		try {
+			extraRequest.setAutomaticDecText(" ");
+			
+			return ResponseEntity.ok().body(service.save(extraRequest));
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
