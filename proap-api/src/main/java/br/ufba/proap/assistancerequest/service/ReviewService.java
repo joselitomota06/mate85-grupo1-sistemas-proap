@@ -19,10 +19,6 @@ public class ReviewService {
     @Autowired
     private ReviewRepository reviewRepository;
 
-    public List<Review> getReviewServices(AssistanceRequestDTO assistanceRequestDTO) {
-        return reviewRepository.findByAssistanceRequestDTO(assistanceRequestDTO);
-    }
-
     public List<Review> findAll() {
         return reviewRepository.findAll();
     }

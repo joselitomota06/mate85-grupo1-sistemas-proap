@@ -48,10 +48,6 @@ public class ExtraRequest {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	private LocalDateTime updatedAt;
 
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "reviewId", referencedColumnName = "id")
-	private Review review;
-
 	public Long getId() {
 		return id;
 	}
@@ -66,14 +62,6 @@ public class ExtraRequest {
 
 	public void setUser(User user) {
 		this.user = user;
-	}
-
-	public Review getReview() {
-		return review;
-	}
-
-	public void setReview(Review review) {
-		this.review = review;
 	}
 
 	public Boolean getSolicitacaoApoio() {

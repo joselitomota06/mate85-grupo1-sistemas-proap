@@ -41,37 +41,13 @@ public class Review {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime updatedAt;
-
-    @JsonIgnore
-    @OneToOne(mappedBy = "review")
-    private AssistanceRequestDTO assistanceRequestDTO;
-
-    @JsonIgnore
-    @OneToOne(mappedBy = "review")
-    private ExtraRequest extraRequest;
-
+    
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public AssistanceRequestDTO getAssistanceRequestDTO() {
-        return assistanceRequestDTO;
-    }
-
-    public void setExtraRequest(ExtraRequest extraRequest) {
-        this.extraRequest = extraRequest;
-    }
-
-    public ExtraRequest getExtraRequest() {
-        return extraRequest;
-    }
-
-    public void setAssistanceRequestDTO(AssistanceRequestDTO assistanceRequestDTO) {
-        this.assistanceRequestDTO = assistanceRequestDTO;
     }
     
     public String getNumeroAta() {
