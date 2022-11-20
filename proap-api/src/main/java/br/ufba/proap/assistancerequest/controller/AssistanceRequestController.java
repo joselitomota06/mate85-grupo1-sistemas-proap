@@ -53,36 +53,33 @@ public class AssistanceRequestController {
 		}
 		
 		try {
-			List<AssistanceRequestDTO> request =  service.findByUser(currentUser);
 			/*
+			List<AssistanceRequestDTO> request =  service.findByUser(currentUser);
+			
 			if (!currentUser.getPerfil().isAdmin()) {
 				return service.findAll();
 			}
 			*/
 		
-			return request;
+			return service.findAll();
 		} catch (Exception e) {
 			return Collections.emptyList();
 		}
 	}
 
 	@GetMapping("/list/{userId}")
-	public List<AssistanceRequestDTO> listById(@PathVariable Long userId) {
+	public Optional<AssistanceRequestDTO> listById(@PathVariable Long userId) {
 		User currentUser = serviceUser.getLoggedUser();
 
 		if (currentUser == null)
-			return Collections.emptyList();
+			return Optional.empty();
 
-		if(!currentUser.getId().equals(userId))
-			return Collections.emptyList();
 		
-		
-
 		try {
-			return service.findByUser(currentUser);
+			return service.findById(userId);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
-			return Collections.emptyList();
+			return Optional.empty();
 		}
 	}
 
