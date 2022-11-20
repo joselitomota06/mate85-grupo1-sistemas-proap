@@ -11,6 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
+import { maskCpf, maskPhone } from "../../helpers/masks";
 import useUsers from "../../hooks/auth/useUsers";
 
 export default function UsersPage() {
@@ -52,8 +53,8 @@ export default function UsersPage() {
                   {name}
                 </TableCell>
                 <TableCell align="right">{email}</TableCell>
-                <TableCell align="right">{cpf}</TableCell>
-                <TableCell align="right">{phone}</TableCell>
+                <TableCell align="right">{maskCpf(cpf)}</TableCell>
+                <TableCell align="right">{maskPhone(phone)}</TableCell>
               </TableRow>
             ))}
           </TableBody>
