@@ -139,7 +139,7 @@ export default function ContactDataFormContainer() {
             </FormControl>
           </Grid>
 
-          {values.isDolar === 'true' && (
+          {values.isDolar === true && (
             <Grid item>
               <Field
                 as={StyledTextField}
