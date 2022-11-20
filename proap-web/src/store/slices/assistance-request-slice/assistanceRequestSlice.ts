@@ -8,16 +8,7 @@ export interface AssistanceRequest {
   valorInscricao: number,
   createdAt: string,
   updatedAt: string,
-  review : {
-    createdAt: string,
-    dataAprovacao: string,
-    id: number,
-    numeroAta: string,
-    numeroDiariasAprovadas: number,
-    observacao: string,
-    situacao: number,
-    updatedAt: string
-  }
+  situacao: number,
   user : {
     id: number
     alternativePhone: string

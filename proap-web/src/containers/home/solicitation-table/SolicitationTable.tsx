@@ -114,12 +114,12 @@ export default function SolicitationTable() {
                   nomeSolicitante,
                   valorInscricao,
                   createdAt,
-                  review,
+                  situacao,
                   user,
                 }) => (
                   <TableRow key={nomeSolicitante}>
                     <TableCell align="center">{nomeSolicitante}</TableCell>
-                    {review === null && (
+                    {situacao === 2 && (
                       <TableCell
                         align="center"
                         style={{ backgroundColor: "lightcoral" }}
@@ -128,12 +128,21 @@ export default function SolicitationTable() {
                       </TableCell>
                     )}
 
-                    {review !== null && (
+                    {situacao === 1 && (
                       <TableCell
                         align="center"
                         style={{ backgroundColor: "lightgreen" }}
                       >
                         Aprovada
+                      </TableCell>
+                    )}
+
+                    {situacao === 0 && (
+                      <TableCell
+                        align="center"
+                        style={{ backgroundColor: "gray" }}
+                      >
+                        Pendente de avaliação
                       </TableCell>
                     )}
                     <TableCell align="center">R$ {valorInscricao}</TableCell>
