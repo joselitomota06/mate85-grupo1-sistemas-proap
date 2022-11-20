@@ -63,10 +63,10 @@ public class ExtraRequestController {
 
 		if (currentUser == null)
 			return Collections.emptyList();
-
+		/*
 		if(!currentUser.getId().equals(userId))
 			return Collections.emptyList();
-
+		*/
 		try {
 			return service.findByUser(currentUser);
 		} catch (Exception e) {
