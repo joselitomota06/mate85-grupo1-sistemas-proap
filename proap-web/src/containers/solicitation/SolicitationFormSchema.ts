@@ -149,6 +149,8 @@ export const INITIAL_FORM_VALUES: SolicitationFormValues = {
   observacao: "",
   coinVariation: undefined,
   nomeEvento: "",
-  quantidadeDiariasSolicitadas: 0
+  quantidadeDiariasSolicitadas: 0,
+
+  autoresPresentePGCOMP: false,
 
 };
