@@ -50,11 +50,14 @@ public class ExtraRequestController {
 		}
 
 		try {
-			return service.findAll();
+			if (currentUser.getPerfil() != null && currentUser.getPerfil().isAdmin()) {
+				return service.findAll();
+			}
+
+			return service.findByUser(currentUser);
 		} catch (Exception e) {
 			return Collections.emptyList();
 		}
-
 	}
 
 	@GetMapping("/list/{userId}")
