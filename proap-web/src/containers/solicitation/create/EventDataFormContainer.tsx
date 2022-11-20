@@ -130,8 +130,8 @@ export default function ContactDataFormContainer() {
               name="isDolar"
               row
             >
-              <FormControlLabel value="true" control={<Radio />} label="Sim" />
-              <FormControlLabel value="false" control={<Radio />} label="Não" />
+              <FormControlLabel value='true' control={<Radio />} label="Sim" />
+              <FormControlLabel value='false' control={<Radio />} label="Não" />
             </Field>
             {touched.isDolar && errors.isDolar && (
               <FormHelperText>{errors.isDolar}</FormHelperText>
@@ -139,7 +139,7 @@ export default function ContactDataFormContainer() {
             </FormControl>
           </Grid>
 
-          {values.isDolar === true && (
+          {values.isDolar === 'true' && (
             <Grid item>
               <Field
                 as={StyledTextField}

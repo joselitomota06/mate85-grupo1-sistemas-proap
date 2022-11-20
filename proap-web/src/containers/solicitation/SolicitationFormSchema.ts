@@ -94,7 +94,7 @@ export interface Solicitation {
   nomeAgenciaFomento: string;
   valorSolicitadoAgenciaFomento: number | string;
   autoresPresentePGCOMP: boolean;
-  isDolar: boolean;
+  isDolar: string | undefined;
   dataInicio: string;
   dataFim: string;
   linkHomepage: string;
@@ -141,7 +141,7 @@ export const INITIAL_FORM_VALUES: SolicitationFormValues = {
   cartaAceite: "",
   qualis: "A1",
   aceiteFinal: false,
-  isDolar: false,
+  isDolar: "",
   situacao: 0,
   dataAprovacao: "",
   numeroAta: 0,
