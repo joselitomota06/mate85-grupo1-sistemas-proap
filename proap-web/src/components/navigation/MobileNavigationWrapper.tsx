@@ -39,6 +39,8 @@ export const MobileNavigationWrapper = ({
   const handleDrawerOpen = () => setDrawerOpen(true);
   const handleDrawerClose = () => setDrawerOpen(false);
 
+  const handleClickNavigation = () => setDrawerOpen(false);
+
   const handleClickExit = useCallback(() => {
     dispatch(logout());
   }, [dispatch]);
@@ -101,7 +103,11 @@ export const MobileNavigationWrapper = ({
               <React.Fragment key={label}>
                 {visible && (
                   <ListItem>
-                    <ListItemButton component={NavLink} to={link}>
+                    <ListItemButton
+                      component={NavLink}
+                      to={link}
+                      onClick={handleClickNavigation}
+                    >
                       {icon}
                       <ListItemText primary={label} />
                     </ListItemButton>
