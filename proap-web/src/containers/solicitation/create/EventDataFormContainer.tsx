@@ -7,6 +7,9 @@ import {
   TextField,
   FormLabel,
   FormControl,
+  RadioGroup,
+  Radio,
+  FormControlLabel,
   FormHelperText,
   MenuItem,
   Tooltip,
@@ -17,7 +20,7 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { StyledTextField } from "../SolicitationFormContainer.style";
 
 export default function ContactDataFormContainer() {
-  const { errors, touched } = useFormikContext<SolicitationFormValues>();
+  const { values, errors, touched } = useFormikContext<SolicitationFormValues>();
 
   return (
     <Grid container paddingTop={2} paddingBottom={2}>
@@ -45,9 +48,34 @@ export default function ContactDataFormContainer() {
               required
             />
           </Grid>
+
+          <Grid item>
+            <Field
+              as={StyledTextField}
+              label="Quantidade de diárias solicitadas "
+              name="quantidadeDiariasSolicitadas"
+              type="number"
+              error={Boolean(touched.quantidadeDiariasSolicitadas && errors.quantidadeDiariasSolicitadas)}
+              helperText={touched.quantidadeDiariasSolicitadas && errors.quantidadeDiariasSolicitadas}
+            />
+          </Grid>
+
+
         </Grid>
 
         <Grid container item direction="column">
+
+        <Field
+            as={StyledTextField}
+            label="Nome do evento"
+            name="nomeEvento"
+            error={Boolean(touched.nomeEvento && errors.nomeEvento)}
+            helperText={touched.nomeEvento && errors.nomeEvento}
+            required
+            multiline
+          />
+
+
           <Field
             as={StyledTextField}
             label="Link de incrição do evento (constando os valores solicitados)"
@@ -91,6 +119,40 @@ export default function ContactDataFormContainer() {
               />
             </Tooltip>
           </Grid>
+          <Grid>
+            <FormControl error={Boolean(touched.isDolar && errors.isDolar)}>
+            <FormLabel required>
+              Os valores pagos foram em outra dolar($)?
+            </FormLabel>
+            <Field
+              as={RadioGroup}
+              aria-labelledby="demo-row-radio-buttons-group-label"
+              name="isDolar"
+              row
+            >
+              <FormControlLabel value="true" control={<Radio />} label="Sim" />
+              <FormControlLabel value="false" control={<Radio />} label="Não" />
+            </Field>
+            {touched.isDolar && errors.isDolar && (
+              <FormHelperText>{errors.isDolar}</FormHelperText>
+            )}
+            </FormControl>
+          </Grid>
+
+          {values.isDolar === 'true' && (
+            <Grid item>
+              <Field
+                as={StyledTextField}
+                label='Cotação da data de pagamento'
+                name='coinVariation'
+                type='number'
+                error={Boolean(touched.coinVariation && errors.coinVariation)}
+                helperText={touched.coinVariation && errors.coinVariation}
+                required
+              />
+            </Grid>
+          )}
+
 
           <Field
             as={StyledTextField}
