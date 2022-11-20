@@ -1,6 +1,5 @@
 package br.ufba.proap.assistancerequest.controller;
 
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -46,23 +45,25 @@ public class AssistanceRequestController {
 	public List<AssistanceRequestDTO> list() {
 
 		User currentUser = serviceUser.getLoggedUser();
+		
+		//System.out.println(currentUser.getPerfil().isAdmin());
 
 		if (currentUser == null) {
 			return Collections.emptyList();
 		}
 		
 		try {
-			
-			if (currentUser.getPerfil().isAdmin()) {
+			List<AssistanceRequestDTO> request =  service.findByUser(currentUser);
+			/*
+			if (!currentUser.getPerfil().isAdmin()) {
 				return service.findAll();
-			}else {
-				return service.findByUser(currentUser);
 			}
-			
+			*/
+		
+			return request;
 		} catch (Exception e) {
 			return Collections.emptyList();
 		}
-
 	}
 
 	@GetMapping("/list/{userId}")
@@ -130,7 +131,8 @@ public class AssistanceRequestController {
 
 			assistanceReques.setNomeSolicitante(nomeUsuario);
 			assistanceReques.setEmailSolicitacao(emailUsuario);
-
+			assistanceReques.setSituacao(0);
+			
 			return ResponseEntity.ok().body(service.save(assistanceReques));
 		} catch (Exception e) {
 			logger.error(e.getMessage());
@@ -150,7 +152,16 @@ public class AssistanceRequestController {
 	
 	@PutMapping("/reviewsolicitation")
 	public ResponseEntity<AssistanceRequestDTO> reviewsolicitation(@RequestBody AssistanceRequestDTO assistanceReques) {
+		User currentUser = serviceUser.getLoggedUser();
+
+		if (currentUser == null) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		}
+		
 		try {
+			assistanceReques.setAutomaticDecText(" ");
+			assistanceReques.setResponsavelAprovacao(currentUser);
+			
 			return ResponseEntity.ok().body(service.save(assistanceReques));
 		} catch (Exception e) {
 			logger.error(e.getMessage());
