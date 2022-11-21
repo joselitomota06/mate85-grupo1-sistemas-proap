@@ -112,10 +112,9 @@ public class ExtraRequestController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
 		try {
-			extraRequest.setUser(currentUser);
-			extraRequest.setNomeSolicitante(currentUser.getName());
-			extraRequest.setEmailSolicitacao(currentUser.getEmail());
 			extraRequest.setSituacao(0);
+			extraRequest.setUser(currentUser);
+			
 			return ResponseEntity.ok().body(service.save(extraRequest));
 		} catch (Exception e) {
 			logger.error(e.getMessage());
