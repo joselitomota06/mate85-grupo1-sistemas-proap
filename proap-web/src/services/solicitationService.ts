@@ -10,8 +10,6 @@ export const submitSolicitation = (values: SolicitationFormValues) =>
 export const updateSolicitation = (values: SolicitationFormValues) =>
   api.put("assistancerequest/update", values);
 
-export const approveAssistanceRequestById = (id: number | string, values: SolicitationFormValues) => 
-  api.put("assistancerequest/approve/${id}", values)
+export const reviewSolicitation = (values: SolicitationFormValues) =>
+  api.put("assistancerequest/reviewsolicitation", values);
 
-export const reproveAssistanceRequestById = (id: number | string, values: SolicitationFormValues) => 
-  api.put("assistancerequest/reprove/${id}", values)

@@ -50,11 +50,14 @@ public class ExtraRequestController {
 		}
 
 		try {
-			return service.findAll();
+			if (currentUser.getPerfil() != null && currentUser.getPerfil().isAdmin()) {
+				return service.findAll();
+			}
+
+			return service.findByUser(currentUser);
 		} catch (Exception e) {
 			return Collections.emptyList();
 		}
-
 	}
 
 	@GetMapping("/list/{userId}")
@@ -63,10 +66,10 @@ public class ExtraRequestController {
 
 		if (currentUser == null)
 			return Collections.emptyList();
-
+		/*
 		if(!currentUser.getId().equals(userId))
 			return Collections.emptyList();
-
+		*/
 		try {
 			return service.findByUser(currentUser);
 		} catch (Exception e) {
@@ -112,6 +115,7 @@ public class ExtraRequestController {
 			extraRequest.setUser(currentUser);
 			extraRequest.setNomeSolicitante(currentUser.getName());
 			extraRequest.setEmailSolicitacao(currentUser.getEmail());
+			extraRequest.setSituacao(0);
 			return ResponseEntity.ok().body(service.save(extraRequest));
 		} catch (Exception e) {
 			logger.error(e.getMessage());
@@ -146,6 +150,24 @@ public class ExtraRequestController {
 
 			return ResponseEntity.notFound().build();
 
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		}
+	}
+	
+	@PutMapping("/extrareviewsolicitation")
+	public ResponseEntity<ExtraRequest> reviewextrasolicitation(@RequestBody ExtraRequest extraRequest) {
+		User currentUser = serviceUser.getLoggedUser();
+
+		if (currentUser == null) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		}
+		
+		try {
+			extraRequest.setAutomaticDecText(" ");
+			
+			return ResponseEntity.ok().body(service.save(extraRequest));
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

@@ -7,6 +7,7 @@ import {
   EditSolicitationPage,
   CreateExtraSolicitationPage,
   EditExtraSolicitationPage,
+  ReviewSolicitationPage,
 } from "../../pages";
 
 import NavigationWrapper from "../navigation/NavigationWrapper";
@@ -28,6 +29,10 @@ export default function PrivateRoutes() {
         <Route
           path="/solicitation/edit/:id"
           element={<EditSolicitationPage />}
+        />
+        <Route
+          path="/solicitation/review/:id"
+          element={<ReviewSolicitationPage />}
         />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

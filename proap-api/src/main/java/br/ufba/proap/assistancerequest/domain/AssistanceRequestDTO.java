@@ -2,17 +2,14 @@ package br.ufba.proap.assistancerequest.domain;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -24,6 +21,7 @@ import br.ufba.proap.authentication.domain.User;
 @Entity
 @Table(name = "proap_assistancerequest", schema = "proap")
 public class AssistanceRequestDTO {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -31,11 +29,37 @@ public class AssistanceRequestDTO {
 	@ManyToOne
 	private User user;
 
+	// Dados do solicitante
 	private String nomeSolicitante;
 
 	private String emailSolicitacao;
 
-	private Boolean aceiteFinal;
+	// Dados da publicação
+	private String nomeCompleto;
+
+	private String doi;
+
+	private String autores;
+
+	private Boolean autoresPresentePGCOMP;
+
+	// Dados de financiamento
+	private Boolean solicitacaoApoio;
+
+	@Column(nullable = true)
+	private Float valorSolicitado;
+
+	@Column(nullable = true)
+	private Boolean solicitacaoAuxilioOutrasFontes;
+
+	@Column(nullable = true)
+	private String nomeAgenciaFomento;
+
+	@Column(nullable = true)
+	private String valorSolicitadoAgenciaFormento;
+
+	// Dados do evento
+	private String nomeEvento;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	private LocalDate dataInicio;
@@ -47,45 +71,128 @@ public class AssistanceRequestDTO {
 	private String linkHomepage;
 
 	@Column(nullable = false)
-	private String pais;
+	private String cidade;
 
 	@Column(nullable = false)
-	private String cidade;
+	private String pais;
 
 	private Float valorInscricao;
 
+	private Integer quantidadeDiariasSolicitadas;
+
 	private String cartaAceite;
 
-	private Boolean solicitacaoApoio;
+	private String qualis;
+
+	private Boolean isDolar;
 
 	@Column(nullable = true)
-	private Float valorSolicitado;
+	private Float coinVariation;
 
 	@Column(nullable = true)
 	private String comprovantePagamento;
 
-	@Column(nullable = true)
-	private Boolean solicitacaoAuxilioOutrasFontes;
+	// Finalizacao da solicitacao
+	private Boolean aceiteFinal;
+
+	// Dados sobre a revisão
+
+	// 0 - Em revisao, 1 - Aceita, 2 - Nao Aceita
+	@Column(nullable = false)
+	private Integer situacao;
 
 	@Column(nullable = true)
-	private String nomeAgenciaFomento;
+	private String numeroAta;
 
 	@Column(nullable = true)
-	private String valorSolicitadoAgenciaFormento;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+	private LocalDate dataAprovacao;
 
-	private String nomeCompleto;
-
-	private String doi;
-
-	private String autores;
-	
-	private Boolean autoresPresentePGCOMP;
-	
 	@Column(nullable = true)
-	private Float coinVariation;
-	
-	private Boolean isDolar;
-	
+	private Integer numeroDiariasAprovadas;
+
+	@Column(nullable = true)
+	private Float valorAprovado;
+
+	@Column(nullable = true)
+	private String observacao;
+
+	// Apos aceite
+	@Column(nullable = true, columnDefinition = "text",  length = 100000)
+	private String automaticDecText;
+
+	public String getNomeEvento() {
+		return nomeEvento;
+	}
+
+	public void setNomeEvento(String nomeEvento) {
+		this.nomeEvento = nomeEvento;
+	}
+
+	public Integer getQuantidadeDiariasSolicitadas() {
+		return quantidadeDiariasSolicitadas;
+	}
+
+	public void setQuantidadeDiariasSolicitadas(Integer quantidadeDiariasSolicitadas) {
+		this.quantidadeDiariasSolicitadas = quantidadeDiariasSolicitadas;
+	}
+
+	public String getQualis() {
+		return qualis;
+	}
+
+	public void setQualis(String qualis) {
+		this.qualis = qualis;
+	}
+
+	public Float getValorAprovado() {
+		return valorAprovado;
+	}
+
+	public void setValorAprovado(Float valorAprovado) {
+		this.valorAprovado = valorAprovado;
+	}
+
+	public String getNumeroAta() {
+		return numeroAta;
+	}
+
+	public void setNumeroAta(String numeroAta) {
+		this.numeroAta = numeroAta;
+	}
+
+	public LocalDate getDataAprovacao() {
+		return dataAprovacao;
+	}
+
+	public void setDataAprovacao(LocalDate dataAprovacao) {
+		this.dataAprovacao = dataAprovacao;
+	}
+
+	public Integer getNumeroDiariasAprovadas() {
+		return numeroDiariasAprovadas;
+	}
+
+	public void setNumeroDiariasAprovadas(Integer numeroDiariasAprovadas) {
+		this.numeroDiariasAprovadas = numeroDiariasAprovadas;
+	}
+
+	public String getObservacao() {
+		return observacao;
+	}
+
+	public void setObservacao(String observacao) {
+		this.observacao = observacao;
+	}
+
+	public int getSituacao() {
+		return situacao;
+	}
+
+	public void setSituacao(Integer situacao) {
+		this.situacao = situacao;
+	}
+
 	public Float getCoinVariation() {
 		return coinVariation;
 	}
@@ -107,11 +214,54 @@ public class AssistanceRequestDTO {
 	}
 
 	public void setAutomaticDecText(String automaticDecText) {
-		this.automaticDecText = automaticDecText;
-	}
+		String name = this.nomeSolicitante;
+		String valorSolicitado = this.valorInscricao.toString();
+		String quantDiarias = String.valueOf(this.quantidadeDiariasSolicitadas);
+		String calculoDiarias = String.valueOf(this.quantidadeDiariasSolicitadas / this.quantidadeDiariasSolicitadas);
+		String nomeTrabalho = this.nomeCompleto;
+		String evento = this.nomeEvento;
+		String qualis = this.qualis;
+		String cidade = this.cidade;
+		String pais = this.pais;
+		String inicio = this.dataInicio.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+		String fim = this.dataFim.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
 
-	@Column(nullable = true)
-	private String automaticDecText;
+		if (this.situacao == 1) {
+			if (this.isDolar == false) {
+				this.automaticDecText = "O discente " + name + " solicita apoio de inscrição (R$" + valorSolicitado
+						+ " e " + quantDiarias + " diárias (R$" + calculoDiarias + " | " + quantDiarias + " x R$ "
+						+ calculoDiarias + ") para apresentação de trabalho oral (" + nomeTrabalho + ") no evento "
+						+ evento + ", Qualis " + qualis + ", a ser realizado em " + cidade + "-" + pais
+						+ ", no período de " + inicio + " a " + fim
+						+ ". Após verificação da documentação enviada pelo discente, a comissão Proap entende que a solicitação está de acordo com a resolução PROAP vigente e recomenda sua aprovação. Posto em apreciação, foi aprovada por unanimidade.";
+			} else {
+				this.automaticDecText = "O discente " + name + " solicita apoio de inscrição em dolar ($"
+						+ valorSolicitado + " e " + quantDiarias + " diárias ($" + calculoDiarias + " | " + quantDiarias
+						+ " x $ " + calculoDiarias + ") com variação cambial atual informada de (R$ "
+						+ this.coinVariation + " para apresentação de trabalho oral (" + nomeTrabalho + ") no evento "
+						+ evento + ", Qualis " + qualis + ", a ser realizado em " + cidade + "-" + pais
+						+ ", no período de " + inicio + " a " + fim
+						+ ". Após verificação da documentação enviada pelo discente, a comissão Proap entende que a solicitação está de acordo com a resolução PROAP vigente e recomenda sua aprovação. Posto em apreciação, foi aprovada por unanimidade.";
+			}
+		} else {
+			if (this.isDolar == false) {
+				this.automaticDecText = "O discente " + name + " solicita apoio de inscrição (R$" + valorSolicitado
+						+ " e " + quantDiarias + " diárias (R$" + calculoDiarias + " | " + quantDiarias + " x R$ "
+						+ calculoDiarias + ") para apresentação de trabalho oral (" + nomeTrabalho + ") no evento "
+						+ evento + ", Qualis " + qualis + ", a ser realizado em " + cidade + "-" + pais
+						+ ", no período de " + inicio + " a " + fim
+						+ ". Após verificação da documentação enviada pelo discente, a comissão Proap entende que a solicitação não está de acordo com a resolução PROAP vigente e recomenda sua reprovação.";
+			} else {
+				this.automaticDecText = "O discente " + name + " solicita apoio de inscrição em dolar ($"
+						+ valorSolicitado + " e " + quantDiarias + " diárias ($" + calculoDiarias + " | " + quantDiarias
+						+ " x $ " + calculoDiarias + ") com variação cambial atual informada de (R$ "
+						+ this.coinVariation + " para apresentação de trabalho oral (" + nomeTrabalho + ") no evento "
+						+ evento + ", Qualis " + qualis + ", a ser realizado em " + cidade + "-" + pais
+						+ ", no período de " + inicio + " a " + fim
+						+ ". Após verificação da documentação enviada pelo discente, a comissão Proap entende que a solicitação não está de acordo com a resolução PROAP vigente e recomenda sua reprovação.";
+			}
+		}
+	}
 
 	public Boolean getAutoresPresentePGCOMP() {
 		return autoresPresentePGCOMP;
@@ -120,10 +270,6 @@ public class AssistanceRequestDTO {
 	public void setAutoresPresentePGCOMP(Boolean autoresPresentePGCOMP) {
 		this.autoresPresentePGCOMP = autoresPresentePGCOMP;
 	}
-
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "reviewId", referencedColumnName = "id")
-	private Review review;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	private LocalDateTime createdAt;
@@ -300,14 +446,6 @@ public class AssistanceRequestDTO {
 		this.autores = autores;
 	}
 
-	public Review getReview() {
-		return review;
-	}
-
-	public void setReview(Review review) {
-		this.review = review;
-	}
-
 	public String getNomeSolicitante() {
 		return nomeSolicitante;
 	}
@@ -323,7 +461,7 @@ public class AssistanceRequestDTO {
 	public void setEmailSolicitacao(String emailSolicitacao) {
 		this.emailSolicitacao = emailSolicitacao;
 	}
-	
+
 	public LocalDateTime getCreatedAt() {
 		return createdAt;
 	}

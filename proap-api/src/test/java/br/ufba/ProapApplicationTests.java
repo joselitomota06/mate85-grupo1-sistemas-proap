@@ -5,8 +5,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 class ProapApplicationTests {
-
+	
 	@Test
-	void contextLoads() {}
+	void main() {
+		ProapApplication.main(new String[] {});
+	}
 
 }

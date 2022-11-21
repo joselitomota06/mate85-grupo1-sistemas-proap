@@ -13,22 +13,26 @@ export interface RequestReview {
 }
 
 export interface AssistanceRequest {
-  id: number;
-  doi: string;
-  nomeSolicitante: string;
-  valorSolicitado: number;
-  valorInscricao: number;
-  createdAt: string;
-  updatedAt: string;
-  review: RequestReview;
-  user: {
-    id: number;
-    alternativePhone: string;
-    cpf: string;
-    email: string;
-    name: string;
-    password: string;
-  };
+  id: number
+  doi: string
+  nomeSolicitante: string
+  valorSolicitado: number
+  valorInscricao: number,
+  createdAt: string,
+  updatedAt: string,
+  situacao: number,
+  automaticDecText: string,
+  valorAprovado:number,
+  dataAprovacao:string
+  
+  user : {
+    id: number
+    alternativePhone: string
+    cpf: string
+    email: string
+    name: string
+    password: string
+  }
 }
 
 interface AssistanceRequestSliceState {

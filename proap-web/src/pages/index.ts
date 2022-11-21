@@ -7,3 +7,4 @@ export { default as CreateExtraSolicitationPage } from './extra-solicitation/Cre
 export { default as EditExtraSolicitationPage } from './extra-solicitation/EditExtraSolicitationPage'
 export { default as EditSolicitationPage } from './edit-solicitation/EditSolicitationPage'
 export { default as RecoverPasswordPage } from './recover-password/RecoverPassword'
+export { default as ReviewSolicitationPage } from './edit-solicitation/ReviewSolicitationPage'

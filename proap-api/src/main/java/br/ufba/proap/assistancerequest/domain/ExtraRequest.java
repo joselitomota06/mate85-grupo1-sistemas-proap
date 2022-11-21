@@ -1,16 +1,14 @@
 package br.ufba.proap.assistancerequest.domain;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -32,6 +30,10 @@ public class ExtraRequest {
 
 	private String nomeSolicitante;
 	private String emailSolicitacao;
+	
+	private Boolean isDiscente;
+	
+	private String itemSolicitado;
 
 	@Column(columnDefinition = "text")
 	private String justificativa;
@@ -41,17 +43,155 @@ public class ExtraRequest {
 
 	private Boolean solicitacaoApoio;
 	private Boolean solicitacaoAuxilioOutrasFontes;
-
+	
+	private String nomeSolicitacao;
+	
+	@Column(nullable = true)
+	private String nomeAgenciaFomento;
+	
+	@Column(nullable = true)
+	private String valorSolicitadoAgenciaFormento;
+	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	private LocalDateTime createdAt;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	private LocalDateTime updatedAt;
+	
+	// 0 - Em revisao, 1 - Aceita, 2 - Nao Aceita
+	@Column(nullable = false) 
+	private int situacao;
+		
+	@Column(nullable = true)
+	private String numeroAta;
+		
+	@Column(nullable = true)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+	private LocalDate dataAprovacao;
+	
+	
+	@Column(nullable = true)
+	private int valorAprovado;
+		    
+	@Column(nullable = true)
+	private String observacao;	
+		    
+	// Apos aceite
+	@Column(nullable = true, columnDefinition = "text")
+	private String automaticDecText;
+	
+	public String getItemSolicitado() {
+		return itemSolicitado;
+	}
 
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "reviewId", referencedColumnName = "id")
-	private Review review;
+	public void setItemSolicitado(String itemSolicitado) {
+		this.itemSolicitado = itemSolicitado;
+	}
+	
+	public Boolean getIsDiscente() {
+		return isDiscente;
+	}
 
+	public void setIsDiscente(Boolean isDiscente) {
+		this.isDiscente = isDiscente;
+	}
+	
+	public String getNomeSolicitacao() {
+		return nomeSolicitacao;
+	}
+
+	public void setNomeSolicitacao(String nomeSolicitacao) {
+		this.nomeSolicitacao = nomeSolicitacao;
+	}
+
+	public String getNomeAgenciaFomento() {
+		return nomeAgenciaFomento;
+	}
+
+	public void setNomeAgenciaFomento(String nomeAgenciaFomento) {
+		this.nomeAgenciaFomento = nomeAgenciaFomento;
+	}
+
+	public String getValorSolicitadoAgenciaFormento() {
+		return valorSolicitadoAgenciaFormento;
+	}
+
+	public void setValorSolicitadoAgenciaFormento(String valorSolicitadoAgenciaFormento) {
+		this.valorSolicitadoAgenciaFormento = valorSolicitadoAgenciaFormento;
+	}
+
+	public int getSituacao() {
+		return situacao;
+	}
+
+	public void setSituacao(int situacao) {
+		this.situacao = situacao;
+	}
+
+	public String getNumeroAta() {
+		return numeroAta;
+	}
+
+	public void setNumeroAta(String numeroAta) {
+		this.numeroAta = numeroAta;
+	}
+
+	public LocalDate getDataAprovacao() {
+		return dataAprovacao;
+	}
+
+	public void setDataAprovacao(LocalDate dataAprovacao) {
+		this.dataAprovacao = dataAprovacao;
+	}
+
+	public int getValorAprovado() {
+		return valorAprovado;
+	}
+
+	public void setValorAprovado(int valorAprovado) {
+		this.valorAprovado = valorAprovado;
+	}
+
+	public String getObservacao() {
+		return observacao;
+	}
+
+	public void setObservacao(String observacao) {
+		this.observacao = observacao;
+	}
+
+	public String getAutomaticDecText() {
+		return automaticDecText;
+	}
+
+	public void setAutomaticDecText(String automaticDecText) {
+		String name = this.nomeSolicitante;
+		String valorSolicitado = this.valorSolicitado.toString();
+		String item = this.itemSolicitado;
+		String justificativa = this.justificativa;
+		
+		String tratamento = "discente";
+		
+		
+		if(this.isDiscente == false) {	
+			tratamento = "docente";
+			
+		} 
+		
+		if(this.situacao == 1) {
+			this.automaticDecText = "O "+tratamento+" "+name+" solicita apoio para compra de "+item+" com valor de R$"+valorSolicitado+" com a justificativa, "+justificativa+
+					"Após verificação da documentação enviada pelo discente, a comissão Proap entende que a solicitação está de acordo com a resolução PROAP vigente e recomenda sua aprovação.";
+		
+		}else {
+			this.automaticDecText = "O "+tratamento+" "+name+" solicita apoio para compra de "+item+" com valor de R$"+valorSolicitado+" com a justificativa, "+justificativa+
+					"Após verificação da documentação enviada pelo discente, a comissão Proap entende que a solicitação não está de acordo com a resolução PROAP vigente e recomenda sua reprovação.";
+		
+		}
+	}
+	
+	
+		
+		
 	public Long getId() {
 		return id;
 	}
@@ -66,14 +206,6 @@ public class ExtraRequest {
 
 	public void setUser(User user) {
 		this.user = user;
-	}
-
-	public Review getReview() {
-		return review;
-	}
-
-	public void setReview(Review review) {
-		this.review = review;
 	}
 
 	public Boolean getSolicitacaoApoio() {

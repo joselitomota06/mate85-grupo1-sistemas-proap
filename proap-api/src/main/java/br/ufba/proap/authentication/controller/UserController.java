@@ -18,7 +18,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.ufba.proap.authentication.domain.Perfil;
 import br.ufba.proap.authentication.domain.User;
+import br.ufba.proap.authentication.domain.dto.UpdatePasswordDTO;
+import br.ufba.proap.authentication.service.PerfilService;
 import br.ufba.proap.authentication.service.UserService;
 
 @RestController
@@ -30,10 +33,59 @@ public class UserController {
 	@Autowired
 	private UserService service;
 
+	@Autowired
+	private PerfilService perfilService;
+
 	@PostMapping("/create")
 	public ResponseEntity<User> create(@RequestBody User user) {
 		try {
 			return ResponseEntity.ok().body(service.create(user));
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		}
+	}
+
+	@GetMapping("/list")
+	public List<User> list() {
+		try {
+			return service.findAll();
+		} catch (Exception e) {
+			return Collections.emptyList();
+		}
+	}
+
+	@PutMapping("/forgot")
+	public ResponseEntity<String> updateCustomerContacts(@RequestBody UpdatePasswordDTO up) {
+		try {
+			service.updateCustomerContacts(up);
+			return ResponseEntity.ok().body("Senha alterada com sucesso!");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return ResponseEntity.ok().body("Usuário Não encontrado");
+		}
+	}
+
+	@PutMapping("/set-admin/{id}")
+	public ResponseEntity<String> setAdminUser(@PathVariable Long id) {
+		try {
+			User currentUser = service.getLoggedUser();
+
+			if (currentUser == null)
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+
+			if(currentUser.getPerfil() == null || !currentUser.getPerfil().isAdmin())
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+
+			Optional<User> user = service.findById(id);
+			Optional<Perfil> adminPerfil = perfilService.findById(5L);
+
+			if(user.isPresent() && adminPerfil.isPresent()) {
+				user.get().setPerfil(adminPerfil.get());
+				service.update(user.get());
+			}
+
+			return ResponseEntity.ok().body("Atulização realizada com sucesso!");
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -47,15 +99,6 @@ public class UserController {
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-		}
-	}
-
-	@GetMapping("/list")
-	public List<User> list() {
-		try {
-			return service.findAll();
-		} catch (Exception e) {
-			return Collections.emptyList();
 		}
 	}
 
@@ -76,4 +119,5 @@ public class UserController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
 	}
+
 }

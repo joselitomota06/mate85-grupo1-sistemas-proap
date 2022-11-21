@@ -6,6 +6,7 @@ import {
   TableHead,
   TableRow,
   Typography,
+
 } from "@mui/material";
 import React, { useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
@@ -17,6 +18,8 @@ import {
 import { IRootState, useAppDispatch } from "../../../store";
 
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
+import Visibility from '@mui/icons-material/Visibility';
+import { CheckCircle } from "@mui/icons-material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Link, useNavigate } from "react-router-dom";
 import { Box } from "@mui/system";
@@ -62,6 +65,10 @@ export default function SolicitationTable() {
     navigate(`/extra-solicitation/edit/${id}`);
   };
 
+  const handleClickReviewRequest = (id: number) => {
+    navigate(`/solicitation/review/${id}`);
+  };
+  
   const handleClickRemoveRequest = (id: number) => {
     removeAssistanceRequestById(id).then(() => {
       updateAssistanceRequestList();
@@ -86,6 +93,17 @@ export default function SolicitationTable() {
     setOpen(true);
   };
 
+  const handleClickTextOpenModal = (texto: string) => {
+    if(texto == null){
+      var texto = "Texto de solicitação "  +"\n"+"\n"+"Texto não disponível, solicitação ainda não foi avaliada. Avalie a solicitação e volte para conferir." +"\n";
+      alert(texto);
+    }else{
+      alert("Texto de solicitação "  +"\n"
+            +"\n"
+            +texto+"\n");
+    }
+  };
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -96,6 +114,12 @@ export default function SolicitationTable() {
       : handleClickRemoveRequest(solicitationId);
 
     setIsExtraSolicitation(false);
+    setSolicitationId(0);
+    handleClose();
+  };
+
+  const handleTextModal = () => {  
+    handleClickRemoveRequest(solicitationId);
     setSolicitationId(0);
     handleClose();
   };
@@ -111,7 +135,7 @@ export default function SolicitationTable() {
             <TableCell align="center">Valor solicitado</TableCell>
             <TableCell align="center">Valor aprovado</TableCell>
             <TableCell align="center">Data de solicitação</TableCell>
-            <TableCell align="center">Data de aprovação</TableCell>
+            <TableCell align="center">Data da avaliação</TableCell>
             <TableCell align="center">Ações</TableCell>
           </TableHead>
 
@@ -132,12 +156,15 @@ export default function SolicitationTable() {
                   nomeSolicitante,
                   valorInscricao,
                   createdAt,
-                  review,
+                  situacao,
+                  valorAprovado,
+                  automaticDecText,
+                  dataAprovacao,
+                  user,
                 }) => (
                   <TableRow key={nomeSolicitante}>
                     <TableCell align="center">{nomeSolicitante}</TableCell>
-                    <TableCell align="center">Não</TableCell>
-                    {review === null && (
+                    {situacao === 2 && (
                       <TableCell
                         align="center"
                         style={{ backgroundColor: "lightcoral" }}
@@ -146,7 +173,7 @@ export default function SolicitationTable() {
                       </TableCell>
                     )}
 
-                    {review !== null && (
+                    {situacao === 1 && (
                       <TableCell
                         align="center"
                         style={{ backgroundColor: "lightgreen" }}
@@ -154,19 +181,58 @@ export default function SolicitationTable() {
                         Aprovada
                       </TableCell>
                     )}
+
+                    {situacao === 0 && (
+                      <TableCell
+                        align="center"
+                        style={{ backgroundColor: "gray" }}
+                      >
+                        Pendente de avaliação
+                      </TableCell>
+                    )}
                     <TableCell align="center">R$ {valorInscricao}</TableCell>
-                    <TableCell align="center">R$</TableCell>
+                    {valorAprovado === null && (
+                    <TableCell align="center">-</TableCell> 
+                    )}
+                    
+                    {valorAprovado !== null && (
+                      <TableCell align="center">R$ {valorAprovado}</TableCell> 
+                    )}
+
+
                     <TableCell align="center">{createdAt}</TableCell>
-                    <TableCell align="center">-</TableCell>
+
+                    {dataAprovacao === null && (
+                    <TableCell align="center">-</TableCell> 
+                    )}
+                    
+                    {dataAprovacao !== null && (
+                      <TableCell align="center">{dataAprovacao}</TableCell> 
+                    )}
 
                     <TableCell align="center">
                       <Box>
+                      
+                        <IconButton onClick={() => handleClickTextOpenModal(automaticDecText)}>
+                          <Visibility />
+                        </IconButton>
+                  
+                        <IconButton onClick={() => handleClickReviewRequest(id)}>
+                          <CheckCircle />
+                        </IconButton>
+                    
                         <IconButton onClick={() => handleClickEditRequest(id)}>
                           <ModeEditIcon />
                         </IconButton>
+
+                        
+
                         <IconButton onClick={() => handleClickOpenModal(id)}>
                           <DeleteIcon />
                         </IconButton>
+
+                        
+                        
                       </Box>
                     </TableCell>
                   </TableRow>
