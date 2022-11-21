@@ -19,6 +19,7 @@ import { IRootState, useAppDispatch } from "../../../store";
 
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import Visibility from '@mui/icons-material/Visibility';
+import { CheckCircle } from "@mui/icons-material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Link, useNavigate } from "react-router-dom";
 import { Box } from "@mui/system";
@@ -51,6 +52,10 @@ export default function SolicitationTable() {
     navigate(`/solicitation/edit/${id}`);
   };
 
+  const handleClickReviewRequest = (id: number) => {
+    navigate(`/solicitation/edit/${id}`);
+  };
+  
   const handleClickRemoveRequest = (id: number) => {
     removeAssistanceRequestById(id).then(() => {
       dispatch(getAssistanceRequests());
@@ -134,7 +139,9 @@ export default function SolicitationTable() {
                   valorInscricao,
                   createdAt,
                   situacao,
+                  valorAprovado,
                   automaticDecText,
+                  dataAprovacao,
                   user,
                 }) => (
                   <TableRow key={nomeSolicitante}>
@@ -166,21 +173,48 @@ export default function SolicitationTable() {
                       </TableCell>
                     )}
                     <TableCell align="center">R$ {valorInscricao}</TableCell>
-                    <TableCell align="center">R$</TableCell>
+                    {valorAprovado === null && (
+                    <TableCell align="center">-</TableCell> 
+                    )}
+                    
+                    {valorAprovado !== null && (
+                      <TableCell align="center">R$ {valorAprovado}</TableCell> 
+                    )}
+
+
                     <TableCell align="center">{createdAt}</TableCell>
-                    <TableCell align="center">-</TableCell>
+
+                    {dataAprovacao === null && (
+                    <TableCell align="center">-</TableCell> 
+                    )}
+                    
+                    {dataAprovacao !== null && (
+                      <TableCell align="center">{dataAprovacao}</TableCell> 
+                    )}
 
                     <TableCell align="center">
                       <Box>
+                      
                         <IconButton onClick={() => handleClickTextOpenModal(automaticDecText)}>
                           <Visibility />
                         </IconButton>
+                  
+                        <IconButton onClick={() => handleClickReviewRequest(id)}>
+                          <CheckCircle />
+                        </IconButton>
+                    
                         <IconButton onClick={() => handleClickEditRequest(id)}>
                           <ModeEditIcon />
                         </IconButton>
+
+                        
+
                         <IconButton onClick={() => handleClickOpenModal(id)}>
                           <DeleteIcon />
                         </IconButton>
+
+                        
+                        
                       </Box>
                     </TableCell>
                   </TableRow>
