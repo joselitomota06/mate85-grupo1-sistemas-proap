@@ -6,7 +6,6 @@ import {
   TableHead,
   TableRow,
   Typography,
-
 } from "@mui/material";
 import React, { useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
@@ -18,7 +17,7 @@ import {
 import { IRootState, useAppDispatch } from "../../../store";
 
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
-import Visibility from '@mui/icons-material/Visibility';
+import Visibility from "@mui/icons-material/Visibility";
 import { CheckCircle } from "@mui/icons-material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Link, useNavigate } from "react-router-dom";
@@ -68,7 +67,7 @@ export default function SolicitationTable() {
   const handleClickReviewRequest = (id: number) => {
     navigate(`/solicitation/review/${id}`);
   };
-  
+
   const handleClickRemoveRequest = (id: number) => {
     removeAssistanceRequestById(id).then(() => {
       updateAssistanceRequestList();
@@ -94,13 +93,16 @@ export default function SolicitationTable() {
   };
 
   const handleClickTextOpenModal = (texto: string) => {
-    if(texto == null){
-      var texto = "Texto de solicitação "  +"\n"+"\n"+"Texto não disponível, solicitação ainda não foi avaliada. Avalie a solicitação e volte para conferir." +"\n";
+    if (texto == null) {
+      var texto =
+        "Texto de solicitação " +
+        "\n" +
+        "\n" +
+        "Texto não disponível, solicitação ainda não foi avaliada. Avalie a solicitação e volte para conferir." +
+        "\n";
       alert(texto);
-    }else{
-      alert("Texto de solicitação "  +"\n"
-            +"\n"
-            +texto+"\n");
+    } else {
+      alert("Texto de solicitação " + "\n" + "\n" + texto + "\n");
     }
   };
 
@@ -118,7 +120,7 @@ export default function SolicitationTable() {
     handleClose();
   };
 
-  const handleTextModal = () => {  
+  const handleTextModal = () => {
     handleClickRemoveRequest(solicitationId);
     setSolicitationId(0);
     handleClose();
@@ -164,6 +166,7 @@ export default function SolicitationTable() {
                 }) => (
                   <TableRow key={nomeSolicitante}>
                     <TableCell align="center">{nomeSolicitante}</TableCell>
+                    <TableCell align="center">Não</TableCell>
                     {situacao === 2 && (
                       <TableCell
                         align="center"
@@ -192,47 +195,46 @@ export default function SolicitationTable() {
                     )}
                     <TableCell align="center">R$ {valorInscricao}</TableCell>
                     {valorAprovado === null && (
-                    <TableCell align="center">-</TableCell> 
-                    )}
-                    
-                    {valorAprovado !== null && (
-                      <TableCell align="center">R$ {valorAprovado}</TableCell> 
+                      <TableCell align="center">-</TableCell>
                     )}
 
+                    {valorAprovado !== null && (
+                      <TableCell align="center">R$ {valorAprovado}</TableCell>
+                    )}
 
                     <TableCell align="center">{createdAt}</TableCell>
 
                     {dataAprovacao === null && (
-                    <TableCell align="center">-</TableCell> 
+                      <TableCell align="center">-</TableCell>
                     )}
-                    
+
                     {dataAprovacao !== null && (
-                      <TableCell align="center">{dataAprovacao}</TableCell> 
+                      <TableCell align="center">{dataAprovacao}</TableCell>
                     )}
 
                     <TableCell align="center">
                       <Box>
-                      
-                        <IconButton onClick={() => handleClickTextOpenModal(automaticDecText)}>
+                        <IconButton
+                          onClick={() =>
+                            handleClickTextOpenModal(automaticDecText)
+                          }
+                        >
                           <Visibility />
                         </IconButton>
-                  
-                        <IconButton onClick={() => handleClickReviewRequest(id)}>
+
+                        <IconButton
+                          onClick={() => handleClickReviewRequest(id)}
+                        >
                           <CheckCircle />
                         </IconButton>
-                    
+
                         <IconButton onClick={() => handleClickEditRequest(id)}>
                           <ModeEditIcon />
                         </IconButton>
 
-                        
-
                         <IconButton onClick={() => handleClickOpenModal(id)}>
                           <DeleteIcon />
                         </IconButton>
-
-                        
-                        
                       </Box>
                     </TableCell>
                   </TableRow>
