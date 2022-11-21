@@ -117,7 +117,7 @@ export default function SolicitationTable() {
             <TableCell align="center">Valor solicitado</TableCell>
             <TableCell align="center">Valor aprovado</TableCell>
             <TableCell align="center">Data de solicitação</TableCell>
-            <TableCell align="center">Data de aprovação</TableCell>
+            <TableCell align="center">Data da avaliação</TableCell>
             <TableCell align="center">Ações</TableCell>
           </TableHead>
 

@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { FormikValues } from "formik";
 
 import SolicitationFormContainer from "../../containers/solicitation/SolicitationFormContainer";
-import { updateSolicitation, approveAssistanceRequestById, reproveAssistanceRequestById } from "../../services/solicitationService";
+import { updateSolicitation, reviewSolicitation } from "../../services/solicitationService";
 import useSolicitation from "../../hooks/solicitation/useSolicitation";
 import LinearProgress from "@mui/material/LinearProgress";
 import { useAuth } from "../../hooks";
@@ -29,27 +29,39 @@ export default function EditSolicitationPage() {
   }, [hasError]);
 
 
-  const handleEditSolicitationSubmit = useCallback(
+  const handleReviewSolicitationSubmit = useCallback(
     (values: FormikValues) => {
       const valuesWithCorrectDates: SolicitationFormValues = {
         ...(values as SolicitationFormValues),
         dataInicio: dateToLocalDate(new Date(values.dataInicio)),
         dataFim: dateToLocalDate(new Date(values.dataFim)),
         dataAprovacao: dateToLocalDate(new Date(values.dataAprovacao)),
+        createdAt: "",
+        updatedAt: "",
       };
 
+      return reviewSolicitation(valuesWithCorrectDates).then(() => {
+        Toast.success("Solicitação avaliada com sucesso!");
+        navigate("/");
+      });
+    
+  }, [dispatch]);
 
-    if(values.situacao == true){
-      return approveAssistanceRequestById(values.id, valuesWithCorrectDates).then(() => {
+  const handleEditSolicitationSubmit = useCallback(
+    (values: FormikValues) => {
+      const valuesWithCorrectDates: SolicitationFormValues = {
+        ...(values as SolicitationFormValues),
+        dataInicio: dateToLocalDate(new Date(values.dataInicio)),
+        dataFim: dateToLocalDate(new Date(values.dataFim)),
+        
+      };
+      
+      
+      return updateSolicitation(valuesWithCorrectDates).then(() => {
         Toast.success("Solicitação avaliada com sucesso!");
         navigate("/");
       });
-    }else{
-      return reproveAssistanceRequestById(values.id, valuesWithCorrectDates).then(() => {
-        Toast.success("Solicitação avaliada com sucesso!");
-        navigate("/");
-      });
-    }
+    
   }, [dispatch]);
 
   return (
@@ -59,7 +71,7 @@ export default function EditSolicitationPage() {
         <>
           {isAdmin ? (
             <AdminSolicitationFormContainer
-              onSubmit={handleEditSolicitationSubmit}
+              onSubmit={handleReviewSolicitationSubmit}
               initialValues={{
                 ...INITIAL_FORM_VALUES,
                 ...solicitation,
