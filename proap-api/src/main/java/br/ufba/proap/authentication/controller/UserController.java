@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.ufba.proap.authentication.domain.User;
+import br.ufba.proap.authentication.domain.dto.UpdatePasswordDTO;
 import br.ufba.proap.authentication.service.UserService;
 
 @RestController
@@ -59,6 +60,17 @@ public class UserController {
 		}
 	}
 
+	@PutMapping("/forgot")
+	public ResponseEntity<String> updateCustomerContacts(@RequestBody UpdatePasswordDTO up) {
+		try {
+			service.updateCustomerContacts(up);
+			return ResponseEntity.ok().body("Senha alterada com sucesso!");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return ResponseEntity.ok().body("Usuário Não encontrado");
+		}
+	}
+
 	@DeleteMapping("/remove/{id}")
 	public ResponseEntity<String> remove(@PathVariable Long id) {
 		try {
@@ -76,4 +88,5 @@ public class UserController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
 	}
+
 }

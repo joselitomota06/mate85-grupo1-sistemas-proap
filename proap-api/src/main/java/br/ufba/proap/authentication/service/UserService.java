@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.ufba.proap.authentication.domain.User;
+import br.ufba.proap.authentication.domain.dto.UpdatePasswordDTO;
 import br.ufba.proap.authentication.repository.UserRepository;
 
 @Service
@@ -68,6 +69,12 @@ public class UserService implements UserDetailsService {
 
 	public Optional<User> findByEmail(String email) {
 		return userRepository.findByEmail(email);
+	}
+
+	public User updateCustomerContacts(UpdatePasswordDTO up) {
+	    User myCustomer = userRepository.findByEmailAndCPF(up.getEmail(), up.getCpf());
+	    myCustomer.setPassword(passwordEncoder.encode(up.getPassword()));
+	    return userRepository.save(myCustomer);
 	}
 
 	public void remove(User user) {
