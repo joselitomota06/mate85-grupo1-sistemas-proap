@@ -9,7 +9,10 @@ export interface AssistanceRequest {
   createdAt: string,
   updatedAt: string,
   situacao: number,
-  automaticDecText: number,
+  automaticDecText: string,
+  valorAprovado:number,
+  dataAprovacao:string
+  
   user : {
     id: number
     alternativePhone: string

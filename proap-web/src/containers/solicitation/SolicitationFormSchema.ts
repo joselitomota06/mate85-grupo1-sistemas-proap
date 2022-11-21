@@ -74,18 +74,19 @@ export const detailsEventDataFormSchema = Yup.object({
 });
 
 export const reviewDataFormSchema = Yup.object({
-  situacao: Yup.number().nullable().required("Campo obrigatório"),
+  situacao: Yup.string().required("Campo obrigatório"),
   dataAprovacao: Yup.string().required("Campo obrigatório"),
   numeroAta: Yup.number().required("Campo obrigatório"),
   numeroDiariasAprovadas: Yup.number().required("Campo obrigatório"),
   observacao: Yup.string().required("Campo obrigatório"),
+  valorAprovado: Yup.number().required("Campo obrigatório"), 
 });
 
 export interface Solicitation {
   nomeCompleto: string;
   doi: string;
   autores: string;
-  alunoPGCOMP: string;
+  autoresPresentePGCOMP: string;
   nomeSolicitante: string;
   emailSolicitacao: string;
   solicitacaoApoio: string | undefined;
@@ -93,7 +94,7 @@ export interface Solicitation {
   solicitacaoAuxilioOutrasFontes: string | undefined;
   nomeAgenciaFomento: string;
   valorSolicitadoAgenciaFomento: number | string;
-  autoresPresentePGCOMP: boolean;
+  valorAprovado: number | undefined;
   isDolar: string | undefined;
   dataInicio: string;
   dataFim: string;
@@ -106,12 +107,17 @@ export interface Solicitation {
   coinVariation: number | undefined;
   comprovantePagamento: string;
   nomeEvento: string;
-  situacao: number;
+  situacao: string;
   dataAprovacao: string;
   numeroAta: number;
   numeroDiariasAprovadas: number;
   observacao: string;
   quantidadeDiariasSolicitadas: number;
+
+
+  createdAt: undefined;
+  updatedAt: undefined;
+
 }
 
 export interface SolicitationFormValues extends Solicitation {
@@ -122,7 +128,7 @@ export const INITIAL_FORM_VALUES: SolicitationFormValues = {
   nomeCompleto: "",
   doi: "",
   autores: "",
-  alunoPGCOMP: "false",
+  autoresPresentePGCOMP: "false",
 
   solicitacaoApoio: "",
   valorSolicitado: "",
@@ -142,7 +148,7 @@ export const INITIAL_FORM_VALUES: SolicitationFormValues = {
   qualis: "A1",
   aceiteFinal: false,
   isDolar: "",
-  situacao: 0,
+  situacao: "2",
   dataAprovacao: "",
   numeroAta: 0,
   numeroDiariasAprovadas: 0,
@@ -150,7 +156,9 @@ export const INITIAL_FORM_VALUES: SolicitationFormValues = {
   coinVariation: undefined,
   nomeEvento: "",
   quantidadeDiariasSolicitadas: 0,
+  valorAprovado: undefined,
 
-  autoresPresentePGCOMP: false,
 
+  createdAt: undefined,
+  updatedAt: undefined,
 };
