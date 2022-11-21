@@ -68,9 +68,8 @@ export default function SolicitationTable() {
 
   const handleClickTextOpenModal = (texto: string) => {
     if(texto == null){
-      alert("Texto de solicitação "  +"\n"
-            +"\n"
-            +"Texto não disponível, solicitação ainda não foi avaliada. Avalie a solicitação e volte para conferir." +"\n");
+      var texto = "Texto de solicitação "  +"\n"+"\n"+"Texto não disponível, solicitação ainda não foi avaliada. Avalie a solicitação e volte para conferir." +"\n";
+      alert(texto);
     }else{
       alert("Texto de solicitação "  +"\n"
             +"\n"
