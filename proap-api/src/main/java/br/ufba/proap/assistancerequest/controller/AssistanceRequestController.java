@@ -133,18 +133,25 @@ public class AssistanceRequestController {
 	}
 
 	@PutMapping("/reviewsolicitation")
-	public ResponseEntity<AssistanceRequestDTO> reviewsolicitation(@RequestBody AssistanceRequestDTO assistanceReques) {
+	public ResponseEntity<AssistanceRequestDTO> reviewsolicitation(@RequestBody AssistanceRequestDTO assistanceRequest) {
 		User currentUser = serviceUser.getLoggedUser();
+		Optional<AssistanceRequestDTO> assistancePersisted = service.findById(assistanceRequest.getId());
 
-		if (currentUser == null) {
+		if (currentUser == null || !assistancePersisted.isPresent()) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
 
 		try {
-			assistanceReques.setAutomaticDecText(" ");
-
-			return ResponseEntity.ok().body(service.save(assistanceReques));
+			assistancePersisted.get().setAutomaticDecText(" ");
+			assistancePersisted.get().setSituacao(assistanceRequest.getSituacao());
+			assistancePersisted.get().setNumeroAta(assistanceRequest.getNumeroAta());
+			assistancePersisted.get().setDataAprovacao(assistanceRequest.getDataAprovacao());
+			assistancePersisted.get().setNumeroDiariasAprovadas(assistanceRequest.getNumeroDiariasAprovadas());
+			assistancePersisted.get().setValorAprovado(assistanceRequest.getValorAprovado());
+			assistancePersisted.get().setObservacao(assistanceRequest.getObservacao());
+			return ResponseEntity.ok().body(service.save(assistancePersisted.get()));
 		} catch (Exception e) {
+			e.printStackTrace();
 			logger.error(e.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}

@@ -118,7 +118,7 @@ public class AssistanceRequestDTO {
 	private String observacao;
 
 	// Apos aceite
-	@Column(nullable = true, columnDefinition = "text")
+	@Column(nullable = true, columnDefinition = "text",  length = 100000)
 	private String automaticDecText;
 
 	public String getNomeEvento() {
