@@ -53,7 +53,7 @@ export default function SolicitationTable() {
   };
 
   const handleClickReviewRequest = (id: number) => {
-    navigate(`/solicitation/edit/${id}`);
+    navigate(`/solicitation/review/${id}`);
   };
   
   const handleClickRemoveRequest = (id: number) => {
