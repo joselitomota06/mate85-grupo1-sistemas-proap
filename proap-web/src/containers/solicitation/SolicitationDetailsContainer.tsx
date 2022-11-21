@@ -66,7 +66,7 @@ export default function SolicitationDetailsContainer({
       <Grid item md={3} xs={12}>
         <StyledData>
           <Typography>
-            Solicitou apoia para esse artigo em outro programa de pós-graduação
+            Solicitou apoio para esse artigo em outro programa de pós-graduação
             <span style={{ color: "red" }}>*</span>
           </Typography>
           <Typography style={{ color: "gray" }} variant="subtitle2">

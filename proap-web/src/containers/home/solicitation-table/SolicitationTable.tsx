@@ -6,9 +6,8 @@ import {
   TableHead,
   TableRow,
   Typography,
-
 } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 
 import {
@@ -18,7 +17,7 @@ import {
 import { IRootState, useAppDispatch } from "../../../store";
 
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
-import Visibility from '@mui/icons-material/Visibility';
+import Visibility from "@mui/icons-material/Visibility";
 import { CheckCircle } from "@mui/icons-material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Link, useNavigate } from "react-router-dom";
@@ -34,51 +33,76 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import {
+  deleteExtraAssistanceRequest,
+  getExtraAssistanceRequests,
+} from "../../../services/extraAssistanceRequestService";
 
 export default function SolicitationTable() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { isAdmin } = useAuth();
 
-  const { requests } = useSelector(
+  const { requests, extraRequests } = useSelector(
     (state: IRootState) => state.assistanceRequestSlice
   );
 
-  useEffect(() => {
+  const updateAssistanceRequestList = useCallback(() => {
     dispatch(getAssistanceRequests());
+    dispatch(getExtraAssistanceRequests());
   }, [dispatch]);
+
+  useEffect(() => {
+    updateAssistanceRequestList();
+  }, []);
 
   const handleClickEditRequest = (id: number) => {
     navigate(`/solicitation/edit/${id}`);
   };
 
+  const handleClickEditExtraRequest = (id: number) => {
+    navigate(`/extra-solicitation/edit/${id}`);
+  };
+
   const handleClickReviewRequest = (id: number) => {
     navigate(`/solicitation/review/${id}`);
   };
-  
+
   const handleClickRemoveRequest = (id: number) => {
     removeAssistanceRequestById(id).then(() => {
-      dispatch(getAssistanceRequests());
+      updateAssistanceRequestList();
       toast.success("Solicitação removida com sucesso");
+    });
+  };
+
+  const handleClickRemoveExtraRequest = (id: number) => {
+    deleteExtraAssistanceRequest(id).then(() => {
+      updateAssistanceRequestList();
+      toast.success("Solicitação extra removida com sucesso");
     });
   };
 
   const [open, setOpen] = React.useState(false);
   const [solicitationId, setSolicitationId] = React.useState(0);
+  const [isExtraSolicitation, setIsExtraSolicitation] = React.useState(false);
 
-  const handleClickOpenModal = (id: number) => {
+  const handleClickOpenModal = (id: number, isExtra: boolean = false) => {
+    setIsExtraSolicitation(isExtra);
     setSolicitationId(id);
     setOpen(true);
   };
 
   const handleClickTextOpenModal = (texto: string) => {
-    if(texto == null){
-      var texto = "Texto de solicitação "  +"\n"+"\n"+"Texto não disponível, solicitação ainda não foi avaliada. Avalie a solicitação e volte para conferir." +"\n";
+    if (texto == null) {
+      var texto =
+        "Texto de solicitação " +
+        "\n" +
+        "\n" +
+        "Texto não disponível, solicitação ainda não foi avaliada. Avalie a solicitação e volte para conferir." +
+        "\n";
       alert(texto);
-    }else{
-      alert("Texto de solicitação "  +"\n"
-            +"\n"
-            +texto+"\n");
+    } else {
+      alert("Texto de solicitação " + "\n" + "\n" + texto + "\n");
     }
   };
 
@@ -87,12 +111,16 @@ export default function SolicitationTable() {
   };
 
   const handleRemoveSolicitation = () => {
-    handleClickRemoveRequest(solicitationId);
+    isExtraSolicitation
+      ? handleClickRemoveExtraRequest(solicitationId)
+      : handleClickRemoveRequest(solicitationId);
+
+    setIsExtraSolicitation(false);
     setSolicitationId(0);
     handleClose();
   };
 
-  const handleTextModal = () => {  
+  const handleTextModal = () => {
     handleClickRemoveRequest(solicitationId);
     setSolicitationId(0);
     handleClose();
@@ -100,19 +128,11 @@ export default function SolicitationTable() {
 
   return (
     <>
-      <Typography
-        variant="h4"
-        color="primary"
-        fontWeight="bold"
-        paddingBottom={2}
-      >
-        {isAdmin ? "Solicitações cadastradas" : "Minhas solicitações"}
-      </Typography>
-
       <TableContainer sx={{ maxHeight: "500px" }}>
         <Table stickyHeader>
           <TableHead>
             <TableCell align="center">Solicitante</TableCell>
+            <TableCell align="center">É extra?</TableCell>
             <TableCell align="center">Status</TableCell>
             <TableCell align="center">Valor solicitado</TableCell>
             <TableCell align="center">Valor aprovado</TableCell>
@@ -122,7 +142,7 @@ export default function SolicitationTable() {
           </TableHead>
 
           <TableBody>
-            {requests.length === 0 && (
+            {!requests.length && !extraRequests.length && (
               <TableRow>
                 <TableCell colSpan={7}>
                   <Typography align="center" color="gray">
@@ -146,6 +166,7 @@ export default function SolicitationTable() {
                 }) => (
                   <TableRow key={nomeSolicitante}>
                     <TableCell align="center">{nomeSolicitante}</TableCell>
+                    <TableCell align="center">Não</TableCell>
                     {situacao === 2 && (
                       <TableCell
                         align="center"
@@ -174,47 +195,100 @@ export default function SolicitationTable() {
                     )}
                     <TableCell align="center">R$ {valorInscricao}</TableCell>
                     {valorAprovado === null && (
-                    <TableCell align="center">-</TableCell> 
-                    )}
-                    
-                    {valorAprovado !== null && (
-                      <TableCell align="center">R$ {valorAprovado}</TableCell> 
+                      <TableCell align="center">-</TableCell>
                     )}
 
+                    {valorAprovado !== null && (
+                      <TableCell align="center">R$ {valorAprovado}</TableCell>
+                    )}
 
                     <TableCell align="center">{createdAt}</TableCell>
 
                     {dataAprovacao === null && (
-                    <TableCell align="center">-</TableCell> 
+                      <TableCell align="center">-</TableCell>
                     )}
-                    
+
                     {dataAprovacao !== null && (
-                      <TableCell align="center">{dataAprovacao}</TableCell> 
+                      <TableCell align="center">{dataAprovacao}</TableCell>
                     )}
 
                     <TableCell align="center">
                       <Box>
-                      
-                        <IconButton onClick={() => handleClickTextOpenModal(automaticDecText)}>
-                          <Visibility />
-                        </IconButton>
-                  
-                        <IconButton onClick={() => handleClickReviewRequest(id)}>
-                          <CheckCircle />
-                        </IconButton>
-                    
+                        {isAdmin && (
+                          <>
+                            <IconButton
+                              onClick={() =>
+                                handleClickTextOpenModal(automaticDecText)
+                              }
+                            >
+                              <Visibility />
+                            </IconButton>
+                            <IconButton
+                              onClick={() => handleClickReviewRequest(id)}
+                            >
+                              <CheckCircle />
+                            </IconButton>
+                          </>
+                        )}
+
                         <IconButton onClick={() => handleClickEditRequest(id)}>
                           <ModeEditIcon />
                         </IconButton>
 
-                        
-
                         <IconButton onClick={() => handleClickOpenModal(id)}>
                           <DeleteIcon />
                         </IconButton>
+                      </Box>
+                    </TableCell>
+                  </TableRow>
+                )
+              )}
+            {extraRequests.length > 0 &&
+              extraRequests.map(
+                ({
+                  id,
+                  nomeSolicitante,
+                  valorSolicitado,
+                  createdAt,
+                  review,
+                }) => (
+                  <TableRow key={nomeSolicitante}>
+                    <TableCell align="center">{nomeSolicitante}</TableCell>
+                    <TableCell align="center">Sim</TableCell>
+                    {review ? (
+                      <TableCell
+                        align="center"
+                        style={{ backgroundColor: "lightgreen" }}
+                      >
+                        Aprovada
+                      </TableCell>
+                    ) : (
+                      <TableCell
+                        align="center"
+                        style={{ backgroundColor: "lightcoral" }}
+                      >
+                        Não aprovada
+                      </TableCell>
+                    )}
+                    <TableCell align="center">
+                      {valorSolicitado ? `R$ ${valorSolicitado}` : "-"}
+                    </TableCell>
+                    <TableCell align="center">-</TableCell>
+                    <TableCell align="center">{createdAt}</TableCell>
+                    <TableCell align="center">-</TableCell>
 
-                        
-                        
+                    <TableCell align="center">
+                      <Box>
+                        <IconButton
+                          onClick={() => handleClickEditExtraRequest(id)}
+                        >
+                          <ModeEditIcon />
+                        </IconButton>
+                        <IconButton
+                          onClick={() => handleClickOpenModal(id, true)}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
                       </Box>
                     </TableCell>
                   </TableRow>

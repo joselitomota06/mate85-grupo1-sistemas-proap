@@ -1,4 +1,16 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { ExtraSolicitation } from "../../../containers/extra-solicitation/schema";
+
+export interface RequestReview {
+  createdAt: string;
+  dataAprovacao: string;
+  id: number;
+  numeroAta: string;
+  numeroDiariasAprovadas: number;
+  observacao: string;
+  situacao: number;
+  updatedAt: string;
+}
 
 export interface AssistanceRequest {
   id: number
@@ -24,25 +36,33 @@ export interface AssistanceRequest {
 }
 
 interface AssistanceRequestSliceState {
-  requests: AssistanceRequest[]
+  requests: AssistanceRequest[];
+  extraRequests: ExtraSolicitation[];
 }
 
 const INITIAL_STATE: AssistanceRequestSliceState = {
   requests: [],
-}
+  extraRequests: [],
+};
 
 const assistanceRequestSlice = createSlice({
-  name: 'solicitation',
+  name: "solicitation",
   initialState: INITIAL_STATE,
   reducers: {
     updateSolicitations: (
       state,
       action: PayloadAction<AssistanceRequest[]>
     ) => {
-      state.requests = action.payload
+      state.requests = action.payload;
+    },
+    updateExtraSolicitations: (
+      state,
+      action: PayloadAction<ExtraSolicitation[]>
+    ) => {
+      state.extraRequests = action.payload;
     },
   },
-})
+});
 
-export const { updateSolicitations } = assistanceRequestSlice.actions
-export default assistanceRequestSlice
+export const { updateSolicitations, updateExtraSolicitations } = assistanceRequestSlice.actions;
+export default assistanceRequestSlice;
