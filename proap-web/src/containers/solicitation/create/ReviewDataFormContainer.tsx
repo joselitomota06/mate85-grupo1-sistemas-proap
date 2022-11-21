@@ -17,8 +17,8 @@ export default function ReviewDataFormContainer() {
         name="situacao"
         row
       >
-        <FormControlLabel value="false" control={<Radio />} label="Reprovado" />
-        <FormControlLabel value="true" control={<Radio />} label="Aprovado" />
+        <FormControlLabel value="2" control={<Radio />} label="Reprovado" />
+        <FormControlLabel value="1" control={<Radio />} label="Aprovado" />
       </Field>
 
       <Field
@@ -35,7 +35,7 @@ export default function ReviewDataFormContainer() {
         as={StyledTextField}
         style={{ maxWidth: "170px" }}
         label="Número da ATA"
-        name="numeroATA"
+        name="numeroAta"
         type="number"
         error={Boolean(touched.numeroAta && errors.numeroAta)}
         helperText={touched.numeroAta && errors.numeroAta}
@@ -44,7 +44,17 @@ export default function ReviewDataFormContainer() {
         as={StyledTextField}
         style={{ maxWidth: "250px" }}
         label="Valor aprovado"
-        name="numerodiarias"
+        name="valorAprovado"
+        type="number"
+        error={Boolean(touched.numeroAta && errors.numeroAta)}
+        helperText={touched.numeroAta && errors.numeroAta}
+      />
+
+      <Field
+        as={StyledTextField}
+        style={{ maxWidth: "250px" }}
+        label="Número de diárias aprovadas"
+        name="numeroDiariasAprovadas"
         type="number"
         error={Boolean(touched.numeroAta && errors.numeroAta)}
         helperText={touched.numeroAta && errors.numeroAta}

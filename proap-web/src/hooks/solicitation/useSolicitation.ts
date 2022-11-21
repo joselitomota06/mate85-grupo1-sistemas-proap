@@ -14,12 +14,22 @@ export default function useSolicitation(id: string | undefined) {
       getAssistanceRequestById(id)
         .then(({ data }) => {
           const { dataInicio, dataFim } = data;
+          const { dataAprovacao } = data;
 
-          setSolicitation({
-            ...data,
-            dataInicio: localDateToDate(dataInicio),
-            dataFim: localDateToDate(dataFim),
-          });
+          if(dataAprovacao !== null){
+            setSolicitation({
+              ...data,
+              dataInicio: localDateToDate(dataInicio),
+              dataFim: localDateToDate(dataFim),
+              dataAprovacao: localDateToDate(dataAprovacao),
+            });
+          }else{
+            setSolicitation({
+              ...data,
+              dataInicio: localDateToDate(dataInicio),
+              dataFim: localDateToDate(dataFim),
+            });
+          }          
         })
         .catch(() => setHasError(true))
         .finally(() => setIsLoading(false));

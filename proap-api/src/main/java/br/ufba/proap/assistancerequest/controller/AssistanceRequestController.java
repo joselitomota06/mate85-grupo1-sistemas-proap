@@ -43,7 +43,6 @@ public class AssistanceRequestController {
 
 	@GetMapping("/list")
 	public List<AssistanceRequestDTO> list() {
-
 		User currentUser = serviceUser.getLoggedUser();
 
 		if (currentUser == null) {
@@ -51,11 +50,14 @@ public class AssistanceRequestController {
 		}
 
 		try {
-			return service.findAll();
+			if (currentUser.getPerfil() != null && currentUser.getPerfil().isAdmin()) {
+				return service.findAll();
+			}
+
+			return service.findByUser(currentUser);
 		} catch (Exception e) {
 			return Collections.emptyList();
 		}
-
 	}
 
 	@GetMapping("/list/{userId}")
@@ -64,10 +66,6 @@ public class AssistanceRequestController {
 
 		if (currentUser == null)
 			return Collections.emptyList();
-
-		if(!currentUser.getId().equals(userId))
-			return Collections.emptyList();
-
 		try {
 			return service.findByUser(currentUser);
 		} catch (Exception e) {
@@ -77,28 +75,30 @@ public class AssistanceRequestController {
 	}
 
 	@GetMapping("/find/{id}")
-	public Optional<AssistanceRequestDTO> findById(@PathVariable Long id) {
+	public ResponseEntity<Optional<AssistanceRequestDTO>> findById(@PathVariable Long id) {
 		User currentUser = serviceUser.getLoggedUser();
 
 		if (currentUser == null)
-			return Optional.empty();
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
 		try {
 			Optional<AssistanceRequestDTO> request = service.findById(id);
 
-			boolean isValid = currentUser.getPerfil() == null ||
-				(!currentUser.getPerfil().isAdmin() &&
-				request.isPresent() && !request.get()
-				.getUser().getId().equals(currentUser.getId()));
+			if(!request.isPresent())
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
-			if(isValid)
-				return Optional.empty();
+			boolean isAdminCurrentUser = currentUser.getPerfil() != null
+				&& currentUser.getPerfil().isAdmin();
 
-			return request;
+			if (request.get().getUser() == currentUser || isAdminCurrentUser) {
+				return ResponseEntity.ok().body(request);
+			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
-			return Optional.empty();
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
+
+		return null;
 	}
 
 	@PostMapping("/create")
@@ -111,13 +111,9 @@ public class AssistanceRequestController {
 		}
 
 		try {
+
+			assistanceReques.setSituacao(0);
 			assistanceReques.setUser(currentUser);
-
-			String nomeUsuario = currentUser.getName();
-			String emailUsuario = currentUser.getEmail();
-
-			assistanceReques.setNomeSolicitante(nomeUsuario);
-			assistanceReques.setEmailSolicitacao(emailUsuario);
 
 			return ResponseEntity.ok().body(service.save(assistanceReques));
 		} catch (Exception e) {
@@ -131,6 +127,31 @@ public class AssistanceRequestController {
 		try {
 			return ResponseEntity.ok().body(service.save(assistanceReques));
 		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		}
+	}
+
+	@PutMapping("/reviewsolicitation")
+	public ResponseEntity<AssistanceRequestDTO> reviewsolicitation(@RequestBody AssistanceRequestDTO assistanceRequest) {
+		User currentUser = serviceUser.getLoggedUser();
+		Optional<AssistanceRequestDTO> assistancePersisted = service.findById(assistanceRequest.getId());
+
+		if (currentUser == null || !assistancePersisted.isPresent()) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		}
+
+		try {
+			assistancePersisted.get().setAutomaticDecText(" ");
+			assistancePersisted.get().setSituacao(assistanceRequest.getSituacao());
+			assistancePersisted.get().setNumeroAta(assistanceRequest.getNumeroAta());
+			assistancePersisted.get().setDataAprovacao(assistanceRequest.getDataAprovacao());
+			assistancePersisted.get().setNumeroDiariasAprovadas(assistanceRequest.getNumeroDiariasAprovadas());
+			assistancePersisted.get().setValorAprovado(assistanceRequest.getValorAprovado());
+			assistancePersisted.get().setObservacao(assistanceRequest.getObservacao());
+			return ResponseEntity.ok().body(service.save(assistancePersisted.get()));
+		} catch (Exception e) {
+			e.printStackTrace();
 			logger.error(e.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}

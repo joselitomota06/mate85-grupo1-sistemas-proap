@@ -12,7 +12,7 @@ export default function useUsers() {
     setPage(newPage);
   }, []);
 
-  useEffect(() => {
+  const updateUsers = useCallback(() => {
     setIsLoading(true);
     listUsers()
       .then(({ data }) => {
@@ -20,6 +20,10 @@ export default function useUsers() {
         setPage(0);
       })
       .finally(() => setIsLoading(false));
+  }, []);
+
+  useEffect(() => {
+    updateUsers();
   }, []);
 
   const paginatedUsers = useMemo(
@@ -38,5 +42,6 @@ export default function useUsers() {
     isLoading,
     PAGE_SIZE,
     handlePageChange,
+    updateUsers
   };
 }

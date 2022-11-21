@@ -7,13 +7,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "proap_review", schema = "proap")
@@ -41,37 +39,13 @@ public class Review {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime updatedAt;
-
-    @JsonIgnore
-    @OneToOne(mappedBy = "review")
-    private AssistanceRequestDTO assistanceRequestDTO;
-
-    @JsonIgnore
-    @OneToOne(mappedBy = "review")
-    private ExtraRequest extraRequest;
-
+    
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public AssistanceRequestDTO getAssistanceRequestDTO() {
-        return assistanceRequestDTO;
-    }
-
-    public void setExtraRequest(ExtraRequest extraRequest) {
-        this.extraRequest = extraRequest;
-    }
-
-    public ExtraRequest getExtraRequest() {
-        return extraRequest;
-    }
-
-    public void setAssistanceRequestDTO(AssistanceRequestDTO assistanceRequestDTO) {
-        this.assistanceRequestDTO = assistanceRequestDTO;
     }
     
     public String getNumeroAta() {

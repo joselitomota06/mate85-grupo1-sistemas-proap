@@ -14,6 +14,7 @@ export interface User {
   cpf: string;
   email: string;
   phone: string;
+  id: number;
 }
 
 export const registerUser =
@@ -31,4 +32,8 @@ export const signIn = (values: LoginFormValues) => (dispatch: AppDispatch) => {
 
 export const listUsers = () => {
   return api.get<User[]>("user/list");
+};
+
+export const updateUserCredentials = (id: number) => {
+  return api.put(`user/set-admin/${id}`);
 };
