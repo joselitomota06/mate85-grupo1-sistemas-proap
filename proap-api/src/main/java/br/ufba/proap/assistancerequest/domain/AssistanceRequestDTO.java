@@ -217,7 +217,7 @@ public class AssistanceRequestDTO {
 		String name = this.nomeSolicitante;
 		String valorSolicitado = this.valorInscricao.toString();
 		String quantDiarias = String.valueOf(this.quantidadeDiariasSolicitadas);
-		String calculoDiarias = String.valueOf(this.quantidadeDiariasSolicitadas / this.quantidadeDiariasSolicitadas);
+		//String calculoDiarias = String.valueOf(this.valorSolicitado / this.quantidadeDiariasSolicitadas);
 		String nomeTrabalho = this.nomeCompleto;
 		String evento = this.nomeEvento;
 		String qualis = this.qualis;
@@ -229,36 +229,34 @@ public class AssistanceRequestDTO {
 		if (this.situacao == 1) {
 			if (this.isDolar == false) {
 				this.automaticDecText = "O discente " + name + " solicita apoio de inscrição (R$" + valorSolicitado
-						+ " e " + quantDiarias + " diárias (R$" + calculoDiarias + " | " + quantDiarias + " x R$ "
-						+ calculoDiarias + ") para apresentação de trabalho oral (" + nomeTrabalho + ") no evento "
+						+ " e " + quantDiarias + " diárias ) para apresentação de trabalho oral (" + nomeTrabalho + ") no evento "
 						+ evento + ", Qualis " + qualis + ", a ser realizado em " + cidade + "-" + pais
 						+ ", no período de " + inicio + " a " + fim
-						+ ". Após verificação da documentação enviada pelo discente, a comissão Proap entende que a solicitação está de acordo com a resolução PROAP vigente e recomenda sua aprovação. Posto em apreciação, foi aprovada por unanimidade.";
+						+ ". Após verificação da documentação enviada, a comissão Proap entende que a solicitação está de acordo com a resolução vigente e recomenda sua aprovação.";
 			} else {
 				this.automaticDecText = "O discente " + name + " solicita apoio de inscrição em dolar ($"
-						+ valorSolicitado + " e " + quantDiarias + " diárias ($" + calculoDiarias + " | " + quantDiarias
-						+ " x $ " + calculoDiarias + ") com variação cambial atual informada de (R$ "
+						+ valorSolicitado + " e " + quantDiarias + " diárias ) com variação cambial atual informada de (R$ "
 						+ this.coinVariation + " para apresentação de trabalho oral (" + nomeTrabalho + ") no evento "
 						+ evento + ", Qualis " + qualis + ", a ser realizado em " + cidade + "-" + pais
 						+ ", no período de " + inicio + " a " + fim
-						+ ". Após verificação da documentação enviada pelo discente, a comissão Proap entende que a solicitação está de acordo com a resolução PROAP vigente e recomenda sua aprovação. Posto em apreciação, foi aprovada por unanimidade.";
+						+ ". Após verificação da documentação enviada, a comissão Proap entende que a solicitação está de acordo com a resolução vigente e recomenda sua aprovação.";
 			}
 		} else {
-			if (this.isDolar == false) {
-				this.automaticDecText = "O discente " + name + " solicita apoio de inscrição (R$" + valorSolicitado
-						+ " e " + quantDiarias + " diárias (R$" + calculoDiarias + " | " + quantDiarias + " x R$ "
-						+ calculoDiarias + ") para apresentação de trabalho oral (" + nomeTrabalho + ") no evento "
-						+ evento + ", Qualis " + qualis + ", a ser realizado em " + cidade + "-" + pais
-						+ ", no período de " + inicio + " a " + fim
-						+ ". Após verificação da documentação enviada pelo discente, a comissão Proap entende que a solicitação não está de acordo com a resolução PROAP vigente e recomenda sua reprovação.";
-			} else {
-				this.automaticDecText = "O discente " + name + " solicita apoio de inscrição em dolar ($"
-						+ valorSolicitado + " e " + quantDiarias + " diárias ($" + calculoDiarias + " | " + quantDiarias
-						+ " x $ " + calculoDiarias + ") com variação cambial atual informada de (R$ "
-						+ this.coinVariation + " para apresentação de trabalho oral (" + nomeTrabalho + ") no evento "
-						+ evento + ", Qualis " + qualis + ", a ser realizado em " + cidade + "-" + pais
-						+ ", no período de " + inicio + " a " + fim
-						+ ". Após verificação da documentação enviada pelo discente, a comissão Proap entende que a solicitação não está de acordo com a resolução PROAP vigente e recomenda sua reprovação.";
+			if (this.situacao == 2) {
+				if (this.isDolar == false) {
+					this.automaticDecText = "O discente " + name + " solicita apoio de inscrição (R$" + valorSolicitado
+							+ " e " + quantDiarias + " diárias) para apresentação de trabalho oral (" + nomeTrabalho + ") no evento "
+							+ evento + ", Qualis " + qualis + ", a ser realizado em " + cidade + "-" + pais
+							+ ", no período de " + inicio + " a " + fim
+							+ ". Após verificação da documentação enviada, a comissão Proap entende que a solicitação não está de acordo com a resolução vigente e recomenda sua reprovação.";
+				} else {
+					this.automaticDecText = "O discente " + name + " solicita apoio de inscrição em dolar ($"
+							+ valorSolicitado + " e " + quantDiarias + " diárias) com variação cambial atual informada de (R$ "
+							+ this.coinVariation + " para apresentação de trabalho oral (" + nomeTrabalho + ") no evento "
+							+ evento + ", Qualis " + qualis + ", a ser realizado em " + cidade + "-" + pais
+							+ ", no período de " + inicio + " a " + fim
+							+ ". Após verificação da documentação enviada, a comissão Proap entende que a solicitação não está de acordo com a resolução vigente e recomenda sua reprovação.";
+				}
 			}
 		}
 	}
