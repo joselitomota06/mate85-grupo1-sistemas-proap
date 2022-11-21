@@ -112,6 +112,7 @@ public class AssistanceRequestController {
 		try {
 
 			assistanceReques.setSituacao(0);
+			assistanceReques.setUser(currentUser);
 
 			return ResponseEntity.ok().body(service.save(assistanceReques));
 		} catch (Exception e) {
