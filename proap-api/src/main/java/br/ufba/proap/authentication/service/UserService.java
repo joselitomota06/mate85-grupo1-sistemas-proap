@@ -27,13 +27,11 @@ public class UserService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		Optional<User> user = userRepository.findByEmail(email);
-		
+
 		if(user.isPresent()) {
 			return user.get();
-			
-		}else {
+		} else {
 			throw new UsernameNotFoundException("Email user: " + email + " not found");
-			
 		}
 	}
 
@@ -71,8 +69,15 @@ public class UserService implements UserDetailsService {
 		return userRepository.findByEmail(email);
 	}
 
-	public User updateCustomerContacts(UpdatePasswordDTO up) {
+	public User updateCustomerContacts(UpdatePasswordDTO up) throws IllegalArgumentException {
 	    User myCustomer = userRepository.findByEmailAndCPF(up.getEmail(), up.getCpf());
+
+	    if(myCustomer == null)
+	    	throw new IllegalArgumentException("Algum parâmetro informado está incorreto. Favor verificar.");
+
+	    if(up.getPassword() == null)
+	    	throw new IllegalArgumentException("Algum parâmetro informado está incorreto. Favor verificar.");
+
 	    myCustomer.setPassword(passwordEncoder.encode(up.getPassword()));
 	    return userRepository.save(myCustomer);
 	}
