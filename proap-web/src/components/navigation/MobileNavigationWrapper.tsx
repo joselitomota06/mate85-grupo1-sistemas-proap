@@ -1,3 +1,4 @@
+import React, { PropsWithChildren, useCallback, useState } from "react";
 import {
   useTheme,
   Toolbar,
@@ -16,7 +17,6 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import LogoutIcon from "@mui/icons-material/Logout";
 
-import { PropsWithChildren, useCallback, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { NavigationItem } from "./NavigationWrapper";
 import { MobileNavigationChildren } from "./MobileNavigationWrapper.style";
@@ -38,6 +38,8 @@ export const MobileNavigationWrapper = ({
 
   const handleDrawerOpen = () => setDrawerOpen(true);
   const handleDrawerClose = () => setDrawerOpen(false);
+
+  const handleClickNavigation = () => setDrawerOpen(false);
 
   const handleClickExit = useCallback(() => {
     dispatch(logout());
@@ -97,13 +99,21 @@ export const MobileNavigationWrapper = ({
           }}
         >
           <List>
-            {items.map(({ label, icon, link }) => (
-              <ListItem key={label}>
-                <ListItemButton component={NavLink} to={link}>
-                  {icon}
-                  <ListItemText primary={label} />
-                </ListItemButton>
-              </ListItem>
+            {items.map(({ label, icon, link, visible }) => (
+              <React.Fragment key={label}>
+                {visible && (
+                  <ListItem>
+                    <ListItemButton
+                      component={NavLink}
+                      to={link}
+                      onClick={handleClickNavigation}
+                    >
+                      {icon}
+                      <ListItemText primary={label} />
+                    </ListItemButton>
+                  </ListItem>
+                )}
+              </React.Fragment>
             ))}
           </List>
         </Drawer>
