@@ -214,19 +214,22 @@ export default function SolicitationTable() {
 
                     <TableCell align="center">
                       <Box>
-                        <IconButton
-                          onClick={() =>
-                            handleClickTextOpenModal(automaticDecText)
-                          }
-                        >
-                          <Visibility />
-                        </IconButton>
-
-                        <IconButton
-                          onClick={() => handleClickReviewRequest(id)}
-                        >
-                          <CheckCircle />
-                        </IconButton>
+                        {isAdmin && (
+                          <>
+                            <IconButton
+                              onClick={() =>
+                                handleClickTextOpenModal(automaticDecText)
+                              }
+                            >
+                              <Visibility />
+                            </IconButton>
+                            <IconButton
+                              onClick={() => handleClickReviewRequest(id)}
+                            >
+                              <CheckCircle />
+                            </IconButton>
+                          </>
+                        )}
 
                         <IconButton onClick={() => handleClickEditRequest(id)}>
                           <ModeEditIcon />
