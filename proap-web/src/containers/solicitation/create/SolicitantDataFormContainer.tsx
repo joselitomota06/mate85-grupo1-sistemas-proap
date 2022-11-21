@@ -21,9 +21,9 @@ export default function ContactDataFormContainer() {
       <Field
         as={StyledTextField}
         label="Nome"
-        name="nomeSolicitacao"
-        error={Boolean(touched.nomeSolicitacao && errors.nomeSolicitacao)}
-        helperText={touched.nomeSolicitacao && errors.nomeSolicitacao}
+        name="nomeSolicitante"
+        error={Boolean(touched.nomeSolicitante && errors.nomeSolicitante)}
+        helperText={touched.nomeSolicitante && errors.nomeSolicitante}
         required
         style={{ padding: "none" }}
         multiline
@@ -58,21 +58,21 @@ export default function ContactDataFormContainer() {
         multiline
       />
 
-      <FormControl error={Boolean(touched.alunoPGCOMP && errors.alunoPGCOMP)}>
+      <FormControl error={Boolean(touched.autoresPresentePGCOMP && errors.autoresPresentePGCOMP)}>
         <FormLabel required>
           Existe aluno PGCOMP como co-autor na publicação
         </FormLabel>
         <Field
           as={RadioGroup}
           aria-labelledby="demo-row-radio-buttons-group-label"
-          name="alunoPGCOMP"
+          name="autoresPresentePGCOMP"
           row
         >
           <FormControlLabel value="true" control={<Radio />} label="Sim" />
           <FormControlLabel value="false" control={<Radio />} label="Não" />
         </Field>
-        {touched.alunoPGCOMP && errors.alunoPGCOMP && (
-          <FormHelperText>{errors.alunoPGCOMP}</FormHelperText>
+        {touched.autoresPresentePGCOMP && errors.autoresPresentePGCOMP && (
+          <FormHelperText>{errors.autoresPresentePGCOMP}</FormHelperText>
         )}
       </FormControl>
     </Grid>

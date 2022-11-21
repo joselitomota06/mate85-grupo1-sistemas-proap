@@ -1,14 +1,14 @@
 import * as Yup from "yup";
 
 export const solicitantDataFormSchema = Yup.object({
-  nomeSolicitacao: Yup.string().required("Campo obrigatório"),
+  nomeSolicitante: Yup.string().required("Campo obrigatório"),
   emailSolicitacao: Yup.string()
     .required("Campo obrigatório")
     .email("Insira um e-mail válido"),
   nomeCompleto: Yup.string(),
   doi: Yup.string().notRequired(),
   autores: Yup.string().required("Campo obrigatório"),
-  alunoPGCOMP: Yup.string().required("Campo obrigatório"),
+  autoresPresentePGCOMP: Yup.string().required("Campo obrigatório"),
 });
 
 export const financingDataFormSchema = Yup.object({
@@ -44,12 +44,26 @@ export const eventDataFormSchema = Yup.object({
   pais: Yup.string().required("Campo obrigatório"),
   cidade: Yup.string().required("Campo obrigatório"),
   linkHomepage: Yup.string().required("Campo obrigatório"),
+  quantidadeDiariasSolicitadas : Yup.number()
+  .nullable()
+  .required("Campo obrigatório")
+  .min(1, "Insira um valor válido"),
+
   valorInscricao: Yup.number()
     .nullable()
     .required("Campo obrigatório")
     .min(1, "Insira um valor válido"),
+  
+  isDolar: Yup.boolean().nullable().required("Campo obrigatório"),
+
+  coinVariation:  Yup.number()
+  .nullable()
+  .min(1, "Insira um valor válido"),
+  
   cartaAceite: Yup.string().required("Campo obrigatório"),
   qualis: Yup.string().required("Campo obrigatório"),
+
+  nomeEvento: Yup.string().required("Campo obrigatório"),
 });
 
 export const detailsEventDataFormSchema = Yup.object({
@@ -60,7 +74,7 @@ export const detailsEventDataFormSchema = Yup.object({
 });
 
 export const reviewDataFormSchema = Yup.object({
-  situacao: Yup.boolean().nullable().required("Campo obrigatório"),
+  situacao: Yup.number().nullable().required("Campo obrigatório"),
   dataAprovacao: Yup.string().required("Campo obrigatório"),
   numeroAta: Yup.number().required("Campo obrigatório"),
   numeroDiariasAprovadas: Yup.number().required("Campo obrigatório"),
@@ -72,14 +86,15 @@ export interface Solicitation {
   doi: string;
   autores: string;
   alunoPGCOMP: string;
-  nomeSolicitacao: string;
+  nomeSolicitante: string;
   emailSolicitacao: string;
   solicitacaoApoio: string | undefined;
   valorSolicitado: number | string;
   solicitacaoAuxilioOutrasFontes: string | undefined;
   nomeAgenciaFomento: string;
   valorSolicitadoAgenciaFomento: number | string;
-
+  autoresPresentePGCOMP: boolean;
+  isDolar: string | undefined;
   dataInicio: string;
   dataFim: string;
   linkHomepage: string;
@@ -88,14 +103,15 @@ export interface Solicitation {
   valorInscricao: number | undefined;
   cartaAceite: string;
   qualis: string;
-
+  coinVariation: number | undefined;
   comprovantePagamento: string;
-
-  situacao: boolean;
+  nomeEvento: string;
+  situacao: number;
   dataAprovacao: string;
   numeroAta: number;
   numeroDiariasAprovadas: number;
   observacao: string;
+  quantidadeDiariasSolicitadas: number;
 }
 
 export interface SolicitationFormValues extends Solicitation {
@@ -106,14 +122,14 @@ export const INITIAL_FORM_VALUES: SolicitationFormValues = {
   nomeCompleto: "",
   doi: "",
   autores: "",
-  alunoPGCOMP: "true",
+  alunoPGCOMP: "false",
 
   solicitacaoApoio: "",
   valorSolicitado: "",
   solicitacaoAuxilioOutrasFontes: "",
   nomeAgenciaFomento: "",
   valorSolicitadoAgenciaFomento: "",
-  nomeSolicitacao: "",
+  nomeSolicitante: "",
   emailSolicitacao: "",
   dataInicio: "",
   dataFim: "",
@@ -125,10 +141,16 @@ export const INITIAL_FORM_VALUES: SolicitationFormValues = {
   cartaAceite: "",
   qualis: "A1",
   aceiteFinal: false,
-
-  situacao: false,
+  isDolar: "",
+  situacao: 0,
   dataAprovacao: "",
   numeroAta: 0,
   numeroDiariasAprovadas: 0,
   observacao: "",
+  coinVariation: undefined,
+  nomeEvento: "",
+  quantidadeDiariasSolicitadas: 0,
+
+  autoresPresentePGCOMP: false,
+
 };

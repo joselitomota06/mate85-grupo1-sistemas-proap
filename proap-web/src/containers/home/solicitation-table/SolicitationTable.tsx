@@ -6,6 +6,7 @@ import {
   TableHead,
   TableRow,
   Typography,
+
 } from "@mui/material";
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
@@ -17,6 +18,7 @@ import {
 import { IRootState, useAppDispatch } from "../../../store";
 
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
+import Visibility from '@mui/icons-material/Visibility';
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Link, useNavigate } from "react-router-dom";
 import { Box } from "@mui/system";
@@ -64,11 +66,28 @@ export default function SolicitationTable() {
     setOpen(true);
   };
 
+  const handleClickTextOpenModal = (texto: string) => {
+    if(texto == null){
+      var texto = "Texto de solicitação "  +"\n"+"\n"+"Texto não disponível, solicitação ainda não foi avaliada. Avalie a solicitação e volte para conferir." +"\n";
+      alert(texto);
+    }else{
+      alert("Texto de solicitação "  +"\n"
+            +"\n"
+            +texto+"\n");
+    }
+  };
+
   const handleClose = () => {
     setOpen(false);
   };
 
   const handleRemoveSolicitation = () => {
+    handleClickRemoveRequest(solicitationId);
+    setSolicitationId(0);
+    handleClose();
+  };
+
+  const handleTextModal = () => {  
     handleClickRemoveRequest(solicitationId);
     setSolicitationId(0);
     handleClose();
@@ -114,12 +133,13 @@ export default function SolicitationTable() {
                   nomeSolicitante,
                   valorInscricao,
                   createdAt,
-                  review,
+                  situacao,
+                  automaticDecText,
                   user,
                 }) => (
                   <TableRow key={nomeSolicitante}>
                     <TableCell align="center">{nomeSolicitante}</TableCell>
-                    {review === null && (
+                    {situacao === 2 && (
                       <TableCell
                         align="center"
                         style={{ backgroundColor: "lightcoral" }}
@@ -128,12 +148,21 @@ export default function SolicitationTable() {
                       </TableCell>
                     )}
 
-                    {review !== null && (
+                    {situacao === 1 && (
                       <TableCell
                         align="center"
                         style={{ backgroundColor: "lightgreen" }}
                       >
                         Aprovada
+                      </TableCell>
+                    )}
+
+                    {situacao === 0 && (
+                      <TableCell
+                        align="center"
+                        style={{ backgroundColor: "gray" }}
+                      >
+                        Pendente de avaliação
                       </TableCell>
                     )}
                     <TableCell align="center">R$ {valorInscricao}</TableCell>
@@ -143,6 +172,9 @@ export default function SolicitationTable() {
 
                     <TableCell align="center">
                       <Box>
+                        <IconButton onClick={() => handleClickTextOpenModal(automaticDecText)}>
+                          <Visibility />
+                        </IconButton>
                         <IconButton onClick={() => handleClickEditRequest(id)}>
                           <ModeEditIcon />
                         </IconButton>
