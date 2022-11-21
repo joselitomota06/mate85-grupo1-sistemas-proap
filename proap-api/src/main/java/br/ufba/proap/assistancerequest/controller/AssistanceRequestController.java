@@ -82,16 +82,17 @@ public class AssistanceRequestController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
 		try {
-
 			Optional<AssistanceRequestDTO> request = service.findById(id);
 
-			if (request == null)
+			if(!request.isPresent())
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
-			if (request.get().getUser() == currentUser) {
+			boolean isAdminCurrentUser = currentUser.getPerfil() != null
+				&& currentUser.getPerfil().isAdmin();
+
+			if (request.get().getUser() == currentUser || isAdminCurrentUser) {
 				return ResponseEntity.ok().body(request);
 			}
-
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
