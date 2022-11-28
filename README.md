@@ -23,7 +23,9 @@
 [10. Documento de casos de testes ](https://docs.google.com/document/d/1YWfuetyzL69glq9oR3SIV29IY8PG3ArdnG8PBTJkpfc/edit?usp=sharing)
 
 
-[(Novo!) 11. Documento de Implantação ](https://docs.google.com/document/d/1s95v6LkgihnHYdhcw4fwv4T_kCOZ0uAHL6VEFEJDQew/edit?usp=sharing)
+[11. Documento de Implantação ](https://docs.google.com/document/d/1s95v6LkgihnHYdhcw4fwv4T_kCOZ0uAHL6VEFEJDQew/edit?usp=sharing)
+
+[12. Repositório de Testes do sistema](https://github.com/MatheusSandes/Selenium-python)
 
 
 O sistema para apoio ao **PROAP - Programa de Apoio à Pós-Graduação** está inserido em um dos sistemas utilizados pelo **Instituto de Computação da Universidade Federal da Bahia** para auxiliar estudantes, professores e funcionários que atuam na gerência de recursos oriundos da Pós-Graduação. A solicitação deste sistema foi realizada com o intuito de organizar, automatizar e gerar celeridade nos processos de cadastros, solicitações e acompanhamento de recursos voltados para publicações em eventos ou periódicos do programa de Pós-graduação do instituto.
