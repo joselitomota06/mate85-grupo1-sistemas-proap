@@ -1,14 +1,14 @@
-import axios from 'axios'
-import { BASE_API_URL } from '../helpers/api'
-import { LocalStorageToken } from '../helpers/auth'
+import axios from 'axios';
+import { BASE_API_URL } from '../helpers/api';
+import { LocalStorageToken } from '../helpers/auth';
 
 const api = axios.create({
   baseURL: BASE_API_URL,
-})
+});
 
 api.interceptors.request.use(
   (config) => {
-    const token = LocalStorageToken.get()
+    const token = LocalStorageToken.get();
     if (token)
       return {
         ...config,
@@ -16,13 +16,13 @@ api.interceptors.request.use(
           ...config.headers,
           'x-access-token': `Bearer ${token}`,
         },
-      }
+      };
 
-    return config
+    return config;
   },
   (error) => {
-    return Promise.reject(error)
+    return Promise.reject(error);
   }
-)
+);
 
-export default api
+export default api;

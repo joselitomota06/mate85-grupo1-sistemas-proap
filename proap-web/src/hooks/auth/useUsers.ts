@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { listUsers, User } from "../../services/authService";
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { listUsers, User } from '../../services/authService';
 
 const PAGE_SIZE = 10;
 
@@ -42,6 +42,6 @@ export default function useUsers() {
     isLoading,
     PAGE_SIZE,
     handlePageChange,
-    updateUsers
+    updateUsers,
   };
 }

@@ -1,49 +1,56 @@
-import { CircularProgress, Grid, Input, TextField, IconButton, InputAdornment, InputProps } from "@mui/material";
-import { Field, Form, Formik, FormikHelpers } from "formik";
-import { useCallback, useState } from "react";
-import { Link } from "react-router-dom";
+import {
+  CircularProgress,
+  Grid,
+  Input,
+  TextField,
+  IconButton,
+  InputAdornment,
+  InputProps,
+} from '@mui/material';
+import { Field, Form, Formik, FormikHelpers } from 'formik';
+import { useCallback, useState } from 'react';
+import { Link } from 'react-router-dom';
 import React from 'react';
-import { signIn } from "../../services/authService";
-import { useAppDispatch } from "../../store";
+import { signIn } from '../../services/authService';
+import { useAppDispatch } from '../../store';
 import {
   LoginButton,
   LoginCircularProgress,
   RegisterLinkTypography,
-} from "./LoginFormContainer.style";
+} from './LoginFormContainer.style';
 import {
   INITIAL_FORM_VALUES,
   loginFormSchema,
   LoginFormValues,
-} from "./LoginFormSchema";
+} from './LoginFormSchema';
 
-import Toast from "../../helpers/notification";
-import { StyledTextField } from "./LoginFormContainer.style";
+import Toast from '../../helpers/notification';
+import { StyledTextField } from './LoginFormContainer.style';
 
-import Visibility from '@mui/icons-material/Visibility'
-import { Label } from "@mui/icons-material";
-
+import Visibility from '@mui/icons-material/Visibility';
+import { Label } from '@mui/icons-material';
 
 export default function LoginFormContainer() {
   const dispatch = useAppDispatch();
-  const [showPassword, setShowPassword] = React.useState(false)
+  const [showPassword, setShowPassword] = React.useState(false);
   const [rightIcon, setRightIcon] = React.useState('eye');
 
   const handleSubmit = useCallback(
     (values: LoginFormValues, actions: FormikHelpers<LoginFormValues>) => {
       return dispatch(signIn(values)).catch(({ response: { status } }) => {
-        if (status == 401) actions.setFieldError("password", "Senha incorreta");
+        if (status == 401) actions.setFieldError('password', 'Senha incorreta');
       });
     },
     [dispatch]
   );
 
   function onMouseDown() {
-    setShowPassword(true)
+    setShowPassword(true);
     setRightIcon('eye');
   }
-  
+
   function onMouseUp() {
-    setShowPassword(false)
+    setShowPassword(false);
     setRightIcon('eye-off');
   }
 
@@ -69,30 +76,28 @@ export default function LoginFormContainer() {
               as={StyledTextField}
               label="Senha"
               name="password"
-              type={showPassword?"text":"password"}
+              type={showPassword ? 'text' : 'password'}
               onMouseDown={onMouseDown}
               onMouseUp={onMouseUp}
               error={Boolean(touched.password && errors.password)}
               helperText={touched.password && errors.password}
               required
-              InputProps = {{
-
-              
-              endAdornment:
-                <InputAdornment position="end">
-                  <IconButton
-                      size='small'
-                      
-                      aria-label='toggle password visibility'
-                      
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      size="small"
+                      aria-label="toggle password visibility"
                       onMouseDown={onMouseDown}
                       onMouseUp={onMouseUp}
-                  > <Visibility /> </IconButton>
-                </InputAdornment>
+                    >
+                      {' '}
+                      <Visibility />{' '}
+                    </IconButton>
+                  </InputAdornment>
+                ),
               }}
             />
-            
-              
           </Grid>
           <LoginButton
             variant="contained"
@@ -107,11 +112,9 @@ export default function LoginFormContainer() {
           </RegisterLinkTypography>
 
           <RegisterLinkTypography>
-            Problemas ao entrar na conta? <Link to="recover-password">Recuperar senha</Link>
+            Problemas ao entrar na conta?{' '}
+            <Link to="recover-password">Recuperar senha</Link>
           </RegisterLinkTypography>
-
-
-          
         </Form>
       )}
     </Formik>

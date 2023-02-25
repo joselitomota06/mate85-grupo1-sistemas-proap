@@ -1,38 +1,38 @@
-import jwt_decode from 'jwt-decode'
+import jwt_decode from 'jwt-decode';
 
 interface DecodedToken {
-  email: string
-  exp: number
-  iat: number
-  id: number
-  login: string
-  name: string
-  isAdmin: boolean
+  email: string;
+  exp: number;
+  iat: number;
+  id: number;
+  login: string;
+  name: string;
+  isAdmin: boolean;
 }
 
-export const LOCAL_STORAGE_TOKEN_KEY = 'token'
+export const LOCAL_STORAGE_TOKEN_KEY = 'token';
 
 export const LocalStorageToken = {
   get: () => {
-    return localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY) ?? ''
+    return localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY) ?? '';
   },
 
   save: (token: string) => {
-    localStorage.setItem(LOCAL_STORAGE_TOKEN_KEY, token)
+    localStorage.setItem(LOCAL_STORAGE_TOKEN_KEY, token);
   },
 
   clear: () => {
-    localStorage.removeItem(LOCAL_STORAGE_TOKEN_KEY)
+    localStorage.removeItem(LOCAL_STORAGE_TOKEN_KEY);
   },
-}
+};
 
 export const getInitialAuthSliceState = () => {
-  const token = LocalStorageToken.get()
+  const token = LocalStorageToken.get();
   return {
     token,
     isAuthenticated: Boolean(token),
-  }
-}
+  };
+};
 
 export const decodeToken = (token: string): DecodedToken => {
   return token
@@ -44,6 +44,6 @@ export const decodeToken = (token: string): DecodedToken => {
         exp: 0,
         iat: 0,
         id: 0,
-        isAdmin: false
-      }
-}
+        isAdmin: false,
+      };
+};

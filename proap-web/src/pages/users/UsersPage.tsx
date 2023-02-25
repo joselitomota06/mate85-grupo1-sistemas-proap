@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   Button,
   Dialog,
@@ -17,12 +17,12 @@ import {
   TablePagination,
   TableRow,
   Typography,
-} from "@mui/material";
-import PermIdentityIcon from "@mui/icons-material/PermIdentity";
-import { maskCpf, maskPhone } from "../../helpers/masks";
-import useUsers from "../../hooks/auth/useUsers";
-import Toast from "../../helpers/notification";
-import { updateUserCredentials } from "../../services/authService";
+} from '@mui/material';
+import PermIdentityIcon from '@mui/icons-material/PermIdentity';
+import { maskCpf, maskPhone } from '../../helpers/masks';
+import useUsers from '../../hooks/auth/useUsers';
+import Toast from '../../helpers/notification';
+import { updateUserCredentials } from '../../services/authService';
 
 export default function UsersPage() {
   const [currentUserId, setCurrentUserId] = useState<number>(-1);
@@ -43,12 +43,12 @@ export default function UsersPage() {
     setOpen(false);
     updateUserCredentials(currentUserId)
       .then(() => {
-        Toast.success("Credencias do usuário atualizadas com sucesso.");
+        Toast.success('Credencias do usuário atualizadas com sucesso.');
         setCurrentUserId(-1);
         updateUsers();
       })
       .catch(() => {
-        Toast.error("Falha ao atualizar as credenciais do usuário");
+        Toast.error('Falha ao atualizar as credenciais do usuário');
       });
   };
 
@@ -66,7 +66,7 @@ export default function UsersPage() {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {"Remoção de solicitação"}
+          {'Remoção de solicitação'}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
@@ -112,7 +112,7 @@ export default function UsersPage() {
                 {users.map(({ id, name, cpf, email, phone }) => (
                   <TableRow
                     key={cpf}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   >
                     <TableCell component="th" scope="row">
                       {name}

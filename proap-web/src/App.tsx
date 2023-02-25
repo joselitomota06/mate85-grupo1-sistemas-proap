@@ -1,12 +1,12 @@
-import { Global } from "@emotion/react";
-import { ThemeProvider } from "@mui/material";
-import { Provider } from "react-redux";
+import { Global } from '@emotion/react';
+import { ThemeProvider } from '@mui/material';
+import { Provider } from 'react-redux';
 
-import globalStyle, { theme } from "./global-style";
-import { AppRoutes } from "./components/routing";
-import store from "./store";
+import globalStyle, { theme } from './global-style';
+import { AppRoutes } from './components/routing';
+import store from './store';
 
-import { ToastContainer } from "react-toastify";
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {

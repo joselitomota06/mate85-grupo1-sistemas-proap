@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes } from 'react-router-dom';
 import {
   HomePage,
   NotFoundPage,
@@ -8,9 +8,9 @@ import {
   EditExtraSolicitationPage,
   ReviewSolicitationPage,
   UsersPage,
-} from "../../pages";
+} from '../../pages';
 
-import NavigationWrapper from "../navigation/NavigationWrapper";
+import NavigationWrapper from '../navigation/NavigationWrapper';
 
 export default function PrivateRoutes() {
   return (

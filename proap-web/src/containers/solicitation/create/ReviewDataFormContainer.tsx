@@ -1,10 +1,10 @@
-import React from "react";
+import React from 'react';
 
-import { SolicitationFormValues } from "../SolicitationFormSchema";
-import { Field, useFormikContext } from "formik";
-import { Grid, TextField } from "@mui/material";
-import { StyledTextField } from "../SolicitationFormContainer.style";
-import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
+import { SolicitationFormValues } from '../SolicitationFormSchema';
+import { Field, useFormikContext } from 'formik';
+import { Grid, TextField } from '@mui/material';
+import { StyledTextField } from '../SolicitationFormContainer.style';
+import { FormControlLabel, Radio, RadioGroup } from '@mui/material';
 
 export default function ReviewDataFormContainer() {
   const { errors, touched } = useFormikContext<SolicitationFormValues>();
@@ -23,7 +23,7 @@ export default function ReviewDataFormContainer() {
 
       <Field
         as={StyledTextField}
-        style={{ maxWidth: "170px" }}
+        style={{ maxWidth: '170px' }}
         label="Data de aprovação da solicitação"
         name="dataAprovacao"
         type="date"
@@ -33,7 +33,7 @@ export default function ReviewDataFormContainer() {
 
       <Field
         as={StyledTextField}
-        style={{ maxWidth: "170px" }}
+        style={{ maxWidth: '170px' }}
         label="Número da ATA"
         name="numeroAta"
         type="number"
@@ -42,7 +42,7 @@ export default function ReviewDataFormContainer() {
       />
       <Field
         as={StyledTextField}
-        style={{ maxWidth: "250px" }}
+        style={{ maxWidth: '250px' }}
         label="Valor aprovado"
         name="valorAprovado"
         type="number"
@@ -52,7 +52,7 @@ export default function ReviewDataFormContainer() {
 
       <Field
         as={StyledTextField}
-        style={{ maxWidth: "250px" }}
+        style={{ maxWidth: '250px' }}
         label="Número de diárias aprovadas"
         name="numeroDiariasAprovadas"
         type="number"

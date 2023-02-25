@@ -6,37 +6,37 @@ import {
   TableHead,
   TableRow,
   Typography,
-} from "@mui/material";
-import React, { useCallback, useEffect } from "react";
-import { useSelector } from "react-redux";
+} from '@mui/material';
+import React, { useCallback, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 import {
   getAssistanceRequests,
   removeAssistanceRequestById,
-} from "../../../services/assistanceRequestService";
-import { IRootState, useAppDispatch } from "../../../store";
+} from '../../../services/assistanceRequestService';
+import { IRootState, useAppDispatch } from '../../../store';
 
-import ModeEditIcon from "@mui/icons-material/ModeEdit";
-import Visibility from "@mui/icons-material/Visibility";
-import { CheckCircle } from "@mui/icons-material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { Link, useNavigate } from "react-router-dom";
-import { Box } from "@mui/system";
-import { IconButton } from "@mui/material";
-import { useAuth } from "../../../hooks";
-import { toast, ToastOptions } from "react-toastify";
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import Visibility from '@mui/icons-material/Visibility';
+import { CheckCircle } from '@mui/icons-material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { Link, useNavigate } from 'react-router-dom';
+import { Box } from '@mui/system';
+import { IconButton } from '@mui/material';
+import { useAuth } from '../../../hooks';
+import { toast, ToastOptions } from 'react-toastify';
 
 // Modal inports
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import {
   deleteExtraAssistanceRequest,
   getExtraAssistanceRequests,
-} from "../../../services/extraAssistanceRequestService";
+} from '../../../services/extraAssistanceRequestService';
 
 export default function SolicitationTable() {
   const dispatch = useAppDispatch();
@@ -71,14 +71,14 @@ export default function SolicitationTable() {
   const handleClickRemoveRequest = (id: number) => {
     removeAssistanceRequestById(id).then(() => {
       updateAssistanceRequestList();
-      toast.success("Solicitação removida com sucesso");
+      toast.success('Solicitação removida com sucesso');
     });
   };
 
   const handleClickRemoveExtraRequest = (id: number) => {
     deleteExtraAssistanceRequest(id).then(() => {
       updateAssistanceRequestList();
-      toast.success("Solicitação extra removida com sucesso");
+      toast.success('Solicitação extra removida com sucesso');
     });
   };
 
@@ -95,14 +95,14 @@ export default function SolicitationTable() {
   const handleClickTextOpenModal = (texto: string) => {
     if (texto == null) {
       var texto =
-        "Texto de solicitação " +
-        "\n" +
-        "\n" +
-        "Texto não disponível, solicitação ainda não foi avaliada. Avalie a solicitação e volte para conferir." +
-        "\n";
+        'Texto de solicitação ' +
+        '\n' +
+        '\n' +
+        'Texto não disponível, solicitação ainda não foi avaliada. Avalie a solicitação e volte para conferir.' +
+        '\n';
       alert(texto);
     } else {
-      alert("Texto de solicitação " + "\n" + "\n" + texto + "\n");
+      alert('Texto de solicitação ' + '\n' + '\n' + texto + '\n');
     }
   };
 
@@ -128,7 +128,7 @@ export default function SolicitationTable() {
 
   return (
     <>
-      <TableContainer sx={{ maxHeight: "500px" }}>
+      <TableContainer sx={{ maxHeight: '500px' }}>
         <Table stickyHeader>
           <TableHead>
             <TableCell align="center">Solicitante</TableCell>
@@ -170,7 +170,7 @@ export default function SolicitationTable() {
                     {situacao === 2 && (
                       <TableCell
                         align="center"
-                        style={{ backgroundColor: "lightcoral" }}
+                        style={{ backgroundColor: 'lightcoral' }}
                       >
                         Não aprovada
                       </TableCell>
@@ -179,7 +179,7 @@ export default function SolicitationTable() {
                     {situacao === 1 && (
                       <TableCell
                         align="center"
-                        style={{ backgroundColor: "lightgreen" }}
+                        style={{ backgroundColor: 'lightgreen' }}
                       >
                         Aprovada
                       </TableCell>
@@ -188,7 +188,7 @@ export default function SolicitationTable() {
                     {situacao === 0 && (
                       <TableCell
                         align="center"
-                        style={{ backgroundColor: "gray" }}
+                        style={{ backgroundColor: 'gray' }}
                       >
                         Pendente de avaliação
                       </TableCell>
@@ -258,20 +258,20 @@ export default function SolicitationTable() {
                     {review ? (
                       <TableCell
                         align="center"
-                        style={{ backgroundColor: "lightgreen" }}
+                        style={{ backgroundColor: 'lightgreen' }}
                       >
                         Aprovada
                       </TableCell>
                     ) : (
                       <TableCell
                         align="center"
-                        style={{ backgroundColor: "lightcoral" }}
+                        style={{ backgroundColor: 'lightcoral' }}
                       >
                         Não aprovada
                       </TableCell>
                     )}
                     <TableCell align="center">
-                      {valorSolicitado ? `R$ ${valorSolicitado}` : "-"}
+                      {valorSolicitado ? `R$ ${valorSolicitado}` : '-'}
                     </TableCell>
                     <TableCell align="center">-</TableCell>
                     <TableCell align="center">{createdAt}</TableCell>
@@ -305,7 +305,7 @@ export default function SolicitationTable() {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {"Remoção de solicitação"}
+          {'Remoção de solicitação'}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">

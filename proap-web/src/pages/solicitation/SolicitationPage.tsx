@@ -1,15 +1,15 @@
-import { useCallback } from "react";
+import { useCallback } from 'react';
 
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { FormikValues } from "formik";
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { FormikValues } from 'formik';
 
-import SolicitationFormContainer from "../../containers/solicitation/SolicitationFormContainer";
-import { SolicitationFormValues } from "../../containers/solicitation/SolicitationFormSchema";
-import { submitSolicitation } from "../../services/solicitationService";
-import { SolicitationGrid } from "./SolicitationPage.style";
-import { dateToLocalDate } from "../../helpers/conversion";
-import Toast from "../../helpers/notification";
+import SolicitationFormContainer from '../../containers/solicitation/SolicitationFormContainer';
+import { SolicitationFormValues } from '../../containers/solicitation/SolicitationFormSchema';
+import { submitSolicitation } from '../../services/solicitationService';
+import { SolicitationGrid } from './SolicitationPage.style';
+import { dateToLocalDate } from '../../helpers/conversion';
+import Toast from '../../helpers/notification';
 
 export default function SolicitationPage() {
   const dispatch = useDispatch();
@@ -23,8 +23,8 @@ export default function SolicitationPage() {
         dataFim: dateToLocalDate(new Date(values.dataFim)),
       };
       return submitSolicitation(valuesWithCorrectDates).then(() => {
-        Toast.success("Solicitação criada com sucesso!");
-        navigate("/");
+        Toast.success('Solicitação criada com sucesso!');
+        navigate('/');
       });
     },
     [dispatch]

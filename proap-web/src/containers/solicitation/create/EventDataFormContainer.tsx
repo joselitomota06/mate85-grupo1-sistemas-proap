@@ -1,7 +1,7 @@
-import React from "react";
+import React from 'react';
 
-import { SolicitationFormValues } from "../SolicitationFormSchema";
-import { Field, useFormikContext } from "formik";
+import { SolicitationFormValues } from '../SolicitationFormSchema';
+import { Field, useFormikContext } from 'formik';
 import {
   Grid,
   TextField,
@@ -13,14 +13,15 @@ import {
   FormHelperText,
   MenuItem,
   Tooltip,
-} from "@mui/material";
-import InputAdornment from "@mui/material/InputAdornment";
-import ErrorIcon from "@mui/icons-material/Error";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { StyledTextField } from "../SolicitationFormContainer.style";
+} from '@mui/material';
+import InputAdornment from '@mui/material/InputAdornment';
+import ErrorIcon from '@mui/icons-material/Error';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { StyledTextField } from '../SolicitationFormContainer.style';
 
 export default function ContactDataFormContainer() {
-  const { values, errors, touched } = useFormikContext<SolicitationFormValues>();
+  const { values, errors, touched } =
+    useFormikContext<SolicitationFormValues>();
 
   return (
     <Grid container paddingTop={2} paddingBottom={2}>
@@ -55,17 +56,20 @@ export default function ContactDataFormContainer() {
               label="Quantidade de diárias solicitadas "
               name="quantidadeDiariasSolicitadas"
               type="number"
-              error={Boolean(touched.quantidadeDiariasSolicitadas && errors.quantidadeDiariasSolicitadas)}
-              helperText={touched.quantidadeDiariasSolicitadas && errors.quantidadeDiariasSolicitadas}
+              error={Boolean(
+                touched.quantidadeDiariasSolicitadas &&
+                  errors.quantidadeDiariasSolicitadas
+              )}
+              helperText={
+                touched.quantidadeDiariasSolicitadas &&
+                errors.quantidadeDiariasSolicitadas
+              }
             />
           </Grid>
-
-
         </Grid>
 
         <Grid container item direction="column">
-
-        <Field
+          <Field
             as={StyledTextField}
             label="Nome do evento"
             name="nomeEvento"
@@ -74,7 +78,6 @@ export default function ContactDataFormContainer() {
             required
             multiline
           />
-
 
           <Field
             as={StyledTextField}
@@ -115,27 +118,35 @@ export default function ContactDataFormContainer() {
             <Tooltip title="Valor apenas de inscrição, não inclui possíveis afiliações">
               <ErrorIcon
                 fontSize="small"
-                style={{ marginTop: "0.3rem", color: "#184a7f" }}
+                style={{ marginTop: '0.3rem', color: '#184a7f' }}
               />
             </Tooltip>
           </Grid>
           <Grid>
             <FormControl error={Boolean(touched.isDolar && errors.isDolar)}>
-            <FormLabel required>
-              Os valores pagos foram em outra dolar($)?
-            </FormLabel>
-            <Field
-              as={RadioGroup}
-              aria-labelledby="demo-row-radio-buttons-group-label"
-              name="isDolar"
-              row
-            >
-              <FormControlLabel value='true' control={<Radio />} label="Sim" />
-              <FormControlLabel value='false' control={<Radio />} label="Não" />
-            </Field>
-            {touched.isDolar && errors.isDolar && (
-              <FormHelperText>{errors.isDolar}</FormHelperText>
-            )}
+              <FormLabel required>
+                Os valores pagos foram em outra dolar($)?
+              </FormLabel>
+              <Field
+                as={RadioGroup}
+                aria-labelledby="demo-row-radio-buttons-group-label"
+                name="isDolar"
+                row
+              >
+                <FormControlLabel
+                  value="true"
+                  control={<Radio />}
+                  label="Sim"
+                />
+                <FormControlLabel
+                  value="false"
+                  control={<Radio />}
+                  label="Não"
+                />
+              </Field>
+              {touched.isDolar && errors.isDolar && (
+                <FormHelperText>{errors.isDolar}</FormHelperText>
+              )}
             </FormControl>
           </Grid>
 
@@ -143,16 +154,15 @@ export default function ContactDataFormContainer() {
             <Grid item>
               <Field
                 as={StyledTextField}
-                label='Cotação da data de pagamento'
-                name='coinVariation'
-                type='number'
+                label="Cotação da data de pagamento"
+                name="coinVariation"
+                type="number"
                 error={Boolean(touched.coinVariation && errors.coinVariation)}
                 helperText={touched.coinVariation && errors.coinVariation}
                 required
               />
             </Grid>
           )}
-
 
           <Field
             as={StyledTextField}
@@ -164,14 +174,14 @@ export default function ContactDataFormContainer() {
           />
         </Grid>
         <FormControl error={Boolean(touched.qualis && errors.qualis)}>
-          <FormLabel style={{ fontSize: ".8rem" }} required>
+          <FormLabel style={{ fontSize: '.8rem' }} required>
             Informe o Qualis do seu evento
           </FormLabel>
           <Field
             as={Select}
             sx={{ maxWidth: 80 }}
             displayEmpty
-            inputProps={{ "aria-label": "Without label" }}
+            inputProps={{ 'aria-label': 'Without label' }}
             name="qualis"
             defaultValue=""
           >

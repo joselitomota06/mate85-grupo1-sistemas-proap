@@ -1,23 +1,29 @@
-import { Button, Grid, Step, StepLabel, Stepper } from '@mui/material'
-import { Form, Formik, FormikConfig, FormikHelpers, FormikValues } from 'formik'
-import React, { useCallback, useMemo, useState } from 'react'
-import { AnySchema } from 'yup'
-import { StepperCircularProgress } from './StepperForm.style'
+import { Button, Grid, Step, StepLabel, Stepper } from '@mui/material';
+import {
+  Form,
+  Formik,
+  FormikConfig,
+  FormikHelpers,
+  FormikValues,
+} from 'formik';
+import React, { useCallback, useMemo, useState } from 'react';
+import { AnySchema } from 'yup';
+import { StepperCircularProgress } from './StepperForm.style';
 
 export interface FormStep {
-  component: React.FC
-  schema?: AnySchema
-  label: string
+  component: React.FC;
+  schema?: AnySchema;
+  label: string;
 }
 
 export interface StepperFormProps<T> extends FormikConfig<T> {
-  steps: FormStep[]
-  activeStep: number
+  steps: FormStep[];
+  activeStep: number;
   labels: {
-    previous?: string
-    submit?: string
-    next?: string
-  }
+    previous?: string;
+    submit?: string;
+    next?: string;
+  };
 }
 
 export default function StepperForm(props: StepperFormProps<FormikValues>) {
@@ -27,19 +33,19 @@ export default function StepperForm(props: StepperFormProps<FormikValues>) {
     labels,
     steps,
     ...formikProps
-  } = props
+  } = props;
 
-  const [activeStep, setActiveStep] = useState(initialActiveStep)
+  const [activeStep, setActiveStep] = useState(initialActiveStep);
 
   const currentValidationSchema = useMemo(() => {
-    const { schema } = steps.at(activeStep) ?? {}
-    return schema
-  }, [activeStep])
+    const { schema } = steps.at(activeStep) ?? {};
+    return schema;
+  }, [activeStep]);
 
   const isLastStep = useMemo(
     () => activeStep === steps.length - 1,
     [activeStep]
-  )
+  );
 
   const componentLabels = useMemo(
     () => ({
@@ -49,23 +55,23 @@ export default function StepperForm(props: StepperFormProps<FormikValues>) {
       ...labels,
     }),
     []
-  )
+  );
 
   const handleClickPreviousStep = useCallback(() => {
-    setActiveStep(Math.max(activeStep - 1, 0))
-  }, [activeStep])
+    setActiveStep(Math.max(activeStep - 1, 0));
+  }, [activeStep]);
 
   const handleClickSubmit = useCallback(
     (values: FormikValues, helpers: FormikHelpers<FormikValues>) => {
-      if (isLastStep) return onSubmit(values, helpers)
+      if (isLastStep) return onSubmit(values, helpers);
       else {
-        setActiveStep(Math.min(activeStep + 1, steps.length))
-        helpers.setSubmitting(false)
-        helpers.setTouched({})
+        setActiveStep(Math.min(activeStep + 1, steps.length));
+        helpers.setSubmitting(false);
+        helpers.setTouched({});
       }
     },
     [isLastStep, activeStep, onSubmit]
-  )
+  );
 
   return (
     <>
@@ -82,7 +88,7 @@ export default function StepperForm(props: StepperFormProps<FormikValues>) {
         {...formikProps}
       >
         {({ isSubmitting }) => (
-          <Form id='stepper-form' noValidate>
+          <Form id="stepper-form" noValidate>
             {steps.map(
               ({ component: FormComponent }, index) =>
                 index === activeStep && (
@@ -97,20 +103,20 @@ export default function StepperForm(props: StepperFormProps<FormikValues>) {
                 <Button
                   onClick={handleClickPreviousStep}
                   disabled={isSubmitting || activeStep === 0}
-                  variant='outlined'
-                  type='button'
+                  variant="outlined"
+                  type="button"
                 >
                   {componentLabels.previous}
                 </Button>
               )}
               <Button
-                variant='contained'
-                type='submit'
-                form='stepper-form'
+                variant="contained"
+                type="submit"
+                form="stepper-form"
                 disabled={isSubmitting}
               >
                 {isSubmitting && (
-                  <StepperCircularProgress color='info' size={25} />
+                  <StepperCircularProgress color="info" size={25} />
                 )}
                 {!isLastStep ? componentLabels.next : componentLabels.submit}
               </Button>
@@ -119,9 +125,9 @@ export default function StepperForm(props: StepperFormProps<FormikValues>) {
         )}
       </Formik>
     </>
-  )
+  );
 }
 
 StepperForm.defaultProps = {
   activeStep: 0,
-}
+};

@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { INITIAL_FORM_VALUES } from "../../containers/solicitation/SolicitationFormSchema";
-import { localDateToDate } from "../../helpers/conversion";
-import { getAssistanceRequestById } from "../../services/assistanceRequestService";
+import React, { useState, useEffect } from 'react';
+import { INITIAL_FORM_VALUES } from '../../containers/solicitation/SolicitationFormSchema';
+import { localDateToDate } from '../../helpers/conversion';
+import { getAssistanceRequestById } from '../../services/assistanceRequestService';
 
 export default function useSolicitation(id: string | undefined) {
   const [solicitation, setSolicitation] = useState(INITIAL_FORM_VALUES);
@@ -16,20 +16,20 @@ export default function useSolicitation(id: string | undefined) {
           const { dataInicio, dataFim } = data;
           const { dataAprovacao } = data;
 
-          if(dataAprovacao !== null){
+          if (dataAprovacao !== null) {
             setSolicitation({
               ...data,
               dataInicio: localDateToDate(dataInicio),
               dataFim: localDateToDate(dataFim),
               dataAprovacao: localDateToDate(dataAprovacao),
             });
-          }else{
+          } else {
             setSolicitation({
               ...data,
               dataInicio: localDateToDate(dataInicio),
               dataFim: localDateToDate(dataFim),
             });
-          }          
+          }
         })
         .catch(() => setHasError(true))
         .finally(() => setIsLoading(false));
@@ -37,7 +37,6 @@ export default function useSolicitation(id: string | undefined) {
   }, [id]);
 
   console.log(solicitation);
-  
 
   return { solicitation, isLoading, hasError };
 }

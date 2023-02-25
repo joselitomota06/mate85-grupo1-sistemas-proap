@@ -1,1 +1,1 @@
-export { default as validateCPF } from './validation/cpf'
+export { default as validateCPF } from './validation/cpf';

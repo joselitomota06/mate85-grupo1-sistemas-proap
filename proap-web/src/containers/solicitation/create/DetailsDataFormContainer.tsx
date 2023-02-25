@@ -1,5 +1,5 @@
-import React from 'react'
-import styled from '@emotion/styled'
+import React from 'react';
+import styled from '@emotion/styled';
 
 import {
   Grid,
@@ -9,26 +9,27 @@ import {
   FormControl,
   Checkbox,
   Box,
-} from '@mui/material'
-import { Field, useFormikContext } from 'formik'
+} from '@mui/material';
+import { Field, useFormikContext } from 'formik';
 
-import { SolicitationFormValues } from '../SolicitationFormSchema'
-import SolicitationDetailsContainer from '../SolicitationDetailsContainer'
+import { SolicitationFormValues } from '../SolicitationFormSchema';
+import SolicitationDetailsContainer from '../SolicitationDetailsContainer';
 
 export default function DetailsDataFormContainer() {
-  const { values, errors, touched } = useFormikContext<SolicitationFormValues>()
+  const { values, errors, touched } =
+    useFormikContext<SolicitationFormValues>();
 
   return (
     <Grid
       container
-      direction='row'
+      direction="row"
       paddingTop={2}
       paddingBottom={2}
-      justifyContent='space-between'
+      justifyContent="space-between"
     >
       <SolicitationDetailsContainer solicitation={values} />
       <Grid item md={12} xs={12}>
-        <Typography variant='subtitle1' style={{ color: 'gray' }}>
+        <Typography variant="subtitle1" style={{ color: 'gray' }}>
           Confirmo que a solicitação é para um artigo aceito (artigos em revisão
           não serão analisados) e que as informações enviadas serão analisadas
           pelo colegiado do PGCOMP com base nas regras de financiamento
@@ -43,8 +44,8 @@ export default function DetailsDataFormContainer() {
             <Field
               as={FormControlLabel}
               control={<Checkbox />}
-              label='Estou de acordo'
-              name='aceiteFinal'
+              label="Estou de acordo"
+              name="aceiteFinal"
             />
             {touched.aceiteFinal && errors.aceiteFinal && (
               <FormHelperText>{errors.aceiteFinal}</FormHelperText>
@@ -53,5 +54,5 @@ export default function DetailsDataFormContainer() {
         </Box>
       </Grid>
     </Grid>
-  )
+  );
 }
