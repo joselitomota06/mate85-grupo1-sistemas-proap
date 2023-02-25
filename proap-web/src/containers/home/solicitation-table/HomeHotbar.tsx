@@ -22,7 +22,7 @@ export default function HomeHotbar() {
             fontWeight="bold"
             paddingBottom={2}
           >
-            {isAdmin ? "Solicitações cadastradas" : "Minhas solicitações"}
+            {isAdmin ? "Solicitações PROAP" : "Minhas solicitações PROAP"}
           </Typography>
         </Grid>
         <Grid container spacing={1} item xs={8} justifyContent="end">
