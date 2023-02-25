@@ -19,9 +19,14 @@ import LogoutIcon from "@mui/icons-material/Logout";
 
 import { NavLink } from "react-router-dom";
 import { NavigationItem } from "./NavigationWrapper";
-import { MobileNavigationChildren } from "./MobileNavigationWrapper.style";
+import {
+  MobileNavigationChildren,
+  ImgLogo,
+} from "./MobileNavigationWrapper.style";
 import { useAppDispatch } from "../../store";
 import { logout } from "../../store/slices/auth-slice/authSlice";
+
+import logoIc from "../../assets/logo_ic.png";
 
 interface MobileNavigationWrapperProps extends PropsWithChildren {
   items: NavigationItem[];
@@ -75,6 +80,7 @@ export const MobileNavigationWrapper = ({
               >
                 <MenuIcon />
               </IconButton>
+              <ImgLogo src={logoIc} alt="Logo Instituto de Computação UFBA" />
               <Typography variant="h6" noWrap component="div">
                 PROAP
               </Typography>
