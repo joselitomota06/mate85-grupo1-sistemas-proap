@@ -35,7 +35,7 @@ export default function HomeHotbar() {
                 fullWidth
                 style={{ padding: "1rem 1rem", border: "3px solid" }}
               >
-                Criar nova solicitação
+                Apoio a publicação científica
               </Button>
             </HomeHotbarLink>
           </Grid>
@@ -48,7 +48,7 @@ export default function HomeHotbar() {
                 fullWidth
                 style={{ padding: "1rem 1rem", border: "3px solid" }}
               >
-                Criar nova solicitação extra
+                Demanda Extra
               </Button>
             </HomeHotbarLink>
           </Grid>
