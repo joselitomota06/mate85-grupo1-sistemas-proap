@@ -1,6 +1,6 @@
-import styled from "@emotion/styled";
-import { Button, CircularProgress, TextField } from "@mui/material";
-import { Field } from "formik";
+import styled from '@emotion/styled';
+import { Button, CircularProgress, TextField } from '@mui/material';
+import { Field } from 'formik';
 
 export const RegisterButton = styled(Button)`
   width: 100%;

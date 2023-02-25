@@ -1,19 +1,19 @@
-import React from "react";
+import React from 'react';
 
-import { Button, Grid, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
-import { Box } from "@mui/system";
+import { Button, Grid, Typography } from '@mui/material';
+import { Link } from 'react-router-dom';
+import { Box } from '@mui/system';
 
-import AddIcon from "@mui/icons-material/Add";
+import AddIcon from '@mui/icons-material/Add';
 
-import { HomeHotbarLink } from "./HomeHotbar.style";
-import { useAuth } from "../../../hooks";
+import { HomeHotbarLink } from './HomeHotbar.style';
+import { useAuth } from '../../../hooks';
 
 export default function HomeHotbar() {
   const { isAdmin } = useAuth();
 
   return (
-    <Box sx={{ marginTop: "1rem", marginBottom: "1rem" }}>
+    <Box sx={{ marginTop: '1rem', marginBottom: '1rem' }}>
       <Grid container justifyContent="end" alignItems="center" spacing={2}>
         <Grid item xs={4}>
           <Typography
@@ -22,7 +22,7 @@ export default function HomeHotbar() {
             fontWeight="bold"
             paddingBottom={2}
           >
-            {isAdmin ? "Solicitações cadastradas" : "Minhas solicitações"}
+            {isAdmin ? 'Solicitações PROAP' : 'Minhas solicitações PROAP'}
           </Typography>
         </Grid>
         <Grid container spacing={1} item xs={8} justifyContent="end">
@@ -33,9 +33,9 @@ export default function HomeHotbar() {
                 size="large"
                 startIcon={<AddIcon />}
                 fullWidth
-                style={{ padding: "1rem 1rem", border: "3px solid" }}
+                style={{ padding: '1rem 1rem', border: '3px solid' }}
               >
-                Criar nova solicitação
+                Apoio a publicação científica
               </Button>
             </HomeHotbarLink>
           </Grid>
@@ -46,9 +46,9 @@ export default function HomeHotbar() {
                 size="large"
                 startIcon={<AddIcon />}
                 fullWidth
-                style={{ padding: "1rem 1rem", border: "3px solid" }}
+                style={{ padding: '1rem 1rem', border: '3px solid' }}
               >
-                Criar nova solicitação extra
+                Demanda Extra
               </Button>
             </HomeHotbarLink>
           </Grid>

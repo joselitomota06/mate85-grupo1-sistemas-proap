@@ -1,7 +1,7 @@
 export const validateCPF = (cpf: string | undefined) => {
-  if (!cpf) return false
+  if (!cpf) return false;
 
-  cpf = cpf.replace(/[\s.-]*/gim, '')
+  cpf = cpf.replace(/[\s.-]*/gim, '');
 
   if (
     !cpf ||
@@ -17,27 +17,27 @@ export const validateCPF = (cpf: string | undefined) => {
     cpf == '88888888888' ||
     cpf == '99999999999'
   ) {
-    return false
+    return false;
   }
 
-  let soma = 0
-  let resto
+  let soma = 0;
+  let resto;
   for (let i = 1; i <= 9; i++)
-    soma = soma + parseInt(cpf.substring(i - 1, i)) * (11 - i)
+    soma = soma + parseInt(cpf.substring(i - 1, i)) * (11 - i);
 
-  resto = (soma * 10) % 11
-  if (resto == 10 || resto == 11) resto = 0
-  if (resto != parseInt(cpf.substring(9, 10))) return false
+  resto = (soma * 10) % 11;
+  if (resto == 10 || resto == 11) resto = 0;
+  if (resto != parseInt(cpf.substring(9, 10))) return false;
 
-  soma = 0
+  soma = 0;
   for (let i = 1; i <= 10; i++)
-    soma = soma + parseInt(cpf.substring(i - 1, i)) * (12 - i)
+    soma = soma + parseInt(cpf.substring(i - 1, i)) * (12 - i);
 
-  resto = (soma * 10) % 11
+  resto = (soma * 10) % 11;
 
-  if (resto == 10 || resto == 11) resto = 0
-  if (resto != parseInt(cpf.substring(10, 11))) return false
-  return true
-}
+  if (resto == 10 || resto == 11) resto = 0;
+  if (resto != parseInt(cpf.substring(10, 11))) return false;
+  return true;
+};
 
-export default validateCPF
+export default validateCPF;

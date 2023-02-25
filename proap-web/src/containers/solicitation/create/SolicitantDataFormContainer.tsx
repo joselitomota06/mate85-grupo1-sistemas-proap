@@ -1,7 +1,7 @@
-import React from "react";
+import React from 'react';
 
-import { SolicitationFormValues } from "../SolicitationFormSchema";
-import { Field, useFormikContext } from "formik";
+import { SolicitationFormValues } from '../SolicitationFormSchema';
+import { Field, useFormikContext } from 'formik';
 import {
   Grid,
   FormLabel,
@@ -10,8 +10,8 @@ import {
   Radio,
   FormControl,
   FormHelperText,
-} from "@mui/material";
-import { StyledTextField } from "../SolicitationFormContainer.style";
+} from '@mui/material';
+import { StyledTextField } from '../SolicitationFormContainer.style';
 
 export default function ContactDataFormContainer() {
   const { errors, touched } = useFormikContext<SolicitationFormValues>();
@@ -25,7 +25,7 @@ export default function ContactDataFormContainer() {
         error={Boolean(touched.nomeSolicitante && errors.nomeSolicitante)}
         helperText={touched.nomeSolicitante && errors.nomeSolicitante}
         required
-        style={{ padding: "none" }}
+        style={{ padding: 'none' }}
         multiline
       />
       <Field
@@ -35,7 +35,7 @@ export default function ContactDataFormContainer() {
         error={Boolean(touched.emailSolicitacao && errors.emailSolicitacao)}
         helperText={touched.emailSolicitacao && errors.emailSolicitacao}
         required
-        style={{ padding: "none" }}
+        style={{ padding: 'none' }}
         multiline
       />
       <Field
@@ -58,7 +58,11 @@ export default function ContactDataFormContainer() {
         multiline
       />
 
-      <FormControl error={Boolean(touched.autoresPresentePGCOMP && errors.autoresPresentePGCOMP)}>
+      <FormControl
+        error={Boolean(
+          touched.autoresPresentePGCOMP && errors.autoresPresentePGCOMP
+        )}
+      >
         <FormLabel required>
           Existe aluno PGCOMP como co-autor na publicação
         </FormLabel>

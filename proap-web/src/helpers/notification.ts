@@ -1,4 +1,4 @@
-import { toast, ToastOptions } from "react-toastify";
+import { toast, ToastOptions } from 'react-toastify';
 
 class Toast {
   success(message: string, options: ToastOptions = {}) {
@@ -10,4 +10,4 @@ class Toast {
   }
 }
 
-export default new Toast()
+export default new Toast();

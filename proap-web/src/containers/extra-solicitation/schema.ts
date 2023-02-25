@@ -1,5 +1,5 @@
-import * as Yup from "yup";
-import { RequestReview } from "../../store/slices/assistance-request-slice/assistanceRequestSlice";
+import * as Yup from 'yup';
+import { RequestReview } from '../../store/slices/assistance-request-slice/assistanceRequestSlice';
 
 export interface ExtraSolicitation {
   id: number;
@@ -11,47 +11,47 @@ export interface ExtraSolicitation {
   solicitacaoAuxilioOutrasFontes: boolean | string;
   nomeAgenciaFomento: string;
   valorSolicitadoAgenciaFomento: number | string;
-  review?: RequestReview
-  createdAt?: string
+  review?: RequestReview;
+  createdAt?: string;
 }
 
 export interface ExtraSolicitationFormValues extends ExtraSolicitation {
-  aceiteFinal: boolean
+  aceiteFinal: boolean;
 }
 
 export const extraSolicitantDataSchema = Yup.object({
-  nomeSolicitante: Yup.string().required("Campo obrigatório"),
+  nomeSolicitante: Yup.string().required('Campo obrigatório'),
   emailSolicitacao: Yup.string()
-    .required("Campo obrigatório")
-    .email("Insira um e-mail válido."),
+    .required('Campo obrigatório')
+    .email('Insira um e-mail válido.'),
 
   justificativa: Yup.string()
-    .required("Campo obrigatório")
-    .max(255, "A justificativa não pode conter mais que 255 caracteres."),
+    .required('Campo obrigatório')
+    .max(255, 'A justificativa não pode conter mais que 255 caracteres.'),
 });
 
 export const extraSolicitationFinancingSchema = Yup.object({
-  solicitacaoApoio: Yup.boolean().nullable().required("Campo obrigatório"),
+  solicitacaoApoio: Yup.boolean().nullable().required('Campo obrigatório'),
   valorSolicitado: Yup.number()
     .nullable()
-    .when("solicitacaoApoio", {
+    .when('solicitacaoApoio', {
       is: true,
-      then: (schema) => schema.required("Campo obrigatório"),
+      then: (schema) => schema.required('Campo obrigatório'),
       otherwise: (schema) => schema.notRequired(),
     }),
   solicitacaoAuxilioOutrasFontes: Yup.boolean()
     .nullable()
-    .required("Campo obrigatório"),
-  nomeAgenciaFomento: Yup.string().when("solicitacaoAuxilioOutrasFontes", {
+    .required('Campo obrigatório'),
+  nomeAgenciaFomento: Yup.string().when('solicitacaoAuxilioOutrasFontes', {
     is: true,
-    then: (schema) => schema.required("Campo obrigatório"),
+    then: (schema) => schema.required('Campo obrigatório'),
     otherwise: (schema) => schema.notRequired(),
   }),
   valorSolicitadoAgenciaFomento: Yup.number().when(
-    "solicitacaoAuxilioOutrasFontes",
+    'solicitacaoAuxilioOutrasFontes',
     {
       is: true,
-      then: (schema) => schema.required("Campo obrigatório"),
+      then: (schema) => schema.required('Campo obrigatório'),
       otherwise: (schema) => schema.notRequired(),
     }
   ),
@@ -59,13 +59,13 @@ export const extraSolicitationFinancingSchema = Yup.object({
 
 export const EXTRA_SOLICITATION_INITIAL_VALUES: ExtraSolicitationFormValues = {
   id: 0,
-  nomeSolicitante: "",
-  emailSolicitacao: "",
-  justificativa: "",
-  valorSolicitado: "",
+  nomeSolicitante: '',
+  emailSolicitacao: '',
+  justificativa: '',
+  valorSolicitado: '',
   solicitacaoApoio: false,
   solicitacaoAuxilioOutrasFontes: false,
-  nomeAgenciaFomento: "",
-  valorSolicitadoAgenciaFomento: "",
-  aceiteFinal: false
+  nomeAgenciaFomento: '',
+  valorSolicitadoAgenciaFomento: '',
+  aceiteFinal: false,
 };

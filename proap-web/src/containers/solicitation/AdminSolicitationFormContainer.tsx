@@ -1,12 +1,12 @@
-import { useMemo } from "react";
+import { useMemo } from 'react';
 
-import { Typography } from "@mui/material";
-import { FormikValues } from "formik";
+import { Typography } from '@mui/material';
+import { FormikValues } from 'formik';
 
-import SolicitantDataFormContainer from "./create/SolicitantDataFormContainer";
-import FinancingDataFormContainer from "./create/FinancingDataFormContainer";
-import EventDataFormContainer from "./create/EventDataFormContainer";
-import ReviewDataFormContainer from "./create/ReviewDataFormContainer";
+import SolicitantDataFormContainer from './create/SolicitantDataFormContainer';
+import FinancingDataFormContainer from './create/FinancingDataFormContainer';
+import EventDataFormContainer from './create/EventDataFormContainer';
+import ReviewDataFormContainer from './create/ReviewDataFormContainer';
 
 import {
   eventDataFormSchema,
@@ -15,10 +15,10 @@ import {
   solicitantDataFormSchema,
   reviewDataFormSchema,
   SolicitationFormValues,
-} from "./SolicitationFormSchema";
+} from './SolicitationFormSchema';
 import StepperForm, {
   FormStep,
-} from "../../components/stepper-form/StepperForm";
+} from '../../components/stepper-form/StepperForm';
 
 interface SolicitationFormContainerProps {
   onSubmit: (values: FormikValues) => void;
@@ -39,22 +39,22 @@ export default function AdminSolicitationFormContainer(
   const evaluateFormSteps: FormStep[] = useMemo(
     () => [
       {
-        label: "Solicitante",
+        label: 'Solicitante',
         component: SolicitantDataFormContainer,
         schema: solicitantDataFormSchema,
       },
       {
-        label: "Financiamento",
+        label: 'Financiamento',
         component: FinancingDataFormContainer,
         schema: financingDataFormSchema,
       },
       {
-        label: "Evento",
+        label: 'Evento',
         component: EventDataFormContainer,
         schema: eventDataFormSchema,
       },
       {
-        label: "Avaliação",
+        label: 'Avaliação',
         component: ReviewDataFormContainer,
         schema: reviewDataFormSchema,
       },
@@ -79,7 +79,7 @@ export default function AdminSolicitationFormContainer(
         validateOnChange={false}
         labels={
           labels || {
-            submit: "Editar solicitação",
+            submit: 'Editar solicitação',
           }
         }
       />
@@ -88,9 +88,9 @@ export default function AdminSolicitationFormContainer(
 }
 
 AdminSolicitationFormContainer.defaultProps = {
-  title: "Editar solicitação de auxílio",
+  title: 'Editar solicitação de auxílio',
   initialValues: INITIAL_FORM_VALUES,
   labels: {
-    submit: "Editar solicitação",
+    submit: 'Editar solicitação',
   },
 };

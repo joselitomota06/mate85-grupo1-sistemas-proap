@@ -1,9 +1,18 @@
-import React from "react";
-import { Field, useFormikContext } from "formik";
-import { FormControl, FormControlLabel, FormHelperText, FormLabel, Grid, Radio, RadioGroup, TextField } from "@mui/material";
+import React from 'react';
+import { Field, useFormikContext } from 'formik';
+import {
+  FormControl,
+  FormControlLabel,
+  FormHelperText,
+  FormLabel,
+  Grid,
+  Radio,
+  RadioGroup,
+  TextField,
+} from '@mui/material';
 
-import { ExtraSolicitation } from "../schema";
-import { StyledTextField } from "../../solicitation/SolicitationFormContainer.style";
+import { ExtraSolicitation } from '../schema';
+import { StyledTextField } from '../../solicitation/SolicitationFormContainer.style';
 
 export default function ExtraSolicitationFinancingContainer() {
   const { values, errors, touched } = useFormikContext<ExtraSolicitation>();
@@ -37,7 +46,7 @@ export default function ExtraSolicitationFinancingContainer() {
           )}
         </FormControl>
       </Grid>
-      {values.solicitacaoApoio === "true" && (
+      {values.solicitacaoApoio === 'true' && (
         <Grid item>
           <Field
             as={StyledTextField}
@@ -71,7 +80,7 @@ export default function ExtraSolicitationFinancingContainer() {
               </FormHelperText>
             )}
         </FormControl>
-        {values.solicitacaoAuxilioOutrasFontes === "true" && (
+        {values.solicitacaoAuxilioOutrasFontes === 'true' && (
           <Grid item container spacing={2}>
             <Grid item>
               <Field

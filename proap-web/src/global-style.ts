@@ -1,6 +1,6 @@
-import { createTheme } from '@mui/material'
-import { deepmerge } from '@mui/utils'
-import { css } from '@emotion/react'
+import { createTheme } from '@mui/material';
+import { deepmerge } from '@mui/utils';
+import { css } from '@emotion/react';
 
 export default css`
   body {
@@ -14,7 +14,7 @@ export default css`
   #root {
     height: 100%;
   }
-`
+`;
 
 export const defaultTheme = createTheme({
   palette: {
@@ -43,7 +43,7 @@ export const defaultTheme = createTheme({
       },
     },
   },
-})
+});
 
 const customFieldLabelTheme = createTheme({
   components: {
@@ -146,6 +146,8 @@ const customFieldLabelTheme = createTheme({
       },
     },
   },
-})
+});
 
-export const theme = createTheme(deepmerge(customFieldLabelTheme, defaultTheme))
+export const theme = createTheme(
+  deepmerge(customFieldLabelTheme, defaultTheme)
+);

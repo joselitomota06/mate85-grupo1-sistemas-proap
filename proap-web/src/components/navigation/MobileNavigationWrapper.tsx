@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useCallback, useState } from "react";
+import React, { PropsWithChildren, useCallback, useState } from 'react';
 import {
   useTheme,
   Toolbar,
@@ -12,16 +12,21 @@ import {
   AppBar,
   Box,
   Container,
-} from "@mui/material";
+} from '@mui/material';
 
-import MenuIcon from "@mui/icons-material/Menu";
-import LogoutIcon from "@mui/icons-material/Logout";
+import MenuIcon from '@mui/icons-material/Menu';
+import LogoutIcon from '@mui/icons-material/Logout';
 
-import { NavLink } from "react-router-dom";
-import { NavigationItem } from "./NavigationWrapper";
-import { MobileNavigationChildren } from "./MobileNavigationWrapper.style";
-import { useAppDispatch } from "../../store";
-import { logout } from "../../store/slices/auth-slice/authSlice";
+import { NavLink } from 'react-router-dom';
+import { NavigationItem } from './NavigationWrapper';
+import {
+  MobileNavigationChildren,
+  ImgLogo,
+} from './MobileNavigationWrapper.style';
+import { useAppDispatch } from '../../store';
+import { logout } from '../../store/slices/auth-slice/authSlice';
+
+import logoIc from '../../assets/logo_ic.png';
 
 interface MobileNavigationWrapperProps extends PropsWithChildren {
   items: NavigationItem[];
@@ -46,24 +51,24 @@ export const MobileNavigationWrapper = ({
   }, [dispatch]);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
       <AppBar position="fixed">
         <Toolbar>
           <Box
             component="div"
             sx={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              width: "100vw",
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              width: '100vw',
             }}
           >
             <Box
               component="div"
               sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
               }}
             >
               <IconButton
@@ -71,10 +76,11 @@ export const MobileNavigationWrapper = ({
                 aria-label="open drawer"
                 onClick={handleDrawerOpen}
                 edge="start"
-                sx={{ mr: 2, ...(isDrawerOpen && { display: "none" }) }}
+                sx={{ mr: 2, ...(isDrawerOpen && { display: 'none' }) }}
               >
                 <MenuIcon />
               </IconButton>
+              <ImgLogo src={logoIc} alt="Logo Instituto de Computação UFBA" />
               <Typography variant="h6" noWrap component="div">
                 PROAP
               </Typography>
@@ -95,7 +101,7 @@ export const MobileNavigationWrapper = ({
           open={isDrawerOpen}
           onClose={handleDrawerClose}
           PaperProps={{
-            sx: { width: "60%", maxWidth: "300px" },
+            sx: { width: '60%', maxWidth: '300px' },
           }}
         >
           <List>

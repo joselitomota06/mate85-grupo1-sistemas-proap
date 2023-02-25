@@ -1,5 +1,5 @@
-import HomeHotbar from '../../containers/home/solicitation-table/HomeHotbar'
-import SolicitationTable from '../../containers/home/solicitation-table/SolicitationTable'
+import HomeHotbar from '../../containers/home/solicitation-table/HomeHotbar';
+import SolicitationTable from '../../containers/home/solicitation-table/SolicitationTable';
 
 export default function HomePage() {
   return (
@@ -7,5 +7,5 @@ export default function HomePage() {
       <HomeHotbar />
       <SolicitationTable />
     </>
-  )
+  );
 }

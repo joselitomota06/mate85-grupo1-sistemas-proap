@@ -1,9 +1,9 @@
-import React from "react";
-import { Field, useFormikContext } from "formik";
-import { Grid } from "@mui/material";
+import React from 'react';
+import { Field, useFormikContext } from 'formik';
+import { Grid } from '@mui/material';
 
-import { ExtraSolicitation } from "../schema";
-import { StyledTextField } from "../../solicitation/SolicitationFormContainer.style";
+import { ExtraSolicitation } from '../schema';
+import { StyledTextField } from '../../solicitation/SolicitationFormContainer.style';
 
 export default function ExtraSolicitantDataContainer() {
   const { errors, touched } = useFormikContext<ExtraSolicitation>();
@@ -17,7 +17,7 @@ export default function ExtraSolicitantDataContainer() {
         error={Boolean(touched.nomeSolicitante && errors.nomeSolicitante)}
         helperText={touched.nomeSolicitante && errors.nomeSolicitante}
         required
-        style={{ padding: "none" }}
+        style={{ padding: 'none' }}
       />
       <Field
         as={StyledTextField}
@@ -26,7 +26,7 @@ export default function ExtraSolicitantDataContainer() {
         error={Boolean(touched.emailSolicitacao && errors.emailSolicitacao)}
         helperText={touched.emailSolicitacao && errors.emailSolicitacao}
         required
-        style={{ padding: "none" }}
+        style={{ padding: 'none' }}
       />
       <Field
         as={StyledTextField}
@@ -35,7 +35,7 @@ export default function ExtraSolicitantDataContainer() {
         error={Boolean(touched.justificativa && errors.justificativa)}
         helperText={touched.justificativa && errors.justificativa}
         required
-        style={{ padding: "none" }}
+        style={{ padding: 'none' }}
         rows={5}
         multiline
       />
