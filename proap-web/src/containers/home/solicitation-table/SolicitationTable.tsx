@@ -131,14 +131,16 @@ export default function SolicitationTable() {
       <TableContainer sx={{ maxHeight: '500px' }}>
         <Table stickyHeader>
           <TableHead>
-            <TableCell align="center">Solicitante</TableCell>
-            <TableCell align="center">É extra?</TableCell>
-            <TableCell align="center">Status</TableCell>
-            <TableCell align="center">Valor solicitado</TableCell>
-            <TableCell align="center">Valor aprovado</TableCell>
-            <TableCell align="center">Data de solicitação</TableCell>
-            <TableCell align="center">Data da avaliação</TableCell>
-            <TableCell align="center">Ações</TableCell>
+            <TableRow>
+              <TableCell align="center">Solicitante</TableCell>
+              <TableCell align="center">É extra?</TableCell>
+              <TableCell align="center">Status</TableCell>
+              <TableCell align="center">Valor solicitado</TableCell>
+              <TableCell align="center">Valor aprovado</TableCell>
+              <TableCell align="center">Data de solicitação</TableCell>
+              <TableCell align="center">Data da avaliação</TableCell>
+              <TableCell align="center">Ações</TableCell>
+            </TableRow>
           </TableHead>
 
           <TableBody>
