@@ -129,15 +129,17 @@ export default function UsersPage() {
                     </TableCell>
                   </TableRow>
                 ))}
+                <TableRow>
+                  <TablePagination
+                    count={totalUsers}
+                    page={page}
+                    rowsPerPage={PAGE_SIZE}
+                    rowsPerPageOptions={[PAGE_SIZE]}
+                    onPageChange={handlePageChange}
+                    labelRowsPerPage=""
+                  />
+                </TableRow>
               </TableBody>
-              <TablePagination
-                count={totalUsers}
-                page={page}
-                rowsPerPage={PAGE_SIZE}
-                rowsPerPageOptions={[PAGE_SIZE]}
-                onPageChange={handlePageChange}
-                labelRowsPerPage=""
-              />
             </Table>
           </TableContainer>
         </>
