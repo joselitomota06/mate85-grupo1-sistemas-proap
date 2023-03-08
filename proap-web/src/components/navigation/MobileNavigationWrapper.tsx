@@ -97,25 +97,21 @@ export const MobileNavigationWrapper = ({
                   {name}
                 </Typography>
               </IconButton>
-
-              <IconButton
-                color="inherit"
-                aria-label="logout"
-                onClick={handleClickExit}
-                edge="end"
-              >
-                <LogoutIcon />
-              </IconButton>
             </Box>
           </Box>
         </Toolbar>
+
         <Drawer
           variant="temporary"
           anchor="left"
           open={isDrawerOpen}
           onClose={handleDrawerClose}
           PaperProps={{
-            sx: { width: '60%', maxWidth: '300px' },
+            sx: {
+              width: '60%',
+              maxWidth: '300px',
+              justifyContent: 'space-between',
+            },
           }}
         >
           <List>
@@ -136,6 +132,32 @@ export const MobileNavigationWrapper = ({
               </React.Fragment>
             ))}
           </List>
+
+          <Box
+            component="div"
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'right',
+              padding: '0 1rem',
+            }}
+          >
+            <IconButton
+              color="inherit"
+              aria-label="logout"
+              onClick={handleClickExit}
+              edge="end"
+            >
+              <Typography
+                variant="body2"
+                component="div"
+                sx={{ marginRight: '0.2rem' }}
+              >
+                Sair
+              </Typography>
+              <LogoutIcon />
+            </IconButton>
+          </Box>
         </Drawer>
       </AppBar>
       <Toolbar />
