@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import { SolicitationFormValues } from '../SolicitationFormSchema';
 import { Field, useFormikContext } from 'formik';
@@ -15,34 +15,13 @@ import {
   Tooltip,
 } from '@mui/material';
 import ErrorIcon from '@mui/icons-material/Error';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import { StyledTextField } from '../SolicitationFormContainer.style';
-import { MoneyInputMask } from '../../../components/input-masks/MoneyInputMask';
+import { CurrencyCustomFormikField } from '../../currency-input/CurrencyInputContainer';
 
 export default function ContactDataFormContainer() {
   const { values, errors, touched, setFieldValue } =
     useFormikContext<SolicitationFormValues>();
-
-  const [valorInscricaoWithoutMask, setValorInscricaoWithoutMask] = useState(
-    values.valorInscricao
-  );
-
-  const handleInputValorInscricaoChange = (event: any) => {
-    let valorInscricaoWithoutMask: number | undefined = parseFloat(
-      event.target.value.replace(/[\R\$' ']/g, '').replace(',', '.')
-    );
-
-    valorInscricaoWithoutMask = isNaN(valorInscricaoWithoutMask)
-      ? undefined
-      : valorInscricaoWithoutMask;
-
-    setValorInscricaoWithoutMask(valorInscricaoWithoutMask);
-    setFieldValue('valorInscricao', valorInscricaoWithoutMask);
-  };
-
-  useEffect(() => {
-    console.log(valorInscricaoWithoutMask);
-  });
 
   return (
     <Grid container paddingTop={2} paddingBottom={2}>
@@ -127,18 +106,14 @@ export default function ContactDataFormContainer() {
             required
           />
           <Grid>
-            <StyledTextField
+            <CurrencyCustomFormikField
               label="Valor da inscrição/publicação"
               name="valorInscricao"
-              required
-              error={Boolean(touched.valorInscricao && errors.valorInscricao)}
-              helperText={touched.valorInscricao && errors.valorInscricao}
-              onChange={handleInputValorInscricaoChange}
-              value={valorInscricaoWithoutMask}
-              InputProps={{
-                inputComponent: MoneyInputMask as any,
-              }}
-              variant="standard"
+              values={values}
+              setFieldValue={setFieldValue}
+              touched={touched}
+              errors={errors}
+              required={true}
             />
             <Tooltip title="Valor apenas de inscrição, não inclui possíveis afiliações">
               <ErrorIcon
