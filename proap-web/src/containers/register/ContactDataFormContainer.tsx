@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { RegisterFormValues } from './RegisterFormSchema';
 import { Field, useFormikContext } from 'formik';
 import { Grid, TextField } from '@mui/material';
-import { PhoneInputMask } from '../../components/input-masks/PhoneInputMask';
+import { PhoneInputMask } from '../input-masks/PhoneInputMask';
 
 export default function ContactDataFormContainer() {
   const { errors, touched, setFieldValue, values } =

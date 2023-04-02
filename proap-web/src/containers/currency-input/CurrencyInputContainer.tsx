@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { MoneyInputMask } from '../../components/input-masks/MoneyInputMask';
+import { CurrencyInputMask } from '../input-masks/CurrencyInputMask';
 import { StyledTextField } from './CurrencyInputContainer.style';
 import { CurrencyCustomFormikFieldInterface } from './CurrencyInputContainterSchema';
 
@@ -39,7 +39,7 @@ const CurrencyCustomFormikField = ({
       onChange={handleInputChange}
       value={valorWithoutMask}
       InputProps={{
-        inputComponent: MoneyInputMask as any,
+        inputComponent: CurrencyInputMask as any,
       }}
       variant="standard"
     />

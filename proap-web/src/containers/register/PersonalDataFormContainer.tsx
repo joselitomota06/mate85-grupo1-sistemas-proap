@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { RegisterFormValues } from './RegisterFormSchema';
 import { Field, useFormikContext } from 'formik';
 import { Grid, TextField } from '@mui/material';
-import { CpfInputMask } from '../../components/input-masks/CpfInputMask';
+import { CpfInputMask } from '../input-masks/CpfInputMask';
 
 export default function PersonalDataFormContainer() {
   const { errors, touched, setFieldValue, values } =
