@@ -122,47 +122,6 @@ export default function ContactDataFormContainer() {
               />
             </Tooltip>
           </Grid>
-          <Grid>
-            <FormControl error={Boolean(touched.isDolar && errors.isDolar)}>
-              <FormLabel required>
-                Os valores pagos foram em outra dolar($)?
-              </FormLabel>
-              <Field
-                as={RadioGroup}
-                aria-labelledby="demo-row-radio-buttons-group-label"
-                name="isDolar"
-                row
-              >
-                <FormControlLabel
-                  value="true"
-                  control={<Radio />}
-                  label="Sim"
-                />
-                <FormControlLabel
-                  value="false"
-                  control={<Radio />}
-                  label="Não"
-                />
-              </Field>
-              {touched.isDolar && errors.isDolar && (
-                <FormHelperText>{errors.isDolar}</FormHelperText>
-              )}
-            </FormControl>
-          </Grid>
-
-          {values.isDolar === 'true' && (
-            <Grid item>
-              <Field
-                as={StyledTextField}
-                label="Cotação da data de pagamento"
-                name="coinVariation"
-                type="number"
-                error={Boolean(touched.coinVariation && errors.coinVariation)}
-                helperText={touched.coinVariation && errors.coinVariation}
-                required
-              />
-            </Grid>
-          )}
 
           <Field
             as={StyledTextField}
