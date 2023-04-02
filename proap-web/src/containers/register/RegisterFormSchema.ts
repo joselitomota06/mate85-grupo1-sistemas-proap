@@ -20,7 +20,9 @@ export const contactDataFormSchema = Yup.object({
   email: Yup.string()
     .email('Insira um e-mail válido')
     .required('Campo obrigatório'),
-  phone: Yup.string().required('Campo obrigatório'),
+  phone: Yup.string()
+    .required('Campo obrigatório')
+    .length(11, 'Número de telefone inválido'),
 });
 
 export const passwordFormSchema = Yup.object({
