@@ -6,10 +6,10 @@ import { Grid, TextField } from '@mui/material';
 import TextMask from '../../components/TextMask/TextMask';
 
 export default function PersonalDataFormContainer() {
-  const { errors, touched, setFieldValue } =
+  const { errors, touched, setFieldValue, values } =
     useFormikContext<RegisterFormValues>();
 
-  const [cpfWihoutMask, setCpfWihoutMask] = useState('');
+  const [cpfWihoutMask, setCpfWihoutMask] = useState(values.cpf);
 
   // useEffect(() => {
   //   console.log(values.cpf);
