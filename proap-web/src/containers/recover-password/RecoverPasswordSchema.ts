@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { validateCPF } from '../../helpers';
+import { cpf } from 'cpf-cnpj-validator';
 
 export interface RecoverPasswordFormValues {
   email: string;
@@ -19,9 +19,14 @@ export const recoverPasswordFormSchema = Yup.object({
   email: Yup.string().required('Campo obrigatório'),
   cpf: Yup.string()
     .required('Campo obrigatório')
-    .test('validation-cpf', 'CPF inválido', function (cpf) {
-      return validateCPF(cpf);
-    }),
+    .test(
+      'validation-cpf',
+      'CPF inválido',
+      function (cpfValue: string | undefined) {
+        if (cpfValue) return cpf.isValid(cpfValue);
+        else return false;
+      }
+    ),
   password: Yup.string().required('Campo obrigatório'),
   confirmPassword: Yup.string()
     .required('Campo obrigatório')

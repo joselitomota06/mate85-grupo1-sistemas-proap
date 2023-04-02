@@ -1,12 +1,17 @@
 import * as Yup from 'yup';
-import { validateCPF } from '../../helpers';
+import { cpf } from 'cpf-cnpj-validator';
 
 export const personalDataFormSchema = Yup.object({
   name: Yup.string().required('Campo obrigatório'),
-  cpf: Yup.string().required('Campo obrigatório'),
-  //.test('validation-cpf', 'CPF inválido', function (cpf) {
-  //  return validateCPF(cpf)
-  //}),
+  cpf: Yup.string()
+    .required('Campo obrigatório')
+    .test(
+      'validation-cpf',
+      'Insira um CPF válido',
+      function (cpfValue?: string) {
+        return cpfValue != undefined && cpf.isValid(cpfValue);
+      }
+    ),
   registration: Yup.string().required('Campo obrigatório'),
 });
 
@@ -14,7 +19,9 @@ export const contactDataFormSchema = Yup.object({
   email: Yup.string()
     .email('Insira um e-mail válido')
     .required('Campo obrigatório'),
-  phone: Yup.string().required('Campo obrigatório'),
+  phone: Yup.string()
+    .required('Campo obrigatório')
+    .length(11, 'Número de telefone inválido'),
 });
 
 export const passwordFormSchema = Yup.object({

@@ -14,13 +14,13 @@ import {
   MenuItem,
   Tooltip,
 } from '@mui/material';
-import InputAdornment from '@mui/material/InputAdornment';
 import ErrorIcon from '@mui/icons-material/Error';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import { StyledTextField } from '../SolicitationFormContainer.style';
+import { CurrencyCustomFormikField } from '../../currency-input/CurrencyInputContainer';
 
 export default function ContactDataFormContainer() {
-  const { values, errors, touched } =
+  const { values, errors, touched, setFieldValue } =
     useFormikContext<SolicitationFormValues>();
 
   return (
@@ -106,15 +106,15 @@ export default function ContactDataFormContainer() {
             required
           />
           <Grid>
-            <Field
-              as={StyledTextField}
-              label="Valor da inscrição/publicação  "
+            <CurrencyCustomFormikField
+              label="Valor da inscrição/publicação"
               name="valorInscricao"
-              type="number"
-              error={Boolean(touched.valorInscricao && errors.valorInscricao)}
-              helperText={touched.valorInscricao && errors.valorInscricao}
+              values={values}
+              setFieldValue={setFieldValue}
+              touched={touched}
+              errors={errors}
+              required={true}
             />
-
             <Tooltip title="Valor apenas de inscrição, não inclui possíveis afiliações">
               <ErrorIcon
                 fontSize="small"
@@ -122,47 +122,6 @@ export default function ContactDataFormContainer() {
               />
             </Tooltip>
           </Grid>
-          <Grid>
-            <FormControl error={Boolean(touched.isDolar && errors.isDolar)}>
-              <FormLabel required>
-                Os valores pagos foram em outra dolar($)?
-              </FormLabel>
-              <Field
-                as={RadioGroup}
-                aria-labelledby="demo-row-radio-buttons-group-label"
-                name="isDolar"
-                row
-              >
-                <FormControlLabel
-                  value="true"
-                  control={<Radio />}
-                  label="Sim"
-                />
-                <FormControlLabel
-                  value="false"
-                  control={<Radio />}
-                  label="Não"
-                />
-              </Field>
-              {touched.isDolar && errors.isDolar && (
-                <FormHelperText>{errors.isDolar}</FormHelperText>
-              )}
-            </FormControl>
-          </Grid>
-
-          {values.isDolar === 'true' && (
-            <Grid item>
-              <Field
-                as={StyledTextField}
-                label="Cotação da data de pagamento"
-                name="coinVariation"
-                type="number"
-                error={Boolean(touched.coinVariation && errors.coinVariation)}
-                helperText={touched.coinVariation && errors.coinVariation}
-                required
-              />
-            </Grid>
-          )}
 
           <Field
             as={StyledTextField}

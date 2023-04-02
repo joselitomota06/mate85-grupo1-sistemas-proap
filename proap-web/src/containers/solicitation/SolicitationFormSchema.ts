@@ -93,7 +93,6 @@ export interface Solicitation {
   nomeAgenciaFomento: string;
   valorSolicitadoAgenciaFomento: number | string;
   valorAprovado: number | undefined;
-  isDolar: string | undefined;
   dataInicio: string;
   dataFim: string;
   linkHomepage: string;
@@ -102,7 +101,6 @@ export interface Solicitation {
   valorInscricao: number | undefined;
   cartaAceite: string;
   qualis: string;
-  coinVariation: number | undefined;
   comprovantePagamento: string;
   nomeEvento: string;
   situacao: string;
@@ -143,13 +141,11 @@ export const INITIAL_FORM_VALUES: SolicitationFormValues = {
   cartaAceite: '',
   qualis: 'A1',
   aceiteFinal: false,
-  isDolar: '',
   situacao: '2',
   dataAprovacao: '',
   numeroAta: 0,
   numeroDiariasAprovadas: 0,
   observacao: '',
-  coinVariation: undefined,
   nomeEvento: '',
   quantidadeDiariasSolicitadas: 0,
   valorAprovado: undefined,
