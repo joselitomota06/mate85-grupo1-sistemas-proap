@@ -18,9 +18,10 @@ import {
   StyledDataInput,
 } from '../SolicitationFormContainer.style';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
+import { CurrencyCustomFormikField } from '../../currency-input/CurrencyInputContainer';
 
 export default function ContactDataFormContainer() {
-  const { values, errors, touched } =
+  const { values, errors, touched, setFieldValue } =
     useFormikContext<SolicitationFormValues>();
 
   return (
@@ -55,14 +56,14 @@ export default function ContactDataFormContainer() {
       </Grid>
       {values.solicitacaoApoio === 'true' && (
         <Grid item>
-          <Field
-            as={StyledTextField}
+          <CurrencyCustomFormikField
             label="Valor solicitado"
             name="valorSolicitado"
-            type="number"
-            error={Boolean(touched.valorSolicitado && errors.valorSolicitado)}
-            helperText={touched.valorSolicitado && errors.valorSolicitado}
-            required
+            values={values}
+            setFieldValue={setFieldValue}
+            touched={touched}
+            errors={errors}
+            required={true}
           />
         </Grid>
       )}
@@ -105,20 +106,14 @@ export default function ContactDataFormContainer() {
               />
             </Grid>
             <Grid item>
-              <Field
-                as={TextField}
+              <CurrencyCustomFormikField
                 label="Valor solicitado"
                 name="valorSolicitadoAgenciaFomento"
-                type="number"
-                error={Boolean(
-                  touched.valorSolicitadoAgenciaFomento &&
-                    errors.valorSolicitadoAgenciaFomento
-                )}
-                helperText={
-                  touched.valorSolicitadoAgenciaFomento &&
-                  errors.valorSolicitadoAgenciaFomento
-                }
-                required
+                values={values}
+                setFieldValue={setFieldValue}
+                touched={touched}
+                errors={errors}
+                required={true}
               />
             </Grid>
           </Grid>
