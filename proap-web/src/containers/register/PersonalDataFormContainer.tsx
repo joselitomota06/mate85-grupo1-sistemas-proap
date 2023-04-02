@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { RegisterFormValues } from './RegisterFormSchema';
 import { Field, useFormikContext } from 'formik';
 import { Grid, TextField } from '@mui/material';
-import TextMask from '../../components/TextMask/TextMask';
+import { CpfInputMask } from '../../components/input-masks/CpfInputMask';
 
 export default function PersonalDataFormContainer() {
   const { errors, touched, setFieldValue, values } =
@@ -42,7 +42,7 @@ export default function PersonalDataFormContainer() {
         onChange={handleInputCpfChange}
         value={cpfWihoutMask}
         InputProps={{
-          inputComponent: TextMask as any,
+          inputComponent: CpfInputMask as any,
         }}
         variant="standard"
       />

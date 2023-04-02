@@ -6,7 +6,7 @@ interface CustomProps {
   onChange: (event: { target: { name: string; value: string } }) => void;
 }
 
-const TextMask = React.forwardRef<HTMLInputElement, CustomProps>(
+const CpfInputMask = React.forwardRef<HTMLInputElement, CustomProps>(
   function TextMask(props: any, ref: any) {
     const { onChange, value, ...other } = props;
     return (
@@ -27,4 +27,4 @@ const TextMask = React.forwardRef<HTMLInputElement, CustomProps>(
   }
 );
 
-export default TextMask;
+export { CpfInputMask };
