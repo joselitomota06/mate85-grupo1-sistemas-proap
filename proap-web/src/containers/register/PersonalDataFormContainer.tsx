@@ -3,16 +3,25 @@ import React, { useEffect, useState } from 'react';
 import { RegisterFormValues } from './RegisterFormSchema';
 import { Field, useFormikContext } from 'formik';
 import { Grid, TextField } from '@mui/material';
+import TextMask from '../../components/TextMask/TextMask';
 
 export default function PersonalDataFormContainer() {
   const { errors, touched, values, setFieldValue } =
     useFormikContext<RegisterFormValues>();
 
-  const [cpfWithMask, setCpfWithMask] = useState('');
+  const [cpfWihoutMask, setCpfWihoutMask] = useState('');
 
-  useEffect(() => {
-    console.log(values.cpf);
-  }, [values]);
+  // useEffect(() => {
+  //   console.log(values.cpf);
+  // }, [values]);
+
+  const handleInputCpfChange = (event: any) => {
+    const cpfWihoutMask = event.target.value.replace(/[\-\.\_]/g, '');
+
+    setCpfWihoutMask(cpfWihoutMask);
+
+    setFieldValue('cpf', cpfWihoutMask);
+  };
 
   return (
     <Grid container direction="column" paddingTop={2} paddingBottom={2}>
@@ -30,19 +39,12 @@ export default function PersonalDataFormContainer() {
         required
         error={Boolean(touched.cpf && errors.cpf)}
         helperText={touched.cpf && errors.cpf}
-        value={cpfWithMask}
-        inputProps={{ maxLength: 11 }}
-        onChange={(e: any) => {
-          const cpfWihoutMask = e.target.value.replace(/[\-\.]/g, '');
-          const cpfWithMask = cpfWihoutMask.replace(
-            /(\d{3})(\d{3})(\d{3})(\d{2})/,
-            '$1.$2.$3-$4'
-          );
-
-          setCpfWithMask(cpfWithMask);
-
-          setFieldValue('cpf', cpfWihoutMask);
+        onChange={handleInputCpfChange}
+        value={cpfWihoutMask}
+        InputProps={{
+          inputComponent: TextMask as any,
         }}
+        variant="standard"
       />
       <Field
         as={TextField}
