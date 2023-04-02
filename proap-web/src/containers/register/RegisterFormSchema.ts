@@ -1,5 +1,4 @@
 import * as Yup from 'yup';
-import { validateCPF } from '../../helpers';
 import { cpf } from 'cpf-cnpj-validator';
 
 export const personalDataFormSchema = Yup.object({
