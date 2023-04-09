@@ -54,10 +54,6 @@ export const eventDataFormSchema = Yup.object({
     .required('Campo obrigatório')
     .min(1, 'Insira um valor válido'),
 
-  isDolar: Yup.boolean().nullable().required('Campo obrigatório'),
-
-  coinVariation: Yup.number().nullable().min(1, 'Insira um valor válido'),
-
   cartaAceite: Yup.string().required('Campo obrigatório'),
   qualis: Yup.string().required('Campo obrigatório'),
 
