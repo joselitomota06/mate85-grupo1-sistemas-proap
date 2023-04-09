@@ -52,6 +52,7 @@ export default function PersonalDataFormContainer() {
         name="registration"
         error={Boolean(touched.registration && errors.registration)}
         helperText={touched.registration && errors.registration}
+        type="number"
         required
       />
     </Grid>
