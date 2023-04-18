@@ -33,13 +33,13 @@ public class AssistanceRequestService{
 	}
 
 	public static class AssistanceRequestListFiltered {
-		public List<AssistanceRequestDTO> asssistanceRequests;
-		public int asssistanceRequestsTotal;
+		public List<AssistanceRequestDTO> list;
+		public long total;
 
-		public AssistanceRequestListFiltered(List<AssistanceRequestDTO> asssistanceRequests,
-				int asssistanceRequestsTotal) {
-			this.asssistanceRequests = asssistanceRequests;
-			this.asssistanceRequestsTotal = asssistanceRequestsTotal;
+		public AssistanceRequestListFiltered(List<AssistanceRequestDTO> list,
+				long total) {
+			this.list = list;
+			this.total = total;
 		}
 	}
 
@@ -53,7 +53,13 @@ public class AssistanceRequestService{
 	 * @return Lista de assistâncias que devem ser exibidas na página
 	 */
 	public AssistanceRequestListFiltered find(String prop, boolean ascending, int page, int requestListSize, User user) {
-		return new AssistanceRequestListFiltered(assistanceRequestQueryRepository.findFiltered(prop, ascending, page, requestListSize, user), 0);
+		long count;
+
+		if(user == null)
+			count = assistanteRequestRepository.count();
+		else count = assistanteRequestRepository.countByUser(user);
+
+		return new AssistanceRequestListFiltered(assistanceRequestQueryRepository.findFiltered(prop, ascending, page, requestListSize, user), count);
 	}
 
 	/**
