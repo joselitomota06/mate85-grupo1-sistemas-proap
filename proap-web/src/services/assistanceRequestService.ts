@@ -11,11 +11,32 @@ import {
   SolicitationFormValues,
 } from '../containers/solicitation/SolicitationFormSchema';
 
-export const getAssistanceRequests = () => (dispatch: AppDispatch) => {
-  return api
-    .get<AssistanceRequest[]>('assistancerequest/list')
-    .then(({ data }) => dispatch(updateSolicitations(data)));
-};
+export interface AssistanceRequestListResponse {
+  /**
+   * Lista de requisições que devem ser exibidas na tela
+   */
+  list: AssistanceRequest[],
+  /**
+   * Número total de registros no banco
+   */
+  total: number
+}
+
+export const getAssistanceRequests =
+  (prop?: keyof AssistanceRequest, ascending?: boolean, page?: number, size?: number) =>
+  (dispatch: AppDispatch) => {   
+    const defaultPropToFilter: keyof AssistanceRequest = 'nomeSolicitante';
+
+    let requestUrl = 'assistancerequest/list'
+      + `?prop=${prop ?? defaultPropToFilter}`
+      + `&ascending=${ascending ?? true}`
+      + `&page=${page ?? 0}`
+      + `&size=${size ?? 10}`;
+
+    return api
+      .get<AssistanceRequestListResponse>(requestUrl)
+      .then(({ data }) => dispatch(updateSolicitations(data)));
+  };
 
 export const getAssistanceRequestById = (id: number | string) => {
   return api.get<SolicitationFormValues>(`assistancerequest/find/${id}`);

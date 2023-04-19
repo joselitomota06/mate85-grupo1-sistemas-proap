@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ExtraSolicitation } from '../../../containers/extra-solicitation/schema';
+import { AssistanceRequestListResponse } from '../../../services/assistanceRequestService';
 
 export interface RequestReview {
   createdAt: string;
@@ -36,12 +37,15 @@ export interface AssistanceRequest {
 }
 
 interface AssistanceRequestSliceState {
-  requests: AssistanceRequest[];
+  requests: AssistanceRequestListResponse;
   extraRequests: ExtraSolicitation[];
 }
 
 const INITIAL_STATE: AssistanceRequestSliceState = {
-  requests: [],
+  requests: {
+    list: [],
+    total: 0
+  },
   extraRequests: [],
 };
 
@@ -51,7 +55,7 @@ const assistanceRequestSlice = createSlice({
   reducers: {
     updateSolicitations: (
       state,
-      action: PayloadAction<AssistanceRequest[]>
+      action: PayloadAction<AssistanceRequestListResponse>
     ) => {
       state.requests = action.payload;
     },

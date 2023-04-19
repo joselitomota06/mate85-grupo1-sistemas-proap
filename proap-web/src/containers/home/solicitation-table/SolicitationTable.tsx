@@ -19,12 +19,15 @@ import { IRootState, useAppDispatch } from '../../../store';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import Visibility from '@mui/icons-material/Visibility';
 import { CheckCircle } from '@mui/icons-material';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Link, useNavigate } from 'react-router-dom';
 import { Box } from '@mui/system';
 import { IconButton } from '@mui/material';
 import { useAuth } from '../../../hooks';
 import { toast, ToastOptions } from 'react-toastify';
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
 
 // Modal inports
 import Button from '@mui/material/Button';
@@ -48,7 +51,7 @@ export default function SolicitationTable() {
   );
 
   const updateAssistanceRequestList = useCallback(() => {
-    dispatch(getAssistanceRequests());
+    dispatch(getAssistanceRequests()); // XXX : Esse método é chamado para carregar os dados da página
     dispatch(getExtraAssistanceRequests());
   }, [dispatch]);
 
@@ -132,7 +135,10 @@ export default function SolicitationTable() {
         <Table stickyHeader>
           <TableHead>
             <TableRow>
-              <TableCell align="center">Solicitante</TableCell>
+              <TableCell align="center">
+                Solicitante
+                <ArrowDropDownIcon/>
+              </TableCell>
               <TableCell align="center">É extra?</TableCell>
               <TableCell align="center">Status</TableCell>
               <TableCell align="center">Valor solicitado</TableCell>
@@ -144,7 +150,7 @@ export default function SolicitationTable() {
           </TableHead>
 
           <TableBody>
-            {!requests.length && !extraRequests.length && (
+            {!requests.list.length && !extraRequests.length && (
               <TableRow>
                 <TableCell colSpan={7}>
                   <Typography align="center" color="gray">
@@ -153,8 +159,8 @@ export default function SolicitationTable() {
                 </TableCell>
               </TableRow>
             )}
-            {requests.length > 0 &&
-              requests.map(
+            {requests.list.length > 0 &&
+              requests.list.map(
                 ({
                   id,
                   nomeSolicitante,
@@ -299,6 +305,10 @@ export default function SolicitationTable() {
           </TableBody>
         </Table>
       </TableContainer>
+
+      <Stack spacing={2} style={{ marginTop: '1rem' }}>
+        <Pagination count={10}></Pagination>
+      </Stack>
 
       <Dialog
         open={open}
