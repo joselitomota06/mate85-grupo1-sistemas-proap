@@ -7,7 +7,7 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import {
@@ -20,6 +20,7 @@ import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import Visibility from '@mui/icons-material/Visibility';
 import { CheckCircle } from '@mui/icons-material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Link, useNavigate } from 'react-router-dom';
 import { Box } from '@mui/system';
@@ -40,6 +41,9 @@ import {
   deleteExtraAssistanceRequest,
   getExtraAssistanceRequests,
 } from '../../../services/extraAssistanceRequestService';
+import assistanceRequestSlice, {
+  AssistanceRequest,
+} from '../../../store/slices/assistance-request-slice/assistanceRequestSlice';
 
 export default function SolicitationTable() {
   const dispatch = useAppDispatch();
@@ -50,10 +54,18 @@ export default function SolicitationTable() {
     (state: IRootState) => state.assistanceRequestSlice
   );
 
-  const updateAssistanceRequestList = useCallback(() => {
-    dispatch(getAssistanceRequests()); // XXX : Esse método é chamado para carregar os dados da página
-    dispatch(getExtraAssistanceRequests());
-  }, [dispatch]);
+  const updateAssistanceRequestList = useCallback(
+    (
+      prop?: keyof AssistanceRequest,
+      ascending?: boolean,
+      page?: number,
+      size?: number
+    ) => {
+      dispatch(getAssistanceRequests(prop, ascending, page, size)); // XXX : Esse método é chamado para carregar os dados da página
+      dispatch(getExtraAssistanceRequests());
+    },
+    [dispatch]
+  );
 
   useEffect(() => {
     updateAssistanceRequestList();
@@ -129,6 +141,58 @@ export default function SolicitationTable() {
     handleClose();
   };
 
+  //#region table sort
+  const handleClickSortTable = (prop: keyof AssistanceRequest) => {
+    if (selectedPropToSortTable[prop]) {
+      updateAssistanceRequestList(prop, false);
+
+      setSelectedPropToSortTable({
+        [prop]: false,
+      });
+    } else {
+      updateAssistanceRequestList(prop, true);
+
+      setSelectedPropToSortTable({
+        [prop]: true,
+      });
+    }
+  };
+
+  const [selectedPropToSortTable, setSelectedPropToSortTable] = useState<{
+    /**
+     * "true" se estiver ascendente, "false" descendente e undefined caso a
+     * prop não esteja selecionada
+     */
+    [Property in keyof AssistanceRequest]?: boolean;
+  }>({
+    nomeSolicitante: true,
+  });
+
+  function TableCellHeader({
+    text,
+    prop,
+  }: {
+    text: string;
+    prop: keyof AssistanceRequest;
+  }) {
+    return (
+      <div 
+        onClick={() => handleClickSortTable(prop)} 
+        style={{userSelect: 'none', cursor: 'pointer'}}
+      >
+        {text}
+        {selectedPropToSortTable[prop] != undefined ? (
+          selectedPropToSortTable[prop] ? (
+            <ArrowDropUpIcon/>
+          ) : (
+            <ArrowDropDownIcon/>
+          )
+        ) : null}
+      </div>
+    );
+  }
+  //#endregion
+
   return (
     <>
       <TableContainer sx={{ maxHeight: '500px' }}>
@@ -136,15 +200,41 @@ export default function SolicitationTable() {
           <TableHead>
             <TableRow>
               <TableCell align="center">
-                Solicitante
-                <ArrowDropDownIcon/>
+                <TableCellHeader
+                  text="Solicitante"
+                  prop="nomeSolicitante"
+                ></TableCellHeader>
               </TableCell>
-              <TableCell align="center">É extra?</TableCell>
-              <TableCell align="center">Status</TableCell>
-              <TableCell align="center">Valor solicitado</TableCell>
-              <TableCell align="center">Valor aprovado</TableCell>
-              <TableCell align="center">Data de solicitação</TableCell>
-              <TableCell align="center">Data da avaliação</TableCell>
+              <TableCell align="center">
+                <TableCellHeader
+                  text="Status"
+                  prop="situacao"
+                ></TableCellHeader>
+              </TableCell>
+              <TableCell align="center">
+                <TableCellHeader
+                  text="Valor solicitado"
+                  prop="valorSolicitado"
+                ></TableCellHeader>
+              </TableCell>
+              <TableCell align="center">
+                <TableCellHeader
+                  text="Valor aprovado"
+                  prop="valorAprovado"
+                ></TableCellHeader>
+              </TableCell>
+              <TableCell align="center">
+                <TableCellHeader
+                  text="Data de solicitação"
+                  prop="createdAt"
+                ></TableCellHeader>
+              </TableCell>
+              <TableCell align="center">
+                <TableCellHeader
+                  text="Data da avaliação"
+                  prop="dataAprovacao"
+                ></TableCellHeader>
+              </TableCell>
               <TableCell align="center">Ações</TableCell>
             </TableRow>
           </TableHead>
@@ -174,7 +264,6 @@ export default function SolicitationTable() {
                 }) => (
                   <TableRow key={nomeSolicitante}>
                     <TableCell align="center">{nomeSolicitante}</TableCell>
-                    <TableCell align="center">Não</TableCell>
                     {situacao === 2 && (
                       <TableCell
                         align="center"
@@ -251,7 +340,9 @@ export default function SolicitationTable() {
                   </TableRow>
                 )
               )}
-            {extraRequests.length > 0 &&
+            {
+              // TODO : Remover este código e separar em duas abas
+              /* {extraRequests.length > 0 &&
               extraRequests.map(
                 ({
                   id,
@@ -301,7 +392,8 @@ export default function SolicitationTable() {
                     </TableCell>
                   </TableRow>
                 )
-              )}
+              )} */
+            }
           </TableBody>
         </Table>
       </TableContainer>
