@@ -62,7 +62,7 @@ export default function SolicitationTable() {
       prop: keyof AssistanceRequest,
       ascending: boolean,
       size: number,
-      page?: number
+      page: number
     ) => {
       dispatch(getAssistanceRequests(prop, ascending, page, size)).then(
         (requests) =>
@@ -79,7 +79,8 @@ export default function SolicitationTable() {
     updateAssistanceRequestList(
       getSelectedProp(),
       selectedPropToSortTable[getSelectedProp()] as boolean,
-      size
+      size,
+      currentPageAssistance
     );
   };
 
@@ -179,13 +180,13 @@ export default function SolicitationTable() {
 
   const handleClickSortTable = (prop: keyof AssistanceRequest) => {
     if (selectedPropToSortTable[prop]) {
-      updateAssistanceRequestList(prop, false, size);
+      updateAssistanceRequestList(prop, false, size, currentPageAssistance);
 
       setSelectedPropToSortTable({
         [prop]: false,
       });
     } else {
-      updateAssistanceRequestList(prop, true, size);
+      updateAssistanceRequestList(prop, true, size, currentPageAssistance);
 
       setSelectedPropToSortTable({
         [prop]: true,
@@ -229,9 +230,21 @@ export default function SolicitationTable() {
     updateAssistanceRequestList(
       getSelectedProp(),
       selectedPropToSortTable[getSelectedProp()] as boolean,
-      newSize
+      newSize,
+      currentPageAssistance
     );
   };
+
+  const [currentPageAssistance, setCurrentPageAssistance] = React.useState(0);
+
+  useEffect(() => {
+    updateAssistanceRequestList(
+      getSelectedProp(),
+      selectedPropToSortTable[getSelectedProp()] as boolean,
+      size,
+      currentPageAssistance
+    )
+  }, [currentPageAssistance]);
   //#endregion
 
   return (
@@ -441,7 +454,10 @@ export default function SolicitationTable() {
 
       <div style={{ display: 'flex' }}>
         <Stack spacing={2} style={{ marginTop: '1rem' }}>
-          <Pagination count={numberPagesAssistance}></Pagination>
+          <Pagination
+            count={numberPagesAssistance}
+            onChange={(e, v) => setCurrentPageAssistance(v - 1)}
+          ></Pagination>
         </Stack>
         <Select
           value={size}
