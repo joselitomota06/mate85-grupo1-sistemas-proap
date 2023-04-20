@@ -56,27 +56,32 @@ export default function SolicitationTable() {
   const { requests, extraRequests } = useSelector(
     (state: IRootState) => state.assistanceRequestSlice
   );
-  
+
   const updateAssistanceRequestList = useCallback(
     (
       prop: keyof AssistanceRequest,
       ascending: boolean,
       size: number,
-      page?: number,
+      page?: number
     ) => {
-      dispatch(getAssistanceRequests(prop, ascending, page, size)); // XXX : Esse método é chamado para carregar os dados da página
+      dispatch(getAssistanceRequests(prop, ascending, page, size)).then(
+        (requests) =>
+          setNumberPagesAssistance(
+            Math.trunc(requests.payload.total / size) + 1
+          )
+      );
       dispatch(getExtraAssistanceRequests());
     },
     [dispatch]
   );
-
+  // HACK : Não entendi a tempo como usar useCallback com os valores atualizados. Estava sempre pegando os iniciais
   const updateAssistanceRequestListWithCurrentParameters = () => {
     updateAssistanceRequestList(
-      getSelectedProp(), 
-      selectedPropToSortTable[getSelectedProp()] as boolean, 
+      getSelectedProp(),
+      selectedPropToSortTable[getSelectedProp()] as boolean,
       size
     );
-  }
+  };
 
   useEffect(() => {
     updateAssistanceRequestListWithCurrentParameters();
@@ -167,11 +172,10 @@ export default function SolicitationTable() {
   });
 
   const getSelectedProp = () => {
-    return Object
-      .getOwnPropertyNames(
-        selectedPropToSortTable
-      )[0] as keyof AssistanceRequest;
-  }
+    return Object.getOwnPropertyNames(
+      selectedPropToSortTable
+    )[0] as keyof AssistanceRequest;
+  };
 
   const handleClickSortTable = (prop: keyof AssistanceRequest) => {
     if (selectedPropToSortTable[prop]) {
@@ -188,7 +192,7 @@ export default function SolicitationTable() {
       });
     }
   };
-  
+
   function TableCellHeader({
     text,
     prop,
@@ -215,17 +219,19 @@ export default function SolicitationTable() {
   //#endregion
 
   //#region pagination
+  const [numberPagesAssistance, setNumberPagesAssistance] = React.useState(1);
+
   const [size, setSize] = React.useState(5);
 
   const handleChangeSize = (newSize: number) => {
     setSize(newSize);
 
     updateAssistanceRequestList(
-      getSelectedProp(), 
-      selectedPropToSortTable[getSelectedProp()] as boolean, 
+      getSelectedProp(),
+      selectedPropToSortTable[getSelectedProp()] as boolean,
       newSize
     );
-  }
+  };
   //#endregion
 
   return (
@@ -435,7 +441,7 @@ export default function SolicitationTable() {
 
       <div style={{ display: 'flex' }}>
         <Stack spacing={2} style={{ marginTop: '1rem' }}>
-          <Pagination count={10}></Pagination>
+          <Pagination count={numberPagesAssistance}></Pagination>
         </Stack>
         <Select
           value={size}
