@@ -29,6 +29,8 @@ import { useAuth } from '../../../hooks';
 import { toast, ToastOptions } from 'react-toastify';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 
 // Modal inports
 import Button from '@mui/material/Button';
@@ -50,16 +52,17 @@ export default function SolicitationTable() {
   const navigate = useNavigate();
   const { isAdmin } = useAuth();
 
+  //#region table data
   const { requests, extraRequests } = useSelector(
     (state: IRootState) => state.assistanceRequestSlice
   );
-
+  
   const updateAssistanceRequestList = useCallback(
     (
-      prop?: keyof AssistanceRequest,
-      ascending?: boolean,
+      prop: keyof AssistanceRequest,
+      ascending: boolean,
+      size: number,
       page?: number,
-      size?: number
     ) => {
       dispatch(getAssistanceRequests(prop, ascending, page, size)); // XXX : Esse método é chamado para carregar os dados da página
       dispatch(getExtraAssistanceRequests());
@@ -67,10 +70,20 @@ export default function SolicitationTable() {
     [dispatch]
   );
 
-  useEffect(() => {
-    updateAssistanceRequestList();
-  }, []);
+  const updateAssistanceRequestListWithCurrentParameters = () => {
+    updateAssistanceRequestList(
+      getSelectedProp(), 
+      selectedPropToSortTable[getSelectedProp()] as boolean, 
+      size
+    );
+  }
 
+  useEffect(() => {
+    updateAssistanceRequestListWithCurrentParameters();
+  }, []);
+  //#endregion
+
+  //#region actions column
   const handleClickEditRequest = (id: number) => {
     navigate(`/solicitation/edit/${id}`);
   };
@@ -85,14 +98,14 @@ export default function SolicitationTable() {
 
   const handleClickRemoveRequest = (id: number) => {
     removeAssistanceRequestById(id).then(() => {
-      updateAssistanceRequestList();
+      updateAssistanceRequestListWithCurrentParameters();
       toast.success('Solicitação removida com sucesso');
     });
   };
 
   const handleClickRemoveExtraRequest = (id: number) => {
     deleteExtraAssistanceRequest(id).then(() => {
-      updateAssistanceRequestList();
+      updateAssistanceRequestListWithCurrentParameters();
       toast.success('Solicitação extra removida com sucesso');
     });
   };
@@ -140,24 +153,9 @@ export default function SolicitationTable() {
     setSolicitationId(0);
     handleClose();
   };
+  //#endregion
 
   //#region table sort
-  const handleClickSortTable = (prop: keyof AssistanceRequest) => {
-    if (selectedPropToSortTable[prop]) {
-      updateAssistanceRequestList(prop, false);
-
-      setSelectedPropToSortTable({
-        [prop]: false,
-      });
-    } else {
-      updateAssistanceRequestList(prop, true);
-
-      setSelectedPropToSortTable({
-        [prop]: true,
-      });
-    }
-  };
-
   const [selectedPropToSortTable, setSelectedPropToSortTable] = useState<{
     /**
      * "true" se estiver ascendente, "false" descendente e undefined caso a
@@ -168,6 +166,29 @@ export default function SolicitationTable() {
     nomeSolicitante: true,
   });
 
+  const getSelectedProp = () => {
+    return Object
+      .getOwnPropertyNames(
+        selectedPropToSortTable
+      )[0] as keyof AssistanceRequest;
+  }
+
+  const handleClickSortTable = (prop: keyof AssistanceRequest) => {
+    if (selectedPropToSortTable[prop]) {
+      updateAssistanceRequestList(prop, false, size);
+
+      setSelectedPropToSortTable({
+        [prop]: false,
+      });
+    } else {
+      updateAssistanceRequestList(prop, true, size);
+
+      setSelectedPropToSortTable({
+        [prop]: true,
+      });
+    }
+  };
+  
   function TableCellHeader({
     text,
     prop,
@@ -176,19 +197,33 @@ export default function SolicitationTable() {
     prop: keyof AssistanceRequest;
   }) {
     return (
-      <div 
-        onClick={() => handleClickSortTable(prop)} 
-        style={{userSelect: 'none', cursor: 'pointer'}}
+      <div
+        onClick={() => handleClickSortTable(prop)}
+        style={{ userSelect: 'none', cursor: 'pointer' }}
       >
         {text}
         {selectedPropToSortTable[prop] != undefined ? (
           selectedPropToSortTable[prop] ? (
-            <ArrowDropUpIcon/>
+            <ArrowDropUpIcon />
           ) : (
-            <ArrowDropDownIcon/>
+            <ArrowDropDownIcon />
           )
         ) : null}
       </div>
+    );
+  }
+  //#endregion
+
+  //#region pagination
+  const [size, setSize] = React.useState(5);
+
+  const handleChangeSize = (newSize: number) => {
+    setSize(newSize);
+
+    updateAssistanceRequestList(
+      getSelectedProp(), 
+      selectedPropToSortTable[getSelectedProp()] as boolean, 
+      newSize
     );
   }
   //#endregion
@@ -398,9 +433,21 @@ export default function SolicitationTable() {
         </Table>
       </TableContainer>
 
-      <Stack spacing={2} style={{ marginTop: '1rem' }}>
-        <Pagination count={10}></Pagination>
-      </Stack>
+      <div style={{ display: 'flex' }}>
+        <Stack spacing={2} style={{ marginTop: '1rem' }}>
+          <Pagination count={10}></Pagination>
+        </Stack>
+        <Select
+          value={size}
+          onChange={(e) => handleChangeSize(e.target.value as number)}
+          type="number"
+        >
+          <MenuItem value={5}>5</MenuItem>
+          <MenuItem value={10}>10</MenuItem>
+          <MenuItem value={20}>20</MenuItem>
+          <MenuItem value={30}>30</MenuItem>
+        </Select>
+      </div>
 
       <Dialog
         open={open}
