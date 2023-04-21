@@ -180,14 +180,10 @@ export default function SolicitationTable() {
 
   const handleClickSortTable = (prop: keyof AssistanceRequest) => {
     if (selectedPropToSortTable[prop]) {
-      updateAssistanceRequestList(prop, false, size, currentPageAssistance);
-
       setSelectedPropToSortTable({
         [prop]: false,
       });
     } else {
-      updateAssistanceRequestList(prop, true, size, currentPageAssistance);
-
       setSelectedPropToSortTable({
         [prop]: true,
       });
@@ -224,19 +220,9 @@ export default function SolicitationTable() {
 
   const [size, setSize] = React.useState(5);
 
-  const handleChangeSize = (newSize: number) => {
-    setSize(newSize);
-
-    updateAssistanceRequestList(
-      getSelectedProp(),
-      selectedPropToSortTable[getSelectedProp()] as boolean,
-      newSize,
-      currentPageAssistance
-    );
-  };
-
   const [currentPageAssistance, setCurrentPageAssistance] = React.useState(0);
-
+  //#endregion
+  
   useEffect(() => {
     updateAssistanceRequestList(
       getSelectedProp(),
@@ -244,8 +230,7 @@ export default function SolicitationTable() {
       size,
       currentPageAssistance
     )
-  }, [currentPageAssistance]);
-  //#endregion
+  }, [currentPageAssistance, size, selectedPropToSortTable]);
 
   return (
     <>
@@ -461,7 +446,7 @@ export default function SolicitationTable() {
         </Stack>
         <Select
           value={size}
-          onChange={(e) => handleChangeSize(e.target.value as number)}
+          onChange={(e) => setSize(e.target.value as number)}
           type="number"
         >
           <MenuItem value={5}>5</MenuItem>
