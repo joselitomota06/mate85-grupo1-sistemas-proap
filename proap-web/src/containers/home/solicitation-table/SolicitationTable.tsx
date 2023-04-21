@@ -46,6 +46,7 @@ import {
 import assistanceRequestSlice, {
   AssistanceRequest,
 } from '../../../store/slices/assistance-request-slice/assistanceRequestSlice';
+import usePrevious from '../../../helpers/usePrevious';
 
 export default function SolicitationTable() {
   const dispatch = useAppDispatch();
@@ -217,19 +218,29 @@ export default function SolicitationTable() {
 
   //#region pagination
   const [numberPagesAssistance, setNumberPagesAssistance] = React.useState(1);
+  const prevNumberPagesAssistance = usePrevious(numberPagesAssistance);
 
   const [size, setSize] = React.useState(5);
 
   const [currentPageAssistance, setCurrentPageAssistance] = React.useState(0);
+
+  useEffect(() => {
+    if (
+      prevNumberPagesAssistance &&
+      prevNumberPagesAssistance > numberPagesAssistance &&
+      currentPageAssistance >= numberPagesAssistance
+    )
+      setCurrentPageAssistance(numberPagesAssistance - 1);
+  }, [numberPagesAssistance]);
   //#endregion
-  
+
   useEffect(() => {
     updateAssistanceRequestList(
       getSelectedProp(),
       selectedPropToSortTable[getSelectedProp()] as boolean,
       size,
       currentPageAssistance
-    )
+    );
   }, [currentPageAssistance, size, selectedPropToSortTable]);
 
   return (
