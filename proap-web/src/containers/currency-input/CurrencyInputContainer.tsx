@@ -25,9 +25,9 @@ const CurrencyCustomFormikField = ({
     setFieldValue(name, valorWithoutMask);
   };
 
-  useEffect(() => {
-    console.log(valorWithoutMask);
-  });
+  // useEffect(() => {
+  //   console.log(valorWithoutMask);
+  // });
 
   return (
     <StyledTextField
