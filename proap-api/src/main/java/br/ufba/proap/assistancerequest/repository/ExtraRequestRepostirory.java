@@ -11,4 +11,6 @@ import br.ufba.proap.authentication.domain.User;
 @Repository
 public interface ExtraRequestRepostirory extends JpaRepository<ExtraRequest, Long> {
 	List<ExtraRequest> findByUser(User user);
+
+	long countByUser(User user);
 }

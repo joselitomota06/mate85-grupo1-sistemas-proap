@@ -9,19 +9,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import br.ufba.proap.assistancerequest.domain.ExtraRequest;
+import br.ufba.proap.assistancerequest.domain.ExtraRequest;;
 import br.ufba.proap.assistancerequest.domain.Review;
 import br.ufba.proap.assistancerequest.domain.dto.ReviewDTO;
 import br.ufba.proap.assistancerequest.service.ExtraRequestService;
+import br.ufba.proap.assistancerequest.service.ExtraRequestService.ExtraRequestListFiltered;
 import br.ufba.proap.assistancerequest.service.ReviewService;
 import br.ufba.proap.authentication.domain.User;
 import br.ufba.proap.authentication.service.UserService;
@@ -42,21 +36,38 @@ public class ExtraRequestController {
 	private UserService serviceUser;
 
 	@GetMapping("/list")
-	public List<ExtraRequest> list() {
+	public ResponseEntity<ExtraRequestListFiltered> list(
+			@RequestParam String prop,
+			@RequestParam Boolean ascending,
+			@RequestParam int page,
+			@RequestParam int size
+	) {
 		User currentUser = serviceUser.getLoggedUser();
 
 		if (currentUser == null) {
-			return Collections.emptyList();
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+				new ExtraRequestListFiltered(
+					Collections.emptyList(), 0
+				)
+			);
 		}
 
 		try {
-			if (currentUser.getPerfil() != null && currentUser.getPerfil().isAdmin()) {
-				return service.findAll();
-			}
-
-			return service.findByUser(currentUser);
+			return ResponseEntity.ok().body(
+				service.find(
+						prop,
+						ascending,
+						page,
+						size,
+						currentUser
+				)
+			);
 		} catch (Exception e) {
-			return Collections.emptyList();
+			return ResponseEntity.internalServerError().body(
+					new ExtraRequestListFiltered(
+							Collections.emptyList(), 0
+					)
+			);
 		}
 	}
 
