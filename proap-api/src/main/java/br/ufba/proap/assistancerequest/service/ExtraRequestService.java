@@ -67,7 +67,7 @@ public class ExtraRequestService {
 			int page,
 			int size,
 			@NotNull User user) {
-		long count = 0;
+		long count;
 
 		boolean userIsAdmin = user.getPerfil() != null
 				&& user.getPerfil().isAdmin();

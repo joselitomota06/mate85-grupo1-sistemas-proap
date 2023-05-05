@@ -1,6 +1,5 @@
 package br.ufba.proap.assistancerequest.repository;
 
-import br.ufba.proap.assistancerequest.domain.AssistanceRequestDTO;
 import br.ufba.proap.assistancerequest.domain.ExtraRequest;
 import br.ufba.proap.authentication.domain.User;
 import org.springframework.stereotype.Repository;
