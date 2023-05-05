@@ -52,26 +52,30 @@ public class AssistanceRequestService{
 	 * @param user Filtrar por usuário
 	 * @return Lista de assistâncias que devem ser exibidas na página
 	 */
-	public AssistanceRequestListFiltered find(String prop, boolean ascending, int page, int requestListSize, User user) {
+	public AssistanceRequestListFiltered find(
+			String prop,
+			boolean ascending,
+			int page,
+			int requestListSize,
+			User user) {
 		long count;
 
-		if(user == null)
+		boolean userIsAdmin = user.getPerfil() != null
+				&& user.getPerfil().isAdmin();
+
+		if(userIsAdmin)
 			count = assistanteRequestRepository.count();
 		else count = assistanteRequestRepository.countByUser(user);
 
-		return new AssistanceRequestListFiltered(assistanceRequestQueryRepository.findFiltered(prop, ascending, page, requestListSize, user), count);
-	}
-
-	/**
-	 * Busca os registros de assistência usando paginação e ordenação a partir de uma propriedade
-	 * @param prop Atributo do objeto AssistanceRequest para ordenação
-	 * @param ascending Se falso, será por ordem descendente
-	 * @param page Número da página (primeira página como 0)
-	 * @param requestListSize Tamanho da página/da lista
-	 * @return Lista de assistâncias que devem ser exibidas na página
-	 */
-	public AssistanceRequestListFiltered find(String prop, boolean ascending, int page, int requestListSize) {
-		return this.find(prop, ascending, page, requestListSize, null);
+		return new AssistanceRequestListFiltered(
+				assistanceRequestQueryRepository.findFiltered(
+						prop,
+						ascending,
+						page,
+						requestListSize,
+						userIsAdmin ? null : user
+				),
+				count);
 	}
 
 	public AssistanceRequestDTO save(AssistanceRequestDTO assistanceReques) {

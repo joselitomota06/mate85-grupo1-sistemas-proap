@@ -61,15 +61,6 @@ public class AssistanceRequestController {
 		}
 
 		try {
-			if (currentUser.getPerfil() != null && currentUser.getPerfil().isAdmin()) {
-				return ResponseEntity.ok().body(service.find(
-					prop,
-					ascending,
-					page,
-					size
-				));
-			}
-			
 			return ResponseEntity.ok().body(service.find(
 				prop,
 				ascending,
