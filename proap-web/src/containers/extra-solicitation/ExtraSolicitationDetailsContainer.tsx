@@ -4,10 +4,10 @@ import { Grid, Typography } from '@mui/material';
 import styled from '@emotion/styled';
 
 import { booleanToYesOrNo } from '../../helpers/conversion';
-import { ExtraSolicitation } from './schema';
+import { ExtraRequest } from '../../store/slices/assistance-request-slice/assistanceRequestSlice';
 
 interface ExtraSolicitationDetailsContainerProps {
-  solicitation: ExtraSolicitation;
+  solicitation: ExtraRequest;
 }
 
 const StyledData = styled.div`
