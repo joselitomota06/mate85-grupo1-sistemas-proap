@@ -237,8 +237,8 @@ export default function SolicitationTableRequests() {
               </TableCell>
               <TableCell align="center">
                 <TableCellHeader
-                  text="Valor solicitado"
-                  prop="valorSolicitado"
+                  text="Valor da Inscrição"
+                  prop="valorInscricao"
                 ></TableCellHeader>
               </TableCell>
               <TableCell align="center">
@@ -278,7 +278,7 @@ export default function SolicitationTableRequests() {
                 ({
                   id,
                   nomeSolicitante,
-                  valorSolicitado,
+                  valorInscricao,
                   createdAt,
                   situacao,
                   valorAprovado,
@@ -314,7 +314,7 @@ export default function SolicitationTableRequests() {
                         Pendente de avaliação
                       </TableCell>
                     )}
-                    <TableCell align="center">R$ {valorSolicitado}</TableCell>
+                    <TableCell align="center">R$ {valorInscricao}</TableCell>
                     {valorAprovado === null && (
                       <TableCell align="center">-</TableCell>
                     )}
