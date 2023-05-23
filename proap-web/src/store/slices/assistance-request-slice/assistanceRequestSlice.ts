@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ExtraSolicitation } from '../../../containers/extra-solicitation/schema';
 import { AssistanceRequestListResponse } from '../../../services/assistanceRequestService';
+import { ExtraRequestListResponse } from '../../../services/extraAssistanceRequestService';
 
 export interface RequestReview {
   createdAt: string;
@@ -13,10 +13,16 @@ export interface RequestReview {
   updatedAt: string;
 }
 
+export interface ExtraRequest
+  extends Omit<AssistanceRequest, 'doi' | 'valorInscricao'> {
+  justificativa: string;
+}
+
 export interface AssistanceRequest {
   id: number;
   doi: string;
   nomeSolicitante: string;
+  emailSolicitacao: string;
   valorSolicitado: number;
   valorInscricao: number;
   createdAt: string;
@@ -25,6 +31,8 @@ export interface AssistanceRequest {
   automaticDecText: string;
   valorAprovado: number;
   dataAprovacao: string;
+	solicitacaoApoio: boolean;
+  solicitacaoAuxilioOutrasFontes: boolean;
 
   user: {
     id: number;
@@ -38,15 +46,18 @@ export interface AssistanceRequest {
 
 interface AssistanceRequestSliceState {
   requests: AssistanceRequestListResponse;
-  extraRequests: ExtraSolicitation[];
+  extraRequests: ExtraRequestListResponse;
 }
 
 const INITIAL_STATE: AssistanceRequestSliceState = {
   requests: {
     list: [],
-    total: 0
+    total: 0,
   },
-  extraRequests: [],
+  extraRequests: {
+    list: [],
+    total: 0,
+  },
 };
 
 const assistanceRequestSlice = createSlice({
@@ -61,7 +72,7 @@ const assistanceRequestSlice = createSlice({
     },
     updateExtraSolicitations: (
       state,
-      action: PayloadAction<ExtraSolicitation[]>
+      action: PayloadAction<ExtraRequestListResponse>
     ) => {
       state.extraRequests = action.payload;
     },

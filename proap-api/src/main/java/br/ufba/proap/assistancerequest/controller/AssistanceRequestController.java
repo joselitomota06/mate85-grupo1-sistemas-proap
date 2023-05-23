@@ -61,17 +61,6 @@ public class AssistanceRequestController {
 		}
 
 		try {
-			// TODO : Obter valor total de registros do banco
-
-			if (currentUser.getPerfil() != null && currentUser.getPerfil().isAdmin()) {
-				return ResponseEntity.ok().body(service.find(
-					prop,
-					ascending,
-					page,
-					size
-				));
-			}
-			
 			return ResponseEntity.ok().body(service.find(
 				prop,
 				ascending,

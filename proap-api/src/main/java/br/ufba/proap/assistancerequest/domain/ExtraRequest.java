@@ -71,7 +71,7 @@ public class ExtraRequest {
 	
 	
 	@Column(nullable = true)
-	private int valorAprovado;
+	private Float valorAprovado;
 		    
 	@Column(nullable = true)
 	private String observacao;	
@@ -144,11 +144,11 @@ public class ExtraRequest {
 		this.dataAprovacao = dataAprovacao;
 	}
 
-	public int getValorAprovado() {
+	public Float getValorAprovado() {
 		return valorAprovado;
 	}
 
-	public void setValorAprovado(int valorAprovado) {
+	public void setValorAprovado(Float valorAprovado) {
 		this.valorAprovado = valorAprovado;
 	}
 

@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 import { RequestReview } from '../../store/slices/assistance-request-slice/assistanceRequestSlice';
 
-export interface ExtraSolicitation {
+export interface ExtraRequestFormSchema {
   id: number;
   nomeSolicitante: string;
   emailSolicitacao: string;
@@ -15,7 +15,7 @@ export interface ExtraSolicitation {
   createdAt?: string;
 }
 
-export interface ExtraSolicitationFormValues extends ExtraSolicitation {
+export interface ExtraSolicitationFormValues extends ExtraRequestFormSchema {
   aceiteFinal: boolean;
 }
 
