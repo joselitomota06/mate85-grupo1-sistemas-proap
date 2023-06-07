@@ -144,7 +144,7 @@ export default function SolicitationTableRequests() {
      */
     [Property in keyof AssistanceRequest]?: boolean;
   }>({
-    nomeSolicitante: true,
+    createdAt: false,
   });
 
   const getSelectedProp = () => {

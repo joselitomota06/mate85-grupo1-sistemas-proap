@@ -25,11 +25,11 @@ export interface AssistanceRequestListResponse {
 export const getAssistanceRequests =
   (prop?: keyof AssistanceRequest, ascending?: boolean, page?: number, size?: number) =>
   (dispatch: AppDispatch) => {   
-    const defaultPropToFilter: keyof AssistanceRequest = 'nomeSolicitante';
+    const defaultPropToFilter: keyof AssistanceRequest = 'createdAt';
 
     let requestUrl = 'assistancerequest/list'
       + `?prop=${prop ?? defaultPropToFilter}`
-      + `&ascending=${ascending ?? true}`
+      + `&ascending=${ascending ?? false}`
       + `&page=${page ?? 0}`
       + `&size=${size ?? 10}`;
 

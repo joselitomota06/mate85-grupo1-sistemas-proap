@@ -162,7 +162,7 @@ export default function SolicitationTableExtraRequests() {
      */
     [Property in keyof ExtraRequest]?: boolean;
   }>({
-    nomeSolicitante: true,
+    createdAt: false,
   });
 
   const getSelectedProp = () => {
