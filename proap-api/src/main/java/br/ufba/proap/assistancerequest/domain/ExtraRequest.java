@@ -24,7 +24,8 @@ public class ExtraRequest {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
+	@Column(nullable = false)
+	private String titulo;
 	@ManyToOne
 	private User user;
 
@@ -280,5 +281,13 @@ public class ExtraRequest {
 	@PreUpdate
 	public void preUpdate() {
 		setUpdatedAt(LocalDateTime.now());
+	}
+
+	public String getTitulo() {
+		return titulo;
+	}
+
+	public void setTitulo(String titulo) {
+		this.titulo = titulo;
 	}
 }
