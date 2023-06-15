@@ -24,10 +24,12 @@ public class ExtraRequest {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column(nullable = false)
-	private String titulo;
+
 	@ManyToOne
 	private User user;
+
+	@Column(nullable = false, columnDefinition = "VARCHAR(255) DEFAULT 'Sem título'")
+	private String titulo;
 
 	private String nomeSolicitante;
 	private String emailSolicitacao;
