@@ -25,14 +25,12 @@ public class ExtraRequest {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	// Dados do solicitante
 	@ManyToOne
 	private User user;
 
 	@Column(nullable = false, columnDefinition = "VARCHAR(255) DEFAULT 'Sem título'")
 	private String titulo;
-
-	private String nomeSolicitante;
-	private String emailSolicitacao;
 	
 	private Boolean isDiscente;
 	
@@ -168,7 +166,7 @@ public class ExtraRequest {
 	}
 
 	public void setAutomaticDecText(String automaticDecText) {
-		String name = this.nomeSolicitante;
+		String name = this.user.getName();
 		String valorSolicitado = this.valorSolicitado.toString();
 		String item = this.itemSolicitado;
 		String justificativa = this.justificativa;
@@ -233,22 +231,6 @@ public class ExtraRequest {
 
 	public void setSolicitacaoAuxilioOutrasFontes(Boolean solicitacaoAuxilioOutrasFontes) {
 		this.solicitacaoAuxilioOutrasFontes = solicitacaoAuxilioOutrasFontes;
-	}
-
-	public String getNomeSolicitante() {
-		return nomeSolicitante;
-	}
-
-	public void setNomeSolicitante(String nomeSolicitante) {
-		this.nomeSolicitante = nomeSolicitante;
-	}
-
-	public String getEmailSolicitacao() {
-		return emailSolicitacao;
-	}
-
-	public void setEmailSolicitacao(String emailSolicitacao) {
-		this.emailSolicitacao = emailSolicitacao;
 	}
 
 	public String getJustificativa() {

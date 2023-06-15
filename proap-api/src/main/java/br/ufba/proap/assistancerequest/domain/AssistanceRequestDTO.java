@@ -26,13 +26,9 @@ public class AssistanceRequestDTO {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	// Dados do solicitante
 	@ManyToOne
 	private User user;
-
-	// Dados do solicitante
-	private String nomeSolicitante;
-
-	private String emailSolicitacao;
 
 	// Dados da publicação
 	private String nomeCompleto;
@@ -214,7 +210,7 @@ public class AssistanceRequestDTO {
 	}
 
 	public void setAutomaticDecText(String automaticDecText) {
-		String name = this.nomeSolicitante;
+		String name = this.user.getName();
 		String valorSolicitado = this.valorInscricao.toString();
 		String quantDiarias = String.valueOf(this.quantidadeDiariasSolicitadas);
 		//String calculoDiarias = String.valueOf(this.valorSolicitado / this.quantidadeDiariasSolicitadas);
@@ -442,22 +438,6 @@ public class AssistanceRequestDTO {
 
 	public void setAutores(String autores) {
 		this.autores = autores;
-	}
-
-	public String getNomeSolicitante() {
-		return nomeSolicitante;
-	}
-
-	public void setNomeSolicitante(String nomeSolicitante) {
-		this.nomeSolicitante = nomeSolicitante;
-	}
-
-	public String getEmailSolicitacao() {
-		return emailSolicitacao;
-	}
-
-	public void setEmailSolicitacao(String emailSolicitacao) {
-		this.emailSolicitacao = emailSolicitacao;
 	}
 
 	public LocalDateTime getCreatedAt() {
