@@ -15,6 +15,7 @@ export interface RequestReview {
 
 export interface ExtraRequest
   extends Omit<AssistanceRequest, 'doi' | 'valorInscricao'> {
+  titulo: string;
   justificativa: string;
 }
 

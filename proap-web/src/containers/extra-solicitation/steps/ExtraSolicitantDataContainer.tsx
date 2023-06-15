@@ -12,6 +12,15 @@ export default function ExtraSolicitantDataContainer() {
     <Grid container direction="column" paddingTop={2} paddingBottom={2}>
       <Field
         as={StyledTextField}
+        label="Solicitação"
+        name="titulo"
+        error={Boolean(touched.titulo && errors.titulo)}
+        helperText={touched.titulo && errors.titulo}
+        required
+        style={{ padding: 'none' }}
+      />
+      <Field
+        as={StyledTextField}
         label="Nome"
         name="nomeSolicitante"
         error={Boolean(touched.nomeSolicitante && errors.nomeSolicitante)}
