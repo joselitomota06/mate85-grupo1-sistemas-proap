@@ -2,11 +2,11 @@ import React from 'react';
 import { Field, useFormikContext } from 'formik';
 import { Grid } from '@mui/material';
 
-import { ExtraSolicitation } from '../schema';
 import { StyledTextField } from '../../solicitation/SolicitationFormContainer.style';
+import { ExtraRequest } from '../../../store/slices/assistance-request-slice/assistanceRequestSlice';
 
 export default function ExtraSolicitantDataContainer() {
-  const { errors, touched } = useFormikContext<ExtraSolicitation>();
+  const { errors, touched } = useFormikContext<ExtraRequest>();
 
   return (
     <Grid container direction="column" paddingTop={2} paddingBottom={2}>
