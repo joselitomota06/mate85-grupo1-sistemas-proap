@@ -12,31 +12,24 @@ import {
   FormHelperText,
 } from '@mui/material';
 import { StyledTextField } from '../SolicitationFormContainer.style';
+import { useAuth } from '../../../hooks';
 
 export default function ContactDataFormContainer() {
   const { errors, touched } = useFormikContext<SolicitationFormValues>();
 
+  const { name, email } = useAuth();
+  
   return (
     <Grid container direction="column" paddingTop={2} paddingBottom={2}>
-      <Field
-        as={StyledTextField}
-        label="Nome"
-        name="nomeSolicitante"
-        error={Boolean(touched.nomeSolicitante && errors.nomeSolicitante)}
-        helperText={touched.nomeSolicitante && errors.nomeSolicitante}
-        required
-        style={{ padding: 'none' }}
-        multiline
+      <StyledTextField 
+        label="Solicitante" 
+        value={name} 
+        disabled 
       />
-      <Field
-        as={StyledTextField}
+      <StyledTextField
         label="E-mail"
-        name="emailSolicitacao"
-        error={Boolean(touched.emailSolicitacao && errors.emailSolicitacao)}
-        helperText={touched.emailSolicitacao && errors.emailSolicitacao}
-        required
-        style={{ padding: 'none' }}
-        multiline
+        value={email}
+        disabled
       />
       <Field
         as={StyledTextField}

@@ -22,8 +22,6 @@ export interface ExtraRequest
 export interface AssistanceRequest {
   id: number;
   doi: string;
-  nomeSolicitante: string;
-  emailSolicitacao: string;
   valorSolicitado: number;
   valorInscricao: number;
   createdAt: string;

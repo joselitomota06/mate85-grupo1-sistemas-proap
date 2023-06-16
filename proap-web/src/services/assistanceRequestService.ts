@@ -15,23 +15,33 @@ export interface AssistanceRequestListResponse {
   /**
    * Lista de requisições que devem ser exibidas na tela
    */
-  list: AssistanceRequest[],
+  list: AssistanceRequest[];
   /**
    * Número total de registros no banco
    */
-  total: number
+  total: number;
 }
 
-export const getAssistanceRequests =
-  (prop?: keyof AssistanceRequest, ascending?: boolean, page?: number, size?: number) =>
-  (dispatch: AppDispatch) => {   
-    const defaultPropToFilter: keyof AssistanceRequest = 'createdAt';
+export type AssistanceRequestPropToSort =
+  | keyof Omit<AssistanceRequest, 'user'>
+  | `user.${keyof AssistanceRequest['user']}`;
 
-    let requestUrl = 'assistancerequest/list'
-      + `?prop=${prop ?? defaultPropToFilter}`
-      + `&ascending=${ascending ?? false}`
-      + `&page=${page ?? 0}`
-      + `&size=${size ?? 10}`;
+export const getAssistanceRequests =
+  (
+    prop?: AssistanceRequestPropToSort,
+    ascending?: boolean,
+    page?: number,
+    size?: number
+  ) =>
+  (dispatch: AppDispatch) => {
+    const defaultPropToFilter: AssistanceRequestPropToSort = 'createdAt';
+
+    let requestUrl =
+      'assistancerequest/list' +
+      `?prop=${prop ?? defaultPropToFilter}` +
+      `&ascending=${ascending ?? false}` +
+      `&page=${page ?? 0}` +
+      `&size=${size ?? 10}`;
 
     return api
       .get<AssistanceRequestListResponse>(requestUrl)

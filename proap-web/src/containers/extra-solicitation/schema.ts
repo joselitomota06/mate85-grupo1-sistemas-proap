@@ -20,11 +20,7 @@ export interface ExtraSolicitationFormValues extends ExtraRequestFormSchema {
 }
 
 export const extraSolicitantDataSchema = Yup.object({
-  nomeSolicitante: Yup.string().required('Campo obrigatório'),
-  emailSolicitacao: Yup.string()
-    .required('Campo obrigatório')
-    .email('Insira um e-mail válido.'),
-
+  titulo: Yup.string().required('Campo obrigatório'),
   justificativa: Yup.string()
     .required('Campo obrigatório')
     .max(255, 'A justificativa não pode conter mais que 255 caracteres.'),

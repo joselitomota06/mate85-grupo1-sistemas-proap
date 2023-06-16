@@ -11,6 +11,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import {
+  AssistanceRequestPropToSort,
   getAssistanceRequests,
   removeAssistanceRequestById,
 } from '../../../services/assistanceRequestService';
@@ -57,7 +58,7 @@ export default function SolicitationTableRequests() {
 
   const updateAssistanceRequestList = useCallback(
     (
-      prop: keyof AssistanceRequest,
+      prop: AssistanceRequestPropToSort,
       ascending: boolean,
       size: number,
       page: number
@@ -142,7 +143,7 @@ export default function SolicitationTableRequests() {
      * "true" se estiver ascendente, "false" descendente e undefined caso a
      * prop não esteja selecionada
      */
-    [Property in keyof AssistanceRequest]?: boolean;
+    [Property in AssistanceRequestPropToSort]?: boolean;
   }>({
     createdAt: false,
   });
@@ -150,10 +151,10 @@ export default function SolicitationTableRequests() {
   const getSelectedProp = () => {
     return Object.getOwnPropertyNames(
       selectedPropToSortTable
-    )[0] as keyof AssistanceRequest;
+    )[0] as AssistanceRequestPropToSort;
   };
 
-  const handleClickSortTable = (prop: keyof AssistanceRequest) => {
+  const handleClickSortTable = (prop: AssistanceRequestPropToSort) => {
     if (selectedPropToSortTable[prop]) {
       setSelectedPropToSortTable({
         [prop]: false,
@@ -170,7 +171,7 @@ export default function SolicitationTableRequests() {
     prop,
   }: {
     text: string;
-    prop: keyof AssistanceRequest;
+    prop: AssistanceRequestPropToSort;
   }) {
     return (
       <div
@@ -226,7 +227,7 @@ export default function SolicitationTableRequests() {
               <TableCell align="center">
                 <TableCellHeader
                   text="Solicitante"
-                  prop="nomeSolicitante"
+                  prop="user.name"
                 ></TableCellHeader>
               </TableCell>
               <TableCell align="center">
@@ -277,17 +278,16 @@ export default function SolicitationTableRequests() {
               requests.list.map(
                 ({
                   id,
-                  nomeSolicitante,
+                  user,
                   valorInscricao,
                   createdAt,
                   situacao,
                   valorAprovado,
                   automaticDecText,
                   dataAprovacao,
-                  user,
                 }) => (
-                  <TableRow key={nomeSolicitante}>
-                    <TableCell align="center">{nomeSolicitante}</TableCell>
+                  <TableRow key={user.name}>
+                    <TableCell align="center">{user.name}</TableCell>
                     {situacao === 2 && (
                       <TableCell
                         align="center"

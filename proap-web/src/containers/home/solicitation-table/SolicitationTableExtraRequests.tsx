@@ -37,6 +37,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import {
+  ExtraRequestPropToSort,
   deleteExtraAssistanceRequest,
   getExtraAssistanceRequests,
 } from '../../../services/extraAssistanceRequestService';
@@ -55,7 +56,7 @@ export default function SolicitationTableExtraRequests() {
 
   const updateRequestList = useCallback(
     (
-      prop: keyof ExtraRequest,
+      prop: ExtraRequestPropToSort,
       ascending: boolean,
       size: number,
       page: number
@@ -160,7 +161,7 @@ export default function SolicitationTableExtraRequests() {
      * "true" se estiver ascendente, "false" descendente e undefined caso a
      * prop não esteja selecionada
      */
-    [Property in keyof ExtraRequest]?: boolean;
+    [Property in ExtraRequestPropToSort]?: boolean;
   }>({
     createdAt: false,
   });
@@ -168,10 +169,10 @@ export default function SolicitationTableExtraRequests() {
   const getSelectedProp = () => {
     return Object.getOwnPropertyNames(
       selectedPropToSortTable
-    )[0] as keyof ExtraRequest;
+    )[0] as ExtraRequestPropToSort;
   };
 
-  const handleClickSortTable = (prop: keyof ExtraRequest) => {
+  const handleClickSortTable = (prop: ExtraRequestPropToSort) => {
     if (selectedPropToSortTable[prop]) {
       setSelectedPropToSortTable({
         [prop]: false,
@@ -188,7 +189,7 @@ export default function SolicitationTableExtraRequests() {
     prop,
   }: {
     text: string;
-    prop: keyof ExtraRequest;
+    prop: ExtraRequestPropToSort;
   }) {
     return (
       <div
@@ -244,7 +245,7 @@ export default function SolicitationTableExtraRequests() {
               <TableCell align="center">
                 <TableCellHeader
                   text="Solicitante"
-                  prop="nomeSolicitante"
+                  prop="user.name"
                 ></TableCellHeader>
               </TableCell>
               <TableCell align="center">
@@ -295,17 +296,16 @@ export default function SolicitationTableExtraRequests() {
               extraRequests.list.map(
                 ({
                   id,
-                  nomeSolicitante,
+                  user,
                   valorSolicitado,
                   createdAt,
                   situacao,
                   valorAprovado,
                   automaticDecText,
                   dataAprovacao,
-                  user,
                 }) => (
-                  <TableRow key={nomeSolicitante}>
-                    <TableCell align="center">{nomeSolicitante}</TableCell>
+                  <TableRow key={user.name}>
+                    <TableCell align="center">{user.name}</TableCell>
                     {situacao === 2 && (
                       <TableCell
                         align="center"
