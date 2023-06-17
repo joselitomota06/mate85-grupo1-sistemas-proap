@@ -226,6 +226,12 @@ export default function SolicitationTableRequests() {
             <TableRow>
               <TableCell align="center">
                 <TableCellHeader
+                  text="Data de solicitação"
+                  prop="createdAt"
+                ></TableCellHeader>
+              </TableCell>
+              <TableCell align="center">
+                <TableCellHeader
                   text="Solicitante"
                   prop="user.name"
                 ></TableCellHeader>
@@ -246,12 +252,6 @@ export default function SolicitationTableRequests() {
                 <TableCellHeader
                   text="Valor aprovado"
                   prop="valorAprovado"
-                ></TableCellHeader>
-              </TableCell>
-              <TableCell align="center">
-                <TableCellHeader
-                  text="Data de solicitação"
-                  prop="createdAt"
                 ></TableCellHeader>
               </TableCell>
               <TableCell align="center">
@@ -287,6 +287,8 @@ export default function SolicitationTableRequests() {
                   dataAprovacao,
                 }) => (
                   <TableRow key={user.name}>
+                    <TableCell align="center">{createdAt}</TableCell>
+
                     <TableCell align="center">{user.name}</TableCell>
                     {situacao === 2 && (
                       <TableCell
@@ -322,8 +324,6 @@ export default function SolicitationTableRequests() {
                     {valorAprovado !== null && (
                       <TableCell align="center">R$ {valorAprovado}</TableCell>
                     )}
-
-                    <TableCell align="center">{createdAt}</TableCell>
 
                     {dataAprovacao === null && (
                       <TableCell align="center">-</TableCell>

@@ -240,6 +240,12 @@ export default function SolicitationTableExtraRequests() {
             <TableRow>
               <TableCell align="center">
                 <TableCellHeader
+                  text="Data de solicitação"
+                  prop="createdAt"
+                ></TableCellHeader>
+              </TableCell>
+              <TableCell align="center">
+                <TableCellHeader
                   text="Solicitante"
                   prop="user.name"
                 ></TableCellHeader>
@@ -260,12 +266,6 @@ export default function SolicitationTableExtraRequests() {
                 <TableCellHeader
                   text="Valor aprovado"
                   prop="valorAprovado"
-                ></TableCellHeader>
-              </TableCell>
-              <TableCell align="center">
-                <TableCellHeader
-                  text="Data de solicitação"
-                  prop="createdAt"
                 ></TableCellHeader>
               </TableCell>
               <TableCell align="center">
@@ -301,6 +301,8 @@ export default function SolicitationTableExtraRequests() {
                   dataAprovacao,
                 }) => (
                   <TableRow key={user.name}>
+                    <TableCell align="center">{createdAt}</TableCell>
+
                     <TableCell align="center">{user.name}</TableCell>
                     {situacao === 2 && (
                       <TableCell
@@ -328,7 +330,7 @@ export default function SolicitationTableExtraRequests() {
                         Pendente de avaliação
                       </TableCell>
                     )}
-                    
+
                     <TableCell align="center">R$ {valorSolicitado}</TableCell>
 
                     {valorAprovado === null && (
@@ -338,8 +340,6 @@ export default function SolicitationTableExtraRequests() {
                     {valorAprovado !== null && (
                       <TableCell align="center">R$ {valorAprovado}</TableCell>
                     )}
-
-                    <TableCell align="center">{createdAt}</TableCell>
 
                     {dataAprovacao === null && (
                       <TableCell align="center">-</TableCell>
@@ -360,9 +360,7 @@ export default function SolicitationTableExtraRequests() {
                             >
                               <Visibility />
                             </IconButton>
-                            <IconButton
-                              onClick={() => handleClickReview(id)}
-                            >
+                            <IconButton onClick={() => handleClickReview(id)}>
                               <CheckCircle />
                             </IconButton>
                           </>
