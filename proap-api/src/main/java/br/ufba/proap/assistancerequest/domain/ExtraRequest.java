@@ -31,9 +31,7 @@ public class ExtraRequest {
 
 	@Column(nullable = false, columnDefinition = "VARCHAR(255) DEFAULT 'Sem título'")
 	private String titulo;
-	
-	private Boolean isDiscente;
-	
+
 	private String itemSolicitado;
 
 	@Column(columnDefinition = "text")
@@ -87,14 +85,6 @@ public class ExtraRequest {
 
 	public void setItemSolicitado(String itemSolicitado) {
 		this.itemSolicitado = itemSolicitado;
-	}
-	
-	public Boolean getIsDiscente() {
-		return isDiscente;
-	}
-
-	public void setIsDiscente(Boolean isDiscente) {
-		this.isDiscente = isDiscente;
 	}
 	
 	public String getNomeSolicitacao() {
@@ -170,21 +160,14 @@ public class ExtraRequest {
 		String valorSolicitado = this.valorSolicitado.toString();
 		String item = this.itemSolicitado;
 		String justificativa = this.justificativa;
-		
-		String tratamento = "discente";
-		
-		
-		if(this.isDiscente == false) {	
-			tratamento = "docente";
-			
-		} 
+		String funcao = this.user.getPerfil().getName();
 		
 		if(this.situacao == 1) {
-			this.automaticDecText = "O "+tratamento+" "+name+" solicita apoio para compra de "+item+" com valor de R$"+valorSolicitado+" com a justificativa, "+justificativa+
+			this.automaticDecText = "O "+funcao+" - "+name+" solicita apoio para compra de "+item+" com valor de R$"+valorSolicitado+" com a justificativa, "+justificativa+
 					"Após verificação da documentação enviada pelo discente, a comissão Proap entende que a solicitação está de acordo com a resolução PROAP vigente e recomenda sua aprovação.";
 		
 		}else {
-			this.automaticDecText = "O "+tratamento+" "+name+" solicita apoio para compra de "+item+" com valor de R$"+valorSolicitado+" com a justificativa, "+justificativa+
+			this.automaticDecText = "O "+funcao+" - "+name+" solicita apoio para compra de "+item+" com valor de R$"+valorSolicitado+" com a justificativa, "+justificativa+
 					"Após verificação da documentação enviada pelo discente, a comissão Proap entende que a solicitação não está de acordo com a resolução PROAP vigente e recomenda sua reprovação.";
 		
 		}
