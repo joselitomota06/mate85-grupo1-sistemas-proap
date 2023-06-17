@@ -7,7 +7,7 @@ import { ExtraRequest } from '../../../store/slices/assistance-request-slice/ass
 import { useAuth } from '../../../hooks';
 
 export default function ExtraSolicitantDataContainer() {
-  const { errors, touched } = useFormikContext<ExtraRequest>();
+  const { errors, touched, values } = useFormikContext<ExtraRequest>();
 
   const { name, email } = useAuth();
 
@@ -15,20 +15,20 @@ export default function ExtraSolicitantDataContainer() {
     <Grid container direction="column" paddingTop={2} paddingBottom={2}>
       <StyledTextField 
         label="Solicitante" 
-        value={name} 
+        value={values.user.name != '' ? values.user.name : name} 
         disabled 
       />
       <StyledTextField
         label="E-mail"
-        value={email}
+        value={values.user.email != '' ? values.user.email : email}
         disabled
       />
       <Field
         as={StyledTextField}
         label="Solicitação"
         name="titulo"
-        error={Boolean(touched.titulo && errors.titulo)}
-        helperText={touched.titulo && errors.titulo}
+        error={Boolean(touched.nomeSolicitacao && errors.nomeSolicitacao)}
+        helperText={touched.nomeSolicitacao && errors.nomeSolicitacao}
         required
         style={{ padding: 'none' }}
       />

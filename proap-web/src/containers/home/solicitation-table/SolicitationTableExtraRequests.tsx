@@ -84,16 +84,12 @@ export default function SolicitationTableExtraRequests() {
   //#endregion
 
   //#region actions column
-  const handleClickEditRequest = (id: number) => {
-    navigate(`/solicitation/edit/${id}`);
-  };
-
-  const handleClickEditExtraRequest = (id: number) => {
+  const handleClickEdit = (id: number) => {
     navigate(`/extra-solicitation/edit/${id}`);
   };
 
-  const handleClickReviewRequest = (id: number) => {
-    navigate(`/solicitation/review/${id}`);
+  const handleClickReview = (id: number) => {
+    navigate(`/extra-solicitation/review/${id}`);
   };
 
   const handleClickRemoveRequest = (id: number) => {
@@ -365,14 +361,14 @@ export default function SolicitationTableExtraRequests() {
                               <Visibility />
                             </IconButton>
                             <IconButton
-                              onClick={() => handleClickReviewRequest(id)}
+                              onClick={() => handleClickReview(id)}
                             >
                               <CheckCircle />
                             </IconButton>
                           </>
                         )}
 
-                        <IconButton onClick={() => handleClickEditRequest(id)}>
+                        <IconButton onClick={() => handleClickEdit(id)}>
                           <ModeEditIcon />
                         </IconButton>
 

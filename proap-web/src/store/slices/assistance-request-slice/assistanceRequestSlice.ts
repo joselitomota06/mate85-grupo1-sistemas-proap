@@ -13,10 +13,34 @@ export interface RequestReview {
   updatedAt: string;
 }
 
-export interface ExtraRequest
-  extends Omit<AssistanceRequest, 'doi' | 'valorInscricao'> {
-  titulo: string;
+export interface ExtraRequest {
+  id: number;
+
+  itemSolicitado: string;
   justificativa: string;
+  valorSolicitado: number | null;
+	solicitacaoApoio: boolean;
+	solicitacaoAuxilioOutrasFontes: boolean;
+	nomeSolicitacao: string;
+	nomeAgenciaFomento: string;
+	situacao: number;
+	numeroAta: string;
+	dataAprovacao: string;
+	valorAprovado: number | null;
+	observacao: string;	
+	automaticDecText: string;
+
+  createdAt: string;
+  updatedAt: string;
+
+  user: {
+    id: number;
+    alternativePhone: string;
+    cpf: string;
+    email: string;
+    name: string;
+    password: string;
+  };
 }
 
 export interface AssistanceRequest {
@@ -27,9 +51,9 @@ export interface AssistanceRequest {
   doi: string;
   autores: string;
   autoresPresentePGCOMP: string;
-  solicitacaoApoio: string | undefined;
   valorSolicitado: number | string;
-  solicitacaoAuxilioOutrasFontes: string | undefined;
+  solicitacaoApoio: boolean | undefined;
+  solicitacaoAuxilioOutrasFontes: boolean | undefined;
   nomeAgenciaFomento: string;
   valorSolicitadoAgenciaFomento: number | string;
   valorAprovado: number | undefined;
@@ -50,8 +74,8 @@ export interface AssistanceRequest {
   observacao: string;
   quantidadeDiariasSolicitadas: number;
 
-  createdAt: undefined;
-  updatedAt: undefined;
+  createdAt: string;
+  updatedAt: string;
 
   user: {
     id: number;

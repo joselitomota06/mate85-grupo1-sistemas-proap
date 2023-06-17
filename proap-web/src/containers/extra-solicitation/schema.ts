@@ -1,21 +1,11 @@
 import * as Yup from 'yup';
-import { RequestReview } from '../../store/slices/assistance-request-slice/assistanceRequestSlice';
+import {
+  ExtraRequest,
+  RequestReview,
+} from '../../store/slices/assistance-request-slice/assistanceRequestSlice';
 
-export interface ExtraRequestFormSchema {
-  id: number;
-  nomeSolicitante: string;
-  emailSolicitacao: string;
-  justificativa: string;
-  valorSolicitado: number | string;
-  solicitacaoApoio: boolean | string;
-  solicitacaoAuxilioOutrasFontes: boolean | string;
-  nomeAgenciaFomento: string;
-  valorSolicitadoAgenciaFomento: number | string;
-  review?: RequestReview;
-  createdAt?: string;
-}
-
-export interface ExtraSolicitationFormValues extends ExtraRequestFormSchema {
+export interface ExtraSolicitationFormValues
+  extends Omit<ExtraRequest, 'automaticDecText' | 'createdAt' | 'updatedAt'> {
   aceiteFinal: boolean;
 }
 
@@ -28,13 +18,26 @@ export const extraSolicitantDataSchema = Yup.object({
 
 export const EXTRA_SOLICITATION_INITIAL_VALUES: ExtraSolicitationFormValues = {
   id: 0,
-  nomeSolicitante: '',
-  emailSolicitacao: '',
+  nomeSolicitacao: '',
+  dataAprovacao: '',
+  itemSolicitado: '',
   justificativa: '',
-  valorSolicitado: '',
+  valorSolicitado: null,
   solicitacaoApoio: false,
   solicitacaoAuxilioOutrasFontes: false,
   nomeAgenciaFomento: '',
-  valorSolicitadoAgenciaFomento: '',
   aceiteFinal: false,
+  situacao: 2,
+  numeroAta: '',
+  observacao: '',
+  valorAprovado: null,
+
+  user: {
+    alternativePhone: '',
+    cpf: '',
+    email: '',
+    id: 0,
+    name: '',
+    password: ''
+  }
 };

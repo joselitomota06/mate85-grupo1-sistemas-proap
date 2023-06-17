@@ -8,13 +8,13 @@ import { FormikValues } from 'formik';
 import ExtraSolicitationDetailsFormContainer from './steps/ExtraSolicitationDetailsContainer';
 import ExtraSolicitantDataContainer from './steps/ExtraSolicitantDataContainer';
 import {
+  ExtraSolicitationFormValues,
   extraSolicitantDataSchema,
 } from './schema';
 import { detailsEventDataFormSchema } from '../solicitation/SolicitationFormSchema';
-import { ExtraRequest } from '../../store/slices/assistance-request-slice/assistanceRequestSlice';
 
 interface ExtraSolicitationFormContainerProps {
-  initialValues: ExtraRequest;
+  initialValues: ExtraSolicitationFormValues;
   onSubmit: (values: FormikValues) => Promise<any>;
   labels?: object;
   title: string;
