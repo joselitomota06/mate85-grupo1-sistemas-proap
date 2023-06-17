@@ -20,18 +20,35 @@ export interface ExtraRequest
 }
 
 export interface AssistanceRequest {
-  id: number;
+  nomeCompleto: string;
   doi: string;
-  valorSolicitado: number;
-  valorInscricao: number;
-  createdAt: string;
-  updatedAt: string;
-  situacao: number;
-  automaticDecText: string;
-  valorAprovado: number;
+  autores: string;
+  autoresPresentePGCOMP: string;
+  solicitacaoApoio: string | undefined;
+  valorSolicitado: number | string;
+  solicitacaoAuxilioOutrasFontes: string | undefined;
+  nomeAgenciaFomento: string;
+  valorSolicitadoAgenciaFomento: number | string;
+  valorAprovado: number | undefined;
+  dataInicio: string;
+  dataFim: string;
+  linkHomepage: string;
+  pais: string;
+  cidade: string;
+  valorInscricao: number | undefined;
+  cartaAceite: string;
+  qualis: string;
+  comprovantePagamento: string;
+  nomeEvento: string;
+  situacao: string;
   dataAprovacao: string;
-	solicitacaoApoio: boolean;
-  solicitacaoAuxilioOutrasFontes: boolean;
+  numeroAta: number;
+  numeroDiariasAprovadas: number;
+  observacao: string;
+  quantidadeDiariasSolicitadas: number;
+
+  createdAt: undefined;
+  updatedAt: undefined;
 
   user: {
     id: number;

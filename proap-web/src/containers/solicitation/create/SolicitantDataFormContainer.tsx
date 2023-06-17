@@ -15,7 +15,7 @@ import { StyledTextField } from '../SolicitationFormContainer.style';
 import { useAuth } from '../../../hooks';
 
 export default function ContactDataFormContainer() {
-  const { errors, touched } = useFormikContext<SolicitationFormValues>();
+  const { errors, touched, values } = useFormikContext<SolicitationFormValues>();
 
   const { name, email } = useAuth();
   
@@ -23,12 +23,12 @@ export default function ContactDataFormContainer() {
     <Grid container direction="column" paddingTop={2} paddingBottom={2}>
       <StyledTextField 
         label="Solicitante" 
-        value={name} 
+        value={values.user.name != '' ? values.user.name : name} 
         disabled 
       />
       <StyledTextField
         label="E-mail"
-        value={email}
+        value={values.user.email != '' ? values.user.email : email}
         disabled
       />
       <Field

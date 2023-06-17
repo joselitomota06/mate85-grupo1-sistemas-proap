@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import { AssistanceRequest } from '../../store/slices/assistance-request-slice/assistanceRequestSlice';
 
 export const solicitantDataFormSchema = Yup.object({
   nomeCompleto: Yup.string(),
@@ -72,41 +73,7 @@ export const reviewDataFormSchema = Yup.object({
   valorAprovado: Yup.number().required('Campo obrigatório'),
 });
 
-export interface Solicitation {
-  nomeCompleto: string;
-  doi: string;
-  autores: string;
-  autoresPresentePGCOMP: string;
-  nomeSolicitante: string;
-  emailSolicitacao: string;
-  solicitacaoApoio: string | undefined;
-  valorSolicitado: number | string;
-  solicitacaoAuxilioOutrasFontes: string | undefined;
-  nomeAgenciaFomento: string;
-  valorSolicitadoAgenciaFomento: number | string;
-  valorAprovado: number | undefined;
-  dataInicio: string;
-  dataFim: string;
-  linkHomepage: string;
-  pais: string;
-  cidade: string;
-  valorInscricao: number | undefined;
-  cartaAceite: string;
-  qualis: string;
-  comprovantePagamento: string;
-  nomeEvento: string;
-  situacao: string;
-  dataAprovacao: string;
-  numeroAta: number;
-  numeroDiariasAprovadas: number;
-  observacao: string;
-  quantidadeDiariasSolicitadas: number;
-
-  createdAt: undefined;
-  updatedAt: undefined;
-}
-
-export interface SolicitationFormValues extends Solicitation {
+export interface SolicitationFormValues extends AssistanceRequest {
   aceiteFinal: boolean | undefined;
 }
 
@@ -121,8 +88,6 @@ export const INITIAL_FORM_VALUES: SolicitationFormValues = {
   solicitacaoAuxilioOutrasFontes: '',
   nomeAgenciaFomento: '',
   valorSolicitadoAgenciaFomento: '',
-  nomeSolicitante: '',
-  emailSolicitacao: '',
   dataInicio: '',
   dataFim: '',
   linkHomepage: '',
@@ -144,4 +109,13 @@ export const INITIAL_FORM_VALUES: SolicitationFormValues = {
 
   createdAt: undefined,
   updatedAt: undefined,
+  
+  user: {
+    id: 0,
+    alternativePhone: '',
+    cpf: '',
+    email: '',
+    name: '',
+    password: ''
+  }
 };
