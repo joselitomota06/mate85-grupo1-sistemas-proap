@@ -19,6 +19,9 @@ public class Perfil implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Column(nullable = false, columnDefinition = "VARCHAR(255) DEFAULT 'Sem nome'")
+	private String name;
+
 	private boolean enable;
 	private boolean admin;
 
@@ -37,17 +40,19 @@ public class Perfil implements Serializable {
 
 	public Perfil() { }
 
-	public Perfil(Long id, boolean enable, boolean admin, List<Permission> permissions, User user) {
+	public Perfil(Long id, boolean enable, boolean admin, List<Permission> permissions, User user, String name) {
 		this.id = id;
 		this.enable = enable;
 		this.admin = admin;
 		this.permissions = permissions;
+		this.name = name;
 	}
 
-	public Perfil(boolean enable, boolean admin, List<Permission> permissions, User user) {
+	public Perfil(boolean enable, boolean admin, List<Permission> permissions, User user, String name) {
 		this.enable = enable;
 		this.admin = admin;
 		this.permissions = permissions;
+		this.name = name;
 	}
 
 	public Long getId() {
@@ -108,4 +113,11 @@ public class Perfil implements Serializable {
 		setUpdatedAt(LocalDateTime.now());
     }
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 }
