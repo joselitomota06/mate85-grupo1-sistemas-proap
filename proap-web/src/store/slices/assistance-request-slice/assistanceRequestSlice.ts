@@ -20,6 +20,9 @@ export interface ExtraRequest
 }
 
 export interface AssistanceRequest {
+  id: number;
+  automaticDecText: string;
+  
   nomeCompleto: string;
   doi: string;
   autores: string;
@@ -40,7 +43,7 @@ export interface AssistanceRequest {
   qualis: string;
   comprovantePagamento: string;
   nomeEvento: string;
-  situacao: string;
+  situacao: number;
   dataAprovacao: string;
   numeroAta: number;
   numeroDiariasAprovadas: number;

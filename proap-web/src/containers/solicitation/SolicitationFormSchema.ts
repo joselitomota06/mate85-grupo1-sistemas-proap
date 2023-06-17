@@ -73,7 +73,8 @@ export const reviewDataFormSchema = Yup.object({
   valorAprovado: Yup.number().required('Campo obrigatório'),
 });
 
-export interface SolicitationFormValues extends AssistanceRequest {
+export interface SolicitationFormValues
+  extends Omit<AssistanceRequest, 'id' | 'automaticDecText'> {
   aceiteFinal: boolean | undefined;
 }
 
@@ -98,7 +99,7 @@ export const INITIAL_FORM_VALUES: SolicitationFormValues = {
   cartaAceite: '',
   qualis: 'A1',
   aceiteFinal: false,
-  situacao: '2',
+  situacao: 2,
   dataAprovacao: '',
   numeroAta: 0,
   numeroDiariasAprovadas: 0,
@@ -109,13 +110,13 @@ export const INITIAL_FORM_VALUES: SolicitationFormValues = {
 
   createdAt: undefined,
   updatedAt: undefined,
-  
+
   user: {
     id: 0,
     alternativePhone: '',
     cpf: '',
     email: '',
     name: '',
-    password: ''
-  }
+    password: '',
+  },
 };
