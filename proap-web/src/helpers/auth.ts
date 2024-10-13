@@ -1,4 +1,4 @@
-import jwt_decode from 'jwt-decode';
+import { jwtDecode } from "jwt-decode";
 
 interface DecodedToken {
   email: string;
@@ -36,7 +36,7 @@ export const getInitialAuthSliceState = () => {
 
 export const decodeToken = (token: string): DecodedToken => {
   return token
-    ? jwt_decode(token)
+    ? jwtDecode(token)
     : {
         email: '',
         login: '',

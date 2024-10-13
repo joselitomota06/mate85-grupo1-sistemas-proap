@@ -9,11 +9,13 @@ const rootReducer = combineReducers({
   assistanceRequestSlice: assistanceRequestSlice.reducer,
 });
 
+const preloadedState: Partial<IRootState> = {
+  auth: getInitialAuthSliceState(),
+}
+
 const store = configureStore({
   reducer: rootReducer,
-  preloadedState: {
-    auth: getInitialAuthSliceState(),
-  },
+  preloadedState
 });
 
 export type IRootState = ReturnType<typeof rootReducer>;
