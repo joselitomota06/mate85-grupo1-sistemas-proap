@@ -12,26 +12,19 @@ export const financingDataFormSchema = Yup.object({
   solicitacaoApoio: Yup.boolean().nullable().required('Campo obrigatório'),
   valorSolicitado: Yup.number()
     .nullable()
-    .when('solicitacaoApoio', {
-      is: true,
-      then: (schema) => schema.required('Campo obrigatório'),
-      otherwise: (schema) => schema.notRequired(),
-    }),
+    .when(['solicitacaoApoio'], ([solicitacaoApoio], schema) => 
+      solicitacaoApoio ? schema.required('Campo obrigatório') : schema.notRequired()
+    ),
   solicitacaoAuxilioOutrasFontes: Yup.boolean()
     .nullable()
     .required('Campo obrigatório'),
-  nomeAgenciaFomento: Yup.string().when('solicitacaoAuxilioOutrasFontes', {
-    is: true,
-    then: (schema) => schema.required('Campo obrigatório'),
-    otherwise: (schema) => schema.notRequired(),
-  }),
+  nomeAgenciaFomento: Yup.string().when(['solicitacaoAuxilioOutrasFontes'], ([solicitacaoAuxilioOutrasFontes], schema) =>
+    solicitacaoAuxilioOutrasFontes ? schema.required('Campo obrigatório') : schema.notRequired()
+  ),
   valorSolicitadoAgenciaFomento: Yup.number().when(
-    'solicitacaoAuxilioOutrasFontes',
-    {
-      is: true,
-      then: (schema) => schema.required('Campo obrigatório'),
-      otherwise: (schema) => schema.notRequired(),
-    }
+    ['solicitacaoAuxilioOutrasFontes'],
+    ([solicitacaoAuxilioOutrasFontes], schema) =>
+      solicitacaoAuxilioOutrasFontes ? schema.required('Campo obrigatório') : schema.notRequired()
   ),
 });
 
@@ -43,23 +36,24 @@ export const eventDataFormSchema = Yup.object({
   linkHomepage: Yup.string().required('Campo obrigatório'),
   quantidadeDiariasSolicitadas: Yup.number()
     .nullable()
-    .required('Campo obrigatório')
-    .min(1, 'Insira um valor válido'),
+    .min(1, 'Insira um valor válido')
+    .defined()
+    .required('Campo obrigatório'), 
 
   valorInscricao: Yup.number()
     .nullable()
-    .required('Campo obrigatório')
-    .min(1, 'Insira um valor válido'),
+    .min(1, 'Insira um valor válido')
+    .defined()
+    .required('Campo obrigatório'),
 
   cartaAceite: Yup.string().required('Campo obrigatório'),
   qualis: Yup.string().required('Campo obrigatório'),
-
   nomeEvento: Yup.string().required('Campo obrigatório'),
 });
 
 export const detailsEventDataFormSchema = Yup.object({
   aceiteFinal: Yup.boolean()
-    .nullable()
+    .nullable(false)
     .required('É necessário aceitar os termos para continuar')
     .isTrue('É necessário aceitar os termos para continuar'),
 });
