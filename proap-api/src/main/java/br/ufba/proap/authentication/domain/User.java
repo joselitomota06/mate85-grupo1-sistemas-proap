@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -65,7 +65,8 @@ public class User implements UserDetails {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
 	private LocalDateTime updatedAt;
 
-	public User() {}
+	public User() {
+	}
 
 	public User(String name, String email, String password) {
 		this.name = name;
@@ -144,7 +145,8 @@ public class User implements UserDetails {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", version=" + version + ", name=" + name + ", email=" + email + ", password=" + password + "]";
+		return "User [id=" + id + ", version=" + version + ", name=" + name + ", email=" + email + ", password="
+				+ password + "]";
 	}
 
 	@Override
@@ -195,13 +197,13 @@ public class User implements UserDetails {
 	}
 
 	@PrePersist
-    public void prePersist() {
+	public void prePersist() {
 		setCreatedAt(LocalDateTime.now());
-    }
+	}
 
-    @PreUpdate
-    public void preUpdate() {
+	@PreUpdate
+	public void preUpdate() {
 		setUpdatedAt(LocalDateTime.now());
-    }
+	}
 
 }

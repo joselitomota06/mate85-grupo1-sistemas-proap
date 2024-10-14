@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -38,7 +38,8 @@ public class Perfil implements Serializable {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
 	private LocalDateTime updatedAt;
 
-	public Perfil() { }
+	public Perfil() {
+	}
 
 	public Perfil(Long id, boolean enable, boolean admin, List<Permission> permissions, User user, String name) {
 		this.id = id;
@@ -104,14 +105,14 @@ public class Perfil implements Serializable {
 	}
 
 	@PrePersist
-    public void prePersist() {
+	public void prePersist() {
 		setCreatedAt(LocalDateTime.now());
-    }
+	}
 
-    @PreUpdate
-    public void preUpdate() {
+	@PreUpdate
+	public void preUpdate() {
 		setUpdatedAt(LocalDateTime.now());
-    }
+	}
 
 	public String getName() {
 		return name;

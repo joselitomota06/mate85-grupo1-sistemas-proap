@@ -4,15 +4,15 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -114,7 +114,7 @@ public class AssistanceRequestDTO {
 	private String observacao;
 
 	// Apos aceite
-	@Column(nullable = true, columnDefinition = "text",  length = 100000)
+	@Column(nullable = true, columnDefinition = "text", length = 100000)
 	private String automaticDecText;
 
 	public String getNomeEvento() {
@@ -213,7 +213,8 @@ public class AssistanceRequestDTO {
 		String name = this.user.getName();
 		String valorSolicitado = this.valorInscricao.toString();
 		String quantDiarias = String.valueOf(this.quantidadeDiariasSolicitadas);
-		//String calculoDiarias = String.valueOf(this.valorSolicitado / this.quantidadeDiariasSolicitadas);
+		// String calculoDiarias = String.valueOf(this.valorSolicitado /
+		// this.quantidadeDiariasSolicitadas);
 		String nomeTrabalho = this.nomeCompleto;
 		String evento = this.nomeEvento;
 		String qualis = this.qualis;
@@ -225,13 +226,15 @@ public class AssistanceRequestDTO {
 		if (this.situacao == 1) {
 			if (this.isDolar == false) {
 				this.automaticDecText = "O discente " + name + " solicita apoio de inscrição (R$" + valorSolicitado
-						+ " e " + quantDiarias + " diárias ) para apresentação de trabalho oral (" + nomeTrabalho + ") no evento "
+						+ " e " + quantDiarias + " diárias ) para apresentação de trabalho oral (" + nomeTrabalho
+						+ ") no evento "
 						+ evento + ", Qualis " + qualis + ", a ser realizado em " + cidade + "-" + pais
 						+ ", no período de " + inicio + " a " + fim
 						+ ". Após verificação da documentação enviada, a comissão Proap entende que a solicitação está de acordo com a resolução vigente e recomenda sua aprovação.";
 			} else {
 				this.automaticDecText = "O discente " + name + " solicita apoio de inscrição em dolar ($"
-						+ valorSolicitado + " e " + quantDiarias + " diárias ) com variação cambial atual informada de (R$ "
+						+ valorSolicitado + " e " + quantDiarias
+						+ " diárias ) com variação cambial atual informada de (R$ "
 						+ this.coinVariation + " para apresentação de trabalho oral (" + nomeTrabalho + ") no evento "
 						+ evento + ", Qualis " + qualis + ", a ser realizado em " + cidade + "-" + pais
 						+ ", no período de " + inicio + " a " + fim
@@ -241,14 +244,17 @@ public class AssistanceRequestDTO {
 			if (this.situacao == 2) {
 				if (this.isDolar == false) {
 					this.automaticDecText = "O discente " + name + " solicita apoio de inscrição (R$" + valorSolicitado
-							+ " e " + quantDiarias + " diárias) para apresentação de trabalho oral (" + nomeTrabalho + ") no evento "
+							+ " e " + quantDiarias + " diárias) para apresentação de trabalho oral (" + nomeTrabalho
+							+ ") no evento "
 							+ evento + ", Qualis " + qualis + ", a ser realizado em " + cidade + "-" + pais
 							+ ", no período de " + inicio + " a " + fim
 							+ ". Após verificação da documentação enviada, a comissão Proap entende que a solicitação não está de acordo com a resolução vigente e recomenda sua reprovação.";
 				} else {
 					this.automaticDecText = "O discente " + name + " solicita apoio de inscrição em dolar ($"
-							+ valorSolicitado + " e " + quantDiarias + " diárias) com variação cambial atual informada de (R$ "
-							+ this.coinVariation + " para apresentação de trabalho oral (" + nomeTrabalho + ") no evento "
+							+ valorSolicitado + " e " + quantDiarias
+							+ " diárias) com variação cambial atual informada de (R$ "
+							+ this.coinVariation + " para apresentação de trabalho oral (" + nomeTrabalho
+							+ ") no evento "
 							+ evento + ", Qualis " + qualis + ", a ser realizado em " + cidade + "-" + pais
 							+ ", no período de " + inicio + " a " + fim
 							+ ". Após verificação da documentação enviada, a comissão Proap entende que a solicitação não está de acordo com a resolução vigente e recomenda sua reprovação.";

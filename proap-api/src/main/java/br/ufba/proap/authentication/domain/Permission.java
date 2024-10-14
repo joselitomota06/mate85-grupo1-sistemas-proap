@@ -2,7 +2,7 @@ package br.ufba.proap.authentication.domain;
 
 import java.io.Serializable;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "aut_permission", schema = "proap")
@@ -11,21 +11,22 @@ public class Permission implements Serializable {
 	private static final long serialVersionUID = -2112649075203340365L;
 
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    private boolean enable;
-    private boolean shortcut;
-    private boolean readOnly;
+	private boolean enable;
+	private boolean shortcut;
+	private boolean readOnly;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "perfil_id")
-    private Perfil perfil;
-    
-    @Version
-    private int version;
+	private Perfil perfil;
 
-    public Permission() { }
+	@Version
+	private int version;
+
+	public Permission() {
+	}
 
 	public Permission(Long id, int version, boolean enable, boolean shortcut, boolean readOnly,
 			Perfil perfil) {
