@@ -20,7 +20,7 @@ import br.ufba.proap.authentication.domain.User;
 import br.ufba.proap.authentication.service.PerfilService;
 import br.ufba.proap.authentication.service.UserService;
 
-@SpringBootTest
+@SpringBootTest(classes = UserController.class)
 class UserControllerTest {
 
 	private static final String NAME_PARAM = "Oracio Candido";

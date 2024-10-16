@@ -11,49 +11,47 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
 import br.ufba.proap.authentication.service.UserService;
 import br.ufba.proap.security.JwtAuthenticationEntryPoint;
 import br.ufba.proap.security.JwtAuthenticationFilter;
+import jakarta.ws.rs.HttpMethod;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
 
 	@Autowired
-	private UserService userService;
-
-	@Autowired
 	private JwtAuthenticationEntryPoint unauthorizedHandler;
 
 	public static final long MAX_AGE_SECS = 3600;
 
-	@Bean
-	BCryptPasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
-
 	@Autowired
 	JwtAuthenticationFilter jwtAuthenticationFilter;
+
+	@Autowired
+	UserService userService;
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 		return httpSecurity
-				.cors(cors -> cors.configurationSource(corsConfigurationSource()))
+				// .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+				.cors(cors -> cors.disable())
 				.csrf(csrf -> csrf.disable())
 				.exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(authorize -> authorize
-						.requestMatchers("/authentication/**", "/user/create", "/actuator/**").permitAll()
+						.requestMatchers(HttpMethod.POST, "/authentication/**", "/user/create", "/actuator/**")
+						.permitAll()
 						.requestMatchers("/v2/api-docs", "/configuration/**", "/swagger-resources/**", "/**.html",
 								"/webjars/**")
 						.permitAll()
-						.anyRequest().authenticated())
+						.anyRequest().permitAll())
 				.logout(logout -> logout.logoutUrl("/proap-api/authentication/logout"))
 				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 				.build();
@@ -66,11 +64,6 @@ public class SecurityConfiguration {
 	}
 
 	@Bean
-	public UserDetailsService userDetailsService() {
-		return userService;
-	}
-
-	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
 		configuration.setAllowedOrigins(Arrays.asList("*"));
@@ -80,6 +73,10 @@ public class SecurityConfiguration {
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);
 		return source;
+	}
+
+	public UserDetailsService userDetailsService() {
+		return userService;
 	}
 
 }
