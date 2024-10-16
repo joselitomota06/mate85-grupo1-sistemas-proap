@@ -12,7 +12,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -25,7 +24,6 @@ import br.ufba.proap.authentication.domain.User;
 import br.ufba.proap.authentication.domain.dto.UpdatePasswordDTO;
 import br.ufba.proap.authentication.repository.UserRepository;
 
-@SpringBootTest(classes = UserService.class)
 class UserServiceTest {
 
 	private static final String NAME_PARAM = "Oracio Candido";

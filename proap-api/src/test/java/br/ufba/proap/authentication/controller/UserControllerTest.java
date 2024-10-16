@@ -11,7 +11,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -20,7 +19,6 @@ import br.ufba.proap.authentication.domain.User;
 import br.ufba.proap.authentication.service.PerfilService;
 import br.ufba.proap.authentication.service.UserService;
 
-@SpringBootTest(classes = UserController.class)
 class UserControllerTest {
 
 	private static final String NAME_PARAM = "Oracio Candido";
