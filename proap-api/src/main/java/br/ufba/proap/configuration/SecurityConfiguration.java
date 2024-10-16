@@ -40,8 +40,8 @@ public class SecurityConfiguration {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 		return httpSecurity
-				// .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-				.cors(cors -> cors.disable())
+				.cors(cors -> cors.configurationSource(corsConfigurationSource()))
+				// .cors(cors -> cors.disable())
 				.csrf(csrf -> csrf.disable())
 				.exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -68,7 +68,7 @@ public class SecurityConfiguration {
 		CorsConfiguration configuration = new CorsConfiguration();
 		configuration.setAllowedOrigins(Arrays.asList("*"));
 		configuration.setAllowedMethods(Arrays.asList("HEAD", "OPTIONS", "GET", "POST", "PUT", "PATCH", "DELETE"));
-		configuration.setExposedHeaders(Arrays.asList("x-access-token"));
+		configuration.setAllowedHeaders(Arrays.asList("*"));
 		configuration.setMaxAge(MAX_AGE_SECS);
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);
