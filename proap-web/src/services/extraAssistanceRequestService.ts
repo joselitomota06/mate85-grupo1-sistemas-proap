@@ -19,7 +19,7 @@ export type ExtraRequestPropToSort =
 
 export const getExtraAssistanceRequests =
   (
-    prop?: ExtraRequestPropToSort,
+    sortBy?: ExtraRequestPropToSort,
     ascending?: boolean,
     page?: number,
     size?: number
@@ -28,7 +28,7 @@ export const getExtraAssistanceRequests =
     const defaultPropToFilter: ExtraRequestPropToSort = 'createdAt';
 
     let requestUrl = 'extrarequest/list'
-      + `?prop=${prop ?? defaultPropToFilter}`
+      + `?sortBy=${sortBy ?? defaultPropToFilter}`
       + `&ascending=${ascending ?? false}`
       + `&page=${page ?? 0}`
       + `&size=${size ?? 10}`;

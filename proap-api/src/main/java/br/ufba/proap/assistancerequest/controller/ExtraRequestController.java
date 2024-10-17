@@ -37,37 +37,30 @@ public class ExtraRequestController {
 
 	@GetMapping("/list")
 	public ResponseEntity<ExtraRequestListFiltered> list(
-			@RequestParam String prop,
+			@RequestParam String sortBy,
 			@RequestParam Boolean ascending,
 			@RequestParam int page,
-			@RequestParam int size
-	) {
+			@RequestParam int size) {
 		User currentUser = serviceUser.getLoggedUser();
 
 		if (currentUser == null) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
-				new ExtraRequestListFiltered(
-					Collections.emptyList(), 0
-				)
-			);
+					new ExtraRequestListFiltered(
+							Collections.emptyList(), 0));
 		}
 
 		try {
 			return ResponseEntity.ok().body(
-				service.find(
-						prop,
-						ascending,
-						page,
-						size,
-						currentUser
-				)
-			);
+					service.find(
+							sortBy,
+							ascending,
+							page,
+							size,
+							currentUser));
 		} catch (Exception e) {
 			return ResponseEntity.internalServerError().body(
 					new ExtraRequestListFiltered(
-							Collections.emptyList(), 0
-					)
-			);
+							Collections.emptyList(), 0));
 		}
 	}
 
@@ -78,9 +71,9 @@ public class ExtraRequestController {
 		if (currentUser == null)
 			return Collections.emptyList();
 		/*
-		if(!currentUser.getId().equals(userId))
-			return Collections.emptyList();
-		*/
+		 * if(!currentUser.getId().equals(userId))
+		 * return Collections.emptyList();
+		 */
 		try {
 			return service.findByUser(currentUser);
 		} catch (Exception e) {
@@ -100,11 +93,11 @@ public class ExtraRequestController {
 			Optional<ExtraRequest> request = service.findById(id);
 
 			boolean isValid = currentUser.getPerfil() == null ||
-				(!currentUser.getPerfil().isAdmin() &&
-				request.isPresent() && !request.get()
-				.getUser().getId().equals(currentUser.getId()));
+					(!currentUser.getPerfil().isAdmin() &&
+							request.isPresent() && !request.get()
+									.getUser().getId().equals(currentUser.getId()));
 
-			if(isValid)
+			if (isValid)
 				return Optional.empty();
 
 			return request;
@@ -114,18 +107,17 @@ public class ExtraRequestController {
 		}
 	}
 
-	
 	@PostMapping("/create")
 	public ResponseEntity<ExtraRequest> create(@RequestBody ExtraRequest extraRequest) {
 		User currentUser = serviceUser.getLoggedUser();
 
-		if (currentUser == null) 
+		if (currentUser == null)
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
 		try {
 			extraRequest.setSituacao(0);
 			extraRequest.setUser(currentUser);
-			
+
 			return ResponseEntity.ok().body(service.save(extraRequest));
 		} catch (Exception e) {
 			logger.error(e.getMessage());
@@ -165,7 +157,7 @@ public class ExtraRequestController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
 	}
-	
+
 	@PutMapping("/extrareviewsolicitation")
 	public ResponseEntity<ExtraRequest> reviewextrasolicitation(@RequestBody ExtraRequest extraRequest) {
 		User currentUser = serviceUser.getLoggedUser();
@@ -173,10 +165,10 @@ public class ExtraRequestController {
 		if (currentUser == null) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
-		
+
 		try {
 			extraRequest.setAutomaticDecText(" ");
-			
+
 			return ResponseEntity.ok().body(service.save(extraRequest));
 		} catch (Exception e) {
 			logger.error(e.getMessage());

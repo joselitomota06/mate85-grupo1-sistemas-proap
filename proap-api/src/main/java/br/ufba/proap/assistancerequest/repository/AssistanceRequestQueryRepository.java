@@ -16,7 +16,7 @@ public class AssistanceRequestQueryRepository {
     @PersistenceContext
     private EntityManager em;
 
-    public List<AssistanceRequestDTO> findFiltered(String prop, boolean ascending, int page, int limitPerPage,
+    public List<AssistanceRequestDTO> findFiltered(String sortBy, boolean ascending, int page, int limitPerPage,
             User user) {
         StringBuilder query = new StringBuilder("from AssistanceRequestDTO ar");
 
@@ -24,7 +24,7 @@ public class AssistanceRequestQueryRepository {
             query.append(" where ar.user.id = :userId");
 
         query.append(" order by ar.");
-        query.append(prop);
+        query.append(sortBy);
         query.append(ascending ? " asc" : " desc");
 
         TypedQuery<AssistanceRequestDTO> typedQuery = em.createQuery(query.toString(), AssistanceRequestDTO.class);

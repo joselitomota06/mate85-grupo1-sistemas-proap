@@ -56,7 +56,7 @@ public class ExtraRequestService {
 	 * Busca os registros de demanda extra usando paginação e ordenação a partir de
 	 * uma propriedade
 	 * 
-	 * @param prop      Atributo do objeto ExtraRequest para ordenação
+	 * @param sortBy    Atributo do objeto ExtraRequest para ordenação
 	 * @param ascending Se falso, será por ordem descendente
 	 * @param page      Número da página (primeira página como 0)
 	 * @param size      Tamanho da página/da lista
@@ -64,7 +64,7 @@ public class ExtraRequestService {
 	 * @return Lista de demandas extras que devem ser exibidas na página
 	 */
 	public ExtraRequestListFiltered find(
-			String prop,
+			String sortBy,
 			boolean ascending,
 			int page,
 			int size,
@@ -81,7 +81,7 @@ public class ExtraRequestService {
 
 		return new ExtraRequestListFiltered(
 				extraRequestQueryRepository.findFiltered(
-						prop,
+						sortBy,
 						ascending,
 						page,
 						size,

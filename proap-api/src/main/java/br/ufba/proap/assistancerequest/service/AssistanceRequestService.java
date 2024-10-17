@@ -12,7 +12,7 @@ import br.ufba.proap.assistancerequest.repository.AssistanteRequestRepository;
 import br.ufba.proap.authentication.domain.User;
 
 @Service
-public class AssistanceRequestService{
+public class AssistanceRequestService {
 
 	@Autowired
 	private AssistanteRequestRepository assistanteRequestRepository;
@@ -27,7 +27,7 @@ public class AssistanceRequestService{
 	public List<AssistanceRequestDTO> findByUser(User user) {
 		return assistanteRequestRepository.findByUser(user);
 	}
-	
+
 	public Optional<AssistanceRequestDTO> findById(Long id) {
 		return assistanteRequestRepository.findById(id);
 	}
@@ -44,16 +44,18 @@ public class AssistanceRequestService{
 	}
 
 	/**
-	 * Busca os registros de assistência usando paginação e ordenação a partir de uma propriedade
-	 * @param prop Atributo do objeto AssistanceRequest para ordenação
-	 * @param ascending Se falso, será por ordem descendente
-	 * @param page Número da página (primeira página como 0)
+	 * Busca os registros de assistência usando paginação e ordenação a partir de
+	 * uma propriedade
+	 * 
+	 * @param sortBy          Atributo do objeto AssistanceRequest para ordenação
+	 * @param ascending       Se falso, será por ordem descendente
+	 * @param page            Número da página (primeira página como 0)
 	 * @param requestListSize Tamanho da página/da lista
-	 * @param user Filtrar por usuário
+	 * @param user            Filtrar por usuário
 	 * @return Lista de assistâncias que devem ser exibidas na página
 	 */
 	public AssistanceRequestListFiltered find(
-			String prop,
+			String sortBy,
 			boolean ascending,
 			int page,
 			int requestListSize,
@@ -63,18 +65,18 @@ public class AssistanceRequestService{
 		boolean userIsAdmin = user.getPerfil() != null
 				&& user.getPerfil().isAdmin();
 
-		if(userIsAdmin)
+		if (userIsAdmin)
 			count = assistanteRequestRepository.count();
-		else count = assistanteRequestRepository.countByUser(user);
+		else
+			count = assistanteRequestRepository.countByUser(user);
 
 		return new AssistanceRequestListFiltered(
 				assistanceRequestQueryRepository.findFiltered(
-						prop,
+						sortBy,
 						ascending,
 						page,
 						requestListSize,
-						userIsAdmin ? null : user
-				),
+						userIsAdmin ? null : user),
 				count);
 	}
 
@@ -83,6 +85,6 @@ public class AssistanceRequestService{
 	}
 
 	public void delete(AssistanceRequestDTO assistanceRequestDTO) {
-		assistanteRequestRepository.delete(assistanceRequestDTO);	
+		assistanteRequestRepository.delete(assistanceRequestDTO);
 	}
 }

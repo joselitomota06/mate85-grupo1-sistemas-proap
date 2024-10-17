@@ -56,12 +56,12 @@ export default function SolicitationTableExtraRequests() {
 
   const updateRequestList = useCallback(
     (
-      prop: ExtraRequestPropToSort,
+      sortBy: ExtraRequestPropToSort,
       ascending: boolean,
       size: number,
       page: number
     ) => {
-      dispatch(getExtraAssistanceRequests(prop, ascending, page, size)).then(
+      dispatch(getExtraAssistanceRequests(sortBy, ascending, page, size)).then(
         (extraRequests) =>
           setNumberPages(Math.trunc(extraRequests.payload.total / size) + 1)
       );
@@ -155,7 +155,7 @@ export default function SolicitationTableExtraRequests() {
   const [selectedPropToSortTable, setSelectedPropToSortTable] = useState<{
     /**
      * "true" se estiver ascendente, "false" descendente e undefined caso a
-     * prop não esteja selecionada
+     * sortBy não esteja selecionada
      */
     [Property in ExtraRequestPropToSort]?: boolean;
   }>({
@@ -168,33 +168,33 @@ export default function SolicitationTableExtraRequests() {
     )[0] as ExtraRequestPropToSort;
   };
 
-  const handleClickSortTable = (prop: ExtraRequestPropToSort) => {
-    if (selectedPropToSortTable[prop]) {
+  const handleClickSortTable = (sortBy: ExtraRequestPropToSort) => {
+    if (selectedPropToSortTable[sortBy]) {
       setSelectedPropToSortTable({
-        [prop]: false,
+        [sortBy]: false,
       });
     } else {
       setSelectedPropToSortTable({
-        [prop]: true,
+        [sortBy]: true,
       });
     }
   };
 
   function TableCellHeader({
     text,
-    prop,
+    sortBy,
   }: {
     text: string;
-    prop: ExtraRequestPropToSort;
+    sortBy: ExtraRequestPropToSort;
   }) {
     return (
       <div
-        onClick={() => handleClickSortTable(prop)}
+        onClick={() => handleClickSortTable(sortBy)}
         style={{ userSelect: 'none', cursor: 'pointer' }}
       >
         {text}
-        {selectedPropToSortTable[prop] != undefined ? (
-          selectedPropToSortTable[prop] ? (
+        {selectedPropToSortTable[sortBy] != undefined ? (
+          selectedPropToSortTable[sortBy] ? (
             <ArrowDropUpIcon />
           ) : (
             <ArrowDropDownIcon />
@@ -241,37 +241,37 @@ export default function SolicitationTableExtraRequests() {
               <TableCell align="center">
                 <TableCellHeader
                   text="Data de solicitação"
-                  prop="createdAt"
+                  sortBy="createdAt"
                 ></TableCellHeader>
               </TableCell>
               <TableCell align="center">
                 <TableCellHeader
                   text="Solicitante"
-                  prop="user.name"
+                  sortBy="user.name"
                 ></TableCellHeader>
               </TableCell>
               <TableCell align="center">
                 <TableCellHeader
                   text="Status"
-                  prop="situacao"
+                  sortBy="situacao"
                 ></TableCellHeader>
               </TableCell>
               <TableCell align="center">
                 <TableCellHeader
                   text="Valor solicitado"
-                  prop="valorSolicitado"
+                  sortBy="valorSolicitado"
                 ></TableCellHeader>
               </TableCell>
               <TableCell align="center">
                 <TableCellHeader
                   text="Valor aprovado"
-                  prop="valorAprovado"
+                  sortBy="valorAprovado"
                 ></TableCellHeader>
               </TableCell>
               <TableCell align="center">
                 <TableCellHeader
                   text="Data da avaliação"
-                  prop="dataAprovacao"
+                  sortBy="dataAprovacao"
                 ></TableCellHeader>
               </TableCell>
               <TableCell align="center">Ações</TableCell>

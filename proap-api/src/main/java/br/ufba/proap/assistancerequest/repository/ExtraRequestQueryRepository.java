@@ -15,7 +15,7 @@ public class ExtraRequestQueryRepository {
     private EntityManager em;
 
     public List<ExtraRequest> findFiltered(
-            String prop,
+            String sortBy,
             boolean ascending,
             int page,
             int size,
@@ -26,7 +26,7 @@ public class ExtraRequestQueryRepository {
             query.append(" where ar.user.id = :userId");
 
         query.append(" order by ar.");
-        query.append(prop);
+        query.append(sortBy);
         query.append(ascending ? " asc" : " desc");
 
         TypedQuery<ExtraRequest> typedQuery = em.createQuery(query.toString(), ExtraRequest.class);

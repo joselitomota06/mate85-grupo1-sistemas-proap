@@ -45,36 +45,30 @@ public class AssistanceRequestController {
 
 	@GetMapping("/list")
 	public ResponseEntity<AssistanceRequestListFiltered> list(
-		@RequestParam String prop, 
-		@RequestParam Boolean ascending, 
-		@RequestParam int page, 
-		@RequestParam int size
-	) {
+			@RequestParam String sortBy,
+			@RequestParam Boolean ascending,
+			@RequestParam int page,
+			@RequestParam int size) {
 		User currentUser = serviceUser.getLoggedUser();
 
 		if (currentUser == null) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
-				new AssistanceRequestListFiltered(
-					Collections.emptyList(), 0
-				)
-			);
+					new AssistanceRequestListFiltered(
+							Collections.emptyList(), 0));
 		}
 
 		try {
 			return ResponseEntity.ok().body(service.find(
-				prop,
-				ascending,
-				page,
-				size,
-				currentUser
-			));
+					sortBy,
+					ascending,
+					page,
+					size,
+					currentUser));
 
 		} catch (Exception e) {
 			return ResponseEntity.internalServerError().body(
-				new AssistanceRequestService.AssistanceRequestListFiltered(
-					Collections.emptyList(), 0
-				)
-			);
+					new AssistanceRequestService.AssistanceRequestListFiltered(
+							Collections.emptyList(), 0));
 		}
 	}
 
@@ -102,11 +96,11 @@ public class AssistanceRequestController {
 		try {
 			Optional<AssistanceRequestDTO> request = service.findById(id);
 
-			if(!request.isPresent())
+			if (!request.isPresent())
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
 			boolean isAdminCurrentUser = currentUser.getPerfil() != null
-				&& currentUser.getPerfil().isAdmin();
+					&& currentUser.getPerfil().isAdmin();
 
 			if (request.get().getUser() == currentUser || isAdminCurrentUser) {
 				return ResponseEntity.ok().body(request);
@@ -151,7 +145,8 @@ public class AssistanceRequestController {
 	}
 
 	@PutMapping("/reviewsolicitation")
-	public ResponseEntity<AssistanceRequestDTO> reviewsolicitation(@RequestBody AssistanceRequestDTO assistanceRequest) {
+	public ResponseEntity<AssistanceRequestDTO> reviewsolicitation(
+			@RequestBody AssistanceRequestDTO assistanceRequest) {
 		User currentUser = serviceUser.getLoggedUser();
 		Optional<AssistanceRequestDTO> assistancePersisted = service.findById(assistanceRequest.getId());
 

@@ -28,7 +28,7 @@ export type AssistanceRequestPropToSort =
 
 export const getAssistanceRequests =
   (
-    prop?: AssistanceRequestPropToSort,
+    sortBy?: AssistanceRequestPropToSort,
     ascending?: boolean,
     page?: number,
     size?: number
@@ -38,7 +38,7 @@ export const getAssistanceRequests =
 
     let requestUrl =
       'assistancerequest/list' +
-      `?prop=${prop ?? defaultPropToFilter}` +
+      `?sortBy=${sortBy ?? defaultPropToFilter}` +
       `&ascending=${ascending ?? false}` +
       `&page=${page ?? 0}` +
       `&size=${size ?? 10}`;
