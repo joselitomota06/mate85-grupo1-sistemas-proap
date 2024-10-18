@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -18,6 +18,9 @@ public class Perfil implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
+	@Column(nullable = false, columnDefinition = "VARCHAR(255) DEFAULT 'Sem nome'")
+	private String name;
 
 	private boolean enable;
 	private boolean admin;
@@ -35,19 +38,22 @@ public class Perfil implements Serializable {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
 	private LocalDateTime updatedAt;
 
-	public Perfil() { }
+	public Perfil() {
+	}
 
-	public Perfil(Long id, boolean enable, boolean admin, List<Permission> permissions, User user) {
+	public Perfil(Long id, boolean enable, boolean admin, List<Permission> permissions, User user, String name) {
 		this.id = id;
 		this.enable = enable;
 		this.admin = admin;
 		this.permissions = permissions;
+		this.name = name;
 	}
 
-	public Perfil(boolean enable, boolean admin, List<Permission> permissions, User user) {
+	public Perfil(boolean enable, boolean admin, List<Permission> permissions, User user, String name) {
 		this.enable = enable;
 		this.admin = admin;
 		this.permissions = permissions;
+		this.name = name;
 	}
 
 	public Long getId() {
@@ -99,13 +105,20 @@ public class Perfil implements Serializable {
 	}
 
 	@PrePersist
-    public void prePersist() {
+	public void prePersist() {
 		setCreatedAt(LocalDateTime.now());
-    }
+	}
 
-    @PreUpdate
-    public void preUpdate() {
+	@PreUpdate
+	public void preUpdate() {
 		setUpdatedAt(LocalDateTime.now());
-    }
+	}
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 }

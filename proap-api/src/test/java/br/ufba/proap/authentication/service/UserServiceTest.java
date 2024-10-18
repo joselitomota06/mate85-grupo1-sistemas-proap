@@ -1,7 +1,7 @@
 package br.ufba.proap.authentication.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -12,7 +12,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -25,7 +24,6 @@ import br.ufba.proap.authentication.domain.User;
 import br.ufba.proap.authentication.domain.dto.UpdatePasswordDTO;
 import br.ufba.proap.authentication.repository.UserRepository;
 
-@SpringBootTest
 class UserServiceTest {
 
 	private static final String NAME_PARAM = "Oracio Candido";
@@ -81,7 +79,7 @@ class UserServiceTest {
 		assertEquals(User.class, userByUsername.getClass());
 		assertEquals(EMAIL_PARAM, userByUsername.getUsername());
 	}
-	
+
 	@Test
 	void whenGetLoggedUserThenReturnAnUserInstance() {
 		Mockito.when(securityContext.getAuthentication()).thenReturn(autheticatedUser);
@@ -174,7 +172,7 @@ class UserServiceTest {
 			public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
 				// Empty method
 			}
-	
+
 			@Override
 			public boolean isAuthenticated() {
 				return true;
@@ -184,7 +182,7 @@ class UserServiceTest {
 			public Object getPrincipal() {
 				return user;
 			}
-			
+
 			@Override
 			public Object getDetails() {
 				return null;

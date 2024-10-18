@@ -2,29 +2,33 @@ import React from 'react';
 import { Field, useFormikContext } from 'formik';
 import { Grid } from '@mui/material';
 
-import { ExtraSolicitation } from '../schema';
 import { StyledTextField } from '../../solicitation/SolicitationFormContainer.style';
+import { ExtraRequest } from '../../../store/slices/assistance-request-slice/assistanceRequestSlice';
+import { useAuth } from '../../../hooks';
 
 export default function ExtraSolicitantDataContainer() {
-  const { errors, touched } = useFormikContext<ExtraSolicitation>();
+  const { errors, touched, values } = useFormikContext<ExtraRequest>();
+
+  const { name, email } = useAuth();
 
   return (
     <Grid container direction="column" paddingTop={2} paddingBottom={2}>
-      <Field
-        as={StyledTextField}
-        label="Nome"
-        name="nomeSolicitante"
-        error={Boolean(touched.nomeSolicitante && errors.nomeSolicitante)}
-        helperText={touched.nomeSolicitante && errors.nomeSolicitante}
-        required
-        style={{ padding: 'none' }}
+      <StyledTextField 
+        label="Solicitante" 
+        value={values.user.name != '' ? values.user.name : name} 
+        disabled 
+      />
+      <StyledTextField
+        label="E-mail"
+        value={values.user.email != '' ? values.user.email : email}
+        disabled
       />
       <Field
         as={StyledTextField}
-        label="E-mail"
-        name="emailSolicitacao"
-        error={Boolean(touched.emailSolicitacao && errors.emailSolicitacao)}
-        helperText={touched.emailSolicitacao && errors.emailSolicitacao}
+        label="Solicitação"
+        name="titulo"
+        error={Boolean(touched.nomeSolicitacao && errors.nomeSolicitacao)}
+        helperText={touched.nomeSolicitacao && errors.nomeSolicitacao}
         required
         style={{ padding: 'none' }}
       />

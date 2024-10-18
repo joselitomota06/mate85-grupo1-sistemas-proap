@@ -3,15 +3,15 @@ package br.ufba.proap.assistancerequest.domain;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -25,61 +25,60 @@ public class ExtraRequest {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	// Dados do solicitante
 	@ManyToOne
 	private User user;
 
-	private String nomeSolicitante;
-	private String emailSolicitacao;
-	
-	private Boolean isDiscente;
-	
+	@Column(nullable = false, columnDefinition = "VARCHAR(255) DEFAULT 'Sem título'")
+	private String titulo;
+
 	private String itemSolicitado;
 
 	@Column(columnDefinition = "text")
 	private String justificativa;
 
-	//06/11 - Apenas seguindo o que vem sendo utilizado no projeto, mas o recomenda seria utilizar BigDecimal.
+	// 06/11 - Apenas seguindo o que vem sendo utilizado no projeto, mas o recomenda
+	// seria utilizar BigDecimal.
 	private Float valorSolicitado;
 
 	private Boolean solicitacaoApoio;
 	private Boolean solicitacaoAuxilioOutrasFontes;
-	
+
 	private String nomeSolicitacao;
-	
+
 	@Column(nullable = true)
 	private String nomeAgenciaFomento;
-	
+
 	@Column(nullable = true)
 	private String valorSolicitadoAgenciaFormento;
-	
+
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	private LocalDateTime createdAt;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	private LocalDateTime updatedAt;
-	
+
 	// 0 - Em revisao, 1 - Aceita, 2 - Nao Aceita
-	@Column(nullable = false) 
+	@Column(nullable = false)
 	private int situacao;
-		
+
 	@Column(nullable = true)
 	private String numeroAta;
-		
+
 	@Column(nullable = true)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	private LocalDate dataAprovacao;
-	
-	
+
 	@Column(nullable = true)
 	private Float valorAprovado;
-		    
+
 	@Column(nullable = true)
-	private String observacao;	
-		    
+	private String observacao;
+
 	// Apos aceite
 	@Column(nullable = true, columnDefinition = "text")
 	private String automaticDecText;
-	
+
 	public String getItemSolicitado() {
 		return itemSolicitado;
 	}
@@ -87,15 +86,7 @@ public class ExtraRequest {
 	public void setItemSolicitado(String itemSolicitado) {
 		this.itemSolicitado = itemSolicitado;
 	}
-	
-	public Boolean getIsDiscente() {
-		return isDiscente;
-	}
 
-	public void setIsDiscente(Boolean isDiscente) {
-		this.isDiscente = isDiscente;
-	}
-	
 	public String getNomeSolicitacao() {
 		return nomeSolicitacao;
 	}
@@ -165,33 +156,25 @@ public class ExtraRequest {
 	}
 
 	public void setAutomaticDecText(String automaticDecText) {
-		String name = this.nomeSolicitante;
+		String name = this.user.getName();
 		String valorSolicitado = this.valorSolicitado.toString();
 		String item = this.itemSolicitado;
 		String justificativa = this.justificativa;
-		
-		String tratamento = "discente";
-		
-		
-		if(this.isDiscente == false) {	
-			tratamento = "docente";
-			
-		} 
-		
-		if(this.situacao == 1) {
-			this.automaticDecText = "O "+tratamento+" "+name+" solicita apoio para compra de "+item+" com valor de R$"+valorSolicitado+" com a justificativa, "+justificativa+
+		String funcao = this.user.getPerfil().getName();
+
+		if (this.situacao == 1) {
+			this.automaticDecText = "O " + funcao + " - " + name + " solicita apoio para compra de " + item
+					+ " com valor de R$" + valorSolicitado + " com a justificativa, " + justificativa +
 					"Após verificação da documentação enviada pelo discente, a comissão Proap entende que a solicitação está de acordo com a resolução PROAP vigente e recomenda sua aprovação.";
-		
-		}else {
-			this.automaticDecText = "O "+tratamento+" "+name+" solicita apoio para compra de "+item+" com valor de R$"+valorSolicitado+" com a justificativa, "+justificativa+
+
+		} else {
+			this.automaticDecText = "O " + funcao + " - " + name + " solicita apoio para compra de " + item
+					+ " com valor de R$" + valorSolicitado + " com a justificativa, " + justificativa +
 					"Após verificação da documentação enviada pelo discente, a comissão Proap entende que a solicitação não está de acordo com a resolução PROAP vigente e recomenda sua reprovação.";
-		
+
 		}
 	}
-	
-	
-		
-		
+
 	public Long getId() {
 		return id;
 	}
@@ -232,22 +215,6 @@ public class ExtraRequest {
 		this.solicitacaoAuxilioOutrasFontes = solicitacaoAuxilioOutrasFontes;
 	}
 
-	public String getNomeSolicitante() {
-		return nomeSolicitante;
-	}
-
-	public void setNomeSolicitante(String nomeSolicitante) {
-		this.nomeSolicitante = nomeSolicitante;
-	}
-
-	public String getEmailSolicitacao() {
-		return emailSolicitacao;
-	}
-
-	public void setEmailSolicitacao(String emailSolicitacao) {
-		this.emailSolicitacao = emailSolicitacao;
-	}
-
 	public String getJustificativa() {
 		return justificativa;
 	}
@@ -280,5 +247,13 @@ public class ExtraRequest {
 	@PreUpdate
 	public void preUpdate() {
 		setUpdatedAt(LocalDateTime.now());
+	}
+
+	public String getTitulo() {
+		return titulo;
+	}
+
+	public void setTitulo(String titulo) {
+		this.titulo = titulo;
 	}
 }

@@ -10,7 +10,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import br.ufba.proap.authentication.domain.User;
 import br.ufba.proap.authentication.domain.dto.UpdatePasswordDTO;
 import br.ufba.proap.authentication.repository.UserRepository;
@@ -28,7 +27,7 @@ public class UserService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		Optional<User> user = userRepository.findByEmail(email);
 
-		if(user.isPresent()) {
+		if (user.isPresent()) {
 			return user.get();
 		} else {
 			throw new UsernameNotFoundException("Email user: " + email + " not found");
@@ -70,16 +69,16 @@ public class UserService implements UserDetailsService {
 	}
 
 	public User updateCustomerContacts(UpdatePasswordDTO up) throws IllegalArgumentException {
-	    User myCustomer = userRepository.findByEmailAndCPF(up.getEmail(), up.getCpf());
+		User myCustomer = userRepository.findByEmailAndCPF(up.getEmail(), up.getCpf());
 
-	    if(myCustomer == null)
-	    	throw new IllegalArgumentException("Algum parâmetro informado está incorreto. Favor verificar.");
+		if (myCustomer == null)
+			throw new IllegalArgumentException("Algum parâmetro informado está incorreto. Favor verificar.");
 
-	    if(up.getPassword() == null)
-	    	throw new IllegalArgumentException("Algum parâmetro informado está incorreto. Favor verificar.");
+		if (up.getPassword() == null)
+			throw new IllegalArgumentException("Algum parâmetro informado está incorreto. Favor verificar.");
 
-	    myCustomer.setPassword(passwordEncoder.encode(up.getPassword()));
-	    return userRepository.save(myCustomer);
+		myCustomer.setPassword(passwordEncoder.encode(up.getPassword()));
+		return userRepository.save(myCustomer);
 	}
 
 	public void remove(User user) {

@@ -30,12 +30,13 @@ const CurrencyCustomFormikField = ({
   // });
 
   return (
+    // TODO : Exibir mensagem de erro ao atualizar o valor da input (o touched[name] não estava funcionando)
     <StyledTextField
       label={label}
       name={name}
       required={required}
-      error={Boolean(touched[name] && errors[name])}
-      helperText={touched[name] && errors[name]}
+      error={Boolean(errors[name])}
+      helperText={errors[name]}
       onChange={handleInputChange}
       value={valorWithoutMask}
       InputProps={{

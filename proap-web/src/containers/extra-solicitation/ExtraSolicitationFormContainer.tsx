@@ -5,18 +5,16 @@ import StepperForm, {
 import { Typography } from '@mui/material';
 import { FormikValues } from 'formik';
 
-import ExtraSolicitationFinancingContainer from './steps/ExtraSolicitationFinancingContainer';
 import ExtraSolicitationDetailsFormContainer from './steps/ExtraSolicitationDetailsContainer';
 import ExtraSolicitantDataContainer from './steps/ExtraSolicitantDataContainer';
 import {
+  ExtraSolicitationFormValues,
   extraSolicitantDataSchema,
-  ExtraSolicitation,
-  extraSolicitationFinancingSchema,
 } from './schema';
 import { detailsEventDataFormSchema } from '../solicitation/SolicitationFormSchema';
 
 interface ExtraSolicitationFormContainerProps {
-  initialValues: ExtraSolicitation;
+  initialValues: ExtraSolicitationFormValues;
   onSubmit: (values: FormikValues) => Promise<any>;
   labels?: object;
   title: string;
@@ -33,11 +31,6 @@ export default function ExtraSolicitationFormContainer(
         label: 'Solicitante',
         component: ExtraSolicitantDataContainer,
         schema: extraSolicitantDataSchema,
-      },
-      {
-        label: 'Financiamento',
-        component: ExtraSolicitationFinancingContainer,
-        schema: extraSolicitationFinancingSchema,
       },
       {
         label: 'Detalhes',

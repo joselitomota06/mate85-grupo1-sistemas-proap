@@ -37,6 +37,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import {
+  ExtraRequestPropToSort,
   deleteExtraAssistanceRequest,
   getExtraAssistanceRequests,
 } from '../../../services/extraAssistanceRequestService';
@@ -55,12 +56,12 @@ export default function SolicitationTableExtraRequests() {
 
   const updateRequestList = useCallback(
     (
-      prop: keyof ExtraRequest,
+      sortBy: ExtraRequestPropToSort,
       ascending: boolean,
       size: number,
       page: number
     ) => {
-      dispatch(getExtraAssistanceRequests(prop, ascending, page, size)).then(
+      dispatch(getExtraAssistanceRequests(sortBy, ascending, page, size)).then(
         (extraRequests) =>
           setNumberPages(Math.trunc(extraRequests.payload.total / size) + 1)
       );
@@ -83,16 +84,12 @@ export default function SolicitationTableExtraRequests() {
   //#endregion
 
   //#region actions column
-  const handleClickEditRequest = (id: number) => {
-    navigate(`/solicitation/edit/${id}`);
-  };
-
-  const handleClickEditExtraRequest = (id: number) => {
+  const handleClickEdit = (id: number) => {
     navigate(`/extra-solicitation/edit/${id}`);
   };
 
-  const handleClickReviewRequest = (id: number) => {
-    navigate(`/solicitation/review/${id}`);
+  const handleClickReview = (id: number) => {
+    navigate(`/extra-solicitation/review/${id}`);
   };
 
   const handleClickRemoveRequest = (id: number) => {
@@ -158,46 +155,46 @@ export default function SolicitationTableExtraRequests() {
   const [selectedPropToSortTable, setSelectedPropToSortTable] = useState<{
     /**
      * "true" se estiver ascendente, "false" descendente e undefined caso a
-     * prop não esteja selecionada
+     * sortBy não esteja selecionada
      */
-    [Property in keyof ExtraRequest]?: boolean;
+    [Property in ExtraRequestPropToSort]?: boolean;
   }>({
-    nomeSolicitante: true,
+    createdAt: false,
   });
 
   const getSelectedProp = () => {
     return Object.getOwnPropertyNames(
       selectedPropToSortTable
-    )[0] as keyof ExtraRequest;
+    )[0] as ExtraRequestPropToSort;
   };
 
-  const handleClickSortTable = (prop: keyof ExtraRequest) => {
-    if (selectedPropToSortTable[prop]) {
+  const handleClickSortTable = (sortBy: ExtraRequestPropToSort) => {
+    if (selectedPropToSortTable[sortBy]) {
       setSelectedPropToSortTable({
-        [prop]: false,
+        [sortBy]: false,
       });
     } else {
       setSelectedPropToSortTable({
-        [prop]: true,
+        [sortBy]: true,
       });
     }
   };
 
   function TableCellHeader({
     text,
-    prop,
+    sortBy,
   }: {
     text: string;
-    prop: keyof ExtraRequest;
+    sortBy: ExtraRequestPropToSort;
   }) {
     return (
       <div
-        onClick={() => handleClickSortTable(prop)}
+        onClick={() => handleClickSortTable(sortBy)}
         style={{ userSelect: 'none', cursor: 'pointer' }}
       >
         {text}
-        {selectedPropToSortTable[prop] != undefined ? (
-          selectedPropToSortTable[prop] ? (
+        {selectedPropToSortTable[sortBy] != undefined ? (
+          selectedPropToSortTable[sortBy] ? (
             <ArrowDropUpIcon />
           ) : (
             <ArrowDropDownIcon />
@@ -243,38 +240,38 @@ export default function SolicitationTableExtraRequests() {
             <TableRow>
               <TableCell align="center">
                 <TableCellHeader
+                  text="Data de solicitação"
+                  sortBy="createdAt"
+                ></TableCellHeader>
+              </TableCell>
+              <TableCell align="center">
+                <TableCellHeader
                   text="Solicitante"
-                  prop="nomeSolicitante"
+                  sortBy="user.name"
                 ></TableCellHeader>
               </TableCell>
               <TableCell align="center">
                 <TableCellHeader
                   text="Status"
-                  prop="situacao"
+                  sortBy="situacao"
                 ></TableCellHeader>
               </TableCell>
               <TableCell align="center">
                 <TableCellHeader
                   text="Valor solicitado"
-                  prop="valorSolicitado"
+                  sortBy="valorSolicitado"
                 ></TableCellHeader>
               </TableCell>
               <TableCell align="center">
                 <TableCellHeader
                   text="Valor aprovado"
-                  prop="valorAprovado"
-                ></TableCellHeader>
-              </TableCell>
-              <TableCell align="center">
-                <TableCellHeader
-                  text="Data de solicitação"
-                  prop="createdAt"
+                  sortBy="valorAprovado"
                 ></TableCellHeader>
               </TableCell>
               <TableCell align="center">
                 <TableCellHeader
                   text="Data da avaliação"
-                  prop="dataAprovacao"
+                  sortBy="dataAprovacao"
                 ></TableCellHeader>
               </TableCell>
               <TableCell align="center">Ações</TableCell>
@@ -295,17 +292,18 @@ export default function SolicitationTableExtraRequests() {
               extraRequests.list.map(
                 ({
                   id,
-                  nomeSolicitante,
+                  user,
                   valorSolicitado,
                   createdAt,
                   situacao,
                   valorAprovado,
                   automaticDecText,
                   dataAprovacao,
-                  user,
                 }) => (
-                  <TableRow key={nomeSolicitante}>
-                    <TableCell align="center">{nomeSolicitante}</TableCell>
+                  <TableRow key={user.name}>
+                    <TableCell align="center">{createdAt}</TableCell>
+
+                    <TableCell align="center">{user.name}</TableCell>
                     {situacao === 2 && (
                       <TableCell
                         align="center"
@@ -332,7 +330,7 @@ export default function SolicitationTableExtraRequests() {
                         Pendente de avaliação
                       </TableCell>
                     )}
-                    
+
                     <TableCell align="center">R$ {valorSolicitado}</TableCell>
 
                     {valorAprovado === null && (
@@ -342,8 +340,6 @@ export default function SolicitationTableExtraRequests() {
                     {valorAprovado !== null && (
                       <TableCell align="center">R$ {valorAprovado}</TableCell>
                     )}
-
-                    <TableCell align="center">{createdAt}</TableCell>
 
                     {dataAprovacao === null && (
                       <TableCell align="center">-</TableCell>
@@ -364,15 +360,13 @@ export default function SolicitationTableExtraRequests() {
                             >
                               <Visibility />
                             </IconButton>
-                            <IconButton
-                              onClick={() => handleClickReviewRequest(id)}
-                            >
+                            <IconButton onClick={() => handleClickReview(id)}>
                               <CheckCircle />
                             </IconButton>
                           </>
                         )}
 
-                        <IconButton onClick={() => handleClickEditRequest(id)}>
+                        <IconButton onClick={() => handleClickEdit(id)}>
                           <ModeEditIcon />
                         </IconButton>
 

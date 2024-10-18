@@ -13,26 +13,69 @@ export interface RequestReview {
   updatedAt: string;
 }
 
-export interface ExtraRequest
-  extends Omit<AssistanceRequest, 'doi' | 'valorInscricao'> {
+export interface ExtraRequest {
+  id: number;
+
+  itemSolicitado: string;
   justificativa: string;
+  valorSolicitado: number | null;
+	solicitacaoApoio: boolean;
+	solicitacaoAuxilioOutrasFontes: boolean;
+	nomeSolicitacao: string;
+	nomeAgenciaFomento: string;
+	situacao: number;
+	numeroAta: string;
+	dataAprovacao: string;
+	valorAprovado: number | null;
+	observacao: string;	
+	automaticDecText: string;
+
+  createdAt: string;
+  updatedAt: string;
+
+  user: {
+    id: number;
+    alternativePhone: string;
+    cpf: string;
+    email: string;
+    name: string;
+    password: string;
+  };
 }
 
 export interface AssistanceRequest {
   id: number;
+  automaticDecText: string;
+  
+  nomeCompleto: string;
   doi: string;
-  nomeSolicitante: string;
-  emailSolicitacao: string;
-  valorSolicitado: number;
-  valorInscricao: number;
+  autores: string;
+  autoresPresentePGCOMP: string;
+  valorSolicitado: number | string;
+  solicitacaoApoio: boolean | undefined;
+  solicitacaoAuxilioOutrasFontes: boolean | undefined;
+  nomeAgenciaFomento: string;
+  valorSolicitadoAgenciaFomento: number | string;
+  valorAprovado: number | undefined;
+  dataInicio: string;
+  dataFim: string;
+  linkHomepage: string;
+  pais: string;
+  cidade: string;
+  valorInscricao: number | undefined;
+  cartaAceite: string;
+  qualis: string;
+  comprovantePagamento: string;
+  nomeEvento: string;
+  situacao: number;
+  dataAprovacao: string;
+  numeroAta: number;
+  numeroDiariasAprovadas: number;
+  observacao: string;
+  quantidadeDiariasSolicitadas: number;
+
   createdAt: string;
   updatedAt: string;
-  situacao: number;
-  automaticDecText: string;
-  valorAprovado: number;
-  dataAprovacao: string;
-	solicitacaoApoio: boolean;
-  solicitacaoAuxilioOutrasFontes: boolean;
 
   user: {
     id: number;

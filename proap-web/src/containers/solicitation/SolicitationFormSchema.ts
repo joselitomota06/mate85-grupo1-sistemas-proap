@@ -1,10 +1,7 @@
 import * as Yup from 'yup';
+import { AssistanceRequest } from '../../store/slices/assistance-request-slice/assistanceRequestSlice';
 
 export const solicitantDataFormSchema = Yup.object({
-  nomeSolicitante: Yup.string().required('Campo obrigatório'),
-  emailSolicitacao: Yup.string()
-    .required('Campo obrigatório')
-    .email('Insira um e-mail válido'),
   nomeCompleto: Yup.string(),
   doi: Yup.string().notRequired(),
   autores: Yup.string().required('Campo obrigatório'),
@@ -15,26 +12,19 @@ export const financingDataFormSchema = Yup.object({
   solicitacaoApoio: Yup.boolean().nullable().required('Campo obrigatório'),
   valorSolicitado: Yup.number()
     .nullable()
-    .when('solicitacaoApoio', {
-      is: true,
-      then: (schema) => schema.required('Campo obrigatório'),
-      otherwise: (schema) => schema.notRequired(),
-    }),
+    .when(['solicitacaoApoio'], ([solicitacaoApoio], schema) => 
+      solicitacaoApoio ? schema.required('Campo obrigatório') : schema.notRequired()
+    ),
   solicitacaoAuxilioOutrasFontes: Yup.boolean()
     .nullable()
     .required('Campo obrigatório'),
-  nomeAgenciaFomento: Yup.string().when('solicitacaoAuxilioOutrasFontes', {
-    is: true,
-    then: (schema) => schema.required('Campo obrigatório'),
-    otherwise: (schema) => schema.notRequired(),
-  }),
+  nomeAgenciaFomento: Yup.string().when(['solicitacaoAuxilioOutrasFontes'], ([solicitacaoAuxilioOutrasFontes], schema) =>
+    solicitacaoAuxilioOutrasFontes ? schema.required('Campo obrigatório') : schema.notRequired()
+  ),
   valorSolicitadoAgenciaFomento: Yup.number().when(
-    'solicitacaoAuxilioOutrasFontes',
-    {
-      is: true,
-      then: (schema) => schema.required('Campo obrigatório'),
-      otherwise: (schema) => schema.notRequired(),
-    }
+    ['solicitacaoAuxilioOutrasFontes'],
+    ([solicitacaoAuxilioOutrasFontes], schema) =>
+      solicitacaoAuxilioOutrasFontes ? schema.required('Campo obrigatório') : schema.notRequired()
   ),
 });
 
@@ -46,23 +36,24 @@ export const eventDataFormSchema = Yup.object({
   linkHomepage: Yup.string().required('Campo obrigatório'),
   quantidadeDiariasSolicitadas: Yup.number()
     .nullable()
-    .required('Campo obrigatório')
-    .min(1, 'Insira um valor válido'),
+    .min(1, 'Insira um valor válido')
+    .defined()
+    .required('Campo obrigatório'), 
 
   valorInscricao: Yup.number()
     .nullable()
-    .required('Campo obrigatório')
-    .min(1, 'Insira um valor válido'),
+    .min(1, 'Insira um valor válido')
+    .defined()
+    .required('Campo obrigatório'),
 
   cartaAceite: Yup.string().required('Campo obrigatório'),
   qualis: Yup.string().required('Campo obrigatório'),
-
   nomeEvento: Yup.string().required('Campo obrigatório'),
 });
 
 export const detailsEventDataFormSchema = Yup.object({
   aceiteFinal: Yup.boolean()
-    .nullable()
+    .nullable(false)
     .required('É necessário aceitar os termos para continuar')
     .isTrue('É necessário aceitar os termos para continuar'),
 });
@@ -76,41 +67,8 @@ export const reviewDataFormSchema = Yup.object({
   valorAprovado: Yup.number().required('Campo obrigatório'),
 });
 
-export interface Solicitation {
-  nomeCompleto: string;
-  doi: string;
-  autores: string;
-  autoresPresentePGCOMP: string;
-  nomeSolicitante: string;
-  emailSolicitacao: string;
-  solicitacaoApoio: string | undefined;
-  valorSolicitado: number | string;
-  solicitacaoAuxilioOutrasFontes: string | undefined;
-  nomeAgenciaFomento: string;
-  valorSolicitadoAgenciaFomento: number | string;
-  valorAprovado: number | undefined;
-  dataInicio: string;
-  dataFim: string;
-  linkHomepage: string;
-  pais: string;
-  cidade: string;
-  valorInscricao: number | undefined;
-  cartaAceite: string;
-  qualis: string;
-  comprovantePagamento: string;
-  nomeEvento: string;
-  situacao: string;
-  dataAprovacao: string;
-  numeroAta: number;
-  numeroDiariasAprovadas: number;
-  observacao: string;
-  quantidadeDiariasSolicitadas: number;
-
-  createdAt: undefined;
-  updatedAt: undefined;
-}
-
-export interface SolicitationFormValues extends Solicitation {
+export interface SolicitationFormValues
+  extends Omit<AssistanceRequest, 'id' | 'automaticDecText'> {
   aceiteFinal: boolean | undefined;
 }
 
@@ -125,8 +83,6 @@ export const INITIAL_FORM_VALUES: SolicitationFormValues = {
   solicitacaoAuxilioOutrasFontes: '',
   nomeAgenciaFomento: '',
   valorSolicitadoAgenciaFomento: '',
-  nomeSolicitante: '',
-  emailSolicitacao: '',
   dataInicio: '',
   dataFim: '',
   linkHomepage: '',
@@ -137,7 +93,7 @@ export const INITIAL_FORM_VALUES: SolicitationFormValues = {
   cartaAceite: '',
   qualis: 'A1',
   aceiteFinal: false,
-  situacao: '2',
+  situacao: 2,
   dataAprovacao: '',
   numeroAta: 0,
   numeroDiariasAprovadas: 0,
@@ -148,4 +104,13 @@ export const INITIAL_FORM_VALUES: SolicitationFormValues = {
 
   createdAt: undefined,
   updatedAt: undefined,
+
+  user: {
+    id: 0,
+    alternativePhone: '',
+    cpf: '',
+    email: '',
+    name: '',
+    password: '',
+  },
 };

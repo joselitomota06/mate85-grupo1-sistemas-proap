@@ -11,6 +11,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import {
+  AssistanceRequestPropToSort,
   getAssistanceRequests,
   removeAssistanceRequestById,
 } from '../../../services/assistanceRequestService';
@@ -57,12 +58,12 @@ export default function SolicitationTableRequests() {
 
   const updateAssistanceRequestList = useCallback(
     (
-      prop: keyof AssistanceRequest,
+      sortBy: AssistanceRequestPropToSort,
       ascending: boolean,
       size: number,
       page: number
     ) => {
-      dispatch(getAssistanceRequests(prop, ascending, page, size)).then(
+      dispatch(getAssistanceRequests(sortBy, ascending, page, size)).then(
         (requests) =>
           setNumberPagesAssistance(
             Math.trunc(requests.payload.total / size) + 1
@@ -140,46 +141,46 @@ export default function SolicitationTableRequests() {
   const [selectedPropToSortTable, setSelectedPropToSortTable] = useState<{
     /**
      * "true" se estiver ascendente, "false" descendente e undefined caso a
-     * prop não esteja selecionada
+     * sortBy não esteja selecionada
      */
-    [Property in keyof AssistanceRequest]?: boolean;
+    [Property in AssistanceRequestPropToSort]?: boolean;
   }>({
-    nomeSolicitante: true,
+    createdAt: false,
   });
 
   const getSelectedProp = () => {
     return Object.getOwnPropertyNames(
       selectedPropToSortTable
-    )[0] as keyof AssistanceRequest;
+    )[0] as AssistanceRequestPropToSort;
   };
 
-  const handleClickSortTable = (prop: keyof AssistanceRequest) => {
-    if (selectedPropToSortTable[prop]) {
+  const handleClickSortTable = (sortBy: AssistanceRequestPropToSort) => {
+    if (selectedPropToSortTable[sortBy]) {
       setSelectedPropToSortTable({
-        [prop]: false,
+        [sortBy]: false,
       });
     } else {
       setSelectedPropToSortTable({
-        [prop]: true,
+        [sortBy]: true,
       });
     }
   };
 
   function TableCellHeader({
     text,
-    prop,
+    sortBy,
   }: {
     text: string;
-    prop: keyof AssistanceRequest;
+    sortBy: AssistanceRequestPropToSort;
   }) {
     return (
       <div
-        onClick={() => handleClickSortTable(prop)}
+        onClick={() => handleClickSortTable(sortBy)}
         style={{ userSelect: 'none', cursor: 'pointer' }}
       >
         {text}
-        {selectedPropToSortTable[prop] != undefined ? (
-          selectedPropToSortTable[prop] ? (
+        {selectedPropToSortTable[sortBy] != undefined ? (
+          selectedPropToSortTable[sortBy] ? (
             <ArrowDropUpIcon />
           ) : (
             <ArrowDropDownIcon />
@@ -225,38 +226,38 @@ export default function SolicitationTableRequests() {
             <TableRow>
               <TableCell align="center">
                 <TableCellHeader
+                  text="Data de solicitação"
+                  sortBy="createdAt"
+                ></TableCellHeader>
+              </TableCell>
+              <TableCell align="center">
+                <TableCellHeader
                   text="Solicitante"
-                  prop="nomeSolicitante"
+                  sortBy="user.name"
                 ></TableCellHeader>
               </TableCell>
               <TableCell align="center">
                 <TableCellHeader
                   text="Status"
-                  prop="situacao"
+                  sortBy="situacao"
                 ></TableCellHeader>
               </TableCell>
               <TableCell align="center">
                 <TableCellHeader
                   text="Valor da Inscrição"
-                  prop="valorInscricao"
+                  sortBy="valorInscricao"
                 ></TableCellHeader>
               </TableCell>
               <TableCell align="center">
                 <TableCellHeader
                   text="Valor aprovado"
-                  prop="valorAprovado"
-                ></TableCellHeader>
-              </TableCell>
-              <TableCell align="center">
-                <TableCellHeader
-                  text="Data de solicitação"
-                  prop="createdAt"
+                  sortBy="valorAprovado"
                 ></TableCellHeader>
               </TableCell>
               <TableCell align="center">
                 <TableCellHeader
                   text="Data da avaliação"
-                  prop="dataAprovacao"
+                  sortBy="dataAprovacao"
                 ></TableCellHeader>
               </TableCell>
               <TableCell align="center">Ações</TableCell>
@@ -277,17 +278,18 @@ export default function SolicitationTableRequests() {
               requests.list.map(
                 ({
                   id,
-                  nomeSolicitante,
+                  user,
                   valorInscricao,
                   createdAt,
                   situacao,
                   valorAprovado,
                   automaticDecText,
                   dataAprovacao,
-                  user,
                 }) => (
-                  <TableRow key={nomeSolicitante}>
-                    <TableCell align="center">{nomeSolicitante}</TableCell>
+                  <TableRow key={user.name}>
+                    <TableCell align="center">{createdAt}</TableCell>
+
+                    <TableCell align="center">{user.name}</TableCell>
                     {situacao === 2 && (
                       <TableCell
                         align="center"
@@ -322,8 +324,6 @@ export default function SolicitationTableRequests() {
                     {valorAprovado !== null && (
                       <TableCell align="center">R$ {valorAprovado}</TableCell>
                     )}
-
-                    <TableCell align="center">{createdAt}</TableCell>
 
                     {dataAprovacao === null && (
                       <TableCell align="center">-</TableCell>

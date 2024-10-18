@@ -13,19 +13,23 @@ export interface ExtraRequestListResponse {
   total: number;
 }
 
+export type ExtraRequestPropToSort =
+  | keyof Omit<ExtraRequest, 'user'>
+  | `user.${keyof ExtraRequest['user']}`;
+
 export const getExtraAssistanceRequests =
   (
-    prop?: keyof ExtraRequest,
+    sortBy?: ExtraRequestPropToSort,
     ascending?: boolean,
     page?: number,
     size?: number
   ) =>
   (dispatch: AppDispatch) => {
-    const defaultPropToFilter: keyof ExtraRequest = 'nomeSolicitante';
+    const defaultPropToFilter: ExtraRequestPropToSort = 'createdAt';
 
     let requestUrl = 'extrarequest/list'
-      + `?prop=${prop ?? defaultPropToFilter}`
-      + `&ascending=${ascending ?? true}`
+      + `?sortBy=${sortBy ?? defaultPropToFilter}`
+      + `&ascending=${ascending ?? false}`
       + `&page=${page ?? 0}`
       + `&size=${size ?? 10}`;
 

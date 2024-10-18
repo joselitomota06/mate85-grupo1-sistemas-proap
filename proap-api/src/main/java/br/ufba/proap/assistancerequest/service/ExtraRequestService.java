@@ -11,7 +11,7 @@ import br.ufba.proap.assistancerequest.domain.ExtraRequest;
 import br.ufba.proap.assistancerequest.repository.ExtraRequestRepostirory;
 import br.ufba.proap.authentication.domain.User;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 @Service
 public class ExtraRequestService {
@@ -39,7 +39,7 @@ public class ExtraRequestService {
 	}
 
 	public void delete(ExtraRequest extraRequest) {
-		extraRequestRepostirory.delete(extraRequest);	
+		extraRequestRepostirory.delete(extraRequest);
 	}
 
 	public static class ExtraRequestListFiltered {
@@ -53,16 +53,18 @@ public class ExtraRequestService {
 	}
 
 	/**
-	 * Busca os registros de demanda extra usando paginação e ordenação a partir de uma propriedade
-	 * @param prop Atributo do objeto ExtraRequest para ordenação
+	 * Busca os registros de demanda extra usando paginação e ordenação a partir de
+	 * uma propriedade
+	 * 
+	 * @param sortBy    Atributo do objeto ExtraRequest para ordenação
 	 * @param ascending Se falso, será por ordem descendente
-	 * @param page Número da página (primeira página como 0)
-	 * @param size Tamanho da página/da lista
-	 * @param user Filtrar por usuário
+	 * @param page      Número da página (primeira página como 0)
+	 * @param size      Tamanho da página/da lista
+	 * @param user      Filtrar por usuário
 	 * @return Lista de demandas extras que devem ser exibidas na página
 	 */
 	public ExtraRequestListFiltered find(
-			String prop,
+			String sortBy,
 			boolean ascending,
 			int page,
 			int size,
@@ -72,19 +74,18 @@ public class ExtraRequestService {
 		boolean userIsAdmin = user.getPerfil() != null
 				&& user.getPerfil().isAdmin();
 
-		if(userIsAdmin)
+		if (userIsAdmin)
 			count = extraRequestRepostirory.count();
-		else count = extraRequestRepostirory.countByUser(user);
+		else
+			count = extraRequestRepostirory.countByUser(user);
 
 		return new ExtraRequestListFiltered(
 				extraRequestQueryRepository.findFiltered(
-						prop,
+						sortBy,
 						ascending,
 						page,
 						size,
-						userIsAdmin ? null : user
-				),
-				count
-		);
+						userIsAdmin ? null : user),
+				count);
 	}
 }

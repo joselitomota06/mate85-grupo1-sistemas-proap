@@ -1,10 +1,13 @@
 package br.ufba.proap.security;
 
+import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -12,12 +15,10 @@ import org.springframework.stereotype.Component;
 
 import br.ufba.proap.authentication.domain.User;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.SignatureException;
-import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.Keys;
+import br.ufba.proap.security.HashProvider.Algorithm;
 
 @Component
 public class JwtTokenProvider {
@@ -29,8 +30,14 @@ public class JwtTokenProvider {
 	private int jwtExpirationInMs;
 
 	/*
-	@Autowired
-	private PerfilService perfilService; */
+	 * @Autowired
+	 * private PerfilService perfilService;
+	 */
+
+	private SecretKey getSigningKey() {
+		String hashedSecret = HashProvider.hash(jwtSecret, Algorithm.SHA256);
+		return Keys.hmacShaKeyFor(hashedSecret.getBytes(StandardCharsets.UTF_8));
+	}
 
 	public String generateToken(Authentication authentication) {
 		User userPrincipal = (User) authentication.getPrincipal();
@@ -42,23 +49,24 @@ public class JwtTokenProvider {
 		claims.put("email", userPrincipal.getEmail());
 		claims.put("isAdmin", userPrincipal.getPerfil() != null ? userPrincipal.getPerfil().isAdmin() : false);
 
-		return Jwts.builder().setSubject(userPrincipal.getName()).setClaims(claims)
-				.setIssuedAt(Date.from(OffsetDateTime.now().toInstant()))
-				.setExpiration(Date.from(expiryDate.toInstant())).signWith(SignatureAlgorithm.HS256, jwtSecret)
-				.compact();
+		return Jwts.builder()
+				.subject(userPrincipal.getName())
+				.claims(claims)
+				.issuedAt(Date.from(OffsetDateTime.now().toInstant()))
+				.expiration(Date.from(expiryDate.toInstant()))
+				.signWith(getSigningKey()).compact();
 	}
 
 	String getEmailFromJwt(String token) {
-		Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
+		Claims claims = Jwts.parser().verifyWith(getSigningKey()).build().parseSignedClaims(token).getPayload();
 		return String.valueOf(claims.get("email"));
 	}
 
 	boolean validateToken(String authToken) {
 		try {
-			Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
+			Jwts.parser().verifyWith(getSigningKey()).build().parseSignedClaims(authToken);
 			return true;
-		} catch (ExpiredJwtException | MalformedJwtException | UnsupportedJwtException | IllegalArgumentException
-				| SignatureException e) {
+		} catch (JwtException | IllegalArgumentException e) {
 			e.getMessage();
 		}
 		return false;
