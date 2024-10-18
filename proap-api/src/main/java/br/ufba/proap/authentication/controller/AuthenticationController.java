@@ -1,12 +1,8 @@
 package br.ufba.proap.authentication.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -40,13 +36,7 @@ public class AuthenticationController {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		String jwt = tokenProvider.generateToken(authentication);
 
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("x-access-token", jwt);
-		List<String> allowedHeaders = new ArrayList<>();
-		allowedHeaders.add("x-access-token");
-		headers.setAccessControlAllowHeaders(allowedHeaders);
-
-		return ResponseEntity.ok().headers(headers).body(new JwtAuthenticationResponse(jwt));
+		return ResponseEntity.ok().body(new JwtAuthenticationResponse(jwt));
 	}
 
 }

@@ -14,7 +14,7 @@ api.interceptors.request.use(
         ...config,
         headers: {
           ...config.headers,
-          'x-access-token': `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
         },
       };
 
