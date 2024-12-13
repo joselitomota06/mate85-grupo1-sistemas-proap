@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.ufba.proap.authentication.domain.Perfil;
-import br.ufba.proap.authentication.domain.PerfilEnum;
 import br.ufba.proap.authentication.domain.User;
 import br.ufba.proap.authentication.domain.dto.UpdatePasswordDTO;
 import br.ufba.proap.authentication.domain.dto.UserResponseDTO;

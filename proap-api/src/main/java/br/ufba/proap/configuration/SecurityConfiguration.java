@@ -54,6 +54,7 @@ public class SecurityConfiguration {
 								"/webjars/**",
 								"/swagger-ui/**")
 						.permitAll()
+						.requestMatchers(HttpMethod.GET, "/user/list").hasAuthority("VIEW_USER")
 						.anyRequest().authenticated())
 				.logout(logout -> logout.logoutUrl("/proap-api/authentication/logout"))
 				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

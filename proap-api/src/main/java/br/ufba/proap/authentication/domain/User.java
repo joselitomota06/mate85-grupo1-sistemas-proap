@@ -1,12 +1,12 @@
 package br.ufba.proap.authentication.domain;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collection;
 
 import jakarta.persistence.*;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -14,6 +14,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
+import io.jsonwebtoken.lang.Collections;
 
 @Entity
 @Table(name = "aut_user", schema = "proap", uniqueConstraints = {
@@ -177,7 +179,14 @@ public class User implements UserDetails {
 	@JsonIgnore
 	@JsonProperty(access = Access.WRITE_ONLY)
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return new ArrayList<>();
+		if (this.perfil == null || this.perfil.getPermissions() == null) {
+			return Collections.emptyList();
+		}
+
+		return this.perfil.getPermissions().stream()
+				.filter(Permission::isEnabled)
+				.map(permission -> new SimpleGrantedAuthority("PERMISSION_" + permission.getKey()))
+				.toList();
 	}
 
 	public LocalDateTime getCreatedAt() {
