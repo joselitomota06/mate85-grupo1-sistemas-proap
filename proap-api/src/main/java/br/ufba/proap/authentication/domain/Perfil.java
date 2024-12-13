@@ -19,7 +19,7 @@ public class Perfil implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(nullable = false, columnDefinition = "VARCHAR(255) DEFAULT 'Sem nome'")
+	@Column(nullable = false, unique = true)
 	private String name;
 
 	private boolean enable;

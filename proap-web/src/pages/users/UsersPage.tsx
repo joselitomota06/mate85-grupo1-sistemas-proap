@@ -25,7 +25,7 @@ import Toast from '../../helpers/notification';
 import { updateUserCredentials } from '../../services/authService';
 
 export default function UsersPage() {
-  const [currentUserId, setCurrentUserId] = useState<number>(-1);
+  const [currentUserEmail, setCurrentUserEmail] = useState<string>('');
   const [open, setOpen] = useState(false);
 
   const {
@@ -40,11 +40,12 @@ export default function UsersPage() {
 
   const handleClose = () => setOpen(false);
   const handleConfirmSetAdmin = () => {
+    console.log(currentUserEmail);
     setOpen(false);
-    updateUserCredentials(currentUserId)
+    updateUserCredentials(currentUserEmail)
       .then(() => {
         Toast.success('Credencias do usuário atualizadas com sucesso.');
-        setCurrentUserId(-1);
+        setCurrentUserEmail('');
         updateUsers();
       })
       .catch(() => {
@@ -52,8 +53,8 @@ export default function UsersPage() {
       });
   };
 
-  const handleClickPermissionAction = (id: number) => {
-    setCurrentUserId(id);
+  const handleClickPermissionAction = (email: string) => {
+    setCurrentUserEmail(email);
     setOpen(true);
   };
 
@@ -109,7 +110,7 @@ export default function UsersPage() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {users.map(({ id, name, cpf, email, phone }) => (
+                {users.map(({ name, cpf, email, phone }) => (
                   <TableRow
                     key={cpf}
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -122,7 +123,7 @@ export default function UsersPage() {
                     <TableCell align="right">{maskPhone(phone)}</TableCell>
                     <TableCell align="right">
                       <IconButton
-                        onClick={() => handleClickPermissionAction(id)}
+                        onClick={() => handleClickPermissionAction(email)}
                       >
                         <PermIdentityIcon />
                       </IconButton>

@@ -1,7 +1,8 @@
 package br.ufba.proap.authentication.domain;
 
 public enum PerfilEnum {
-    ADMIN("Admin");
+    ADMIN("admin"),
+    DEFAULT("default");
 
     private String name;
 

@@ -14,7 +14,6 @@ export interface User {
   cpf: string;
   email: string;
   phone: string;
-  id: number;
 }
 
 export const registerUser =
@@ -34,6 +33,6 @@ export const listUsers = () => {
   return api.get<User[]>('user/list');
 };
 
-export const updateUserCredentials = (id: number) => {
-  return api.put(`user/set-admin/${id}`);
+export const updateUserCredentials = (email: string) => {
+  return api.put(`user/set-admin/${email}`);
 };

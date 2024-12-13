@@ -67,8 +67,8 @@ public class UserController {
 		}
 	}
 
-	@PutMapping("/set-admin/{id}")
-	public ResponseEntity<String> setAdminUser(@PathVariable Long id) {
+	@PutMapping("/set-admin/{email}")
+	public ResponseEntity<String> setAdminUser(@PathVariable String email) {
 		try {
 			User currentUser = service.getLoggedUser();
 
@@ -78,7 +78,7 @@ public class UserController {
 			if (currentUser.getPerfil() == null || !currentUser.getPerfil().isAdmin())
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
-			Optional<User> user = service.findById(id);
+			Optional<User> user = service.findByEmail(email);
 			Optional<Perfil> adminPerfil = perfilService.findByName(PerfilEnum.ADMIN.getName());
 
 			if (user.isPresent() && adminPerfil.isPresent()) {
