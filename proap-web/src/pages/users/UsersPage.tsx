@@ -23,6 +23,8 @@ import { maskCpf, maskPhone } from '../../helpers/masks';
 import useUsers from '../../hooks/auth/useUsers';
 import Toast from '../../helpers/notification';
 import { updateUserCredentials } from '../../services/authService';
+import useAuth from '../../hooks/auth/useAuth';
+import { UnauthorizedPage } from '../unauthorized/UnauthorizedPage';
 
 export default function UsersPage() {
   const [currentUserEmail, setCurrentUserEmail] = useState<string>('');
@@ -37,6 +39,8 @@ export default function UsersPage() {
     handlePageChange,
     updateUsers,
   } = useUsers();
+
+  const { isAdmin } = useAuth();
 
   const handleClose = () => setOpen(false);
   const handleConfirmSetAdmin = () => {
@@ -58,7 +62,9 @@ export default function UsersPage() {
     setOpen(true);
   };
 
-  return (
+  return !isAdmin ? (
+    <UnauthorizedPage />
+  ) : (
     <>
       <Dialog
         open={open}

@@ -1,7 +1,6 @@
 import { Box, Typography } from '@mui/material';
-import React from 'react';
 
-export default function NotFoundPage() {
+export function UnauthorizedPage() {
   return (
     <Box
       display="flex"
@@ -10,7 +9,7 @@ export default function NotFoundPage() {
       height="100vh"
     >
       <Typography variant="h4" fontWeight="bold">
-        Página não encontrada
+        Acesso não autorizado
       </Typography>
     </Box>
   );
