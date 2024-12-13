@@ -1,6 +1,5 @@
 package br.ufba.proap.authentication.controller;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +21,7 @@ import br.ufba.proap.authentication.domain.Perfil;
 import br.ufba.proap.authentication.domain.PerfilEnum;
 import br.ufba.proap.authentication.domain.User;
 import br.ufba.proap.authentication.domain.dto.UpdatePasswordDTO;
+import br.ufba.proap.authentication.domain.dto.UserResponseDTO;
 import br.ufba.proap.authentication.service.PerfilService;
 import br.ufba.proap.authentication.service.UserService;
 
@@ -48,11 +48,23 @@ public class UserController {
 	}
 
 	@GetMapping("/list")
-	public List<User> list() {
+	public ResponseEntity<List<UserResponseDTO>> list() {
 		try {
-			return service.findAll();
+			User currentUser = service.getLoggedUser();
+			if (currentUser.getPerfil() == null || !currentUser.getPerfil().isAdmin()) {
+				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+			}
+
+			List<User> users = service.findAll();
+			List<UserResponseDTO> usersDto = users.stream().map(user -> {
+				String perfilName = user.getPerfil() != null ? user.getPerfil().getName() : PerfilEnum.COMUM.getName();
+				return new UserResponseDTO(user.getName(), user.getEmail(), user.getCpf(), user.getRegistration(),
+						user.getPhone(), user.getAlternativePhone(), perfilName);
+			}).toList();
+			return ResponseEntity.ok().body(usersDto);
 		} catch (Exception e) {
-			return Collections.emptyList();
+			logger.error(e.getMessage(), e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
 

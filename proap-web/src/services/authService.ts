@@ -14,6 +14,7 @@ export interface User {
   cpf: string;
   email: string;
   phone: string;
+  profileName: string;
 }
 
 export const registerUser =

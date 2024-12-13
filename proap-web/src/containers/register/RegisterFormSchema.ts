@@ -10,7 +10,7 @@ export const personalDataFormSchema = Yup.object({
       'Insira um CPF válido',
       function (cpfValue?: string) {
         return cpfValue != undefined && cpf.isValid(cpfValue);
-      }
+      },
     ),
   registration: Yup.number().required('Campo obrigatório'),
 });
@@ -18,7 +18,8 @@ export const personalDataFormSchema = Yup.object({
 export const contactDataFormSchema = Yup.object({
   email: Yup.string()
     .email('Insira um e-mail válido')
-    .required('Campo obrigatório'),
+    .required('Campo obrigatório')
+    .transform((value: string) => value.toLowerCase),
   phone: Yup.string()
     .required('Campo obrigatório')
     .length(11, 'Número de telefone inválido'),

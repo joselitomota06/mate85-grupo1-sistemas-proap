@@ -12,4 +12,4 @@ CREATE TABLE IF NOT EXISTS proap.aut_perfil (
 INSERT INTO proap.aut_perfil (name, enable, admin, created_at, updated_at)
 VALUES 
     ('admin', TRUE, TRUE, NOW(), NOW()),
-    ('user', TRUE, FALSE, NOW(), NOW());
+    ('comum', TRUE, FALSE, NOW(), NOW());

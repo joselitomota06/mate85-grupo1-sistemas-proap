@@ -36,12 +36,22 @@ export default function LoginFormContainer() {
   const [rightIcon, setRightIcon] = React.useState('eye');
 
   const handleSubmit = useCallback(
-    (values: LoginFormValues, actions: FormikHelpers<LoginFormValues>) => {
-      return dispatch(signIn(values)).catch(({ response: { status } }) => {
-        if (status == 401) actions.setFieldError('password', 'Senha incorreta');
-      });
+    async (
+      values: LoginFormValues,
+      actions: FormikHelpers<LoginFormValues>,
+    ) => {
+      const transformedValues = {
+        ...values,
+        username: values.username.toLowerCase(),
+      };
+      return dispatch(signIn(transformedValues)).catch(
+        ({ response: { status } }) => {
+          if (status == 401)
+            actions.setFieldError('password', 'Senha incorreta');
+        },
+      );
     },
-    [dispatch]
+    [dispatch],
   );
 
   function onMouseDown() {
