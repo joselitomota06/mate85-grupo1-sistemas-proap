@@ -31,6 +31,7 @@ export default function UsersPage() {
   const [open, setOpen] = useState(false);
 
   const {
+    status,
     isLoading,
     users,
     page,
@@ -40,8 +41,10 @@ export default function UsersPage() {
     updateUsers,
   } = useUsers();
 
-  const { isAdmin } = useAuth();
-  console.log(users);
+  const { profile } = useAuth();
+  console.log(status);
+
+  const userHasPermission = status === 'success';
 
   const handleClose = () => setOpen(false);
   const handleConfirmSetAdmin = () => {
@@ -63,7 +66,7 @@ export default function UsersPage() {
     setOpen(true);
   };
 
-  return !isAdmin ? (
+  return !userHasPermission ? (
     <UnauthorizedPage />
   ) : (
     <>

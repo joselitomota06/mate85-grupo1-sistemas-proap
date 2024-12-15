@@ -30,8 +30,12 @@ export const signIn = (values: LoginFormValues) => (dispatch: AppDispatch) => {
     });
 };
 
-export const listUsers = () => {
-  return api.get<User[]>('user/list');
+export const listUsers = async () => {
+  const response = await api.get<User[]>('user/list');
+  return {
+    status: response.status === 200 ? 'success' : 'error',
+    data: response.data,
+  };
 };
 
 export const updateUserCredentials = (email: string) => {

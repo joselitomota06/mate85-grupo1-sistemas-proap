@@ -35,10 +35,6 @@ public class PermissionService {
 		return permissionRepository.findById(id);
 	}
 
-	public List<Permission> findByPerfilId(Long perfilId) {
-		return permissionRepository.findByPerfilId(perfilId);
-	}
-
 	public void remove(Permission permission) {
 		permissionRepository.delete(permission);
 	}

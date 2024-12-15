@@ -11,10 +11,6 @@ export default function ContactDataFormContainer() {
 
   const [phoneWithoutMask, setPhoneWithoutMask] = useState(values.phone);
 
-  useEffect(() => {
-    console.log(values.phone);
-  });
-
   const handleInputPhoneChange = (event: any) => {
     const phoneWithoutMask = event.target.value.replace(/[\-\(\)' ']/g, '');
 

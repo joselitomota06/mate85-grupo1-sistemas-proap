@@ -71,10 +71,10 @@ public class ExtraRequestService {
 			@NotNull User user) {
 		long count;
 
-		boolean userIsAdmin = user.getPerfil() != null
-				&& user.getPerfil().isAdmin();
+		boolean userHasPermission = user.getPerfil() != null
+				&& user.getPerfil().hasPermission("VIEW_ALL_REQUESTS");
 
-		if (userIsAdmin)
+		if (userHasPermission)
 			count = extraRequestRepostirory.count();
 		else
 			count = extraRequestRepostirory.countByUser(user);
@@ -85,7 +85,7 @@ public class ExtraRequestService {
 						ascending,
 						page,
 						size,
-						userIsAdmin ? null : user),
+						userHasPermission ? null : user),
 				count);
 	}
 }

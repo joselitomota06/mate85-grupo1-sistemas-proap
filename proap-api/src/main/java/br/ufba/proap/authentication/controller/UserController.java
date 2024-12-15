@@ -50,13 +50,13 @@ public class UserController {
 	public ResponseEntity<List<UserResponseDTO>> list() {
 		try {
 			User currentUser = service.getLoggedUser();
-			if (currentUser.getPerfil() == null || !currentUser.getPerfil().isAdmin()) {
+			if (currentUser.getPerfil() == null || !currentUser.getPerfil().hasPermission("VIEW_USER")) {
 				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 			}
 
 			List<User> users = service.findAll();
 			List<UserResponseDTO> usersDto = users.stream().map(user -> {
-				String perfilName = user.getPerfil() != null ? user.getPerfil().getName() : PerfilEnum.COMUM.getName();
+				String perfilName = user.getPerfil() != null ? user.getPerfil().getName() : "N/A";
 				return new UserResponseDTO(user.getName(), user.getEmail(), user.getCpf(), user.getRegistration(),
 						user.getPhone(), user.getAlternativePhone(), perfilName);
 			}).toList();
@@ -86,11 +86,11 @@ public class UserController {
 			if (currentUser == null)
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
-			if (currentUser.getPerfil() == null || !currentUser.getPerfil().isAdmin())
+			if (currentUser.getPerfil() == null || !currentUser.getPerfil().hasPermission("EDIT_USER_ROLE"))
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
 			Optional<User> user = service.findByEmail(email);
-			Optional<Perfil> adminPerfil = perfilService.findByName(PerfilEnum.ADMIN.getName());
+			Optional<Perfil> adminPerfil = perfilService.findByName("Admin");
 
 			if (user.isPresent() && adminPerfil.isPresent()) {
 				user.get().setPerfil(adminPerfil.get());

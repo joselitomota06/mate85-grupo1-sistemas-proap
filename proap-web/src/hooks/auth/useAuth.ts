@@ -6,14 +6,14 @@ import { decodeToken } from '../../helpers/auth';
 
 export default function useAuth() {
   const { isAuthenticated, token } = useSelector(
-    (state: IRootState) => state.auth
+    (state: IRootState) => state.auth,
   );
 
-  const { name, email, isAdmin } = decodeToken(token);
+  const { name, email, profile } = decodeToken(token);
 
   return {
     isAuthenticated,
-    isAdmin,
+    profile,
     email,
     name,
   };

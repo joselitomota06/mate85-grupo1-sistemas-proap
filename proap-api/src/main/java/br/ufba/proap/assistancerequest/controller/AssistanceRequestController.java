@@ -99,10 +99,10 @@ public class AssistanceRequestController {
 			if (!request.isPresent())
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
-			boolean isAdminCurrentUser = currentUser.getPerfil() != null
-					&& currentUser.getPerfil().isAdmin();
+			boolean currentUserHasPermission = currentUser.getPerfil() != null
+					&& currentUser.getPerfil().hasPermission("VIEW_ALL_REQUESTS");
 
-			if (request.get().getUser() == currentUser || isAdminCurrentUser) {
+			if (request.get().getUser() == currentUser || currentUserHasPermission) {
 				return ResponseEntity.ok().body(request);
 			}
 		} catch (Exception e) {

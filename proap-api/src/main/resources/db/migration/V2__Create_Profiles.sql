@@ -1,7 +1,7 @@
 -- Criação da tabelas de perfis e permissões (se ainda não existir)
 CREATE TABLE IF NOT EXISTS proap.aut_perfil (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL UNIQUE,
+    name VARCHAR(255) NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS proap.aut_permission (
@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS proap.aut_perfil_permission (
     perfil_id INT REFERENCES proap.aut_perfil(id) ON DELETE CASCADE,
     permission_id INT REFERENCES proap.aut_permission(id) ON DELETE CASCADE,
     PRIMARY KEY (perfil_id, permission_id)
-)
+);
 
 -- Inserção dos perfis pré-definidos
 INSERT INTO proap.aut_perfil (name) VALUES 

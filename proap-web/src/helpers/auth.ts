@@ -1,4 +1,4 @@
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from 'jwt-decode';
 
 interface DecodedToken {
   email: string;
@@ -7,7 +7,7 @@ interface DecodedToken {
   id: number;
   login: string;
   name: string;
-  isAdmin: boolean;
+  profile: string;
 }
 
 export const LOCAL_STORAGE_TOKEN_KEY = 'token';
@@ -44,6 +44,6 @@ export const decodeToken = (token: string): DecodedToken => {
         exp: 0,
         iat: 0,
         id: 0,
-        isAdmin: false,
+        profile: '',
       };
 };

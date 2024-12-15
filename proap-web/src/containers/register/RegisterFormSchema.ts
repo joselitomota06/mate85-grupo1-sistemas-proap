@@ -18,8 +18,7 @@ export const personalDataFormSchema = Yup.object({
 export const contactDataFormSchema = Yup.object({
   email: Yup.string()
     .email('Insira um e-mail válido')
-    .required('Campo obrigatório')
-    .transform((value: string) => value.toLowerCase),
+    .required('Campo obrigatório'),
   phone: Yup.string()
     .required('Campo obrigatório')
     .length(11, 'Número de telefone inválido'),

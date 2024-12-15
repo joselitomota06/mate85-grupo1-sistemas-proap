@@ -93,7 +93,7 @@ public class ExtraRequestController {
 			Optional<ExtraRequest> request = service.findById(id);
 
 			boolean isValid = currentUser.getPerfil() == null ||
-					(!currentUser.getPerfil().isAdmin() &&
+					(currentUser.getPerfil().getName() != "Aluno" &&
 							request.isPresent() && !request.get()
 									.getUser().getId().equals(currentUser.getId()));
 

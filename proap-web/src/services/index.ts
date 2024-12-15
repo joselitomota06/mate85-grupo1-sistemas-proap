@@ -14,15 +14,15 @@ api.interceptors.request.use(
         ...config,
         headers: {
           ...config.headers,
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
-      };
+      } as any;
 
     return config;
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 export default api;
