@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import br.ufba.proap.authentication.domain.Perfil;
 import br.ufba.proap.authentication.domain.User;
 import br.ufba.proap.authentication.domain.dto.UpdatePasswordDTO;
 import br.ufba.proap.authentication.repository.UserRepository;
@@ -19,6 +21,9 @@ public class UserService implements UserDetailsService {
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private PerfilService perfilService;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -47,6 +52,8 @@ public class UserService implements UserDetailsService {
 	}
 
 	public User create(User user) {
+		Perfil defaultPerfil = perfilService.findByName(Perfil.getDefaultPerfilName()).orElse(null);
+		user.setPerfil(defaultPerfil);
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		return userRepository.saveAndFlush(user);
 	}

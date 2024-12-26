@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 public class Perfil implements Serializable {
 
 	private static final long serialVersionUID = 6718249363254821367L;
+	private static final String DEFAULT_PERFIL_NAME = "Aluno";
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,5 +40,9 @@ public class Perfil implements Serializable {
 
 	public boolean hasPermission(String key) {
 		return permissions.stream().filter(Permission::isEnabled).anyMatch(p -> p.getKey().equalsIgnoreCase(key));
+	}
+
+	public static String getDefaultPerfilName() {
+		return DEFAULT_PERFIL_NAME;
 	}
 }

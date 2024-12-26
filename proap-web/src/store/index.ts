@@ -11,7 +11,7 @@ const rootReducer = combineReducers({
 
 const loadState = (): Partial<IRootState> | undefined => {
   try {
-    const serializedState = localStorage.getItem('reduxState');
+    const serializedState = localStorage.getItem('localState');
     return serializedState ? JSON.parse(serializedState) : undefined;
   } catch (err) {
     console.error('Error loading state from local storage: ', err);
@@ -27,7 +27,7 @@ const saveState = (state: Partial<IRootState>) => {
       ...state,
     };
     const serializedState = JSON.stringify(newState);
-    localStorage.setItem('reduxState', serializedState);
+    localStorage.setItem('localState', serializedState);
   } catch (err) {
     console.error('Error saving state to local storage: ', err);
   }

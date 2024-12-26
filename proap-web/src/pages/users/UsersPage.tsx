@@ -42,16 +42,10 @@ export default function UsersPage() {
     updateUsers,
   } = useUsers();
 
-  const { profile } = useAuth();
-  console.log(status);
-
   const userCanViewPage = useHasPermission('VIEW_USER');
-
-  console.log(userCanViewPage);
 
   const handleClose = () => setOpen(false);
   const handleConfirmSetAdmin = () => {
-    console.log(currentUserEmail);
     setOpen(false);
     updateUserCredentials(currentUserEmail)
       .then(() => {

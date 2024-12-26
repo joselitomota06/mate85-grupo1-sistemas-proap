@@ -47,8 +47,7 @@ public class JwtTokenProvider {
 		claims.put("id", userPrincipal.getId());
 		claims.put("name", userPrincipal.getName());
 		claims.put("email", userPrincipal.getEmail());
-		claims.put("profile",
-				userPrincipal.getPerfil() != null ? userPrincipal.getPerfil().getName() : "N/A");
+		claims.put("profile", userPrincipal.getPerfil().getName());
 
 		return Jwts.builder()
 				.subject(userPrincipal.getName())

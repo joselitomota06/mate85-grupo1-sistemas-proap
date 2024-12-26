@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, IRootState } from '../../store';
 import useAuth from '../auth/useAuth';
 import { useEffect } from 'react';
-import { loadProfiles } from '../../store/slices/profile-slice/profileSlice';
+import { loadProfile } from '../../store/slices/profile-slice/profileSlice';
 
 /* 
   Hook to verify if a user has a specific permission.
@@ -11,7 +11,7 @@ import { loadProfiles } from '../../store/slices/profile-slice/profileSlice';
   @returns boolean - True if the user has the permission, false otherwise.
 */
 export default function useHasPermission(permission: string) {
-  const profiles = useSelector((state: IRootState) => state.profileSlice);
+  const profileState = useSelector((state: IRootState) => state.profileSlice);
   const { isAuthenticated, profile } = useAuth();
   const dispatch = useDispatch<AppDispatch>();
 
@@ -20,13 +20,11 @@ export default function useHasPermission(permission: string) {
   }
 
   useEffect(() => {
-    if (!profiles || profiles.length === 0) {
-      dispatch(loadProfiles());
-    }
-  }, [dispatch]);
-  console.log('all profiles: ', profiles);
+    dispatch(loadProfile(profile));
+  }, [profile, profileState, dispatch]);
+  console.log('all profiles: ', profileState);
   console.log('current profile: ', profile);
-  const userProfile = profiles.find(
+  const userProfile = profileState.find(
     (p) => p.name.toLowerCase() === profile.toLowerCase(),
   );
 
