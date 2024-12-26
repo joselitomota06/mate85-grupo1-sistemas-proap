@@ -185,7 +185,7 @@ public class User implements UserDetails {
 
 		return this.perfil.getPermissions().stream()
 				.filter(Permission::isEnabled)
-				.map(permission -> new SimpleGrantedAuthority("PERMISSION_" + permission.getKey()))
+				.map(permission -> new SimpleGrantedAuthority(permission.getKey()))
 				.toList();
 	}
 

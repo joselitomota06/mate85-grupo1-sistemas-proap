@@ -25,6 +25,7 @@ import Toast from '../../helpers/notification';
 import { updateUserCredentials } from '../../services/authService';
 import useAuth from '../../hooks/auth/useAuth';
 import { UnauthorizedPage } from '../unauthorized/UnauthorizedPage';
+import useHasPermission from '../../hooks/profile/useHasPermission';
 
 export default function UsersPage() {
   const [currentUserEmail, setCurrentUserEmail] = useState<string>('');
@@ -44,7 +45,9 @@ export default function UsersPage() {
   const { profile } = useAuth();
   console.log(status);
 
-  const userHasPermission = status === 'success';
+  const userCanViewPage = useHasPermission('VIEW_USER');
+
+  console.log(userCanViewPage);
 
   const handleClose = () => setOpen(false);
   const handleConfirmSetAdmin = () => {
@@ -66,7 +69,7 @@ export default function UsersPage() {
     setOpen(true);
   };
 
-  return !userHasPermission ? (
+  return !userCanViewPage ? (
     <UnauthorizedPage />
   ) : (
     <>

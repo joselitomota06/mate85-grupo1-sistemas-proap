@@ -50,15 +50,14 @@ public class UserController {
 	public ResponseEntity<List<UserResponseDTO>> list() {
 		try {
 			User currentUser = service.getLoggedUser();
-			if (currentUser.getPerfil() == null || !currentUser.getPerfil().hasPermission("VIEW_USER")) {
+			if (currentUser.getPerfil() == null ||
+					!currentUser.getPerfil().hasPermission("VIEW_USER")) {
 				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 			}
 
-			List<User> users = service.findAll();
+			List<User> users = service.getAllUsersWithPerfilAndPermissions();
 			List<UserResponseDTO> usersDto = users.stream().map(user -> {
-				String perfilName = user.getPerfil() != null ? user.getPerfil().getName() : "N/A";
-				return new UserResponseDTO(user.getName(), user.getEmail(), user.getCpf(), user.getRegistration(),
-						user.getPhone(), user.getAlternativePhone(), perfilName);
+				return UserResponseDTO.fromUser(user);
 			}).toList();
 			return ResponseEntity.ok().body(usersDto);
 		} catch (Exception e) {

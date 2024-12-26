@@ -25,13 +25,12 @@ public class UserService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-		Optional<User> user = userRepository.findByEmail(email);
+		Optional<User> user = userRepository.findByEmailWithPerfilAndPermissions(email);
 
-		if (user.isPresent()) {
-			return user.get();
-		} else {
+		if (!user.isPresent()) {
 			throw new UsernameNotFoundException("Email user: " + email + " not found");
 		}
+		return user.get();
 	}
 
 	public User getLoggedUser() {
@@ -58,6 +57,10 @@ public class UserService implements UserDetailsService {
 
 	public List<User> findAll() {
 		return userRepository.findAll();
+	}
+
+	public List<User> getAllUsersWithPerfilAndPermissions() {
+		return userRepository.findAllWithPerfilAndPermissions();
 	}
 
 	public Optional<User> findById(Long id) {
