@@ -9,11 +9,12 @@ export default function useAuth() {
     (state: IRootState) => state.auth,
   );
 
-  const { name, email, profile } = decodeToken(token);
+  const { name, email, profile, permissions } = decodeToken(token);
 
   return {
     isAuthenticated,
     profile,
+    permissions,
     email,
     name,
   };

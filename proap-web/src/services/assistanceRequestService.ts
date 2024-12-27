@@ -31,7 +31,7 @@ export const getAssistanceRequests =
     sortBy?: AssistanceRequestPropToSort,
     ascending?: boolean,
     page?: number,
-    size?: number
+    size?: number,
   ) =>
   (dispatch: AppDispatch) => {
     const defaultPropToFilter: AssistanceRequestPropToSort = 'createdAt';

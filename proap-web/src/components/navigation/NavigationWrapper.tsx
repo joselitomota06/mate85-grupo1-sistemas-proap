@@ -6,7 +6,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import MobileNavigationWrapper from './MobileNavigationWrapper';
 import { AddRounded } from '@mui/icons-material';
 import { useAuth } from '../../hooks';
-import useHasPermission from '../../hooks/profile/useHasPermission';
+import useHasPermission from '../../hooks/auth/useHasPermission';
 
 export interface NavigationItem {
   label: string;

@@ -23,9 +23,8 @@ import { maskCpf, maskPhone } from '../../helpers/masks';
 import useUsers from '../../hooks/auth/useUsers';
 import Toast from '../../helpers/notification';
 import { updateUserCredentials } from '../../services/authService';
-import useAuth from '../../hooks/auth/useAuth';
 import { UnauthorizedPage } from '../unauthorized/UnauthorizedPage';
-import useHasPermission from '../../hooks/profile/useHasPermission';
+import useHasPermission from '../../hooks/auth/useHasPermission';
 
 export default function UsersPage() {
   const [currentUserEmail, setCurrentUserEmail] = useState<string>('');

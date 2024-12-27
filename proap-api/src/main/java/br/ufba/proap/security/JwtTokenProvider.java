@@ -48,6 +48,8 @@ public class JwtTokenProvider {
 		claims.put("name", userPrincipal.getName());
 		claims.put("email", userPrincipal.getEmail());
 		claims.put("profile", userPrincipal.getPerfil().getName());
+		claims.put("permissions",
+				userPrincipal.getPerfil().getPermissions().stream().map(permission -> permission.getKey()).toList());
 
 		return Jwts.builder()
 				.subject(userPrincipal.getName())

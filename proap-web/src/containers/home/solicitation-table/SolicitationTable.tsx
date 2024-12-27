@@ -55,14 +55,8 @@ import SolicitationTableExtraRequests from './SolicitationTableExtraRequests';
 export default function SolicitationTable() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { isAdmin } = useAuth();
 
   const [currentTab, setCurrentTab] = React.useState(0);
-
-  useEffect(() => {
-    // TODO : Apagar esse useEffect quando terminar de desenvolver as abas
-      console.log(currentTab);
-    }, [currentTab]);
 
   return (
     <>

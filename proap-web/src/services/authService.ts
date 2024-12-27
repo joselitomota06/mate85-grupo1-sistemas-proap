@@ -22,13 +22,14 @@ export const registerUser =
     return api.post('user/create', values);
   };
 
-export const signIn = (values: LoginFormValues) => (dispatch: AppDispatch) => {
-  return api
-    .post<SignInResponse>('authentication/signin', values)
-    .then(({ data: { accessToken } }) => {
-      dispatch(authenticate(accessToken));
-    });
-};
+export const signIn =
+  (values: LoginFormValues) => async (dispatch: AppDispatch) => {
+    return await api
+      .post<SignInResponse>('authentication/signin', values)
+      .then(({ data: { accessToken } }) => {
+        dispatch(authenticate(accessToken));
+      });
+  };
 
 export const listUsers = async () => {
   const response = await api.get<User[]>('user/list');

@@ -8,6 +8,7 @@ interface DecodedToken {
   login: string;
   name: string;
   profile: string;
+  permissions: string[];
 }
 
 export const LOCAL_STORAGE_TOKEN_KEY = 'token';
@@ -45,5 +46,6 @@ export const decodeToken = (token: string): DecodedToken => {
         iat: 0,
         id: 0,
         profile: '',
+        permissions: [],
       };
 };

@@ -1,12 +1,11 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 import { getInitialAuthSliceState } from '../helpers/auth';
-import { authSlice, assistanceRequestSlice, profileSlice } from './slices';
+import { authSlice, assistanceRequestSlice } from './slices';
 
 const rootReducer = combineReducers({
   auth: authSlice.reducer,
   assistanceRequestSlice: assistanceRequestSlice.reducer,
-  profileSlice: profileSlice.reducer,
 });
 
 const loadState = (): Partial<IRootState> | undefined => {
@@ -33,6 +32,14 @@ const saveState = (state: Partial<IRootState>) => {
   }
 };
 
+const clearState = () => {
+  try {
+    localStorage.removeItem('localState');
+  } catch (err) {
+    console.error('Error clearing state from local storage: ', err);
+  }
+};
+
 const preloadedState: Partial<IRootState> = {
   auth: getInitialAuthSliceState(),
   ...(loadState() || {}),
@@ -46,6 +53,6 @@ const store = configureStore({
 export type IRootState = ReturnType<typeof rootReducer>;
 export type AppDispatch = typeof store.dispatch;
 export const useAppDispatch: () => AppDispatch = useDispatch;
-export { saveState };
+export { saveState, clearState };
 
 export default store;
