@@ -3,19 +3,7 @@ import { LoginFormValues } from '../containers/login/LoginFormSchema';
 import { authenticate } from '../store/slices/auth-slice/authSlice';
 import { AppDispatch } from '../store';
 import api from '.';
-
-interface SignInResponse {
-  accessToken: string;
-  tokenType: string;
-}
-
-export interface User {
-  name: string;
-  cpf: string;
-  email: string;
-  phone: string;
-  profileName: string;
-}
+import { SignInResponse, User } from '../types';
 
 export const registerUser =
   (values: RegisterFormValues) => (dispatch: AppDispatch) => {

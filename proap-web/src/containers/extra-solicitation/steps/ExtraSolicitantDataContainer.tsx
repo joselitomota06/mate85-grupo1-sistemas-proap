@@ -3,7 +3,7 @@ import { Field, useFormikContext } from 'formik';
 import { Grid } from '@mui/material';
 
 import { StyledTextField } from '../../solicitation/SolicitationFormContainer.style';
-import { ExtraRequest } from '../../../store/slices/assistance-request-slice/assistanceRequestSlice';
+import { ExtraRequest } from '../../../types/requests-type/ExtraRequest';
 import { useAuth } from '../../../hooks';
 
 export default function ExtraSolicitantDataContainer() {
@@ -13,10 +13,10 @@ export default function ExtraSolicitantDataContainer() {
 
   return (
     <Grid container direction="column" paddingTop={2} paddingBottom={2}>
-      <StyledTextField 
-        label="Solicitante" 
-        value={values.user.name != '' ? values.user.name : name} 
-        disabled 
+      <StyledTextField
+        label="Solicitante"
+        value={values.user.name != '' ? values.user.name : name}
+        disabled
       />
       <StyledTextField
         label="E-mail"

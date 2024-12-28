@@ -1,5 +1,6 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { listUsers, User } from '../../services/authService';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { listUsers } from '../../services/authService';
+import { User } from '../../types/auth-type/user';
 
 const PAGE_SIZE = 10;
 

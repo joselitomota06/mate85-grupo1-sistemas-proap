@@ -45,9 +45,8 @@ import {
   deleteExtraAssistanceRequest,
   getExtraAssistanceRequests,
 } from '../../../services/extraAssistanceRequestService';
-import assistanceRequestSlice, {
-  AssistanceRequest,
-} from '../../../store/slices/assistance-request-slice/assistanceRequestSlice';
+import assistanceRequestSlice from '../../../store/slices/assistance-request-slice/assistanceRequestSlice';
+import { AssistanceRequest } from '../../../store/slices/assistance-request-slice/AssistanceRequest';
 import usePrevious from '../../../helpers/usePrevious';
 import SolicitationTableRequests from './SolicitationTableRequests';
 import SolicitationTableExtraRequests from './SolicitationTableExtraRequests';

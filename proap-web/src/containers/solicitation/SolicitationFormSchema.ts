@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { AssistanceRequest } from '../../store/slices/assistance-request-slice/assistanceRequestSlice';
+import { AssistanceRequest } from '../../types';
 
 export const solicitantDataFormSchema = Yup.object({
   nomeCompleto: Yup.string(),
@@ -12,19 +12,27 @@ export const financingDataFormSchema = Yup.object({
   solicitacaoApoio: Yup.boolean().nullable().required('Campo obrigatório'),
   valorSolicitado: Yup.number()
     .nullable()
-    .when(['solicitacaoApoio'], ([solicitacaoApoio], schema) => 
-      solicitacaoApoio ? schema.required('Campo obrigatório') : schema.notRequired()
+    .when(['solicitacaoApoio'], ([solicitacaoApoio], schema) =>
+      solicitacaoApoio
+        ? schema.required('Campo obrigatório')
+        : schema.notRequired(),
     ),
   solicitacaoAuxilioOutrasFontes: Yup.boolean()
     .nullable()
     .required('Campo obrigatório'),
-  nomeAgenciaFomento: Yup.string().when(['solicitacaoAuxilioOutrasFontes'], ([solicitacaoAuxilioOutrasFontes], schema) =>
-    solicitacaoAuxilioOutrasFontes ? schema.required('Campo obrigatório') : schema.notRequired()
+  nomeAgenciaFomento: Yup.string().when(
+    ['solicitacaoAuxilioOutrasFontes'],
+    ([solicitacaoAuxilioOutrasFontes], schema) =>
+      solicitacaoAuxilioOutrasFontes
+        ? schema.required('Campo obrigatório')
+        : schema.notRequired(),
   ),
   valorSolicitadoAgenciaFomento: Yup.number().when(
     ['solicitacaoAuxilioOutrasFontes'],
     ([solicitacaoAuxilioOutrasFontes], schema) =>
-      solicitacaoAuxilioOutrasFontes ? schema.required('Campo obrigatório') : schema.notRequired()
+      solicitacaoAuxilioOutrasFontes
+        ? schema.required('Campo obrigatório')
+        : schema.notRequired(),
   ),
 });
 
@@ -38,7 +46,7 @@ export const eventDataFormSchema = Yup.object({
     .nullable()
     .min(1, 'Insira um valor válido')
     .defined()
-    .required('Campo obrigatório'), 
+    .required('Campo obrigatório'),
 
   valorInscricao: Yup.number()
     .nullable()

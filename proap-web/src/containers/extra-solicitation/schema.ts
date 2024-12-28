@@ -1,8 +1,6 @@
 import * as Yup from 'yup';
-import {
-  ExtraRequest,
-  RequestReview,
-} from '../../store/slices/assistance-request-slice/assistanceRequestSlice';
+import { ExtraRequest } from '../../types/requests-type/ExtraRequest';
+import { RequestReview } from '../../types/requests-type/RequestReview';
 
 export interface ExtraSolicitationFormValues
   extends Omit<ExtraRequest, 'automaticDecText' | 'createdAt' | 'updatedAt'> {
@@ -38,6 +36,6 @@ export const EXTRA_SOLICITATION_INITIAL_VALUES: ExtraSolicitationFormValues = {
     email: '',
     id: 0,
     name: '',
-    password: ''
-  }
+    password: '',
+  },
 };

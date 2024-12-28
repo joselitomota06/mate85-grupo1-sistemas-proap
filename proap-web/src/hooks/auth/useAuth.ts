@@ -1,6 +1,4 @@
-import React from 'react';
 import { useSelector } from 'react-redux';
-
 import { IRootState } from '../../store';
 import { decodeToken } from '../../helpers/auth';
 

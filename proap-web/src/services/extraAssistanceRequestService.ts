@@ -1,17 +1,7 @@
 import { AppDispatch } from '../store';
 import api from '.';
-import { ExtraRequest, updateExtraSolicitations } from '../store/slices/assistance-request-slice/assistanceRequestSlice';
-
-export interface ExtraRequestListResponse {
-  /**
-   * Lista de solicitações extras que devem ser exibidas na tela
-   */
-  list: ExtraRequest[];
-  /**
-   * Número total de registros no banco
-   */
-  total: number;
-}
+import { updateExtraSolicitations } from '../store/slices/assistance-request-slice/assistanceRequestSlice';
+import { ExtraRequest, ExtraRequestListResponse } from '../types';
 
 export type ExtraRequestPropToSort =
   | keyof Omit<ExtraRequest, 'user'>
@@ -22,16 +12,17 @@ export const getExtraAssistanceRequests =
     sortBy?: ExtraRequestPropToSort,
     ascending?: boolean,
     page?: number,
-    size?: number
+    size?: number,
   ) =>
   (dispatch: AppDispatch) => {
     const defaultPropToFilter: ExtraRequestPropToSort = 'createdAt';
 
-    let requestUrl = 'extrarequest/list'
-      + `?sortBy=${sortBy ?? defaultPropToFilter}`
-      + `&ascending=${ascending ?? false}`
-      + `&page=${page ?? 0}`
-      + `&size=${size ?? 10}`;
+    let requestUrl =
+      'extrarequest/list' +
+      `?sortBy=${sortBy ?? defaultPropToFilter}` +
+      `&ascending=${ascending ?? false}` +
+      `&page=${page ?? 0}` +
+      `&size=${size ?? 10}`;
 
     return api
       .get<ExtraRequestListResponse>(requestUrl)

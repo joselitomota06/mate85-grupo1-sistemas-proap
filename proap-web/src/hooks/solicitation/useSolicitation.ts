@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { INITIAL_FORM_VALUES } from '../../containers/solicitation/SolicitationFormSchema';
 import { localDateToDate } from '../../helpers/conversion';
 import { getAssistanceRequestById } from '../../services/assistanceRequestService';
