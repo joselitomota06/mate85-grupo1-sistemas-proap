@@ -12,13 +12,14 @@ import {
   AppBar,
   Box,
   Container,
+  Tooltip,
 } from '@mui/material';
 
 import MenuIcon from '@mui/icons-material/Menu';
 import LogoutIcon from '@mui/icons-material/Logout';
 import PersonIcon from '@mui/icons-material/Person';
 
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { NavigationItem } from './NavigationWrapper';
 import {
   MobileNavigationChildren,
@@ -40,6 +41,7 @@ export const MobileNavigationWrapper = ({
 }: MobileNavigationWrapperProps) => {
   const theme = useTheme();
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const [isDrawerOpen, setDrawerOpen] = useState(false);
 
@@ -47,6 +49,7 @@ export const MobileNavigationWrapper = ({
   const handleDrawerClose = () => setDrawerOpen(false);
 
   const handleClickNavigation = () => setDrawerOpen(false);
+  const handleClickUserProfile = () => navigate('/user-profile');
 
   const handleClickExit = useCallback(() => {
     dispatch(logout());
@@ -91,12 +94,19 @@ export const MobileNavigationWrapper = ({
             </Box>
 
             <Box component="div" sx={{ display: 'flex', alignItems: 'center' }}>
-              <IconButton color="inherit" aria-label="perfil" edge="end">
-                <PersonIcon />
-                <Typography variant="h6" noWrap component="div">
-                  {name}
-                </Typography>
-              </IconButton>
+              <Tooltip title="Informações do Usuário" arrow>
+                <IconButton
+                  color="inherit"
+                  aria-label="perfil"
+                  edge="end"
+                  onClick={handleClickUserProfile}
+                >
+                  <PersonIcon />
+                  <Typography variant="h6" noWrap component="div">
+                    {name}
+                  </Typography>
+                </IconButton>
+              </Tooltip>
             </Box>
           </Box>
         </Toolbar>

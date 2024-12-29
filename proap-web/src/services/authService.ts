@@ -4,6 +4,7 @@ import { authenticate } from '../store/slices/auth-slice/authSlice';
 import { AppDispatch } from '../store';
 import api from '.';
 import { SignInResponse, User } from '../types';
+import { setUser } from '../store/slices/user-profile-slice/userProfileSlice';
 
 export const registerUser =
   (values: RegisterFormValues) => (dispatch: AppDispatch) => {
@@ -25,6 +26,16 @@ export const listUsers = async () => {
     status: response.status === 200 ? 'success' : 'error',
     data: response.data,
   };
+};
+
+export const getCurrentUserInfo = async (dispatch: AppDispatch) => {
+  return await api.get<User>('user/info').then((response) => {
+    dispatch(setUser(response.data));
+  });
+};
+
+export const updateUser = (values: Partial<User>) => {
+  return api.put('user/update', values);
 };
 
 export const updateUserCredentials = (email: string) => {

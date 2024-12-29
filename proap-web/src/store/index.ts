@@ -1,11 +1,12 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 import { getInitialAuthSliceState } from '../helpers/auth';
-import { authSlice, assistanceRequestSlice } from './slices';
+import { authSlice, assistanceRequestSlice, userProfileSlice } from './slices';
 
 const rootReducer = combineReducers({
   auth: authSlice.reducer,
   assistanceRequestSlice: assistanceRequestSlice.reducer,
+  userProfileSlice: userProfileSlice.reducer,
 });
 
 const loadState = (): Partial<IRootState> | undefined => {

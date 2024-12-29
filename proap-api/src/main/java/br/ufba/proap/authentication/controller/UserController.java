@@ -66,6 +66,20 @@ public class UserController {
 		}
 	}
 
+	@GetMapping("/info")
+	public ResponseEntity<UserResponseDTO> currentUserInfo() {
+		try {
+			User currentUser = service.getLoggedUser();
+			if (currentUser == null) {
+				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+			}
+			return ResponseEntity.ok().body(UserResponseDTO.fromUser(currentUser));
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
+
 	@PutMapping("/forgot")
 	public ResponseEntity<String> updateCustomerContacts(@RequestBody UpdatePasswordDTO up) {
 		try {
