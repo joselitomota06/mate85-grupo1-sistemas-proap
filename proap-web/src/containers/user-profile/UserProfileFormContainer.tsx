@@ -18,9 +18,6 @@ export default function UserProfileFormContainer(props: UserProfileFormProps) {
       {({ errors, touched }) => (
         <Box component={Form} sx={{ width: '100%' }}>
           <Stack spacing={2}>
-            <Typography variant="h4" gutterBottom>
-              Informações do Usuário
-            </Typography>
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
               <Field
                 as={TextField}

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import br.ufba.proap.authentication.domain.Perfil;
 import br.ufba.proap.authentication.domain.User;
 import br.ufba.proap.authentication.domain.dto.UpdatePasswordDTO;
+import br.ufba.proap.authentication.domain.dto.UserUpdateDTO;
 import br.ufba.proap.authentication.repository.UserRepository;
 
 @Service
@@ -58,8 +59,22 @@ public class UserService implements UserDetailsService {
 		return userRepository.saveAndFlush(user);
 	}
 
-	public User update(User user) {
-		return userRepository.save(user);
+	public User update(UserUpdateDTO user) {
+		User loggedUser = getLoggedUser();
+
+		if (user.getName() != null && !user.getName().isEmpty()) {
+			loggedUser.setName(user.getName());
+		}
+		if (user.getRegistrationNumber() != null) {
+			loggedUser.setRegistration(user.getRegistrationNumber());
+		}
+		if (user.getPhone() != null) {
+			loggedUser.setPhone(user.getPhone());
+		}
+		if (user.getAlternativePhone() != null) {
+			loggedUser.setAlternativePhone(user.getAlternativePhone());
+		}
+		return userRepository.save(loggedUser);
 	}
 
 	public List<User> findAll() {

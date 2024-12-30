@@ -34,8 +34,13 @@ export const getCurrentUserInfo = async (dispatch: AppDispatch) => {
   });
 };
 
-export const updateUser = (values: Partial<User>) => {
-  return api.put('user/update', values);
+export const updateUserProfile = async (
+  values: Pick<
+    User,
+    'name' | 'registrationNumber' | 'phone' | 'alternativePhone'
+  >,
+) => {
+  return await api.put('user/update', values).then((response) => response.data);
 };
 
 export const updateUserCredentials = (email: string) => {

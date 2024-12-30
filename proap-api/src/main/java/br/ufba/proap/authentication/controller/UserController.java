@@ -21,8 +21,10 @@ import br.ufba.proap.authentication.domain.Perfil;
 import br.ufba.proap.authentication.domain.User;
 import br.ufba.proap.authentication.domain.dto.UpdatePasswordDTO;
 import br.ufba.proap.authentication.domain.dto.UserResponseDTO;
+import br.ufba.proap.authentication.domain.dto.UserUpdateDTO;
 import br.ufba.proap.authentication.service.PerfilService;
 import br.ufba.proap.authentication.service.UserService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/user")
@@ -107,7 +109,7 @@ public class UserController {
 
 			if (user.isPresent() && adminPerfil.isPresent()) {
 				user.get().setPerfil(adminPerfil.get());
-				service.update(user.get());
+				// service.update(user.get());
 			}
 
 			return ResponseEntity.ok().body("Atulização realizada com sucesso!");
@@ -118,9 +120,10 @@ public class UserController {
 	}
 
 	@PutMapping("/update")
-	public ResponseEntity<User> update(@RequestBody User user) {
+	public ResponseEntity<UserResponseDTO> update(@RequestBody @Valid UserUpdateDTO user) {
 		try {
-			return ResponseEntity.ok().body(service.update(user));
+			User userService = service.update(user);
+			return ResponseEntity.ok().body(UserResponseDTO.fromUser(userService));
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
