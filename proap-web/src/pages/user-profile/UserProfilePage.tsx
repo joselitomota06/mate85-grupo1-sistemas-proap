@@ -10,8 +10,10 @@ import {
   updateUserProfile,
 } from '../../services/authService';
 import { User } from '../../types';
-import { Container, Paper, Typography } from '@mui/material';
+import { Box, Container, Paper, Typography } from '@mui/material';
 import UserProfileFormContainer from '../../containers/user-profile/UserProfileFormContainer';
+import Toast from '../../helpers/notification';
+import ChangePasswordContainer from '../../containers/change-password/ChangePasswordContainer';
 
 export default function UserProfilePage() {
   const dispatch = useAppDispatch();
@@ -22,19 +24,51 @@ export default function UserProfilePage() {
   useEffect(() => {
     if (currentUser.email === '') {
       dispatch(setLoading(true));
-      getCurrentUserInfo(dispatch).then(() => dispatch(setLoading(false)));
+      getCurrentUserInfo()
+        .then((user) => {
+          dispatch(updateUser(user));
+          dispatch(setLoading(false));
+        })
+        .catch((error) => {
+          dispatch(setLoading(false));
+          Toast.error(
+            'Erro ao carregar informações do usuário: ' + error.message,
+          );
+        });
     }
   }, [currentUser, dispatch]);
 
   const handleSubmit = async (values: User) => {
     dispatch(setLoading(true));
-    const updatedUsers = await updateUserProfile(values);
-    dispatch(updateUser(updatedUsers));
-    dispatch(setLoading(false));
+    updateUserProfile(values)
+      .then((updatedUsers) => {
+        Toast.success('Usuário atualizado com sucesso!');
+        dispatch(updateUser(updatedUsers));
+        dispatch(setLoading(false));
+      })
+      .catch((error) => {
+        Toast.error('Erro ao atualizar usuário: ' + error.message);
+        dispatch(setLoading(false));
+      });
   };
   if (isLoading) {
-    return <Typography>Carregando...</Typography>;
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100vh"
+      >
+        <Typography variant="h4" fontWeight="bold">
+          Carregando...
+        </Typography>
+      </Box>
+    );
   }
+
+  const mockhandleSubmit = (values: any) => {
+    console.log(values);
+  };
 
   if (error) {
     return <Typography color="error">{error}</Typography>;
@@ -50,6 +84,12 @@ export default function UserProfilePage() {
           initialValues={currentUser}
           onSubmit={handleSubmit}
         />
+      </Paper>
+      <Typography variant="h4" color="primary" fontWeight="bold" paddingTop={4}>
+        Alterar Senha
+      </Typography>
+      <Paper elevation={3} style={{ padding: '2rem', marginTop: '2rem' }}>
+        <ChangePasswordContainer onSubmit={mockhandleSubmit} />
       </Paper>
     </Container>
   );

@@ -65,7 +65,7 @@ public class UserService implements UserDetailsService {
 		if (user.getName() != null && !user.getName().isEmpty()) {
 			loggedUser.setName(user.getName());
 		}
-		if (user.getRegistrationNumber() != null && user.getRegistrationNumber().isEmpty()) {
+		if (user.getRegistrationNumber() != null && !user.getRegistrationNumber().isEmpty()) {
 			loggedUser.setRegistration(user.getRegistrationNumber());
 		}
 		if (user.getPhone() != null && !user.getPhone().isEmpty()) {

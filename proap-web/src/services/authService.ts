@@ -28,10 +28,8 @@ export const listUsers = async () => {
   };
 };
 
-export const getCurrentUserInfo = async (dispatch: AppDispatch) => {
-  return await api.get<User>('user/info').then((response) => {
-    dispatch(setUser(response.data));
-  });
+export const getCurrentUserInfo = async () => {
+  return await api.get<User>('user/info').then((response) => response.data);
 };
 
 export const updateUserProfile = async (
