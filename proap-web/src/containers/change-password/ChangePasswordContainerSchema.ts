@@ -8,7 +8,7 @@ export const ChangePasswordSchema = Yup.object().shape({
       [Yup.ref('currentPassword'), undefined],
       'Nova senha não pode ser igual a senha atual',
     ),
-  confirmPassword: Yup.string()
+  confirmNewPassword: Yup.string()
     .oneOf([Yup.ref('newPassword'), undefined], 'Senhas não conferem')
     .required('Confirmação de senha é obrigatória'),
 });

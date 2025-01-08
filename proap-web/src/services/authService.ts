@@ -44,3 +44,5 @@ export const updateUserProfile = async (
 export const updateUserCredentials = (email: string) => {
   return api.put(`user/set-admin/${email}`);
 };
+
+export const changeUserPassword;

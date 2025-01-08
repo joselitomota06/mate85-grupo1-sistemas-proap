@@ -66,7 +66,7 @@ export default function UserProfilePage() {
     );
   }
 
-  const mockhandleSubmit = (values: any) => {
+  const mockhandleSubmit = (values: unknown) => {
     console.log(values);
   };
 

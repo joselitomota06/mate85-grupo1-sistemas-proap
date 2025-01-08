@@ -1,15 +1,6 @@
-import {
-  Box,
-  Button,
-  IconButton,
-  InputAdornment,
-  Stack,
-  TextField,
-} from '@mui/material';
+import { Box, Button, Stack } from '@mui/material';
 import { Field, Form, Formik } from 'formik';
 import { ChangePasswordSchema } from './ChangePasswordContainerSchema';
-import { useState } from 'react';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
 import PasswordField from '../../components/custom/PasswordField';
 
 type ChangePasswordForm = {
@@ -35,10 +26,7 @@ export default function ChangePasswordContainer(
       validationSchema={ChangePasswordSchema}
       onSubmit={props.onSubmit}
     >
-      {({ errors, touched, values }) => {
-        console.log('Errors:', errors);
-        console.log('Touched:', touched);
-        console.log('Values:', values);
+      {({ errors, touched }) => {
         return (
           <Box component={Form} sx={{ width: '100%' }}>
             <Stack spacing={2}>

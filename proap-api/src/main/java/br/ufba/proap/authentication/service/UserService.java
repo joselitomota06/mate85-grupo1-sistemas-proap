@@ -16,6 +16,7 @@ import br.ufba.proap.authentication.domain.User;
 import br.ufba.proap.authentication.domain.dto.UpdatePasswordDTO;
 import br.ufba.proap.authentication.domain.dto.UserUpdateDTO;
 import br.ufba.proap.authentication.repository.UserRepository;
+import jakarta.validation.ValidationException;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -108,6 +109,19 @@ public class UserService implements UserDetailsService {
 
 	public void remove(User user) {
 		userRepository.delete(user);
+	}
+
+	public void changePassword(String currentPassword, String newPassword) throws ValidationException {
+		User loggedUser = getLoggedUser();
+		if (!passwordEncoder.matches(currentPassword, loggedUser.getPassword())) {
+			throw new ValidationException("Senha atual incorreta");
+		}
+		if (currentPassword.equals(newPassword)) {
+			throw new ValidationException("A nova senha não pode ser igual a senha atual");
+		}
+		loggedUser.setPassword(passwordEncoder.encode(newPassword));
+		userRepository.save(loggedUser);
+
 	}
 
 }

@@ -19,12 +19,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.ufba.proap.authentication.domain.Perfil;
 import br.ufba.proap.authentication.domain.User;
+import br.ufba.proap.authentication.domain.dto.ChangePasswordDTO;
+import br.ufba.proap.authentication.domain.dto.StatusResponseDTO;
 import br.ufba.proap.authentication.domain.dto.UpdatePasswordDTO;
 import br.ufba.proap.authentication.domain.dto.UserResponseDTO;
 import br.ufba.proap.authentication.domain.dto.UserUpdateDTO;
 import br.ufba.proap.authentication.service.PerfilService;
 import br.ufba.proap.authentication.service.UserService;
 import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 
 @RestController
 @RequestMapping("/user")
@@ -145,6 +148,23 @@ public class UserController {
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		}
+	}
+
+	@PutMapping("/change-password")
+	public ResponseEntity<StatusResponseDTO> changePassword(@Valid @RequestBody ChangePasswordDTO body) {
+		try {
+			service.changePassword(body.currentPassword(), body.newPassword());
+			return ResponseEntity.ok()
+					.body(new StatusResponseDTO("Sucesso", "Senha alterada com sucesso!"));
+		} catch (ValidationException e) {
+			logger.error(e.getMessage());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(new StatusResponseDTO("Inválido", e.getMessage()));
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new StatusResponseDTO("Erro", "Erro interno no servidor"));
 		}
 	}
 

@@ -13,8 +13,8 @@ export default function PasswordField({
 }: PasswordFieldProps) {
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleMouseDown = () => setShowPassword(true);
-  const handleMouseUpPassword = () => setShowPassword(false);
+  const handleClickDown = () => setShowPassword(true);
+  const handleClickUp = () => setShowPassword(false);
 
   return (
     <TextField
@@ -31,8 +31,8 @@ export default function PasswordField({
               <IconButton
                 size="small"
                 aria-label="toggle password visibility"
-                onPointerDown={handleMouseDown}
-                onPointerUp={handleMouseUpPassword}
+                onPointerDown={handleClickDown}
+                onPointerUp={handleClickUp}
                 edge="end"
               >
                 {showPassword ? <Visibility /> : <VisibilityOff />}
