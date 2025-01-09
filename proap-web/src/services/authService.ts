@@ -45,4 +45,13 @@ export const updateUserCredentials = (email: string) => {
   return api.put(`user/set-admin/${email}`);
 };
 
-export const changeUserPassword;
+export const changeUserPassword = async (
+  currentPassword: string,
+  newPassword: string,
+) => {
+  const response = await api.put('user/change-password', {
+    currentPassword,
+    newPassword,
+  });
+  return response.data;
+};

@@ -6,6 +6,7 @@ import {
   updateUser,
 } from '../../store/slices/user-profile-slice/userProfileSlice';
 import {
+  changeUserPassword,
   getCurrentUserInfo,
   updateUserProfile,
 } from '../../services/authService';
@@ -66,8 +67,22 @@ export default function UserProfilePage() {
     );
   }
 
-  const mockhandleSubmit = (values: unknown) => {
-    console.log(values);
+  const handleChangePasswordSubmit = (values: unknown) => {
+    const { currentPassword, newPassword } = values as {
+      currentPassword: string;
+      newPassword: string;
+    };
+    dispatch(setLoading(true));
+    changeUserPassword(currentPassword, newPassword)
+      .then((response) => {
+        Toast.success(response.message);
+        dispatch(setLoading(false));
+      })
+      .catch((error) => {
+        Toast.error(error.response.data.message);
+        console.error(error.response.data);
+        dispatch(setLoading(false));
+      });
   };
 
   if (error) {
@@ -89,7 +104,7 @@ export default function UserProfilePage() {
         Alterar Senha
       </Typography>
       <Paper elevation={3} style={{ padding: '2rem', marginTop: '2rem' }}>
-        <ChangePasswordContainer onSubmit={mockhandleSubmit} />
+        <ChangePasswordContainer onSubmit={handleChangePasswordSubmit} />
       </Paper>
     </Container>
   );
