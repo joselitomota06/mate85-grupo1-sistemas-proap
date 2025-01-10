@@ -62,10 +62,10 @@ public class AssistanceRequestService {
 			User user) {
 		long count;
 
-		boolean userIsAdmin = user.getPerfil() != null
-				&& user.getPerfil().isAdmin();
+		boolean userHasPermission = user.getPerfil() != null
+				&& user.getPerfil().hasPermission("VIEW_ALL_REQUESTS");
 
-		if (userIsAdmin)
+		if (userHasPermission)
 			count = assistanteRequestRepository.count();
 		else
 			count = assistanteRequestRepository.countByUser(user);
@@ -76,7 +76,7 @@ public class AssistanceRequestService {
 						ascending,
 						page,
 						requestListSize,
-						userIsAdmin ? null : user),
+						userHasPermission ? null : user),
 				count);
 	}
 

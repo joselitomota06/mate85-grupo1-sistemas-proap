@@ -40,20 +40,20 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import assistanceRequestSlice, {
-  AssistanceRequest,
-} from '../../../store/slices/assistance-request-slice/assistanceRequestSlice';
+import assistanceRequestSlice from '../../../store/slices/assistance-request-slice/assistanceRequestSlice';
+import { AssistanceRequest } from '../../../store/slices/assistance-request-slice/AssistanceRequest';
 import usePrevious from '../../../helpers/usePrevious';
+import useHasPermission from '../../../hooks/auth/useHasPermission';
 
 export default function SolicitationTableRequests() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { isAdmin } = useAuth();
+  const userCanViewAllRequests = useHasPermission('VIEW_ALL_REQUESTS');
 
   //#region table data
   // TODO : Não usar mais o slice já que request e extra request agora estão em abas separadas
   const { requests, extraRequests } = useSelector(
-    (state: IRootState) => state.assistanceRequestSlice
+    (state: IRootState) => state.assistanceRequestSlice,
   );
 
   const updateAssistanceRequestList = useCallback(
@@ -61,16 +61,16 @@ export default function SolicitationTableRequests() {
       sortBy: AssistanceRequestPropToSort,
       ascending: boolean,
       size: number,
-      page: number
+      page: number,
     ) => {
       dispatch(getAssistanceRequests(sortBy, ascending, page, size)).then(
         (requests) =>
           setNumberPagesAssistance(
-            Math.trunc(requests.payload.total / size) + 1
-          )
+            Math.trunc(requests.payload.total / size) + 1,
+          ),
       );
     },
-    [dispatch]
+    [dispatch],
   );
   // HACK : Não entendi a tempo como usar useCallback com os valores atualizados. Estava sempre pegando os iniciais
   const updateAssistanceRequestListWithCurrentParameters = () => {
@@ -78,7 +78,7 @@ export default function SolicitationTableRequests() {
       getSelectedProp(),
       selectedPropToSortTable[getSelectedProp()] as boolean,
       size,
-      currentPageAssistance
+      currentPageAssistance,
     );
   };
   //#endregion
@@ -150,7 +150,7 @@ export default function SolicitationTableRequests() {
 
   const getSelectedProp = () => {
     return Object.getOwnPropertyNames(
-      selectedPropToSortTable
+      selectedPropToSortTable,
     )[0] as AssistanceRequestPropToSort;
   };
 
@@ -214,7 +214,7 @@ export default function SolicitationTableRequests() {
       getSelectedProp(),
       selectedPropToSortTable[getSelectedProp()] as boolean,
       size,
-      currentPageAssistance
+      currentPageAssistance,
     );
   }, [currentPageAssistance, size, selectedPropToSortTable]);
 
@@ -335,7 +335,7 @@ export default function SolicitationTableRequests() {
 
                     <TableCell align="center">
                       <Box>
-                        {isAdmin && (
+                        {userCanViewAllRequests && (
                           <>
                             <IconButton
                               onClick={() =>
@@ -362,7 +362,7 @@ export default function SolicitationTableRequests() {
                       </Box>
                     </TableCell>
                   </TableRow>
-                )
+                ),
               )}
           </TableBody>
         </Table>

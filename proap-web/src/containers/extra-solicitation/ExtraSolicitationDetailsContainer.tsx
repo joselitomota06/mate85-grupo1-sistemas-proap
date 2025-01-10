@@ -4,7 +4,7 @@ import { Grid, Typography } from '@mui/material';
 import styled from '@emotion/styled';
 
 import { booleanToYesOrNo } from '../../helpers/conversion';
-import { ExtraRequest } from '../../store/slices/assistance-request-slice/assistanceRequestSlice';
+import { ExtraRequest } from '../../types/requests-type/ExtraRequest';
 
 interface ExtraSolicitationDetailsContainerProps {
   solicitation: ExtraRequest;
@@ -15,7 +15,7 @@ const StyledData = styled.div`
 `;
 
 export default function ExtraSolicitationDetailsContainer(
-  props: ExtraSolicitationDetailsContainerProps
+  props: ExtraSolicitationDetailsContainerProps,
 ) {
   const { solicitation } = props;
 
@@ -65,7 +65,7 @@ export default function ExtraSolicitationDetailsContainer(
           </Typography>
           <Typography style={{ color: 'gray' }} variant="subtitle2">
             {booleanToYesOrNo(
-              Boolean(solicitation.solicitacaoAuxilioOutrasFontes)
+              Boolean(solicitation.solicitacaoAuxilioOutrasFontes),
             )}
           </Typography>
         </StyledData>

@@ -1,6 +1,5 @@
 package br.ufba.proap.authentication.controller;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,11 +18,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.ufba.proap.authentication.domain.Perfil;
-import br.ufba.proap.authentication.domain.PerfilEnum;
 import br.ufba.proap.authentication.domain.User;
+import br.ufba.proap.authentication.domain.dto.ChangePasswordDTO;
+import br.ufba.proap.authentication.domain.dto.StatusResponseDTO;
 import br.ufba.proap.authentication.domain.dto.UpdatePasswordDTO;
+import br.ufba.proap.authentication.domain.dto.UserResponseDTO;
+import br.ufba.proap.authentication.domain.dto.UserUpdateDTO;
 import br.ufba.proap.authentication.service.PerfilService;
 import br.ufba.proap.authentication.service.UserService;
+import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 
 @RestController
 @RequestMapping("/user")
@@ -48,11 +52,36 @@ public class UserController {
 	}
 
 	@GetMapping("/list")
-	public List<User> list() {
+	public ResponseEntity<List<UserResponseDTO>> list() {
 		try {
-			return service.findAll();
+			User currentUser = service.getLoggedUser();
+			if (currentUser.getPerfil() == null ||
+					!currentUser.getPerfil().hasPermission("VIEW_USER")) {
+				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+			}
+
+			List<User> users = service.getAllUsersWithPerfilAndPermissions();
+			List<UserResponseDTO> usersDto = users.stream().map(user -> {
+				return UserResponseDTO.fromUser(user);
+			}).toList();
+			return ResponseEntity.ok().body(usersDto);
 		} catch (Exception e) {
-			return Collections.emptyList();
+			logger.error(e.getMessage(), e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
+
+	@GetMapping("/info")
+	public ResponseEntity<UserResponseDTO> currentUserInfo() {
+		try {
+			User currentUser = service.getLoggedUser();
+			if (currentUser == null) {
+				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+			}
+			return ResponseEntity.ok().body(UserResponseDTO.fromUser(currentUser));
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
 
@@ -67,23 +96,23 @@ public class UserController {
 		}
 	}
 
-	@PutMapping("/set-admin/{id}")
-	public ResponseEntity<String> setAdminUser(@PathVariable Long id) {
+	@PutMapping("/set-admin/{email}")
+	public ResponseEntity<String> setAdminUser(@PathVariable String email) {
 		try {
 			User currentUser = service.getLoggedUser();
 
 			if (currentUser == null)
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
-			if (currentUser.getPerfil() == null || !currentUser.getPerfil().isAdmin())
+			if (currentUser.getPerfil() == null || !currentUser.getPerfil().hasPermission("EDIT_USER_ROLE"))
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
-			Optional<User> user = service.findById(id);
-			Optional<Perfil> adminPerfil = perfilService.findByName(PerfilEnum.ADMIN.getName());
+			Optional<User> user = service.findByEmail(email);
+			Optional<Perfil> adminPerfil = perfilService.findByName("Admin");
 
 			if (user.isPresent() && adminPerfil.isPresent()) {
 				user.get().setPerfil(adminPerfil.get());
-				service.update(user.get());
+				// service.update(user.get());
 			}
 
 			return ResponseEntity.ok().body("Atulização realizada com sucesso!");
@@ -94,9 +123,10 @@ public class UserController {
 	}
 
 	@PutMapping("/update")
-	public ResponseEntity<User> update(@RequestBody User user) {
+	public ResponseEntity<UserResponseDTO> update(@RequestBody @Valid UserUpdateDTO user) {
 		try {
-			return ResponseEntity.ok().body(service.update(user));
+			User userService = service.update(user);
+			return ResponseEntity.ok().body(UserResponseDTO.fromUser(userService));
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -118,6 +148,23 @@ public class UserController {
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		}
+	}
+
+	@PutMapping("/change-password")
+	public ResponseEntity<StatusResponseDTO> changePassword(@Valid @RequestBody ChangePasswordDTO body) {
+		try {
+			service.changePassword(body.currentPassword(), body.newPassword());
+			return ResponseEntity.ok()
+					.body(new StatusResponseDTO("Sucesso", "Senha alterada com sucesso!"));
+		} catch (ValidationException e) {
+			logger.error(e.getMessage());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(new StatusResponseDTO("Inválido", e.getMessage()));
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new StatusResponseDTO("Erro", "Erro interno no servidor"));
 		}
 	}
 

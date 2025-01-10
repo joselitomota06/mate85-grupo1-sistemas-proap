@@ -17,4 +17,7 @@ public interface PerfilRepository extends JpaRepository<Perfil, Long> {
 	@Query(value = "SELECT * FROM AUT_PERFIL WHERE NAME = :name", nativeQuery = true)
 	Optional<Perfil> findByName(@Param("name") String name);
 
+	@Query("SELECT p FROM Perfil p JOIN FETCH p.permissions")
+	List<Perfil> findAllWithPermissions();
+
 }

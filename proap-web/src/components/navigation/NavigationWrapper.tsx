@@ -6,6 +6,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import MobileNavigationWrapper from './MobileNavigationWrapper';
 import { AddRounded } from '@mui/icons-material';
 import { useAuth } from '../../hooks';
+import useHasPermission from '../../hooks/auth/useHasPermission';
 
 export interface NavigationItem {
   label: string;
@@ -17,7 +18,7 @@ export interface NavigationItem {
 export const NavigationWrapper = ({ children }: PropsWithChildren) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const { isAdmin } = useAuth();
+  const userCanViewPage = useHasPermission('VIEW_USER');
 
   const navigationItems: NavigationItem[] = [
     {
@@ -30,7 +31,7 @@ export const NavigationWrapper = ({ children }: PropsWithChildren) => {
       label: 'Usuários cadastrados',
       icon: <AddRounded />,
       link: '/users',
-      visible: isAdmin,
+      visible: userCanViewPage,
     },
   ];
 

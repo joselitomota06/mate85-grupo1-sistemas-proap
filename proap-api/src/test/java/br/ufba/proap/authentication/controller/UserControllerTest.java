@@ -53,7 +53,7 @@ class UserControllerTest {
 		Mockito.when(perfilService.findById(Mockito.anyLong())).thenReturn(optionalPerfil);
 		Mockito.when(service.update(Mockito.any())).thenReturn(user);
 
-		ResponseEntity<String> response = controller.setAdminUser(10L);
+		ResponseEntity<String> response = controller.setAdminUser(user.getEmail());
 
 		assertNotNull(response);
 		assertNotNull(response.getBody());
@@ -66,7 +66,7 @@ class UserControllerTest {
 	@Test
 	void whenSetAdminUserAndCurrentUserIsNullThenReturnBadRequest() {
 		Mockito.when(service.getLoggedUser()).thenReturn(null);
-		ResponseEntity<String> response = controller.setAdminUser(10L);
+		ResponseEntity<String> response = controller.setAdminUser(user.getEmail());
 		assertNotNull(response);
 		assertEquals(ResponseEntity.class, response.getClass());
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
@@ -77,7 +77,7 @@ class UserControllerTest {
 		Mockito.when(service.getLoggedUser()).thenReturn(user);
 
 		user.setPerfil(null);
-		ResponseEntity<String> response = controller.setAdminUser(10L);
+		ResponseEntity<String> response = controller.setAdminUser(user.getEmail());
 		assertNotNull(response);
 		assertEquals(ResponseEntity.class, response.getClass());
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
@@ -88,7 +88,7 @@ class UserControllerTest {
 		Mockito.when(service.getLoggedUser()).thenReturn(user);
 		user.getPerfil().setAdmin(false);
 
-		ResponseEntity<String> response = controller.setAdminUser(10L);
+		ResponseEntity<String> response = controller.setAdminUser(user.getEmail());
 		assertNotNull(response);
 		assertEquals(ResponseEntity.class, response.getClass());
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());

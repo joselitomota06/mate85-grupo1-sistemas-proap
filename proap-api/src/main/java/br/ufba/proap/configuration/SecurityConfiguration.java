@@ -48,12 +48,14 @@ public class SecurityConfiguration {
 				.authorizeHttpRequests(authorize -> authorize
 						.requestMatchers(HttpMethod.POST, "/authentication/**", "/user/create", "/actuator/**")
 						.permitAll()
+						.requestMatchers(HttpMethod.GET, "/profile/**").authenticated()
 						.requestMatchers("/v3/api-docs/**", "/configuration/**",
 								"/swagger-resources/**",
 								"/**.html",
 								"/webjars/**",
 								"/swagger-ui/**")
 						.permitAll()
+						.requestMatchers(HttpMethod.GET, "/user/list").hasAuthority("VIEW_USER")
 						.anyRequest().authenticated())
 				.logout(logout -> logout.logoutUrl("/proap-api/authentication/logout"))
 				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

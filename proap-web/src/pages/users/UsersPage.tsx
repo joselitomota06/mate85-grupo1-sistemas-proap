@@ -23,12 +23,15 @@ import { maskCpf, maskPhone } from '../../helpers/masks';
 import useUsers from '../../hooks/auth/useUsers';
 import Toast from '../../helpers/notification';
 import { updateUserCredentials } from '../../services/authService';
+import { UnauthorizedPage } from '../unauthorized/UnauthorizedPage';
+import useHasPermission from '../../hooks/auth/useHasPermission';
 
 export default function UsersPage() {
-  const [currentUserId, setCurrentUserId] = useState<number>(-1);
+  const [currentUserEmail, setCurrentUserEmail] = useState<string>('');
   const [open, setOpen] = useState(false);
 
   const {
+    status,
     isLoading,
     users,
     page,
@@ -38,13 +41,15 @@ export default function UsersPage() {
     updateUsers,
   } = useUsers();
 
+  const userCanViewPage = useHasPermission('VIEW_USER');
+
   const handleClose = () => setOpen(false);
   const handleConfirmSetAdmin = () => {
     setOpen(false);
-    updateUserCredentials(currentUserId)
+    updateUserCredentials(currentUserEmail)
       .then(() => {
         Toast.success('Credencias do usuário atualizadas com sucesso.');
-        setCurrentUserId(-1);
+        setCurrentUserEmail('');
         updateUsers();
       })
       .catch(() => {
@@ -52,12 +57,14 @@ export default function UsersPage() {
       });
   };
 
-  const handleClickPermissionAction = (id: number) => {
-    setCurrentUserId(id);
+  const handleClickPermissionAction = (email: string) => {
+    setCurrentUserEmail(email);
     setOpen(true);
   };
 
-  return (
+  return !userCanViewPage ? (
+    <UnauthorizedPage />
+  ) : (
     <>
       <Dialog
         open={open}
@@ -105,11 +112,12 @@ export default function UsersPage() {
                   <TableCell align="right">E-mail</TableCell>
                   <TableCell align="right">CPF</TableCell>
                   <TableCell align="right">Telefone</TableCell>
+                  <TableCell align="right">Perfil de Usuário</TableCell>
                   <TableCell align="right">Ações</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {users.map(({ id, name, cpf, email, phone }) => (
+                {users.map(({ name, cpf, email, phone, profileName }) => (
                   <TableRow
                     key={cpf}
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -121,8 +129,12 @@ export default function UsersPage() {
                     <TableCell align="right">{maskCpf(cpf)}</TableCell>
                     <TableCell align="right">{maskPhone(phone)}</TableCell>
                     <TableCell align="right">
+                      {profileName.charAt(0).toUpperCase() +
+                        profileName.slice(1)}
+                    </TableCell>
+                    <TableCell align="right">
                       <IconButton
-                        onClick={() => handleClickPermissionAction(id)}
+                        onClick={() => handleClickPermissionAction(email)}
                       >
                         <PermIdentityIcon />
                       </IconButton>

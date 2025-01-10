@@ -8,9 +8,10 @@ import AddIcon from '@mui/icons-material/Add';
 
 import { HomeHotbarLink } from './HomeHotbar.style';
 import { useAuth } from '../../../hooks';
+import useHasPermission from '../../../hooks/auth/useHasPermission';
 
 export default function HomeHotbar() {
-  const { isAdmin } = useAuth();
+  const userCanViewAllRequests = useHasPermission('VIEW_ALL_REQUESTS');
 
   return (
     <Box sx={{ marginTop: '1rem', marginBottom: '1rem' }}>
@@ -22,7 +23,9 @@ export default function HomeHotbar() {
             fontWeight="bold"
             paddingBottom={2}
           >
-            {isAdmin ? 'Solicitações PROAP' : 'Minhas solicitações PROAP'}
+            {userCanViewAllRequests
+              ? 'Solicitações PROAP'
+              : 'Minhas solicitações PROAP'}
           </Typography>
         </Grid>
         <Grid container spacing={1} item xs={8} justifyContent="end">

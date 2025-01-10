@@ -1,5 +1,6 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { listUsers, User } from '../../services/authService';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { listUsers } from '../../services/authService';
+import { User } from '../../types/auth-type/user';
 
 const PAGE_SIZE = 10;
 
@@ -7,6 +8,7 @@ export default function useUsers() {
   const [isLoading, setIsLoading] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
   const [page, setPage] = useState(0);
+  const [status, setStatus] = useState('');
 
   const handlePageChange = useCallback((e: any, newPage: number) => {
     setPage(newPage);
@@ -15,9 +17,10 @@ export default function useUsers() {
   const updateUsers = useCallback(() => {
     setIsLoading(true);
     listUsers()
-      .then(({ data }) => {
+      .then(({ status, data }) => {
         setUsers(data);
         setPage(0);
+        setStatus(status);
       })
       .finally(() => setIsLoading(false));
   }, []);
@@ -30,12 +33,12 @@ export default function useUsers() {
     () =>
       users.filter(
         (_, index) =>
-          index >= PAGE_SIZE * page && index < PAGE_SIZE * (page + 1)
+          index >= PAGE_SIZE * page && index < PAGE_SIZE * (page + 1),
       ),
-    [users, page]
+    [users, page],
   );
 
-  return {
+  const data = {
     users: paginatedUsers,
     page,
     totalUsers: users.length,
@@ -43,5 +46,10 @@ export default function useUsers() {
     PAGE_SIZE,
     handlePageChange,
     updateUsers,
+  };
+
+  return {
+    status,
+    ...data,
   };
 }

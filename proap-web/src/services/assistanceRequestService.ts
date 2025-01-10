@@ -1,26 +1,8 @@
 import { AppDispatch } from '../store';
-
-import {
-  AssistanceRequest,
-  updateSolicitations,
-} from '../store/slices/assistance-request-slice/assistanceRequestSlice';
-
+import { updateSolicitations } from '../store/slices/assistance-request-slice/assistanceRequestSlice';
+import { AssistanceRequest, AssistanceRequestListResponse } from '../types';
 import api from '.';
-import {
-  Solicitation,
-  SolicitationFormValues,
-} from '../containers/solicitation/SolicitationFormSchema';
-
-export interface AssistanceRequestListResponse {
-  /**
-   * Lista de requisições que devem ser exibidas na tela
-   */
-  list: AssistanceRequest[];
-  /**
-   * Número total de registros no banco
-   */
-  total: number;
-}
+import { SolicitationFormValues } from '../containers/solicitation/SolicitationFormSchema';
 
 export type AssistanceRequestPropToSort =
   | keyof Omit<AssistanceRequest, 'user'>
@@ -31,7 +13,7 @@ export const getAssistanceRequests =
     sortBy?: AssistanceRequestPropToSort,
     ascending?: boolean,
     page?: number,
-    size?: number
+    size?: number,
   ) =>
   (dispatch: AppDispatch) => {
     const defaultPropToFilter: AssistanceRequestPropToSort = 'createdAt';

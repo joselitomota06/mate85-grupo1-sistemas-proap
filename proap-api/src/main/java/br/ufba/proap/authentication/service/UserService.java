@@ -10,9 +10,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import br.ufba.proap.authentication.domain.Perfil;
 import br.ufba.proap.authentication.domain.User;
 import br.ufba.proap.authentication.domain.dto.UpdatePasswordDTO;
+import br.ufba.proap.authentication.domain.dto.UserUpdateDTO;
 import br.ufba.proap.authentication.repository.UserRepository;
+import jakarta.validation.ValidationException;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -21,17 +25,19 @@ public class UserService implements UserDetailsService {
 	private UserRepository userRepository;
 
 	@Autowired
+	private PerfilService perfilService;
+
+	@Autowired
 	private PasswordEncoder passwordEncoder;
 
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-		Optional<User> user = userRepository.findByEmail(email);
+		Optional<User> user = userRepository.findByEmailWithPerfilAndPermissions(email);
 
-		if (user.isPresent()) {
-			return user.get();
-		} else {
+		if (!user.isPresent()) {
 			throw new UsernameNotFoundException("Email user: " + email + " not found");
 		}
+		return user.get();
 	}
 
 	public User getLoggedUser() {
@@ -48,16 +54,36 @@ public class UserService implements UserDetailsService {
 	}
 
 	public User create(User user) {
+		Perfil defaultPerfil = perfilService.findByName(Perfil.getDefaultPerfilName()).orElse(null);
+		user.setPerfil(defaultPerfil);
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		return userRepository.saveAndFlush(user);
 	}
 
-	public User update(User user) {
-		return userRepository.save(user);
+	public User update(UserUpdateDTO user) {
+		User loggedUser = getLoggedUser();
+
+		if (user.getName() != null && !user.getName().isEmpty()) {
+			loggedUser.setName(user.getName());
+		}
+		if (user.getRegistrationNumber() != null && !user.getRegistrationNumber().isEmpty()) {
+			loggedUser.setRegistration(user.getRegistrationNumber());
+		}
+		if (user.getPhone() != null && !user.getPhone().isEmpty()) {
+			loggedUser.setPhone(user.getPhone());
+		}
+		if (user.getAlternativePhone() != null) {
+			loggedUser.setAlternativePhone(user.getAlternativePhone());
+		}
+		return userRepository.save(loggedUser);
 	}
 
 	public List<User> findAll() {
 		return userRepository.findAll();
+	}
+
+	public List<User> getAllUsersWithPerfilAndPermissions() {
+		return userRepository.findAllWithPerfilAndPermissions();
 	}
 
 	public Optional<User> findById(Long id) {
@@ -83,6 +109,19 @@ public class UserService implements UserDetailsService {
 
 	public void remove(User user) {
 		userRepository.delete(user);
+	}
+
+	public void changePassword(String currentPassword, String newPassword) throws ValidationException {
+		User loggedUser = getLoggedUser();
+		if (!passwordEncoder.matches(currentPassword, loggedUser.getPassword())) {
+			throw new ValidationException("Senha atual incorreta");
+		}
+		if (currentPassword.equals(newPassword)) {
+			throw new ValidationException("A nova senha não pode ser igual a senha atual");
+		}
+		loggedUser.setPassword(passwordEncoder.encode(newPassword));
+		userRepository.save(loggedUser);
+
 	}
 
 }

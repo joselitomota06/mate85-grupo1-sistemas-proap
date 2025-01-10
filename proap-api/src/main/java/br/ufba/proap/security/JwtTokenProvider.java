@@ -47,7 +47,9 @@ public class JwtTokenProvider {
 		claims.put("id", userPrincipal.getId());
 		claims.put("name", userPrincipal.getName());
 		claims.put("email", userPrincipal.getEmail());
-		claims.put("isAdmin", userPrincipal.getPerfil() != null ? userPrincipal.getPerfil().isAdmin() : false);
+		claims.put("profile", userPrincipal.getPerfil().getName());
+		claims.put("permissions",
+				userPrincipal.getPerfil().getPermissions().stream().map(permission -> permission.getKey()).toList());
 
 		return Jwts.builder()
 				.subject(userPrincipal.getName())

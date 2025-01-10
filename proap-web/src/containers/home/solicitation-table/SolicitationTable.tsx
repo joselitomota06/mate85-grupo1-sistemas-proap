@@ -45,9 +45,8 @@ import {
   deleteExtraAssistanceRequest,
   getExtraAssistanceRequests,
 } from '../../../services/extraAssistanceRequestService';
-import assistanceRequestSlice, {
-  AssistanceRequest,
-} from '../../../store/slices/assistance-request-slice/assistanceRequestSlice';
+import assistanceRequestSlice from '../../../store/slices/assistance-request-slice/assistanceRequestSlice';
+import { AssistanceRequest } from '../../../store/slices/assistance-request-slice/AssistanceRequest';
 import usePrevious from '../../../helpers/usePrevious';
 import SolicitationTableRequests from './SolicitationTableRequests';
 import SolicitationTableExtraRequests from './SolicitationTableExtraRequests';
@@ -55,14 +54,8 @@ import SolicitationTableExtraRequests from './SolicitationTableExtraRequests';
 export default function SolicitationTable() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { isAdmin } = useAuth();
 
   const [currentTab, setCurrentTab] = React.useState(0);
-
-  useEffect(() => {
-    // TODO : Apagar esse useEffect quando terminar de desenvolver as abas
-      console.log(currentTab);
-    }, [currentTab]);
 
   return (
     <>

@@ -41,7 +41,7 @@ import {
   deleteExtraAssistanceRequest,
   getExtraAssistanceRequests,
 } from '../../../services/extraAssistanceRequestService';
-import { ExtraRequest } from '../../../store/slices/assistance-request-slice/assistanceRequestSlice';
+import { ExtraRequest } from '../../../types/requests-type/ExtraRequest';
 import usePrevious from '../../../helpers/usePrevious';
 
 export default function SolicitationTableExtraRequests() {
@@ -51,7 +51,7 @@ export default function SolicitationTableExtraRequests() {
 
   //#region table data
   const { requests, extraRequests } = useSelector(
-    (state: IRootState) => state.assistanceRequestSlice
+    (state: IRootState) => state.assistanceRequestSlice,
   );
 
   const updateRequestList = useCallback(
@@ -59,14 +59,14 @@ export default function SolicitationTableExtraRequests() {
       sortBy: ExtraRequestPropToSort,
       ascending: boolean,
       size: number,
-      page: number
+      page: number,
     ) => {
       dispatch(getExtraAssistanceRequests(sortBy, ascending, page, size)).then(
         (extraRequests) =>
-          setNumberPages(Math.trunc(extraRequests.payload.total / size) + 1)
+          setNumberPages(Math.trunc(extraRequests.payload.total / size) + 1),
       );
     },
-    [dispatch]
+    [dispatch],
   );
   // HACK : Não entendi a tempo como usar useCallback com os valores atualizados. Estava sempre pegando os iniciais
   const updateRequestListWithCurrentParameters = () => {
@@ -74,7 +74,7 @@ export default function SolicitationTableExtraRequests() {
       getSelectedProp(),
       selectedPropToSortTable[getSelectedProp()] as boolean,
       size,
-      currentPage
+      currentPage,
     );
   };
 
@@ -164,7 +164,7 @@ export default function SolicitationTableExtraRequests() {
 
   const getSelectedProp = () => {
     return Object.getOwnPropertyNames(
-      selectedPropToSortTable
+      selectedPropToSortTable,
     )[0] as ExtraRequestPropToSort;
   };
 
@@ -228,7 +228,7 @@ export default function SolicitationTableExtraRequests() {
       getSelectedProp(),
       selectedPropToSortTable[getSelectedProp()] as boolean,
       size,
-      currentPage
+      currentPage,
     );
   }, [currentPage, size, selectedPropToSortTable]);
 
@@ -376,7 +376,7 @@ export default function SolicitationTableExtraRequests() {
                       </Box>
                     </TableCell>
                   </TableRow>
-                )
+                ),
               )}
           </TableBody>
         </Table>

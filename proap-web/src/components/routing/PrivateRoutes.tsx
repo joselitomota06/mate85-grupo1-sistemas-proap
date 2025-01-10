@@ -11,6 +11,7 @@ import {
 } from '../../pages';
 
 import NavigationWrapper from '../navigation/NavigationWrapper';
+import UserProfilePage from '../../pages/user-profile/UserProfilePage';
 
 export default function PrivateRoutes() {
   return (
@@ -35,6 +36,7 @@ export default function PrivateRoutes() {
           element={<ReviewSolicitationPage />}
         />
         <Route path="/users" element={<UsersPage />} />
+        <Route path="/user-profile" element={<UserProfilePage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </NavigationWrapper>
