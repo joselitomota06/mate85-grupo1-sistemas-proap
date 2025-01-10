@@ -42,3 +42,4 @@ const assistanceRequestSlice = createSlice({
 export const { updateSolicitations, updateExtraSolicitations } =
   assistanceRequestSlice.actions;
 export default assistanceRequestSlice;
+export { INITIAL_STATE as ASSISTANCE_REQUEST_INITIAL_STATE };

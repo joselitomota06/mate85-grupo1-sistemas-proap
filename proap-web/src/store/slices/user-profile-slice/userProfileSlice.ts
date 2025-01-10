@@ -47,3 +47,4 @@ const userProfileSlice = createSlice({
 export const { setUser, updateUser, setLoading, setError } =
   userProfileSlice.actions;
 export default userProfileSlice;
+export { initialState as USER_PROFILE_INITIAL_STATE };

@@ -1,13 +1,21 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { combineReducers, configureStore, Reducer } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 import { getInitialAuthSliceState } from '../helpers/auth';
 import { authSlice, assistanceRequestSlice, userProfileSlice } from './slices';
+import { SLICES_INITIAL_STATE } from './slices/initialSliceState';
 
-const rootReducer = combineReducers({
+const appReducer = combineReducers({
   auth: authSlice.reducer,
   assistanceRequestSlice: assistanceRequestSlice.reducer,
   userProfileSlice: userProfileSlice.reducer,
 });
+
+const rootReducer: Reducer<ReturnType<typeof appReducer>> = (state, action) => {
+  if (action.type === 'authentication/logout') {
+    return appReducer(SLICES_INITIAL_STATE, action);
+  }
+  return appReducer(state, action);
+};
 
 const loadState = (): Partial<IRootState> | undefined => {
   try {
@@ -19,31 +27,11 @@ const loadState = (): Partial<IRootState> | undefined => {
   }
 };
 
-const saveState = (state: Partial<IRootState>) => {
-  try {
-    const previousState = loadState() || {};
-    const newState = {
-      ...previousState,
-      ...state,
-    };
-    const serializedState = JSON.stringify(newState);
-    localStorage.setItem('localState', serializedState);
-  } catch (err) {
-    console.error('Error saving state to local storage: ', err);
-  }
-};
+const { auth, ...otherSlices } = SLICES_INITIAL_STATE;
 
-const clearState = () => {
-  try {
-    localStorage.removeItem('localState');
-  } catch (err) {
-    console.error('Error clearing state from local storage: ', err);
-  }
-};
-
-const preloadedState: Partial<IRootState> = {
+const preloadedState = {
   auth: getInitialAuthSliceState(),
-  ...(loadState() || {}),
+  ...otherSlices,
 };
 
 const store = configureStore({
@@ -54,6 +42,5 @@ const store = configureStore({
 export type IRootState = ReturnType<typeof rootReducer>;
 export type AppDispatch = typeof store.dispatch;
 export const useAppDispatch: () => AppDispatch = useDispatch;
-export { saveState, clearState };
 
 export default store;

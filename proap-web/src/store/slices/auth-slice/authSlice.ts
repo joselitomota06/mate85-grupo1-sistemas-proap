@@ -2,12 +2,13 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { LocalStorageToken } from '../../../helpers/auth';
 
+const INITIAL_STATE = {
+  isAuthenticated: false,
+  token: '',
+};
 const authSlice = createSlice({
   name: 'authentication',
-  initialState: {
-    isAuthenticated: false,
-    token: '',
-  },
+  initialState: INITIAL_STATE,
   reducers: {
     authenticate: (state, action: PayloadAction<string>) => {
       state.isAuthenticated = true;
@@ -26,3 +27,4 @@ const authSlice = createSlice({
 
 export const { authenticate, logout } = authSlice.actions;
 export default authSlice;
+export { INITIAL_STATE as AUTH_INITIAL_STATE };
