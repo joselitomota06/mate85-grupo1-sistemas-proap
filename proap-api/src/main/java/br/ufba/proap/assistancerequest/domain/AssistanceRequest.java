@@ -20,7 +20,7 @@ import br.ufba.proap.authentication.domain.User;
 
 @Entity
 @Table(name = "proap_assistancerequest", schema = "proap")
-public class AssistanceRequestDTO {
+public class AssistanceRequest {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,6 +29,9 @@ public class AssistanceRequestDTO {
 	// Dados do solicitante
 	@ManyToOne
 	private User user;
+
+	@Column(columnDefinition = "jsonb", nullable = true)
+	private String dynamicFields; // Campos dinâmicos
 
 	// Dados da publicação
 	private String nomeCompleto;
@@ -290,7 +293,7 @@ public class AssistanceRequestDTO {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		AssistanceRequestDTO other = (AssistanceRequestDTO) obj;
+		AssistanceRequest other = (AssistanceRequest) obj;
 		return Objects.equals(id, other.id);
 	}
 

@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.ufba.proap.assistancerequest.domain.AssistanceRequestDTO;
+import br.ufba.proap.assistancerequest.domain.AssistanceRequest;
 import br.ufba.proap.assistancerequest.domain.Review;
 import br.ufba.proap.assistancerequest.domain.dto.ReviewDTO;
 import br.ufba.proap.assistancerequest.service.AssistanceRequestService;
@@ -73,7 +73,7 @@ public class AssistanceRequestController {
 	}
 
 	@GetMapping("/list/{userId}")
-	public List<AssistanceRequestDTO> listById(@PathVariable Long userId) {
+	public List<AssistanceRequest> listById(@PathVariable Long userId) {
 		User currentUser = serviceUser.getLoggedUser();
 
 		if (currentUser == null)
@@ -87,14 +87,14 @@ public class AssistanceRequestController {
 	}
 
 	@GetMapping("/find/{id}")
-	public ResponseEntity<Optional<AssistanceRequestDTO>> findById(@PathVariable Long id) {
+	public ResponseEntity<Optional<AssistanceRequest>> findById(@PathVariable Long id) {
 		User currentUser = serviceUser.getLoggedUser();
 
 		if (currentUser == null)
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
 		try {
-			Optional<AssistanceRequestDTO> request = service.findById(id);
+			Optional<AssistanceRequest> request = service.findById(id);
 
 			if (!request.isPresent())
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -114,7 +114,7 @@ public class AssistanceRequestController {
 	}
 
 	@PostMapping("/create")
-	public ResponseEntity<AssistanceRequestDTO> create(@RequestBody AssistanceRequestDTO assistanceReques) {
+	public ResponseEntity<AssistanceRequest> create(@RequestBody AssistanceRequest assistanceReques) {
 
 		User currentUser = serviceUser.getLoggedUser();
 
@@ -135,7 +135,7 @@ public class AssistanceRequestController {
 	}
 
 	@PutMapping("/update")
-	public ResponseEntity<AssistanceRequestDTO> update(@RequestBody AssistanceRequestDTO assistanceReques) {
+	public ResponseEntity<AssistanceRequest> update(@RequestBody AssistanceRequest assistanceReques) {
 		try {
 			return ResponseEntity.ok().body(service.save(assistanceReques));
 		} catch (Exception e) {
@@ -145,10 +145,10 @@ public class AssistanceRequestController {
 	}
 
 	@PutMapping("/reviewsolicitation")
-	public ResponseEntity<AssistanceRequestDTO> reviewsolicitation(
-			@RequestBody AssistanceRequestDTO assistanceRequest) {
+	public ResponseEntity<AssistanceRequest> reviewsolicitation(
+			@RequestBody AssistanceRequest assistanceRequest) {
 		User currentUser = serviceUser.getLoggedUser();
-		Optional<AssistanceRequestDTO> assistancePersisted = service.findById(assistanceRequest.getId());
+		Optional<AssistanceRequest> assistancePersisted = service.findById(assistanceRequest.getId());
 
 		if (currentUser == null || !assistancePersisted.isPresent()) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -178,7 +178,7 @@ public class AssistanceRequestController {
 			return ResponseEntity.badRequest().build();
 
 		try {
-			Optional<AssistanceRequestDTO> assistanceReques = service.findById(id);
+			Optional<AssistanceRequest> assistanceReques = service.findById(id);
 
 			if (assistanceReques.isPresent()) {
 				service.delete(assistanceReques.get());

@@ -8,7 +8,7 @@ import jakarta.persistence.TypedQuery;
 
 import org.springframework.stereotype.Repository;
 
-import br.ufba.proap.assistancerequest.domain.AssistanceRequestDTO;
+import br.ufba.proap.assistancerequest.domain.AssistanceRequest;
 import br.ufba.proap.authentication.domain.User;
 
 @Repository
@@ -16,7 +16,7 @@ public class AssistanceRequestQueryRepository {
     @PersistenceContext
     private EntityManager em;
 
-    public List<AssistanceRequestDTO> findFiltered(String sortBy, boolean ascending, int page, int limitPerPage,
+    public List<AssistanceRequest> findFiltered(String sortBy, boolean ascending, int page, int limitPerPage,
             User user) {
         StringBuilder query = new StringBuilder("from AssistanceRequestDTO ar");
 
@@ -27,7 +27,7 @@ public class AssistanceRequestQueryRepository {
         query.append(sortBy);
         query.append(ascending ? " asc" : " desc");
 
-        TypedQuery<AssistanceRequestDTO> typedQuery = em.createQuery(query.toString(), AssistanceRequestDTO.class);
+        TypedQuery<AssistanceRequest> typedQuery = em.createQuery(query.toString(), AssistanceRequest.class);
 
         if (user != null)
             typedQuery.setParameter("userId", user.getId());
