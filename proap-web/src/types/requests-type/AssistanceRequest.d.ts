@@ -1,43 +1,46 @@
+import { User } from '../auth-type/user';
+
 export interface AssistanceRequest {
   id: number;
   automaticDecText: string;
 
-  nomeCompleto: string;
-  doi: string;
-  autores: string;
-  autoresPresentePGCOMP: string;
-  valorSolicitado: number | string;
-  solicitacaoApoio: boolean | undefined;
-  solicitacaoAuxilioOutrasFontes: boolean | undefined;
-  nomeAgenciaFomento: string;
-  valorSolicitadoAgenciaFomento: number | string;
-  valorAprovado: number | undefined;
+  tituloPublicacao: string;
+  coautores: string[];
+  algumCoautorPGCOMP: boolean;
+  solicitanteDocente: boolean;
+  nomeDocente: string;
+  nomeDiscente: string;
+  discenteNoPrazoDoCurso: boolean | undefined;
+  mesesAtrasoCurso: number | undefined;
+  nomeEvento: string;
+  eventoInternacional: boolean;
   dataInicio: string;
   dataFim: string;
-  linkHomepage: string;
-  pais: string;
+  afastamentoParaParticipacao: boolean;
+  diasAfastamento: number | undefined;
+  linkHomePageEvento: string;
   cidade: string;
-  valorInscricao: number | undefined;
-  cartaAceite: string;
+  pais: string;
   qualis: string;
+  modalidadeParticipacao: string;
+  valorInscricao: number | undefined;
+  linkPaginaInscricao: string;
+  quantidadeDiariasSolicitadas: number | undefined;
+  valorDiaria: number | undefined;
+  isDolar: boolean | undefined;
+  cotacaoMoeda: number | undefined;
+  valorPassagem: number | undefined;
+  valorAprovado: number | undefined;
+  cartaAceite: string;
   comprovantePagamento: string;
-  nomeEvento: string;
   situacao: number;
   dataAprovacao: string;
   numeroAta: number;
   numeroDiariasAprovadas: number;
   observacao: string;
-  quantidadeDiariasSolicitadas: number;
 
   createdAt: string;
   updatedAt: string;
 
-  user: {
-    id: number;
-    alternativePhone: string;
-    cpf: string;
-    email: string;
-    name: string;
-    password: string;
-  };
+  user: User;
 }

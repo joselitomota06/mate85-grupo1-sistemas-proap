@@ -3,16 +3,16 @@ import { useMemo } from 'react';
 import { Typography } from '@mui/material';
 import { FormikValues } from 'formik';
 
-import SolicitantDataFormContainer from './create/SolicitantDataFormContainer';
+import SolicitantDataFormContainer from './create/SolicitationDataFormContainer';
 import FinancingDataFormContainer from './create/FinancingDataFormContainer';
 import EventDataFormContainer from './create/EventDataFormContainer';
 import ReviewDataFormContainer from './create/ReviewDataFormContainer';
 
 import {
-  eventDataFormSchema,
-  financingDataFormSchema,
+  financialDetailFormSchema,
+  eventDetailFormSchema,
   INITIAL_FORM_VALUES,
-  solicitantDataFormSchema,
+  solicitantionDataFormSchema,
   reviewDataFormSchema,
   SolicitationFormValues,
 } from './SolicitationFormSchema';
@@ -32,7 +32,7 @@ interface SolicitationFormContainerProps {
 }
 
 export default function AdminSolicitationFormContainer(
-  props: SolicitationFormContainerProps
+  props: SolicitationFormContainerProps,
 ) {
   const { title, initialValues, labels, onSubmit } = props;
 
@@ -41,17 +41,17 @@ export default function AdminSolicitationFormContainer(
       {
         label: 'Solicitante',
         component: SolicitantDataFormContainer,
-        schema: solicitantDataFormSchema,
+        schema: solicitantionDataFormSchema,
       },
       {
         label: 'Financiamento',
         component: FinancingDataFormContainer,
-        schema: financingDataFormSchema,
+        schema: eventDetailFormSchema,
       },
       {
         label: 'Evento',
         component: EventDataFormContainer,
-        schema: eventDataFormSchema,
+        schema: financialDetailFormSchema,
       },
       {
         label: 'Avaliação',
@@ -59,7 +59,7 @@ export default function AdminSolicitationFormContainer(
         schema: reviewDataFormSchema,
       },
     ],
-    []
+    [],
   );
 
   return (

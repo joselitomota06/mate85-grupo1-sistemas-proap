@@ -3,22 +3,24 @@ import { useMemo } from 'react';
 import { Typography } from '@mui/material';
 import { FormikValues } from 'formik';
 
-import SolicitantDataFormContainer from './create/SolicitantDataFormContainer';
+import SolicitationDataFormContainer from './create/SolicitationDataFormContainer';
 import FinancingDataFormContainer from './create/FinancingDataFormContainer';
 import DetailsDataFormContainer from './create/DetailsDataFormContainer';
 import EventDataFormContainer from './create/EventDataFormContainer';
 
 import {
-  detailsEventDataFormSchema,
-  eventDataFormSchema,
-  financingDataFormSchema,
+  acceptanceDataFormSchema,
+  financialDetailFormSchema,
+  eventDetailFormSchema,
   INITIAL_FORM_VALUES,
-  solicitantDataFormSchema,
+  solicitantionDataFormSchema,
   SolicitationFormValues,
+  solicitantDetailFormSchema,
 } from './SolicitationFormSchema';
 import StepperForm, {
   FormStep,
 } from '../../components/stepper-form/StepperForm';
+import SolicitantDetailFormContainer from './create/SolicitantDetailFormContainer';
 
 interface SolicitationFormContainerProps {
   onSubmit: (values: FormikValues) => void;
@@ -32,34 +34,39 @@ interface SolicitationFormContainerProps {
 }
 
 export default function SolicitationFormContainer(
-  props: SolicitationFormContainerProps
+  props: SolicitationFormContainerProps,
 ) {
   const { title, initialValues, labels, onSubmit } = props;
 
   const registerFormSteps: FormStep[] = useMemo(
     () => [
       {
-        label: 'Solicitante',
-        component: SolicitantDataFormContainer,
-        schema: solicitantDataFormSchema,
+        label: 'Dados da Solicitação',
+        component: SolicitationDataFormContainer,
+        schema: solicitantionDataFormSchema,
       },
+      // {
+      //   label: 'Detalhes do Solicitante',
+      //   component: SolicitantDetailFormContainer,
+      //   schema: solicitantDetailFormSchema,
+      // },
       {
-        label: 'Financiamento',
+        label: 'Detalhamento do Evento',
         component: FinancingDataFormContainer,
-        schema: financingDataFormSchema,
+        schema: eventDetailFormSchema,
       },
       {
-        label: 'Evento',
+        label: 'Detalhamento Financeiro',
         component: EventDataFormContainer,
-        schema: eventDataFormSchema,
+        schema: financialDetailFormSchema,
       },
       {
-        label: 'Detalhes',
+        label: 'Aceite e Justificativa',
         component: DetailsDataFormContainer,
-        schema: detailsEventDataFormSchema,
+        schema: acceptanceDataFormSchema,
       },
     ],
-    []
+    [],
   );
 
   return (

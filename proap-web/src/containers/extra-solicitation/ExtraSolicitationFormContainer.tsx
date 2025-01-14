@@ -11,7 +11,7 @@ import {
   ExtraSolicitationFormValues,
   extraSolicitantDataSchema,
 } from './schema';
-import { detailsEventDataFormSchema } from '../solicitation/SolicitationFormSchema';
+import { acceptanceDataFormSchema } from '../solicitation/SolicitationFormSchema';
 
 interface ExtraSolicitationFormContainerProps {
   initialValues: ExtraSolicitationFormValues;
@@ -21,7 +21,7 @@ interface ExtraSolicitationFormContainerProps {
 }
 
 export default function ExtraSolicitationFormContainer(
-  props: ExtraSolicitationFormContainerProps
+  props: ExtraSolicitationFormContainerProps,
 ) {
   const { title, initialValues, labels, onSubmit } = props;
 
@@ -35,10 +35,10 @@ export default function ExtraSolicitationFormContainer(
       {
         label: 'Detalhes',
         component: ExtraSolicitationDetailsFormContainer,
-        schema: detailsEventDataFormSchema,
+        schema: acceptanceDataFormSchema,
       },
     ],
-    []
+    [],
   );
 
   return (

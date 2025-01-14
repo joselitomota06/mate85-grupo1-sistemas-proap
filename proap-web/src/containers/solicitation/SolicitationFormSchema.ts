@@ -1,67 +1,95 @@
 import * as Yup from 'yup';
 import { AssistanceRequest } from '../../types';
 
-export const solicitantDataFormSchema = Yup.object({
-  nomeCompleto: Yup.string(),
-  doi: Yup.string().notRequired(),
-  autores: Yup.string().required('Campo obrigatório'),
-  autoresPresentePGCOMP: Yup.string().required('Campo obrigatório'),
+export const solicitantionDataFormSchema = Yup.object({
+  tituloPublicacao: Yup.string().required('Campo obrigatório'),
+  coautores: Yup.array().of(Yup.string()),
+  algumCoautorPGCOMP: Yup.boolean().required('Campo obrigatório'),
 });
 
-export const financingDataFormSchema = Yup.object({
-  solicitacaoApoio: Yup.boolean().nullable().required('Campo obrigatório'),
-  valorSolicitado: Yup.number()
-    .nullable()
-    .when(['solicitacaoApoio'], ([solicitacaoApoio], schema) =>
-      solicitacaoApoio
-        ? schema.required('Campo obrigatório')
-        : schema.notRequired(),
-    ),
-  solicitacaoAuxilioOutrasFontes: Yup.boolean()
-    .nullable()
-    .required('Campo obrigatório'),
-  nomeAgenciaFomento: Yup.string().when(
-    ['solicitacaoAuxilioOutrasFontes'],
-    ([solicitacaoAuxilioOutrasFontes], schema) =>
-      solicitacaoAuxilioOutrasFontes
-        ? schema.required('Campo obrigatório')
-        : schema.notRequired(),
+export const solicitantDetailFormSchema = Yup.object({
+  solicitanteDocente: Yup.boolean().required('Campo obrigatório'),
+  nomeDocente: Yup.string().required('Campo obrigatório'),
+  nomeDiscente: Yup.string().when(
+    ['solicitanteDocente'],
+    (solicitanteDocente, schema) =>
+      solicitanteDocente
+        ? schema.notRequired()
+        : schema.required('Campo obrigatório'),
   ),
-  valorSolicitadoAgenciaFomento: Yup.number().when(
-    ['solicitacaoAuxilioOutrasFontes'],
-    ([solicitacaoAuxilioOutrasFontes], schema) =>
-      solicitacaoAuxilioOutrasFontes
-        ? schema.required('Campo obrigatório')
-        : schema.notRequired(),
+  discenteNoPrazoDoCurso: Yup.boolean().when(
+    ['solicitanteDocente'],
+    (solicitanteDocente, schema) =>
+      solicitanteDocente
+        ? schema.notRequired()
+        : schema.required('Campo obrigatório'),
+  ),
+  mesesAtrasoCurso: Yup.number().when(
+    ['discenteNoPrazoDoCurso'],
+    (discenteNoPrazoDoCurso, schema) =>
+      discenteNoPrazoDoCurso
+        ? schema.notRequired()
+        : schema.required('Campo obrigatório'),
   ),
 });
-
-export const eventDataFormSchema = Yup.object({
+export const eventDetailFormSchema = Yup.object({
+  nomeEvento: Yup.string().required('Campo obrigatório'),
+  eventoInternacional: Yup.boolean().required('Campo obrigatório'),
   dataInicio: Yup.string().required('Campo obrigatório'),
-  dataFim: Yup.string().required('Campo obrigatório'),
-  pais: Yup.string().required('Campo obrigatório'),
+  dataFim: Yup.string()
+    .required('Campo obrigatório')
+    .min(
+      Yup.ref('dataInicio'),
+      'Data de fim deve ser maior que a data de início',
+    ),
+  afastamentoParaParticipacao: Yup.boolean().required('Campo obrigatório'),
+  diasAfastamento: Yup.number().when(
+    ['afastamentoParaParticipacao'],
+    (afastamentoParaParticipacao, schema) =>
+      afastamentoParaParticipacao
+        ? schema.required('Campo obrigatório')
+        : schema.notRequired(),
+  ),
+  linkHomePageEvento: Yup.string(),
   cidade: Yup.string().required('Campo obrigatório'),
-  linkHomepage: Yup.string().required('Campo obrigatório'),
-  quantidadeDiariasSolicitadas: Yup.number()
-    .nullable()
-    .min(1, 'Insira um valor válido')
-    .defined()
-    .required('Campo obrigatório'),
+  pais: Yup.string().required('Campo obrigatório'),
+  qualis: Yup.string().required('Campo obrigatório'),
+  modalidadeParticipacao: Yup.string().required('Campo obrigatório'),
+});
 
+export const financialDetailFormSchema = Yup.object({
   valorInscricao: Yup.number()
     .nullable()
     .min(1, 'Insira um valor válido')
     .defined()
     .required('Campo obrigatório'),
-
-  cartaAceite: Yup.string().required('Campo obrigatório'),
-  qualis: Yup.string().required('Campo obrigatório'),
-  nomeEvento: Yup.string().required('Campo obrigatório'),
+  linkPaginaInscricao: Yup.string().required('Campo obrigatório'),
+  quantidadeDiariasSolicitadas: Yup.number()
+    .nullable()
+    .min(1, 'Insira um valor válido')
+    .defined()
+    .required('Campo obrigatório'),
+  valorDiaria: Yup.number()
+    .nullable()
+    .min(1, 'Insira um valor válido')
+    .defined()
+    .required('Campo obrigatório'),
+  isDolar: Yup.boolean().required('Campo obrigatório'),
+  cotacaoMoeda: Yup.number().when(['isDolar'], (isDolar, schema) =>
+    isDolar ? schema.required('Campo obrigatório') : schema.notRequired(),
+  ),
+  valorPassagem: Yup.number()
+    .nullable()
+    .min(1, 'Insira um valor válido')
+    .defined()
+    .required('Campo obrigatório'),
 });
 
-export const detailsEventDataFormSchema = Yup.object({
+export const acceptanceDataFormSchema = Yup.object({
+  cartaAceite: Yup.string().required('Campo obrigatório'),
+  justificativa: Yup.string(),
   aceiteFinal: Yup.boolean()
-    .nullable(false)
+    .nullable()
     .required('É necessário aceitar os termos para continuar')
     .isTrue('É necessário aceitar os termos para continuar'),
 });
@@ -81,19 +109,26 @@ export interface SolicitationFormValues
 }
 
 export const INITIAL_FORM_VALUES: SolicitationFormValues = {
-  nomeCompleto: '',
-  doi: '',
-  autores: '',
-  autoresPresentePGCOMP: 'false',
-
-  solicitacaoApoio: '',
-  valorSolicitado: '',
-  solicitacaoAuxilioOutrasFontes: '',
-  nomeAgenciaFomento: '',
-  valorSolicitadoAgenciaFomento: '',
+  tituloPublicacao: '',
+  coautores: [],
+  eventoInternacional: false,
+  afastamentoParaParticipacao: false,
+  diasAfastamento: undefined,
+  linkHomePageEvento: '',
+  modalidadeParticipacao: '',
+  linkPaginaInscricao: '',
+  valorDiaria: undefined,
+  isDolar: undefined,
+  cotacaoMoeda: undefined,
+  valorPassagem: undefined,
+  algumCoautorPGCOMP: false,
+  solicitanteDocente: false,
+  nomeDocente: '',
+  nomeDiscente: '',
+  discenteNoPrazoDoCurso: undefined,
+  mesesAtrasoCurso: undefined,
   dataInicio: '',
   dataFim: '',
-  linkHomepage: '',
   pais: '',
   cidade: '',
   valorInscricao: undefined,
@@ -110,15 +145,16 @@ export const INITIAL_FORM_VALUES: SolicitationFormValues = {
   quantidadeDiariasSolicitadas: 0,
   valorAprovado: undefined,
 
-  createdAt: undefined,
-  updatedAt: undefined,
+  createdAt: '',
+  updatedAt: '',
 
   user: {
-    id: 0,
     alternativePhone: '',
     cpf: '',
     email: '',
     name: '',
-    password: '',
+    phone: '',
+    registrationNumber: '',
+    profileName: '',
   },
 };

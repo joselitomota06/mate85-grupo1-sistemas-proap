@@ -3,6 +3,7 @@ package br.ufba.proap.assistancerequest.domain;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Objects;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,11 +14,19 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import br.ufba.proap.authentication.domain.User;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "proap_assistancerequest", schema = "proap")
 public class AssistanceRequest {
@@ -26,48 +35,54 @@ public class AssistanceRequest {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	// Dados do solicitante
+	// Dados da Solicitação
 	@ManyToOne
 	private User user;
 
-	@Column(columnDefinition = "jsonb", nullable = true)
-	private String dynamicFields; // Campos dinâmicos
+	@Column(nullable = false)
+	private String tituloPublicacao;
 
-	// Dados da publicação
-	private String nomeCompleto;
+	private String coautores;
 
-	private String doi;
+	@Column(nullable = false)
+	private Boolean algumCoautorPGCOMP;
 
-	private String autores;
+	// Detalhes do Solicitante
+	@Column(nullable = false)
+	private Boolean solicitanteDocente;
 
-	private Boolean autoresPresentePGCOMP;
+	@Column(nullable = false)
+	private String nomeDocente;
 
-	// Dados de financiamento
-	private Boolean solicitacaoApoio;
-
-	@Column(nullable = true)
-	private Float valorSolicitado;
-
-	@Column(nullable = true)
-	private Boolean solicitacaoAuxilioOutrasFontes;
+	private String nomeDiscente;
 
 	@Column(nullable = true)
-	private String nomeAgenciaFomento;
+	private Boolean discenteNoPrazoDoCurso;
 
-	@Column(nullable = true)
-	private String valorSolicitadoAgenciaFormento;
+	@Column(nullable = true, name = "meses_atraso")
+	private Integer mesesAtrasoCurso;
 
-	// Dados do evento
+	// Detalhamento do Evento (ou Solicitação)
+
+	@Column(nullable = false)
 	private String nomeEvento;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-	private LocalDate dataInicio;
+	@Column(nullable = false)
+	private Boolean eventoInternacional;
 
 	@Column(nullable = false)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+	private LocalDate dataInicio;
+
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	private LocalDate dataFim;
 
-	private String linkHomepage;
+	@Column(nullable = false)
+	private Boolean afastamentoParaParticipacao;
+
+	private Integer diasAfastamento;
+
+	private String linkHomePageEvento;
 
 	@Column(nullable = false)
 	private String cidade;
@@ -75,23 +90,34 @@ public class AssistanceRequest {
 	@Column(nullable = false)
 	private String pais;
 
+	private String qualis;
+
+	@Column(nullable = false)
+	private String modalidadeParticipacao;
+
+	// Detalhamento Financeiro
+
 	private Float valorInscricao;
+
+	private String linkPaginaInscricao;
 
 	private Integer quantidadeDiariasSolicitadas;
 
-	private String cartaAceite;
-
-	private String qualis;
+	private Float valorDiaria;
 
 	private Boolean isDolar;
 
-	@Column(nullable = true)
-	private Float coinVariation;
+	private Float cotacaoMoeda;
 
-	@Column(nullable = true)
-	private String comprovantePagamento;
+	private Float valorPassagem;
 
-	// Finalizacao da solicitacao
+	// Aceite e Justificativa
+
+	@Column(nullable = true, columnDefinition = "BYTEA")
+	private byte[] cartaAceite;
+
+	private String justificativa;
+
 	private Boolean aceiteFinal;
 
 	// Dados sobre a revisão
@@ -99,6 +125,9 @@ public class AssistanceRequest {
 	// 0 - Em revisao, 1 - Aceita, 2 - Nao Aceita
 	@Column(nullable = false)
 	private Integer situacao;
+
+	@Column(nullable = true)
+	private String comprovantePagamento;
 
 	@Column(nullable = true)
 	private String numeroAta;
@@ -120,96 +149,12 @@ public class AssistanceRequest {
 	@Column(nullable = true, columnDefinition = "text", length = 100000)
 	private String automaticDecText;
 
-	public String getNomeEvento() {
-		return nomeEvento;
+	public List<String> getCoautores() {
+		return coautores != null ? List.of(coautores.split(",")) : List.of();
 	}
 
-	public void setNomeEvento(String nomeEvento) {
-		this.nomeEvento = nomeEvento;
-	}
-
-	public Integer getQuantidadeDiariasSolicitadas() {
-		return quantidadeDiariasSolicitadas;
-	}
-
-	public void setQuantidadeDiariasSolicitadas(Integer quantidadeDiariasSolicitadas) {
-		this.quantidadeDiariasSolicitadas = quantidadeDiariasSolicitadas;
-	}
-
-	public String getQualis() {
-		return qualis;
-	}
-
-	public void setQualis(String qualis) {
-		this.qualis = qualis;
-	}
-
-	public Float getValorAprovado() {
-		return valorAprovado;
-	}
-
-	public void setValorAprovado(Float valorAprovado) {
-		this.valorAprovado = valorAprovado;
-	}
-
-	public String getNumeroAta() {
-		return numeroAta;
-	}
-
-	public void setNumeroAta(String numeroAta) {
-		this.numeroAta = numeroAta;
-	}
-
-	public LocalDate getDataAprovacao() {
-		return dataAprovacao;
-	}
-
-	public void setDataAprovacao(LocalDate dataAprovacao) {
-		this.dataAprovacao = dataAprovacao;
-	}
-
-	public Integer getNumeroDiariasAprovadas() {
-		return numeroDiariasAprovadas;
-	}
-
-	public void setNumeroDiariasAprovadas(Integer numeroDiariasAprovadas) {
-		this.numeroDiariasAprovadas = numeroDiariasAprovadas;
-	}
-
-	public String getObservacao() {
-		return observacao;
-	}
-
-	public void setObservacao(String observacao) {
-		this.observacao = observacao;
-	}
-
-	public int getSituacao() {
-		return situacao;
-	}
-
-	public void setSituacao(Integer situacao) {
-		this.situacao = situacao;
-	}
-
-	public Float getCoinVariation() {
-		return coinVariation;
-	}
-
-	public void setCoinVariation(Float coinVariation) {
-		this.coinVariation = coinVariation;
-	}
-
-	public Boolean getIsDolar() {
-		return isDolar;
-	}
-
-	public void setIsDolar(Boolean isDolar) {
-		this.isDolar = isDolar;
-	}
-
-	public String getAutomaticDecText() {
-		return automaticDecText;
+	public void setCoautores(List<String> coautores) {
+		this.coautores = coautores != null ? String.join(",", coautores) : null;
 	}
 
 	public void setAutomaticDecText(String automaticDecText) {
@@ -218,7 +163,7 @@ public class AssistanceRequest {
 		String quantDiarias = String.valueOf(this.quantidadeDiariasSolicitadas);
 		// String calculoDiarias = String.valueOf(this.valorSolicitado /
 		// this.quantidadeDiariasSolicitadas);
-		String nomeTrabalho = this.nomeCompleto;
+		String nomeTrabalho = this.tituloPublicacao;
 		String evento = this.nomeEvento;
 		String qualis = this.qualis;
 		String cidade = this.cidade;
@@ -238,7 +183,7 @@ public class AssistanceRequest {
 				this.automaticDecText = "O discente " + name + " solicita apoio de inscrição em dolar ($"
 						+ valorSolicitado + " e " + quantDiarias
 						+ " diárias ) com variação cambial atual informada de (R$ "
-						+ this.coinVariation + " para apresentação de trabalho oral (" + nomeTrabalho + ") no evento "
+						+ this.cotacaoMoeda + " para apresentação de trabalho oral (" + nomeTrabalho + ") no evento "
 						+ evento + ", Qualis " + qualis + ", a ser realizado em " + cidade + "-" + pais
 						+ ", no período de " + inicio + " a " + fim
 						+ ". Após verificação da documentação enviada, a comissão Proap entende que a solicitação está de acordo com a resolução vigente e recomenda sua aprovação.";
@@ -256,7 +201,7 @@ public class AssistanceRequest {
 					this.automaticDecText = "O discente " + name + " solicita apoio de inscrição em dolar ($"
 							+ valorSolicitado + " e " + quantDiarias
 							+ " diárias) com variação cambial atual informada de (R$ "
-							+ this.coinVariation + " para apresentação de trabalho oral (" + nomeTrabalho
+							+ this.cotacaoMoeda + " para apresentação de trabalho oral (" + nomeTrabalho
 							+ ") no evento "
 							+ evento + ", Qualis " + qualis + ", a ser realizado em " + cidade + "-" + pais
 							+ ", no período de " + inicio + " a " + fim
@@ -264,14 +209,6 @@ public class AssistanceRequest {
 				}
 			}
 		}
-	}
-
-	public Boolean getAutoresPresentePGCOMP() {
-		return autoresPresentePGCOMP;
-	}
-
-	public void setAutoresPresentePGCOMP(Boolean autoresPresentePGCOMP) {
-		this.autoresPresentePGCOMP = autoresPresentePGCOMP;
 	}
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
@@ -295,174 +232,6 @@ public class AssistanceRequest {
 			return false;
 		AssistanceRequest other = (AssistanceRequest) obj;
 		return Objects.equals(id, other.id);
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public User getUser() {
-		return this.user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	public Boolean getAceiteFinal() {
-		return aceiteFinal;
-	}
-
-	public void setAceiteFinal(Boolean aceiteFinal) {
-		this.aceiteFinal = aceiteFinal;
-	}
-
-	public LocalDate getDataInicio() {
-		return dataInicio;
-	}
-
-	public void setDataInicio(LocalDate dataInicio) {
-		this.dataInicio = dataInicio;
-	}
-
-	public LocalDate getDataFim() {
-		return dataFim;
-	}
-
-	public void setDataFim(LocalDate dataFim) {
-		this.dataFim = dataFim;
-	}
-
-	public String getLinkHomepage() {
-		return linkHomepage;
-	}
-
-	public void setLinkHomepage(String linkHomepage) {
-		this.linkHomepage = linkHomepage;
-	}
-
-	public String getPais() {
-		return pais;
-	}
-
-	public void setPais(String pais) {
-		this.pais = pais;
-	}
-
-	public String getCidade() {
-		return cidade;
-	}
-
-	public void setCidade(String cidade) {
-		this.cidade = cidade;
-	}
-
-	public Float getValorInscricao() {
-		return valorInscricao;
-	}
-
-	public void setValorInscricao(Float valorInscricao) {
-		this.valorInscricao = valorInscricao;
-	}
-
-	public String getCartaAceite() {
-		return cartaAceite;
-	}
-
-	public void setCartaAceite(String cartaAceite) {
-		this.cartaAceite = cartaAceite;
-	}
-
-	public Boolean getSolicitacaoApoio() {
-		return solicitacaoApoio;
-	}
-
-	public void setSolicitacaoApoio(Boolean solicitacaoApoio) {
-		this.solicitacaoApoio = solicitacaoApoio;
-	}
-
-	public Float getValorSolicitado() {
-		return valorSolicitado;
-	}
-
-	public void setValorSolicitado(Float valorSolicitado) {
-		this.valorSolicitado = valorSolicitado;
-	}
-
-	public String getComprovantePagamento() {
-		return comprovantePagamento;
-	}
-
-	public void setComprovantePagamento(String comprovantePagamento) {
-		this.comprovantePagamento = comprovantePagamento;
-	}
-
-	public Boolean getSolicitacaoAuxilioOutrasFontes() {
-		return solicitacaoAuxilioOutrasFontes;
-	}
-
-	public void setSolicitacaoAuxilioOutrasFontes(Boolean solicitacaoAuxilioOutrasFontes) {
-		this.solicitacaoAuxilioOutrasFontes = solicitacaoAuxilioOutrasFontes;
-	}
-
-	public String getNomeAgenciaFomento() {
-		return nomeAgenciaFomento;
-	}
-
-	public void setNomeAgenciaFomento(String nomeAgenciaFomento) {
-		this.nomeAgenciaFomento = nomeAgenciaFomento;
-	}
-
-	public String getValorSolicitadoAgenciaFormento() {
-		return valorSolicitadoAgenciaFormento;
-	}
-
-	public void setValorSolicitadoAgenciaFormento(String valorSolicitadoAgenciaFormento) {
-		this.valorSolicitadoAgenciaFormento = valorSolicitadoAgenciaFormento;
-	}
-
-	public String getNomeCompleto() {
-		return nomeCompleto;
-	}
-
-	public void setNomeCompleto(String nomeCompleto) {
-		this.nomeCompleto = nomeCompleto;
-	}
-
-	public String getDoi() {
-		return doi;
-	}
-
-	public void setDoi(String doi) {
-		this.doi = doi;
-	}
-
-	public String getAutores() {
-		return autores;
-	}
-
-	public void setAutores(String autores) {
-		this.autores = autores;
-	}
-
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public LocalDateTime getUpdatedAt() {
-		return updatedAt;
-	}
-
-	public void setUpdatedAt(LocalDateTime updatedAt) {
-		this.updatedAt = updatedAt;
 	}
 
 	@PrePersist
