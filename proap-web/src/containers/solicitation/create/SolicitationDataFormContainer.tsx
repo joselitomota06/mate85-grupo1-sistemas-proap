@@ -1,9 +1,6 @@
-import React from 'react';
-
 import { SolicitationFormValues } from '../SolicitationFormSchema';
 import { Field, FieldArray, Form, useFormikContext } from 'formik';
 import {
-  Grid,
   FormLabel,
   RadioGroup,
   FormControlLabel,
@@ -11,7 +8,6 @@ import {
   FormControl,
   FormHelperText,
   Box,
-  TextField,
   IconButton,
   Button,
 } from '@mui/material';
@@ -20,15 +16,19 @@ import { useAuth } from '../../../hooks';
 import { Add, Remove } from '@mui/icons-material';
 
 export default function SolicitationDataFormContainer() {
-  const { errors, touched, values } =
+  const { errors, touched, values, setFieldValue } =
     useFormikContext<SolicitationFormValues>();
 
   const { name, email } = useAuth();
 
   return (
     <Box
-      component={Form}
-      sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}
+      sx={{
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        marginTop: 2,
+      }}
     >
       <StyledTextField
         label="Solicitante"
@@ -113,14 +113,21 @@ export default function SolicitationDataFormContainer() {
         <FormLabel required>
           Existe aluno PGCOMP como co-autor na publicação
         </FormLabel>
-        <Field
-          as={RadioGroup}
-          aria-labelledby="demo-row-radio-buttons-group-label"
-          name="autoresPresentePGCOMP"
-          row
-        >
-          <FormControlLabel value="true" control={<Radio />} label="Sim" />
-          <FormControlLabel value="false" control={<Radio />} label="Não" />
+        <Field name="algumCoautorPGCOMP">
+          {({ field }: { field: any }) => (
+            <RadioGroup
+              {...field}
+              row
+              value={field.value}
+              onChange={(event) => {
+                setFieldValue(field.name, event.target.value === 'true');
+              }}
+              aria-labelledby="demo-row-radio-buttons-group-label"
+            >
+              <FormControlLabel value={true} control={<Radio />} label="Sim" />
+              <FormControlLabel value={false} control={<Radio />} label="Não" />
+            </RadioGroup>
+          )}
         </Field>
         {touched.algumCoautorPGCOMP && errors.algumCoautorPGCOMP && (
           <FormHelperText>{errors.algumCoautorPGCOMP}</FormHelperText>

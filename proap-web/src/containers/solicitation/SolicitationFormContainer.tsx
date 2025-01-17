@@ -33,11 +33,21 @@ interface SolicitationFormContainerProps {
   };
 }
 
-export default function SolicitationFormContainer(
-  props: SolicitationFormContainerProps,
-) {
-  const { title, initialValues, labels, onSubmit } = props;
+const defaultProps: SolicitationFormContainerProps = {
+  title: 'Nova solicitação de auxílio',
+  initialValues: INITIAL_FORM_VALUES,
+  labels: {
+    submit: 'Enviar solicitação',
+  },
+  onSubmit: () => {},
+};
 
+export default function SolicitationFormContainer({
+  title = defaultProps.title,
+  initialValues = defaultProps.initialValues,
+  labels = defaultProps.labels,
+  onSubmit = defaultProps.onSubmit,
+}: SolicitationFormContainerProps) {
   const registerFormSteps: FormStep[] = useMemo(
     () => [
       {
@@ -45,11 +55,11 @@ export default function SolicitationFormContainer(
         component: SolicitationDataFormContainer,
         schema: solicitantionDataFormSchema,
       },
-      // {
-      //   label: 'Detalhes do Solicitante',
-      //   component: SolicitantDetailFormContainer,
-      //   schema: solicitantDetailFormSchema,
-      // },
+      {
+        label: 'Detalhes do Solicitante',
+        component: SolicitantDetailFormContainer,
+        schema: solicitantDetailFormSchema,
+      },
       {
         label: 'Detalhamento do Evento',
         component: FinancingDataFormContainer,
@@ -93,11 +103,3 @@ export default function SolicitationFormContainer(
     </>
   );
 }
-
-SolicitationFormContainer.defaultProps = {
-  title: 'Nova solicitação de auxílio',
-  initialValues: INITIAL_FORM_VALUES,
-  labels: {
-    submit: 'Enviar solicitação',
-  },
-};

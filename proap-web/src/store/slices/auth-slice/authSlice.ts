@@ -13,7 +13,6 @@ const authSlice = createSlice({
     authenticate: (state, action: PayloadAction<string>) => {
       state.isAuthenticated = true;
       state.token = action.payload;
-
       LocalStorageToken.save(action.payload);
       axios.defaults.headers.common['Authorization'] =
         `Bearer ${action.payload}`;

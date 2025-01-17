@@ -4,7 +4,7 @@ import { AssistanceRequest } from '../../types';
 export const solicitantionDataFormSchema = Yup.object({
   tituloPublicacao: Yup.string().required('Campo obrigatório'),
   coautores: Yup.array().of(Yup.string()),
-  algumCoautorPGCOMP: Yup.boolean().required('Campo obrigatório'),
+  algumCoautorPGCOMP: Yup.string().required('Campo obrigatório'),
 });
 
 export const solicitantDetailFormSchema = Yup.object({
