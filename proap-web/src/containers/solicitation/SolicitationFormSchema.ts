@@ -4,33 +4,34 @@ import { AssistanceRequest } from '../../types';
 export const solicitantionDataFormSchema = Yup.object({
   tituloPublicacao: Yup.string().required('Campo obrigatório'),
   coautores: Yup.array().of(Yup.string()),
-  algumCoautorPGCOMP: Yup.string().required('Campo obrigatório'),
+  algumCoautorPGCOMP: Yup.boolean().when('coautores', {
+    is: (coautores: string[]) => coautores && coautores.length > 0,
+    then: () => Yup.string().required('Campo obrigatório'),
+    otherwise: () => Yup.string().notRequired(),
+  }),
 });
 
 export const solicitantDetailFormSchema = Yup.object({
   solicitanteDocente: Yup.boolean().required('Campo obrigatório'),
   nomeDocente: Yup.string().required('Campo obrigatório'),
-  nomeDiscente: Yup.string().when(
-    ['solicitanteDocente'],
-    (solicitanteDocente, schema) =>
-      solicitanteDocente
-        ? schema.notRequired()
-        : schema.required('Campo obrigatório'),
-  ),
-  discenteNoPrazoDoCurso: Yup.boolean().when(
-    ['solicitanteDocente'],
-    (solicitanteDocente, schema) =>
-      solicitanteDocente
-        ? schema.notRequired()
-        : schema.required('Campo obrigatório'),
-  ),
-  mesesAtrasoCurso: Yup.number().when(
-    ['discenteNoPrazoDoCurso'],
-    (discenteNoPrazoDoCurso, schema) =>
-      discenteNoPrazoDoCurso
-        ? schema.notRequired()
-        : schema.required('Campo obrigatório'),
-  ),
+  nomeDiscente: Yup.string().when('solicitanteDocente', {
+    is: false,
+    then: () => Yup.string().required('Campo obrigatório'),
+    otherwise: () => Yup.string().notRequired(),
+  }),
+  discenteNoPrazoDoCurso: Yup.boolean().when('solicitanteDocente', {
+    is: true,
+    then: () => Yup.boolean().notRequired(),
+    otherwise: () => Yup.boolean().required('Campo obrigatório'),
+  }),
+  mesesAtrasoCurso: Yup.number()
+    .when('discenteNoPrazoDoCurso', {
+      is: false,
+      then: () => Yup.number().required('Campo obrigatório'),
+      otherwise: () => Yup.number().notRequired(),
+    })
+    .integer('Deve ser um número inteiro')
+    .min(1, 'O valor mínimo é 1'),
 });
 export const eventDetailFormSchema = Yup.object({
   nomeEvento: Yup.string().required('Campo obrigatório'),

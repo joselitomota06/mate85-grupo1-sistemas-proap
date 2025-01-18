@@ -30,19 +30,9 @@ export default function SolicitationDataFormContainer() {
         marginTop: 2,
       }}
     >
-      <StyledTextField
-        label="Solicitante"
-        value={values.user.name != '' ? values.user.name : name}
-        disabled
-      />
-      <StyledTextField
-        label="E-mail"
-        value={values.user.email != '' ? values.user.email : email}
-        disabled
-      />
       <Field
         as={StyledTextField}
-        label="Título completo da publicação a ser apoiada"
+        label="Título completo da publicação (solicitação) a ser apoiada"
         name="tituloPublicacao"
         error={Boolean(touched.tituloPublicacao && errors.tituloPublicacao)}
         helperText={touched.tituloPublicacao && errors.tituloPublicacao}
@@ -51,8 +41,8 @@ export default function SolicitationDataFormContainer() {
       />
       <Box>
         <FormLabel>
-          Lista completa de co-autor(es) da publicação a ser apoiada (Nome e
-          sobrenome)
+          Lista completa de coautor(es) da publicação ou solicitação a ser
+          apoiada (Nome e sobrenome)
         </FormLabel>
         <FieldArray name="coautores">
           {({ push, remove }) => (
@@ -107,32 +97,45 @@ export default function SolicitationDataFormContainer() {
         </FieldArray>
       </Box>
 
-      <FormControl
-        error={Boolean(touched.algumCoautorPGCOMP && errors.algumCoautorPGCOMP)}
-      >
-        <FormLabel required>
-          Existe aluno PGCOMP como co-autor na publicação
-        </FormLabel>
-        <Field name="algumCoautorPGCOMP">
-          {({ field }: { field: any }) => (
-            <RadioGroup
-              {...field}
-              row
-              value={field.value}
-              onChange={(event) => {
-                setFieldValue(field.name, event.target.value === 'true');
-              }}
-              aria-labelledby="demo-row-radio-buttons-group-label"
-            >
-              <FormControlLabel value={true} control={<Radio />} label="Sim" />
-              <FormControlLabel value={false} control={<Radio />} label="Não" />
-            </RadioGroup>
+      {values.coautores.some((coautor) => coautor !== '') && (
+        <FormControl
+          error={Boolean(
+            touched.algumCoautorPGCOMP && errors.algumCoautorPGCOMP,
           )}
-        </Field>
-        {touched.algumCoautorPGCOMP && errors.algumCoautorPGCOMP && (
-          <FormHelperText>{errors.algumCoautorPGCOMP}</FormHelperText>
-        )}
-      </FormControl>
+        >
+          <FormLabel required>
+            Há alunos ativos do PGCOMP coautores/coparticipantes direto na
+            solicitação?
+          </FormLabel>
+          <Field name="algumCoautorPGCOMP">
+            {({ field }: { field: any }) => (
+              <RadioGroup
+                {...field}
+                row
+                value={field.value}
+                onChange={(event) => {
+                  setFieldValue(field.name, event.target.value === 'true');
+                }}
+                aria-labelledby="demo-row-radio-buttons-group-label"
+              >
+                <FormControlLabel
+                  value={true}
+                  control={<Radio />}
+                  label="Sim"
+                />
+                <FormControlLabel
+                  value={false}
+                  control={<Radio />}
+                  label="Não"
+                />
+              </RadioGroup>
+            )}
+          </Field>
+          {touched.algumCoautorPGCOMP && errors.algumCoautorPGCOMP && (
+            <FormHelperText>{errors.algumCoautorPGCOMP}</FormHelperText>
+          )}
+        </FormControl>
+      )}
     </Box>
   );
 }
