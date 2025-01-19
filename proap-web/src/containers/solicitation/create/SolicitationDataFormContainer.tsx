@@ -28,6 +28,7 @@ export default function SolicitationDataFormContainer() {
         display: 'flex',
         flexDirection: 'column',
         marginTop: 2,
+        gap: 2,
       }}
     >
       <Field

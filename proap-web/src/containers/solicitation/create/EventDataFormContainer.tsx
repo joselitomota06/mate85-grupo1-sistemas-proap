@@ -58,7 +58,7 @@ export default function ContactDataFormContainer() {
               type="number"
               error={Boolean(
                 touched.quantidadeDiariasSolicitadas &&
-                  errors.quantidadeDiariasSolicitadas
+                  errors.quantidadeDiariasSolicitadas,
               )}
               helperText={
                 touched.quantidadeDiariasSolicitadas &&

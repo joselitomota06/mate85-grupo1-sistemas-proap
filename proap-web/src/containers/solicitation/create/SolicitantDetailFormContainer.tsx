@@ -24,9 +24,6 @@ export default function SolicitantDetailFormContainer() {
   const userIsDocente = useHasPermission('DOCENTE_ROLE');
   const userIsAdmin = useHasPermission('ADMIN_ROLE');
 
-  console.log('Values:', values);
-  console.log('Errors:', errors);
-
   useEffect(() => {
     if (!userIsAdmin) {
       setFieldValue('solicitanteDocente', userIsDocente);
@@ -53,6 +50,7 @@ export default function SolicitantDetailFormContainer() {
         display: 'flex',
         flexDirection: 'column',
         marginTop: 2,
+        gap: 2,
       }}
     >
       <FormControl
@@ -177,7 +175,7 @@ export default function SolicitantDetailFormContainer() {
                 <Field
                   as={StyledTextField}
                   id="text-field"
-                  sx={{ maxWidth: '250px !important' }}
+                  sx={{ maxWidth: '250px !important', margin: 0 }}
                   name="mesesAtrasoCurso"
                   type="number"
                   InputProps={{ inputProps: { min: 1, step: 1 } }}

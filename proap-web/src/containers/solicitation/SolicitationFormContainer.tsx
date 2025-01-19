@@ -4,7 +4,7 @@ import { Typography } from '@mui/material';
 import { FormikValues } from 'formik';
 
 import SolicitationDataFormContainer from './create/SolicitationDataFormContainer';
-import FinancingDataFormContainer from './create/FinancingDataFormContainer';
+import eventDetailFormContainer from './create/eventDetailFormContainer';
 import DetailsDataFormContainer from './create/DetailsDataFormContainer';
 import EventDataFormContainer from './create/EventDataFormContainer';
 
@@ -62,7 +62,7 @@ export default function SolicitationFormContainer({
       },
       {
         label: 'Detalhamento do Evento',
-        component: FinancingDataFormContainer,
+        component: eventDetailFormContainer,
         schema: eventDetailFormSchema,
       },
       {

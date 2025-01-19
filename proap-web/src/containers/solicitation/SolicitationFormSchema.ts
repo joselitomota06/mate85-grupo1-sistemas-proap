@@ -39,18 +39,20 @@ export const eventDetailFormSchema = Yup.object({
   dataInicio: Yup.string().required('Campo obrigatório'),
   dataFim: Yup.string()
     .required('Campo obrigatório')
-    .min(
-      Yup.ref('dataInicio'),
-      'Data de fim deve ser maior que a data de início',
+    .test(
+      'dataFim-maior-que-dataInicio',
+      'Data de término deve ser maior ou igual a data de início',
+      function (value) {
+        const { dataInicio } = this.parent;
+        return value && dataInicio && new Date(value) >= new Date(dataInicio);
+      },
     ),
   afastamentoParaParticipacao: Yup.boolean().required('Campo obrigatório'),
-  diasAfastamento: Yup.number().when(
-    ['afastamentoParaParticipacao'],
-    (afastamentoParaParticipacao, schema) =>
-      afastamentoParaParticipacao
-        ? schema.required('Campo obrigatório')
-        : schema.notRequired(),
-  ),
+  diasAfastamento: Yup.number().when('afastamentoParaParticipacao', {
+    is: true,
+    then: () => Yup.number().required('Campo obrigatório'),
+    otherwise: () => Yup.number().notRequired(),
+  }),
   linkHomePageEvento: Yup.string(),
   cidade: Yup.string().required('Campo obrigatório'),
   pais: Yup.string().required('Campo obrigatório'),
