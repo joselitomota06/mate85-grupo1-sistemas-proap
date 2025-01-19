@@ -5,7 +5,6 @@ import { Field, useFormikContext } from 'formik';
 import {
   Grid,
   TextField,
-  FormLabel,
   FormControl,
   RadioGroup,
   Radio,
@@ -16,7 +15,10 @@ import {
 } from '@mui/material';
 import ErrorIcon from '@mui/icons-material/Error';
 import Select from '@mui/material/Select';
-import { StyledTextField } from '../SolicitationFormContainer.style';
+import {
+  StyledFormLabel,
+  StyledTextField,
+} from '../SolicitationFormContainer.style';
 import { CurrencyCustomFormikField } from '../../currency-input/CurrencyInputContainer';
 
 export default function ContactDataFormContainer() {
@@ -133,9 +135,9 @@ export default function ContactDataFormContainer() {
           />
         </Grid>
         <FormControl error={Boolean(touched.qualis && errors.qualis)}>
-          <FormLabel style={{ fontSize: '.8rem' }} required>
+          <StyledFormLabel required>
             Informe o Qualis do seu evento
-          </FormLabel>
+          </StyledFormLabel>
           <Field
             as={Select}
             sx={{ maxWidth: 80 }}

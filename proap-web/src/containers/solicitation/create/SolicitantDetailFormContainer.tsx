@@ -6,12 +6,14 @@ import {
   FormControl,
   FormControlLabel,
   FormHelperText,
-  FormLabel,
   Radio,
   RadioGroup,
   Stack,
 } from '@mui/material';
-import { StyledTextField } from '../SolicitationFormContainer.style';
+import {
+  StyledFormLabel,
+  StyledTextField,
+} from '../SolicitationFormContainer.style';
 import useHasPermission from '../../../hooks/auth/useHasPermission';
 import { useEffect } from 'react';
 import useCurrentUser from '../../../hooks/auth/useCurrentUser';
@@ -56,7 +58,7 @@ export default function SolicitantDetailFormContainer() {
       <FormControl
         error={Boolean(touched.solicitanteDocente && errors.solicitanteDocente)}
       >
-        <FormLabel required>Solicitação em nome do:</FormLabel>
+        <StyledFormLabel required>Solicitação em nome do:</StyledFormLabel>
         <Field name="solicitanteDocente">
           {({ field }: { field: any }) => (
             <RadioGroup
@@ -111,82 +113,89 @@ export default function SolicitantDetailFormContainer() {
 
       {!values.solicitanteDocente && (
         <Box>
-          <FormLabel required>
-            Está no prazo regular para finalização do seu curso (mestrado ou
-            doutorado)?
-          </FormLabel>
-          <Stack
-            direction={{ xs: 'column', sm: 'row' }}
-            sx={{
-              alignItems: { xs: 'start', sm: 'center' },
-              justifyContent: 'space-between',
-              maxWidth: '800px',
-            }}
-          >
-            <FormControl
-              error={Boolean(
-                touched.discenteNoPrazoDoCurso && errors.discenteNoPrazoDoCurso,
-              )}
-            >
-              <Field name="discenteNoPrazoDoCurso">
-                {({ field }: { field: any }) => (
-                  <RadioGroup
-                    {...field}
-                    row
-                    value={String(field.value)}
-                    onChange={(event) => {
-                      setFieldValue(field.name, event.target.value === 'true');
-                      setFieldValue('mesesAtrasoCurso', undefined);
-                    }}
-                    aria-labelledby="demo-row-radio-buttons-group-label"
-                  >
-                    <FormControlLabel
-                      value={true}
-                      control={<Radio />}
-                      label="Sim"
-                    />
-                    <FormControlLabel
-                      value={false}
-                      control={<Radio />}
-                      label="Não"
-                    />
-                  </RadioGroup>
-                )}
-              </Field>
-              {touched.discenteNoPrazoDoCurso &&
-                errors.discenteNoPrazoDoCurso && (
-                  <FormHelperText>
-                    {errors.discenteNoPrazoDoCurso}
-                  </FormHelperText>
-                )}
-            </FormControl>
-            {!values.discenteNoPrazoDoCurso && (
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: { xs: 'column', sm: 'row' },
-                  alignItems: { xs: 'start', sm: 'center' },
-                  gap: { xs: 0, sm: 2 },
-                }}
-              >
-                <FormLabel required htmlFor="text-field">
-                  Quantos meses já se passaram do prazo regular?
-                </FormLabel>
-                <Field
-                  as={StyledTextField}
-                  id="text-field"
-                  sx={{ maxWidth: '250px !important', margin: 0 }}
-                  name="mesesAtrasoCurso"
-                  type="number"
-                  InputProps={{ inputProps: { min: 1, step: 1 } }}
-                  error={touched.mesesAtrasoCurso && !!errors.mesesAtrasoCurso}
-                  helperText={
-                    touched.mesesAtrasoCurso && errors.mesesAtrasoCurso
-                  }
-                />
-              </Box>
+          <FormControl
+            error={Boolean(
+              touched.discenteNoPrazoDoCurso && errors.discenteNoPrazoDoCurso,
             )}
-          </Stack>
+          >
+            <StyledFormLabel required>
+              Está no prazo regular para finalização do seu curso (mestrado ou
+              doutorado)?
+            </StyledFormLabel>
+            <Stack
+              direction={{ xs: 'column', sm: 'row' }}
+              sx={{
+                alignItems: { xs: 'start', sm: 'center' },
+                justifyContent: 'space-between',
+                maxWidth: '800px',
+              }}
+            >
+              <Stack>
+                <Field name="discenteNoPrazoDoCurso">
+                  {({ field }: { field: any }) => (
+                    <RadioGroup
+                      {...field}
+                      row
+                      value={String(field.value)}
+                      onChange={(event) => {
+                        setFieldValue(
+                          field.name,
+                          event.target.value === 'true',
+                        );
+                        setFieldValue('mesesAtrasoCurso', undefined);
+                      }}
+                      aria-labelledby="demo-row-radio-buttons-group-label"
+                    >
+                      <FormControlLabel
+                        value={true}
+                        control={<Radio />}
+                        label="Sim"
+                      />
+                      <FormControlLabel
+                        value={false}
+                        control={<Radio />}
+                        label="Não"
+                      />
+                    </RadioGroup>
+                  )}
+                </Field>
+                {touched.discenteNoPrazoDoCurso &&
+                  errors.discenteNoPrazoDoCurso && (
+                    <FormHelperText>
+                      {errors.discenteNoPrazoDoCurso}
+                    </FormHelperText>
+                  )}
+              </Stack>
+              {!values.discenteNoPrazoDoCurso && (
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: { xs: 'column', sm: 'row' },
+                    alignItems: { xs: 'start', sm: 'center' },
+                    gap: { xs: 0, sm: 2 },
+                  }}
+                >
+                  <StyledFormLabel required htmlFor="text-field">
+                    Quantos meses já se passaram do prazo regular?
+                  </StyledFormLabel>
+                  <Field
+                    as={StyledTextField}
+                    id="text-field"
+                    sx={{ maxWidth: '250px !important', margin: 0 }}
+                    name="mesesAtrasoCurso"
+                    type="number"
+                    InputProps={{ inputProps: { min: 1, step: 1 } }}
+                    error={
+                      touched.mesesAtrasoCurso && !!errors.mesesAtrasoCurso
+                    }
+                    helperText={
+                      touched.mesesAtrasoCurso && errors.mesesAtrasoCurso
+                    }
+                  />
+                </Box>
+              )}
+            </Stack>
+          </FormControl>
         </Box>
       )}
     </Box>

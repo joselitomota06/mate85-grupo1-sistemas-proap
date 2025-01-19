@@ -1,4 +1,4 @@
-import { Button, Grid, Step, StepLabel, Stepper } from '@mui/material';
+import { Box, Button, Step, StepLabel, Stepper } from '@mui/material';
 import {
   Form,
   Formik,
@@ -97,9 +97,12 @@ export default function StepperForm({
                   <FormComponent key={`form-wrapper-${index}`} />
                 ),
             )}
-            <Grid
-              container
-              justifyContent={activeStep === 0 ? 'end' : 'space-between'}
+            <Box
+              sx={{
+                display: 'flex',
+                marginTop: 2,
+                justifyContent: activeStep === 0 ? 'end' : 'space-between',
+              }}
             >
               {activeStep > 0 && (
                 <Button
@@ -122,7 +125,7 @@ export default function StepperForm({
                 )}
                 {!isLastStep ? componentLabels.next : componentLabels.submit}
               </Button>
-            </Grid>
+            </Box>
           </Form>
         )}
       </Formik>

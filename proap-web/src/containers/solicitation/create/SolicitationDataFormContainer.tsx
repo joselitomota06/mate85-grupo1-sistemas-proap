@@ -1,7 +1,6 @@
 import { SolicitationFormValues } from '../SolicitationFormSchema';
 import { Field, FieldArray, Form, useFormikContext } from 'formik';
 import {
-  FormLabel,
   RadioGroup,
   FormControlLabel,
   Radio,
@@ -11,7 +10,10 @@ import {
   IconButton,
   Button,
 } from '@mui/material';
-import { StyledTextField } from '../SolicitationFormContainer.style';
+import {
+  StyledFormLabel,
+  StyledTextField,
+} from '../SolicitationFormContainer.style';
 import { useAuth } from '../../../hooks';
 import { Add, Remove } from '@mui/icons-material';
 
@@ -41,10 +43,10 @@ export default function SolicitationDataFormContainer() {
         multiline
       />
       <Box>
-        <FormLabel>
+        <StyledFormLabel>
           Lista completa de coautor(es) da publicação ou solicitação a ser
           apoiada (Nome e sobrenome)
-        </FormLabel>
+        </StyledFormLabel>
         <FieldArray name="coautores">
           {({ push, remove }) => (
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -104,10 +106,10 @@ export default function SolicitationDataFormContainer() {
             touched.algumCoautorPGCOMP && errors.algumCoautorPGCOMP,
           )}
         >
-          <FormLabel required>
+          <StyledFormLabel required>
             Há alunos ativos do PGCOMP coautores/coparticipantes direto na
             solicitação?
-          </FormLabel>
+          </StyledFormLabel>
           <Field name="algumCoautorPGCOMP">
             {({ field }: { field: any }) => (
               <RadioGroup
