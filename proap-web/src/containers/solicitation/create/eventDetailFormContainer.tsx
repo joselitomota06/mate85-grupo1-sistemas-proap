@@ -13,14 +13,13 @@ import {
   IconButton,
   MenuItem,
   Select,
+  Alert,
+  Link,
 } from '@mui/material';
 import {
   StyledTextField,
-  StyledDataInput,
   StyledFormLabel,
 } from '../SolicitationFormContainer.style';
-import UploadFileIcon from '@mui/icons-material/UploadFile';
-import { CurrencyCustomFormikField } from '../../currency-input/CurrencyInputContainer';
 import { Info } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 
@@ -35,9 +34,6 @@ export default function eventDetailFormContainer() {
       setFieldValue('qualis', outroQualis);
     }
   }, [outroQualis]);
-
-  console.log('Values:', values);
-  console.log('Errors:', errors);
 
   return (
     <Box
@@ -91,7 +87,6 @@ export default function eventDetailFormContainer() {
           <FormHelperText>{errors.eventoInternacional}</FormHelperText>
         )}
       </FormControl>
-
       <Stack direction={{ xs: 'column', sm: 'row' }} spacing={4}>
         <Field
           sx={{ width: 200 }}
@@ -285,29 +280,39 @@ export default function eventDetailFormContainer() {
             gap: { xs: 2, sm: 4 },
           }}
         >
-          <Stack>
-            <Field
-              as={Select}
-              sx={{ maxWidth: 100 }}
-              displayEmpty
-              inputProps={{ 'aria-label': 'Without label' }}
-              name="qualis"
-              defaultValue=""
+          <Stack direction="row">
+            <Stack>
+              <Field
+                as={Select}
+                sx={{ maxWidth: 100 }}
+                displayEmpty
+                inputProps={{ 'aria-label': 'Without label' }}
+                name="qualis"
+                defaultValue=""
+              >
+                <MenuItem value=""></MenuItem>
+                <MenuItem value="A1">A1</MenuItem>
+                <MenuItem value="A2">A2</MenuItem>
+                <MenuItem value="A3">A3</MenuItem>
+                <MenuItem value="A4">A4</MenuItem>
+                <MenuItem value="B1">B1</MenuItem>
+                <MenuItem value="B2">B2</MenuItem>
+                <MenuItem value="B3">B3</MenuItem>
+                <MenuItem value="B4">B4</MenuItem>
+                <MenuItem value={outroQualis}>Outro</MenuItem>
+              </Field>
+              {touched.qualis && errors.qualis && (
+                <FormHelperText>{errors.qualis}</FormHelperText>
+              )}
+            </Stack>
+            <Tooltip
+              sx={{ position: 'relative' }}
+              title="Workshops associados a eventos não possuem a mesma avaliação da trilha principal"
             >
-              <MenuItem value=""></MenuItem>
-              <MenuItem value="A1">A1</MenuItem>
-              <MenuItem value="A2">A2</MenuItem>
-              <MenuItem value="A3">A3</MenuItem>
-              <MenuItem value="A4">A4</MenuItem>
-              <MenuItem value="B1">B1</MenuItem>
-              <MenuItem value="B2">B2</MenuItem>
-              <MenuItem value="B3">B3</MenuItem>
-              <MenuItem value="B4">B4</MenuItem>
-              <MenuItem value={outroQualis}>Outro</MenuItem>
-            </Field>
-            {touched.qualis && errors.qualis && (
-              <FormHelperText>{errors.qualis}</FormHelperText>
-            )}
+              <IconButton>
+                <Info />
+              </IconButton>
+            </Tooltip>
           </Stack>
           {!/^(A|B)[1-4]$/.test(values.qualis) && (
             <Box
@@ -319,7 +324,7 @@ export default function eventDetailFormContainer() {
               }}
             >
               <StyledFormLabel required htmlFor="text-field-qualis">
-                Especifique o Qualis
+                Especifique
               </StyledFormLabel>
               <Field
                 as={StyledTextField}
@@ -336,6 +341,23 @@ export default function eventDetailFormContainer() {
           )}
         </Stack>
       </FormControl>
+      <Alert severity="info" sx={{ maxWidth: '800px' }}>
+        Para calcular o Qualis do seu evento, siga as instruções disponíveis no{' '}
+        <Link
+          href="https://pgcomp.ufba.br/qual-o-qualis-de-uma-conferencia-ou-um-periodico"
+          target="_blank"
+          rel="noopener"
+          style={{ color: 'inherit', fontWeight: 'bold' }}
+        >
+          site da PGCOMP
+        </Link>
+        .
+      </Alert>
+      <Alert severity="warning" sx={{ maxWidth: '800px' }}>
+        {`Nos casos de artigos aceitos em conferências, 
+              o Qualis deve ser atribubído quando o artigo é aceito no evento principal, 
+              e não em eventos satélites como workshops, minicursos ou CTDs.`}
+      </Alert>
     </Box>
   );
 }
