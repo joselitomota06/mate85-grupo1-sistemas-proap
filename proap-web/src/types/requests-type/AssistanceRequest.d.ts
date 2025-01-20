@@ -23,12 +23,12 @@ export interface AssistanceRequest {
   pais: string;
   qualis: string;
   modalidadeParticipacao: string;
-  valorInscricao: number | undefined;
+  valorInscricao: number;
   linkPaginaInscricao: string;
-  quantidadeDiariasSolicitadas: number | undefined;
-  valorDiaria: number | undefined;
-  isDolar: boolean | undefined;
-  cotacaoMoeda: number | undefined;
+  quantidadeDiariasSolicitadas: number;
+  valorDiaria: number;
+  isDolar: boolean;
+  cotacaoMoeda: number;
   valorPassagem: number | undefined;
   valorAprovado: number | undefined;
   cartaAceite: string;

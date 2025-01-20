@@ -10,7 +10,6 @@ import {
   Box,
   Stack,
   Tooltip,
-  IconButton,
   MenuItem,
   Select,
   Alert,
@@ -19,6 +18,7 @@ import {
 import {
   StyledTextField,
   StyledFormLabel,
+  StyledIconButton,
 } from '../SolicitationFormContainer.style';
 import { Info } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
@@ -113,9 +113,9 @@ export default function eventDetailFormContainer() {
             sx={{ position: 'relative', top: 10 }}
             title="Se o evento for de um único dia, preencha a mesma data nos dois campos"
           >
-            <IconButton>
+            <StyledIconButton>
               <Info />
-            </IconButton>
+            </StyledIconButton>
           </Tooltip>
         </Stack>
       </Stack>
@@ -309,9 +309,9 @@ export default function eventDetailFormContainer() {
               sx={{ position: 'relative' }}
               title="Workshops associados a eventos não possuem a mesma avaliação da trilha principal"
             >
-              <IconButton>
+              <StyledIconButton>
                 <Info />
-              </IconButton>
+              </StyledIconButton>
             </Tooltip>
           </Stack>
           {!/^(A|B)[1-4]$/.test(values.qualis) && (

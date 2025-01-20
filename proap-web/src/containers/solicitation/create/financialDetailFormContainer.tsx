@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { SolicitationFormValues } from '../SolicitationFormSchema';
 import { Field, useFormikContext } from 'formik';
@@ -12,156 +12,247 @@ import {
   FormHelperText,
   MenuItem,
   Tooltip,
+  Box,
+  Stack,
+  Alert,
+  Link,
 } from '@mui/material';
 import ErrorIcon from '@mui/icons-material/Error';
 import Select from '@mui/material/Select';
 import {
   StyledFormLabel,
+  StyledIconButton,
   StyledTextField,
 } from '../SolicitationFormContainer.style';
 import { CurrencyCustomFormikField } from '../../currency-input/CurrencyInputContainer';
+import { Info } from '@mui/icons-material';
 
 export default function financialDetailFormContainer() {
   const { values, errors, touched, setFieldValue } =
     useFormikContext<SolicitationFormValues>();
 
+  useEffect(() => {
+    if (!values.isDolar) {
+      setFieldValue('valorDiaria', 320);
+    } else {
+      setFieldValue('valorDiaria', '');
+    }
+
+    if (values.quantidadeDiariasSolicitadas === 0) {
+      setFieldValue('valorDiaria', 0);
+    }
+  }, [values.isDolar, values.quantidadeDiariasSolicitadas]);
+
+  console.log('Values', values);
+  console.log('Errors', errors);
+
   return (
-    <Grid container paddingTop={2} paddingBottom={2}>
-      <Grid container item md={6} xs={12}>
-        <Grid container direction="row" spacing={2}>
-          <Grid item>
-            <Field
-              as={TextField}
-              label="Data de início"
-              name="dataInicio"
-              error={Boolean(touched.dataInicio && errors.dataInicio)}
-              helperText={touched.dataInicio && errors.dataInicio}
-              type="date"
-              required
-            />
-          </Grid>
-          <Grid item>
-            <Field
-              as={TextField}
-              label="Data de termino"
-              name="dataFim"
-              error={Boolean(touched.dataFim && errors.dataFim)}
-              helperText={touched.dataFim && errors.dataFim}
-              type="date"
-              required
-            />
-          </Grid>
-
-          <Grid item>
-            <Field
-              as={StyledTextField}
-              label="Quantidade de diárias solicitadas "
-              name="quantidadeDiariasSolicitadas"
-              type="number"
-              error={Boolean(
-                touched.quantidadeDiariasSolicitadas &&
-                  errors.quantidadeDiariasSolicitadas,
-              )}
-              helperText={
-                touched.quantidadeDiariasSolicitadas &&
-                errors.quantidadeDiariasSolicitadas
-              }
-            />
-          </Grid>
-        </Grid>
-
-        <Grid container item direction="column">
-          <Field
-            as={StyledTextField}
-            label="Nome do evento"
-            name="nomeEvento"
-            error={Boolean(touched.nomeEvento && errors.nomeEvento)}
-            helperText={touched.nomeEvento && errors.nomeEvento}
-            required
-            multiline
-          />
-
-          <Field
-            as={StyledTextField}
-            label="Link de incrição do evento (constando os valores solicitados)"
-            name="linkHomepage"
-            error={Boolean(touched.linkHomepage && errors.linkHomepage)}
-            helperText={touched.linkHomepage && errors.linkHomepage}
-            required
-            multiline
-          />
-
-          <Field
-            as={StyledTextField}
-            label="Cidade"
-            name="cidade"
-            error={Boolean(touched.cidade && errors.cidade)}
-            helperText={touched.cidade && errors.cidade}
-            required
-          />
-          <Field
-            as={StyledTextField}
-            label="País"
-            name="pais"
-            error={Boolean(touched.pais && errors.pais)}
-            helperText={touched.pais && errors.pais}
-            required
-          />
-          <Grid>
-            <CurrencyCustomFormikField
-              label="Valor da inscrição/publicação"
-              name="valorInscricao"
-              values={values}
-              setFieldValue={setFieldValue}
-              touched={touched}
-              errors={errors}
-              required={true}
-            />
-            <Tooltip title="Valor apenas de inscrição, não inclui possíveis afiliações">
-              <ErrorIcon
-                fontSize="small"
-                style={{ marginTop: '0.3rem', color: '#184a7f' }}
-              />
-            </Tooltip>
-          </Grid>
-
-          <Field
-            as={StyledTextField}
-            label="Carta de aceite"
-            name="cartaAceite"
-            error={Boolean(touched.cartaAceite && errors.cartaAceite)}
-            helperText={touched.cartaAceite && errors.cartaAceite}
-            required
-          />
-        </Grid>
-        <FormControl error={Boolean(touched.qualis && errors.qualis)}>
-          <StyledFormLabel required>
-            Informe o Qualis do seu evento
-          </StyledFormLabel>
-          <Field
-            as={Select}
-            sx={{ maxWidth: 80 }}
-            displayEmpty
-            inputProps={{ 'aria-label': 'Without label' }}
-            name="qualis"
-            defaultValue=""
-          >
-            <MenuItem value=""></MenuItem>
-            <MenuItem value="A1">A1</MenuItem>
-            <MenuItem value="A2">A2</MenuItem>
-            <MenuItem value="A3">A3</MenuItem>
-            <MenuItem value="A4">A4</MenuItem>
-            <MenuItem value="B1">B1</MenuItem>
-            <MenuItem value="B2">B2</MenuItem>
-            <MenuItem value="B3">B3</MenuItem>
-            <MenuItem value="B4">B4</MenuItem>
-            <MenuItem value="outro">Outro</MenuItem>
-          </Field>
-          {touched.qualis && errors.qualis && (
-            <FormHelperText>{errors.qualis}</FormHelperText>
+    <Box
+      sx={{
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        marginTop: 2,
+        gap: 2,
+      }}
+    >
+      <Stack direction={'row'}>
+        <Field
+          as={StyledTextField}
+          label="Valor da inscrição/solicitação (R$)"
+          sx={{ width: '200px' }}
+          name="valorInscricao"
+          type="number"
+          InputProps={{
+            inputProps: { min: 0, step: 0.01 },
+          }}
+          error={Boolean(touched.valorInscricao && errors.valorInscricao)}
+          helperText={touched.valorInscricao && errors.valorInscricao}
+          required
+        />
+        <Tooltip
+          sx={{ position: 'relative', top: '10px' }}
+          title="Informe o valor conforme seu extrato bancário"
+        >
+          <StyledIconButton>
+            <Info />
+          </StyledIconButton>
+        </Tooltip>
+      </Stack>
+      <Alert severity="warning" sx={{ maxWidth: '800px' }}>
+        {`O PROAP não reembolsa taxa de filiação, a não ser que 
+        seja uma opção obrigatória associada à taxa de inscrição.`}
+      </Alert>
+      <Stack direction={'row'}>
+        <Field
+          required
+          as={StyledTextField}
+          sx={{ width: '100%' }}
+          label="Link da página da inscrição do evento (ou solicitação)"
+          name="linkPaginaInscricao"
+          error={Boolean(
+            touched.linkPaginaInscricao && errors.linkPaginaInscricao,
           )}
-        </FormControl>
-      </Grid>
-    </Grid>
+          helperText={touched.linkPaginaInscricao && errors.linkPaginaInscricao}
+        />
+        <Tooltip
+          sx={{ position: 'relative', top: '10px' }}
+          title="Deve conter o valor da inscrição solicitado"
+        >
+          <StyledIconButton>
+            <Info />
+          </StyledIconButton>
+        </Tooltip>
+      </Stack>
+      <FormControl
+        error={Boolean(
+          touched.quantidadeDiariasSolicitadas &&
+            errors.quantidadeDiariasSolicitadas,
+        )}
+      >
+        <StyledFormLabel required>
+          Quantas diárias deseja solicitar?
+        </StyledFormLabel>
+        <Stack direction="row">
+          <Stack>
+            <Field
+              as={Select}
+              sx={{ maxWidth: 100 }}
+              displayEmpty
+              inputProps={{ 'aria-label': 'Without label' }}
+              name="quantidadeDiariasSolicitadas"
+              defaultValue={0}
+            >
+              <MenuItem value={0}>0</MenuItem>
+              <MenuItem value={1}>1</MenuItem>
+              <MenuItem value={2}>2</MenuItem>
+              <MenuItem value={3}>3</MenuItem>
+              <MenuItem value={4}>4</MenuItem>
+              {!values.solicitanteDocente && <MenuItem value={5}>5</MenuItem>}
+            </Field>
+            {touched.quantidadeDiariasSolicitadas &&
+              errors.quantidadeDiariasSolicitadas && (
+                <FormHelperText>
+                  {errors.quantidadeDiariasSolicitadas}
+                </FormHelperText>
+              )}
+          </Stack>
+          <Tooltip
+            sx={{ position: 'relative' }}
+            title="Caso não se aplique, informe 0 (zero)"
+          >
+            <StyledIconButton>
+              <Info />
+            </StyledIconButton>
+          </Tooltip>
+        </Stack>
+      </FormControl>
+      <Alert severity="info" sx={{ maxWidth: '800px' }}>
+        Conforme a resolução do PROAP, a quantidade de diárias é limitada ao
+        número de dias do evento, e a última diária é de 50% do valor. Leia a{' '}
+        <Link
+          href="https://pgcomp.ufba.br/sites/pgcomp.ufba.br/files/2024_resolucao_01_-_pgcomp_-_proap.pdf"
+          target="_blank"
+          rel="noopener"
+          style={{ color: 'inherit', fontWeight: 'bold' }}
+        >
+          Resolução 01/2024
+        </Link>{' '}
+        antes de inserir esta informação.
+      </Alert>
+      {values.quantidadeDiariasSolicitadas > 0 && (
+        <Stack gap={2}>
+          <FormControl
+            error={Boolean(touched.valorDiaria && errors.valorDiaria)}
+          >
+            <StyledFormLabel>Informe o valor da sua diária</StyledFormLabel>
+            <Stack direction={'row'} gap={1}>
+              <Field
+                as={Select}
+                sx={{ width: '80px' }}
+                displayEmpty
+                inputProps={{ 'aria-label': 'Without label' }}
+                name="isDolar"
+                defaultValue={false}
+                onChange={(e: any) => {
+                  setFieldValue('isDolar', e.target.value === 'true');
+                }}
+              >
+                <MenuItem value={'false'}>BRL</MenuItem>
+                <MenuItem value={'true'}>USD</MenuItem>
+              </Field>
+
+              <Field
+                as={StyledTextField}
+                sx={{ margin: 0 }}
+                name="valorDiaria"
+                disabled={!values.isDolar}
+                type="number"
+                InputProps={{
+                  inputProps: { min: 0, step: 0.01 },
+                }}
+                error={Boolean(touched.valorDiaria && errors.valorDiaria)}
+                required
+              />
+              <Tooltip
+                sx={{ position: 'relative' }}
+                title="Informe o valor referente a uma diária"
+              >
+                <StyledIconButton sx={{ padding: 0 }}>
+                  <Info />
+                </StyledIconButton>
+              </Tooltip>
+            </Stack>
+            {touched.valorDiaria && errors.valorDiaria && (
+              <FormHelperText sx={{ color: 'red' }}>
+                {errors.valorDiaria}
+              </FormHelperText>
+            )}
+            {touched.isDolar && errors.isDolar && (
+              <FormHelperText>{errors.isDolar}</FormHelperText>
+            )}
+          </FormControl>
+          <Alert severity="info" sx={{ maxWidth: '800px' }}>
+            O valor atual da diária no Brasil é R$320. No exterior, indique o
+            valor em USD, conforme a tabela de auxílio diário no exterior mais
+            recente, disponível na{' '}
+            <Link
+              href="https://acrobat.adobe.com/id/urn:aaid:sc:US:2f1cb5ef-adf6-4c35-8258-63444225af4e"
+              target="_blank"
+              rel="noopener"
+              style={{ color: 'inherit', fontWeight: 'bold' }}
+            >
+              neste link
+            </Link>{' '}
+            .
+          </Alert>
+        </Stack>
+      )}
+      {values.isDolar && (
+        <Stack direction={'row'}>
+          <Field
+            as={StyledTextField}
+            label="Informe o valor da cotação do dólar americano (USD)"
+            sx={{ width: '200px' }}
+            name="cotacaoMoeda"
+            type="number"
+            InputProps={{
+              inputProps: { min: 0, step: 0.01 },
+            }}
+            error={Boolean(touched.cotacaoMoeda && errors.cotacaoMoeda)}
+            helperText={touched.cotacaoMoeda && errors.cotacaoMoeda}
+            required
+          />
+          <Tooltip
+            sx={{ position: 'relative', top: '10px' }}
+            title="A cotação deve ser do dia desta solicitação"
+          >
+            <StyledIconButton>
+              <Info />
+            </StyledIconButton>
+          </Tooltip>
+        </Stack>
+      )}
+    </Box>
   );
 }

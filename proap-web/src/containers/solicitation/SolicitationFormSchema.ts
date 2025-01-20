@@ -62,25 +62,32 @@ export const eventDetailFormSchema = Yup.object({
 
 export const financialDetailFormSchema = Yup.object({
   valorInscricao: Yup.number()
-    .nullable()
-    .min(1, 'Insira um valor válido')
+    .min(0, 'Insira um valor válido')
     .defined()
     .required('Campo obrigatório'),
   linkPaginaInscricao: Yup.string().required('Campo obrigatório'),
   quantidadeDiariasSolicitadas: Yup.number()
-    .nullable()
-    .min(1, 'Insira um valor válido')
+    .min(0, 'Insira um valor válido')
     .defined()
     .required('Campo obrigatório'),
   valorDiaria: Yup.number()
-    .nullable()
-    .min(1, 'Insira um valor válido')
+    .min(0, 'Insira um valor válido')
     .defined()
-    .required('Campo obrigatório'),
+    .when('quantidadeDiariasSolicitadas', {
+      is: (quantidadeDiariasSolicitadas: number) =>
+        quantidadeDiariasSolicitadas > 0,
+      then: () => Yup.number().required('Campo obrigatório'),
+      otherwise: () => Yup.number().notRequired(),
+    }),
   isDolar: Yup.boolean().required('Campo obrigatório'),
-  cotacaoMoeda: Yup.number().when(['isDolar'], (isDolar, schema) =>
-    isDolar ? schema.required('Campo obrigatório') : schema.notRequired(),
-  ),
+  cotacaoMoeda: Yup.number()
+    .when('isDolar', {
+      is: true,
+      then: () => Yup.number().required('Campo obrigatório'),
+      otherwise: () => Yup.number().notRequired(),
+    })
+    .defined()
+    .min(1, 'Insira um valor válido'),
   valorPassagem: Yup.number()
     .nullable()
     .min(1, 'Insira um valor válido')
@@ -120,9 +127,9 @@ export const INITIAL_FORM_VALUES: SolicitationFormValues = {
   linkHomePageEvento: '',
   modalidadeParticipacao: '',
   linkPaginaInscricao: '',
-  valorDiaria: undefined,
-  isDolar: undefined,
-  cotacaoMoeda: undefined,
+  valorDiaria: 0,
+  isDolar: false,
+  cotacaoMoeda: 1,
   valorPassagem: undefined,
   algumCoautorPGCOMP: false,
   solicitanteDocente: false,
@@ -134,7 +141,7 @@ export const INITIAL_FORM_VALUES: SolicitationFormValues = {
   dataFim: '',
   pais: '',
   cidade: '',
-  valorInscricao: undefined,
+  valorInscricao: 0,
   comprovantePagamento: '',
   cartaAceite: '',
   qualis: 'A1',

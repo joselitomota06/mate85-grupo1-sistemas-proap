@@ -6,8 +6,6 @@ import { CurrencyCustomFormikFieldInterface } from './CurrencyInputContainterSch
 const CurrencyCustomFormikField = ({
   values,
   setFieldValue,
-  touched,
-  errors,
   label,
   name,
   required,
@@ -16,7 +14,7 @@ const CurrencyCustomFormikField = ({
 
   const handleInputChange = (event: any) => {
     let valorWithoutMask: number | undefined = parseFloat(
-      event.target.value.replace(/[\R\$' ']/g, '').replace(',', '.')
+      event.target.value.replace(/[\R\$' ']/g, '').replace(',', '.'),
     );
 
     valorWithoutMask = isNaN(valorWithoutMask) ? undefined : valorWithoutMask;
@@ -35,8 +33,6 @@ const CurrencyCustomFormikField = ({
       label={label}
       name={name}
       required={required}
-      error={Boolean(errors[name])}
-      helperText={errors[name]}
       onChange={handleInputChange}
       value={valorWithoutMask}
       InputProps={{
