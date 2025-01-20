@@ -5,7 +5,7 @@ import { FormikValues } from 'formik';
 
 import SolicitantDataFormContainer from './create/SolicitationDataFormContainer';
 import FinancingDataFormContainer from './create/eventDetailFormContainer';
-import EventDataFormContainer from './create/EventDataFormContainer';
+import EventDataFormContainer from './create/financialDetailFormContainer';
 import ReviewDataFormContainer from './create/ReviewDataFormContainer';
 
 import {

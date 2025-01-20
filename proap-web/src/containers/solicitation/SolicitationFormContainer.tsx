@@ -6,7 +6,7 @@ import { FormikValues } from 'formik';
 import SolicitationDataFormContainer from './create/SolicitationDataFormContainer';
 import eventDetailFormContainer from './create/eventDetailFormContainer';
 import DetailsDataFormContainer from './create/DetailsDataFormContainer';
-import EventDataFormContainer from './create/EventDataFormContainer';
+import financialDetailFormContainer from './create/financialDetailFormContainer';
 
 import {
   acceptanceDataFormSchema,
@@ -67,7 +67,7 @@ export default function SolicitationFormContainer({
       },
       {
         label: 'Detalhamento Financeiro',
-        component: EventDataFormContainer,
+        component: financialDetailFormContainer,
         schema: financialDetailFormSchema,
       },
       {

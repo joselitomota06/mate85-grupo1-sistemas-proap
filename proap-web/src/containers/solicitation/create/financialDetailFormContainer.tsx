@@ -21,7 +21,7 @@ import {
 } from '../SolicitationFormContainer.style';
 import { CurrencyCustomFormikField } from '../../currency-input/CurrencyInputContainer';
 
-export default function ContactDataFormContainer() {
+export default function financialDetailFormContainer() {
   const { values, errors, touched, setFieldValue } =
     useFormikContext<SolicitationFormValues>();
 

@@ -7,13 +7,15 @@ import { FormikValues } from 'formik';
 import SolicitationFormContainer from '../../containers/solicitation/SolicitationFormContainer';
 import { SolicitationFormValues } from '../../containers/solicitation/SolicitationFormSchema';
 import { submitSolicitation } from '../../services/solicitationService';
-import { SolicitationGrid } from './SolicitationPage.style';
 import { dateToLocalDate } from '../../helpers/conversion';
 import Toast from '../../helpers/notification';
+import useHasPermission from '../../hooks/auth/useHasPermission';
+import { UnauthorizedPage } from '../unauthorized/UnauthorizedPage';
 
 export default function SolicitationPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const userCanCreateRequest = useHasPermission('CREATE_REQUEST');
 
   const handleSubmitSolicitation = useCallback(
     (values: FormikValues) => {
@@ -27,8 +29,12 @@ export default function SolicitationPage() {
         navigate('/');
       });
     },
-    [dispatch]
+    [dispatch],
   );
+
+  if (!userCanCreateRequest) {
+    return <UnauthorizedPage />;
+  }
 
   return <SolicitationFormContainer onSubmit={handleSubmitSolicitation} />;
 }

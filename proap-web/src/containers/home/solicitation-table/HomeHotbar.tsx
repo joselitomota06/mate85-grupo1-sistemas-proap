@@ -12,10 +12,11 @@ import useHasPermission from '../../../hooks/auth/useHasPermission';
 
 export default function HomeHotbar() {
   const userCanViewAllRequests = useHasPermission('VIEW_ALL_REQUESTS');
+  const userCanCreateRequest = useHasPermission('CREATE_REQUEST');
 
   return (
     <Box sx={{ marginTop: '1rem', marginBottom: '1rem' }}>
-      <Grid container justifyContent="end" alignItems="center" spacing={2}>
+      <Grid container justifyContent="start" alignItems="center" spacing={2}>
         <Grid item xs={4}>
           <Typography
             variant="h4"
@@ -28,34 +29,36 @@ export default function HomeHotbar() {
               : 'Minhas solicitações PROAP'}
           </Typography>
         </Grid>
-        <Grid container spacing={1} item xs={8} justifyContent="end">
-          <Grid item lg={6} xl={4} paddingTop={2} paddingBottom={3}>
-            <HomeHotbarLink to="solicitation/create">
-              <Button
-                variant="outlined"
-                size="large"
-                startIcon={<AddIcon />}
-                fullWidth
-                style={{ padding: '1rem 1rem', border: '3px solid' }}
-              >
-                Apoio a publicação científica
-              </Button>
-            </HomeHotbarLink>
+        {userCanCreateRequest && (
+          <Grid container spacing={1} item xs={8} justifyContent="end">
+            <Grid item lg={6} xl={4} paddingTop={2} paddingBottom={3}>
+              <HomeHotbarLink to="solicitation/create">
+                <Button
+                  variant="outlined"
+                  size="large"
+                  startIcon={<AddIcon />}
+                  fullWidth
+                  style={{ padding: '1rem 1rem', border: '3px solid' }}
+                >
+                  Apoio a publicação científica
+                </Button>
+              </HomeHotbarLink>
+            </Grid>
+            <Grid item lg={6} xl={4} paddingTop={2} paddingBottom={3}>
+              <HomeHotbarLink to="extra-solicitation/create">
+                <Button
+                  variant="outlined"
+                  size="large"
+                  startIcon={<AddIcon />}
+                  fullWidth
+                  style={{ padding: '1rem 1rem', border: '3px solid' }}
+                >
+                  Demanda Extra
+                </Button>
+              </HomeHotbarLink>
+            </Grid>
           </Grid>
-          <Grid item lg={6} xl={4} paddingTop={2} paddingBottom={3}>
-            <HomeHotbarLink to="extra-solicitation/create">
-              <Button
-                variant="outlined"
-                size="large"
-                startIcon={<AddIcon />}
-                fullWidth
-                style={{ padding: '1rem 1rem', border: '3px solid' }}
-              >
-                Demanda Extra
-              </Button>
-            </HomeHotbarLink>
-          </Grid>
-        </Grid>
+        )}
       </Grid>
     </Box>
   );
