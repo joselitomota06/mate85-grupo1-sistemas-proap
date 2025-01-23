@@ -26,10 +26,13 @@ import {
 } from '../SolicitationFormContainer.style';
 import { CurrencyCustomFormikField } from '../../currency-input/CurrencyInputContainer';
 import { Info } from '@mui/icons-material';
+import useCalculeTotal from '../../../hooks/solicitation/useCalculeTotal';
 
 export default function financialDetailFormContainer() {
   const { values, errors, touched, setFieldValue } =
     useFormikContext<SolicitationFormValues>();
+
+  useCalculeTotal();
 
   useEffect(() => {
     if (!values.isDolar) {
@@ -253,6 +256,48 @@ export default function financialDetailFormContainer() {
           </Tooltip>
         </Stack>
       )}
+      {values.solicitanteDocente && (
+        <Stack>
+          <Stack direction={'row'}>
+            <Field
+              as={StyledTextField}
+              label="Informe o valor aproximado da passagem aérea (R$)"
+              sx={{ width: '200px' }}
+              name="valorPassagem"
+              type="number"
+              InputProps={{
+                inputProps: { min: 0, step: 0.01 },
+              }}
+              error={Boolean(touched.valorPassagem && errors.valorPassagem)}
+              helperText={touched.valorPassagem && errors.valorPassagem}
+              required
+            />
+            <Tooltip
+              sx={{ position: 'relative', top: '10px' }}
+              title="Informe 0 se não estiver solicitando apoio de passagem aérea."
+            >
+              <StyledIconButton>
+                <Info />
+              </StyledIconButton>
+            </Tooltip>
+          </Stack>
+          <Alert severity="info" sx={{ maxWidth: '800px' }}>
+            As passagens serão adquiridas pelo SCDP.
+          </Alert>
+        </Stack>
+      )}
+      <Field
+        as={StyledTextField}
+        label="Valor total da solicitação (R$)"
+        sx={{ width: '200px' }}
+        disabled
+        value={values.valorTotal.toFixed(2)}
+        type="number"
+        InputProps={{
+          inputProps: { min: 0, step: 0.01 },
+        }}
+        required
+      />
     </Box>
   );
 }

@@ -143,6 +143,9 @@ public class AssistanceRequest {
 	private Float valorAprovado;
 
 	@Column(nullable = true)
+	private Float valorTotal;
+
+	@Column(nullable = true)
 	private String observacao;
 
 	// Apos aceite

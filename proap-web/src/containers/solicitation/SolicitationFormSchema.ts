@@ -89,10 +89,13 @@ export const financialDetailFormSchema = Yup.object({
     .defined()
     .min(1, 'Insira um valor válido'),
   valorPassagem: Yup.number()
-    .nullable()
-    .min(1, 'Insira um valor válido')
+    .min(0, 'Insira um valor válido')
     .defined()
-    .required('Campo obrigatório'),
+    .when('solitanteDocente', {
+      is: true,
+      then: () => Yup.number().required('Campo obrigatório'),
+      otherwise: () => Yup.number().notRequired(),
+    }),
 });
 
 export const acceptanceDataFormSchema = Yup.object({
@@ -130,7 +133,8 @@ export const INITIAL_FORM_VALUES: SolicitationFormValues = {
   valorDiaria: 0,
   isDolar: false,
   cotacaoMoeda: 1,
-  valorPassagem: undefined,
+  valorPassagem: 0,
+  valorTotal: 0,
   algumCoautorPGCOMP: false,
   solicitanteDocente: false,
   nomeDocente: '',

@@ -29,7 +29,8 @@ export interface AssistanceRequest {
   valorDiaria: number;
   isDolar: boolean;
   cotacaoMoeda: number;
-  valorPassagem: number | undefined;
+  valorPassagem: number;
+  valorTotal: number;
   valorAprovado: number | undefined;
   cartaAceite: string;
   comprovantePagamento: string;
