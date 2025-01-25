@@ -1,4 +1,4 @@
-import { SolicitationFormValues } from '../SolicitationFormSchema';
+import { InitialSolicitationFormValues } from '../SolicitationFormSchema';
 import { Field, FieldArray, Form, useFormikContext } from 'formik';
 import {
   RadioGroup,
@@ -19,7 +19,7 @@ import { Add, Remove } from '@mui/icons-material';
 
 export default function SolicitationDataFormContainer() {
   const { errors, touched, values, setFieldValue } =
-    useFormikContext<SolicitationFormValues>();
+    useFormikContext<InitialSolicitationFormValues>();
 
   const { name, email } = useAuth();
 

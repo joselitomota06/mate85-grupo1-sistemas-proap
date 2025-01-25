@@ -6,18 +6,18 @@ export interface AssistanceRequest {
 
   tituloPublicacao: string;
   coautores: string[];
-  algumCoautorPGCOMP: boolean;
+  algumCoautorPGCOMP: boolean | null;
   solicitanteDocente: boolean;
   nomeDocente: string;
   nomeDiscente: string;
-  discenteNoPrazoDoCurso: boolean | undefined;
-  mesesAtrasoCurso: number | undefined;
+  discenteNoPrazoDoCurso: boolean | null;
+  mesesAtrasoCurso: number | null;
   nomeEvento: string;
   eventoInternacional: boolean;
   dataInicio: string;
   dataFim: string;
-  afastamentoParaParticipacao: boolean;
-  diasAfastamento: number | undefined;
+  afastamentoParaParticipacao: boolean | null;
+  diasAfastamento: number | null;
   linkHomePageEvento: string;
   cidade: string;
   pais: string;
@@ -31,17 +31,17 @@ export interface AssistanceRequest {
   cotacaoMoeda: number;
   valorPassagem: number;
   valorTotal: number;
-  valorAprovado: number | undefined;
-  cartaAceite: string;
-  comprovantePagamento: string;
+  valorAprovado: number;
+  cartaAceite: string | null;
+  comprovantePagamento: string | null;
   situacao: number;
   dataAprovacao: string;
   numeroAta: number;
   numeroDiariasAprovadas: number;
   observacao: string;
 
-  createdAt: string;
-  updatedAt: string;
+  createdAt: string | undefined;
+  updatedAt: string | undefined;
 
   user: User;
 }

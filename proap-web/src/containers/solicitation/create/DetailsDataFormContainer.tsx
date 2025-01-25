@@ -12,12 +12,12 @@ import {
 } from '@mui/material';
 import { Field, useFormikContext } from 'formik';
 
-import { SolicitationFormValues } from '../SolicitationFormSchema';
+import { InitialSolicitationFormValues } from '../SolicitationFormSchema';
 import SolicitationDetailsContainer from '../SolicitationDetailsContainer';
 
 export default function DetailsDataFormContainer() {
   const { values, errors, touched } =
-    useFormikContext<SolicitationFormValues>();
+    useFormikContext<InitialSolicitationFormValues>();
 
   return (
     <Grid

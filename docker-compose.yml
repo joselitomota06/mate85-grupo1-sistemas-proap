@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  volume-holder:
+    image: alpine
+    container_name: proap-volume-holder
+    volumes:
+      - ./storage/proap_storage_volume:/app/pdf-storage
+    command: tail -f /dev/null
+    # ^ Comando "infinito" apenas para manter o container em execução

@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { FormikValues } from 'formik';
 
 import SolicitationFormContainer from '../../containers/solicitation/SolicitationFormContainer';
-import { SolicitationFormValues } from '../../containers/solicitation/SolicitationFormSchema';
+import { InitialSolicitationFormValues } from '../../containers/solicitation/SolicitationFormSchema';
 import { submitSolicitation } from '../../services/solicitationService';
 import { dateToLocalDate } from '../../helpers/conversion';
 import Toast from '../../helpers/notification';
@@ -19,8 +19,8 @@ export default function SolicitationPage() {
 
   const handleSubmitSolicitation = useCallback(
     (values: FormikValues) => {
-      const valuesWithCorrectDates: SolicitationFormValues = {
-        ...(values as SolicitationFormValues),
+      const valuesWithCorrectDates: InitialSolicitationFormValues = {
+        ...(values as InitialSolicitationFormValues),
         dataInicio: dateToLocalDate(new Date(values.dataInicio)),
         dataFim: dateToLocalDate(new Date(values.dataFim)),
       };

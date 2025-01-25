@@ -111,10 +111,12 @@ public class AssistanceRequest {
 
 	private Float valorPassagem;
 
+	@Column(nullable = true)
+	private Float valorTotal;
 	// Aceite e Justificativa
 
-	@Column(nullable = true, columnDefinition = "BYTEA")
-	private byte[] cartaAceite;
+	@Column(nullable = true)
+	private String cartaAceite;
 
 	private String justificativa;
 
@@ -141,9 +143,6 @@ public class AssistanceRequest {
 
 	@Column(nullable = true)
 	private Float valorAprovado;
-
-	@Column(nullable = true)
-	private Float valorTotal;
 
 	@Column(nullable = true)
 	private String observacao;

@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import { INITIAL_FORM_VALUES } from '../../containers/solicitation/SolicitationFormSchema';
+import { INITIAL_REVIEW_FORM_VALUES } from '../../containers/solicitation/SolicitationFormSchema';
 import { localDateToDate } from '../../helpers/conversion';
 import { getAssistanceRequestById } from '../../services/assistanceRequestService';
 
 export default function useSolicitation(id: string | undefined) {
-  const [solicitation, setSolicitation] = useState(INITIAL_FORM_VALUES);
+  const [solicitation, setSolicitation] = useState(INITIAL_REVIEW_FORM_VALUES);
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
 

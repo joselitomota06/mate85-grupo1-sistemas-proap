@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-import { SolicitationFormValues } from '../SolicitationFormSchema';
+import { InitialSolicitationFormValues } from '../SolicitationFormSchema';
 import { Field, useFormikContext } from 'formik';
 import {
   Grid,
@@ -30,7 +30,7 @@ import useCalculeTotal from '../../../hooks/solicitation/useCalculeTotal';
 
 export default function financialDetailFormContainer() {
   const { values, errors, touched, setFieldValue } =
-    useFormikContext<SolicitationFormValues>();
+    useFormikContext<InitialSolicitationFormValues>();
 
   useCalculeTotal();
 

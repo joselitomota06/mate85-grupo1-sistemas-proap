@@ -1,5 +1,5 @@
 import { Field, useFormikContext } from 'formik';
-import { SolicitationFormValues } from '../SolicitationFormSchema';
+import { InitialSolicitationFormValues } from '../SolicitationFormSchema';
 import {
   Box,
   Checkbox,
@@ -20,7 +20,7 @@ import useCurrentUser from '../../../hooks/auth/useCurrentUser';
 
 export default function SolicitantDetailFormContainer() {
   const { errors, touched, values, setFieldValue } =
-    useFormikContext<SolicitationFormValues>();
+    useFormikContext<InitialSolicitationFormValues>();
 
   const { name } = useCurrentUser();
   const userIsDocente = useHasPermission('DOCENTE_ROLE');

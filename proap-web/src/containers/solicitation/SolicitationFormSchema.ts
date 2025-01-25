@@ -99,12 +99,17 @@ export const financialDetailFormSchema = Yup.object({
 });
 
 export const acceptanceDataFormSchema = Yup.object({
-  cartaAceite: Yup.string().required('Campo obrigatório'),
+  cartaAceite: Yup.mixed<File>()
+    .required('A carta de aceite é obrigatória')
+    .test('fileSize', 'O arquivo deve ter no máximo 10MB', (value) => {
+      if (!value) return true;
+      return value.size <= 10000000;
+    }),
   justificativa: Yup.string(),
-  aceiteFinal: Yup.boolean()
-    .nullable()
-    .required('É necessário aceitar os termos para continuar')
-    .isTrue('É necessário aceitar os termos para continuar'),
+  // aceiteFinal: Yup.boolean()
+  //   .nullable()
+  //   .required('É necessário aceitar os termos para continuar')
+  //   .isTrue('É necessário aceitar os termos para continuar'),
 });
 
 export const reviewDataFormSchema = Yup.object({
@@ -121,12 +126,46 @@ export interface SolicitationFormValues
   aceiteFinal: boolean | undefined;
 }
 
-export const INITIAL_FORM_VALUES: SolicitationFormValues = {
+export type InitialSolicitationFormValues = Pick<
+  AssistanceRequest,
+  | 'tituloPublicacao'
+  | 'coautores'
+  | 'algumCoautorPGCOMP'
+  | 'solicitanteDocente'
+  | 'nomeDocente'
+  | 'nomeDiscente'
+  | 'discenteNoPrazoDoCurso'
+  | 'mesesAtrasoCurso'
+  | 'nomeEvento'
+  | 'eventoInternacional'
+  | 'dataInicio'
+  | 'dataFim'
+  | 'afastamentoParaParticipacao'
+  | 'diasAfastamento'
+  | 'linkHomePageEvento'
+  | 'cidade'
+  | 'pais'
+  | 'qualis'
+  | 'modalidadeParticipacao'
+  | 'valorInscricao'
+  | 'linkPaginaInscricao'
+  | 'quantidadeDiariasSolicitadas'
+  | 'valorDiaria'
+  | 'isDolar'
+  | 'cotacaoMoeda'
+  | 'valorPassagem'
+  | 'valorTotal'
+> & {
+  file: File | null;
+  aceiteFinal: boolean | undefined;
+};
+
+export const INITIAL_FORM_VALUES: InitialSolicitationFormValues = {
   tituloPublicacao: '',
   coautores: [],
   eventoInternacional: false,
-  afastamentoParaParticipacao: false,
-  diasAfastamento: undefined,
+  afastamentoParaParticipacao: null,
+  diasAfastamento: null,
   linkHomePageEvento: '',
   modalidadeParticipacao: '',
   linkPaginaInscricao: '',
@@ -139,35 +178,65 @@ export const INITIAL_FORM_VALUES: SolicitationFormValues = {
   solicitanteDocente: false,
   nomeDocente: '',
   nomeDiscente: '',
-  discenteNoPrazoDoCurso: undefined,
-  mesesAtrasoCurso: undefined,
+  discenteNoPrazoDoCurso: null,
+  mesesAtrasoCurso: null,
   dataInicio: '',
   dataFim: '',
   pais: '',
   cidade: '',
   valorInscricao: 0,
-  comprovantePagamento: '',
-  cartaAceite: '',
   qualis: 'A1',
+  nomeEvento: '',
+  quantidadeDiariasSolicitadas: 0,
+  file: null,
   aceiteFinal: false,
-  situacao: 2,
+};
+
+export const INITIAL_REVIEW_FORM_VALUES: SolicitationFormValues = {
+  tituloPublicacao: '',
+  coautores: [],
+  eventoInternacional: false,
+  afastamentoParaParticipacao: null,
+  diasAfastamento: null,
+  linkHomePageEvento: '',
+  modalidadeParticipacao: '',
+  linkPaginaInscricao: '',
+  valorDiaria: 0,
+  isDolar: false,
+  cotacaoMoeda: 1,
+  valorPassagem: 0,
+  valorTotal: 0,
+  algumCoautorPGCOMP: false,
+  solicitanteDocente: false,
+  nomeDocente: '',
+  nomeDiscente: '',
+  discenteNoPrazoDoCurso: null,
+  mesesAtrasoCurso: null,
+  dataInicio: '',
+  dataFim: '',
+  pais: '',
+  cidade: '',
+  valorInscricao: 0,
+  qualis: 'A1',
+  nomeEvento: '',
+  quantidadeDiariasSolicitadas: 0,
+  cartaAceite: null,
+  aceiteFinal: false,
+  situacao: 0,
   dataAprovacao: '',
   numeroAta: 0,
   numeroDiariasAprovadas: 0,
   observacao: '',
-  nomeEvento: '',
-  quantidadeDiariasSolicitadas: 0,
-  valorAprovado: undefined,
-
-  createdAt: '',
-  updatedAt: '',
-
+  valorAprovado: 0,
+  comprovantePagamento: null,
+  createdAt: undefined,
+  updatedAt: undefined,
   user: {
-    alternativePhone: '',
+    name: '',
     cpf: '',
     email: '',
-    name: '',
     phone: '',
+    alternativePhone: '',
     registrationNumber: '',
     profileName: '',
   },

@@ -16,15 +16,17 @@ import {
   solicitantionDataFormSchema,
   SolicitationFormValues,
   solicitantDetailFormSchema,
+  InitialSolicitationFormValues,
 } from './SolicitationFormSchema';
 import StepperForm, {
   FormStep,
 } from '../../components/stepper-form/StepperForm';
 import SolicitantDetailFormContainer from './create/SolicitantDetailFormContainer';
+import AcceptanceDataFormContainer from './create/acceptanceDataFormContainer';
 
 interface SolicitationFormContainerProps {
   onSubmit: (values: FormikValues) => void;
-  initialValues?: SolicitationFormValues;
+  initialValues?: InitialSolicitationFormValues;
   title?: string;
   labels?: {
     previous?: string;
@@ -72,6 +74,11 @@ export default function SolicitationFormContainer({
       },
       {
         label: 'Aceite e Justificativa',
+        component: AcceptanceDataFormContainer,
+        schema: acceptanceDataFormSchema,
+      },
+      {
+        label: 'Confirmação',
         component: DetailsDataFormContainer,
         schema: acceptanceDataFormSchema,
       },

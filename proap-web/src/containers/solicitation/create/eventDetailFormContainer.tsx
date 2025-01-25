@@ -1,4 +1,4 @@
-import { SolicitationFormValues } from '../SolicitationFormSchema';
+import { InitialSolicitationFormValues } from '../SolicitationFormSchema';
 import { Field, useFormikContext } from 'formik';
 import {
   TextField,
@@ -25,7 +25,7 @@ import { useEffect, useState } from 'react';
 
 export default function eventDetailFormContainer() {
   const { values, errors, touched, setFieldValue } =
-    useFormikContext<SolicitationFormValues>();
+    useFormikContext<InitialSolicitationFormValues>();
 
   const [outroQualis, setOutroQualis] = useState('');
 

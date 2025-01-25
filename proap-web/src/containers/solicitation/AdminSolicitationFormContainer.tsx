@@ -15,6 +15,7 @@ import {
   solicitantionDataFormSchema,
   reviewDataFormSchema,
   SolicitationFormValues,
+  INITIAL_REVIEW_FORM_VALUES,
 } from './SolicitationFormSchema';
 import StepperForm, {
   FormStep,
@@ -31,11 +32,21 @@ interface SolicitationFormContainerProps {
   };
 }
 
-export default function AdminSolicitationFormContainer(
-  props: SolicitationFormContainerProps,
-) {
-  const { title, initialValues, labels, onSubmit } = props;
+const defaultProps: SolicitationFormContainerProps = {
+  title: 'Editar solicitação de auxílio',
+  initialValues: INITIAL_REVIEW_FORM_VALUES,
+  labels: {
+    submit: 'Editar solicitação',
+  },
+  onSubmit: () => {},
+};
 
+export default function AdminSolicitationFormContainer({
+  title = defaultProps.title,
+  initialValues = defaultProps.initialValues,
+  labels = defaultProps.labels,
+  onSubmit = defaultProps.onSubmit,
+}: SolicitationFormContainerProps) {
   const evaluateFormSteps: FormStep[] = useMemo(
     () => [
       {
@@ -86,11 +97,3 @@ export default function AdminSolicitationFormContainer(
     </>
   );
 }
-
-AdminSolicitationFormContainer.defaultProps = {
-  title: 'Editar solicitação de auxílio',
-  initialValues: INITIAL_FORM_VALUES,
-  labels: {
-    submit: 'Editar solicitação',
-  },
-};
