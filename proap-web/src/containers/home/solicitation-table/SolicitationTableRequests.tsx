@@ -40,8 +40,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import assistanceRequestSlice from '../../../store/slices/assistance-request-slice/assistanceRequestSlice';
-import { AssistanceRequest } from '../../../store/slices/assistance-request-slice/AssistanceRequest';
+
 import usePrevious from '../../../helpers/usePrevious';
 import useHasPermission from '../../../hooks/auth/useHasPermission';
 

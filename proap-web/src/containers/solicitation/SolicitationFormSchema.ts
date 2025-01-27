@@ -156,6 +156,7 @@ export type InitialSolicitationFormValues = Pick<
   | 'valorPassagem'
   | 'valorTotal'
   | 'justificativa'
+  | 'cartaAceite'
 > & {
   file: File | null;
   aceiteFinal: boolean | undefined;
@@ -192,6 +193,7 @@ export const INITIAL_FORM_VALUES: InitialSolicitationFormValues = {
   file: null,
   aceiteFinal: false,
   justificativa: '',
+  cartaAceite: null,
 };
 
 export const INITIAL_REVIEW_FORM_VALUES: SolicitationFormValues = {

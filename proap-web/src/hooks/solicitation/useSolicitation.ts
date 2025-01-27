@@ -13,6 +13,7 @@ export default function useSolicitation(id: string | undefined) {
       setIsLoading(true);
       getAssistanceRequestById(id)
         .then(({ data }) => {
+          console.log(data);
           const { dataInicio, dataFim } = data;
           const { dataAprovacao } = data;
 

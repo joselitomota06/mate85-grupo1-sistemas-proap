@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Grid, Stack, Typography } from '@mui/material';
+import { Grid, Link, Stack, Typography } from '@mui/material';
 import styled from '@emotion/styled';
 
 import { InitialSolicitationFormValues } from './SolicitationFormSchema';
@@ -95,7 +95,20 @@ export default function SolicitationDetailsContainer({
           <StyledData>
             <Typography>Arquivo da carta de aceite do artigo</Typography>
             <Typography style={{ color: 'gray' }} variant="subtitle2">
-              {solicitation.file?.name ?? 'Nenhum arquivo enviado'}
+              {solicitation.cartaAceite ? (
+                <Link
+                  href="link"
+                  target="_blank"
+                  rel="noopener"
+                  sx={{ alignSelf: 'center' }}
+                >
+                  <Typography sx={{ fontWeight: 'bold' }}>
+                    Visualizar
+                  </Typography>
+                </Link>
+              ) : (
+                (solicitation.file?.name ?? 'Nenhum arquivo enviado')
+              )}
             </Typography>
           </StyledData>
         </Stack>
@@ -295,7 +308,8 @@ export default function SolicitationDetailsContainer({
               <StyledData>
                 <Typography>Informe o valor da sua diária</Typography>
                 <Typography style={{ color: 'gray' }} variant="subtitle2">
-                  {solicitation.isDolar ? '$' : 'R$' + solicitation.valorDiaria}
+                  {solicitation.isDolar ? '$' : 'R$'}
+                  {solicitation.valorDiaria}
                 </Typography>
               </StyledData>
               {solicitation.isDolar && (

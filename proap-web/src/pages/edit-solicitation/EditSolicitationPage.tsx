@@ -53,9 +53,9 @@ export default function EditSolicitationPage() {
             <SolicitationFormContainer
               onSubmit={handleEditSolicitationSubmit}
               initialValues={{
-                ...INITIAL_FORM_VALUES,
                 ...solicitation,
                 aceiteFinal: false,
+                file: null,
               }}
               title="Editar solicitação de auxílio"
               labels={{
