@@ -9,6 +9,13 @@ export const solicitantionDataFormSchema = Yup.object({
     then: () => Yup.string().required('Campo obrigatório'),
     otherwise: () => Yup.string().notRequired(),
   }),
+  file: Yup.mixed<File>()
+    .nullable()
+    .notRequired()
+    .test('fileSize', 'O arquivo deve ter no máximo 10MB', (value) => {
+      if (!value) return true;
+      return value.size <= 10000000;
+    }),
 });
 
 export const solicitantDetailFormSchema = Yup.object({
@@ -97,19 +104,12 @@ export const financialDetailFormSchema = Yup.object({
       otherwise: () => Yup.number().notRequired(),
     }),
 });
-
-export const acceptanceDataFormSchema = Yup.object({
-  cartaAceite: Yup.mixed<File>()
-    .required('A carta de aceite é obrigatória')
-    .test('fileSize', 'O arquivo deve ter no máximo 10MB', (value) => {
-      if (!value) return true;
-      return value.size <= 10000000;
-    }),
-  justificativa: Yup.string(),
-  // aceiteFinal: Yup.boolean()
-  //   .nullable()
-  //   .required('É necessário aceitar os termos para continuar')
-  //   .isTrue('É necessário aceitar os termos para continuar'),
+export const confirmationDataFormSchema = Yup.object({
+  // justificativa: Yup.string(),
+  aceiteFinal: Yup.boolean()
+    .nullable()
+    .required('É necessário aceitar os termos para continuar')
+    .isTrue('É necessário aceitar os termos para continuar'),
 });
 
 export const reviewDataFormSchema = Yup.object({
@@ -155,6 +155,7 @@ export type InitialSolicitationFormValues = Pick<
   | 'cotacaoMoeda'
   | 'valorPassagem'
   | 'valorTotal'
+  | 'justificativa'
 > & {
   file: File | null;
   aceiteFinal: boolean | undefined;
@@ -190,6 +191,7 @@ export const INITIAL_FORM_VALUES: InitialSolicitationFormValues = {
   quantidadeDiariasSolicitadas: 0,
   file: null,
   aceiteFinal: false,
+  justificativa: '',
 };
 
 export const INITIAL_REVIEW_FORM_VALUES: SolicitationFormValues = {
@@ -222,6 +224,7 @@ export const INITIAL_REVIEW_FORM_VALUES: SolicitationFormValues = {
   quantidadeDiariasSolicitadas: 0,
   cartaAceite: null,
   aceiteFinal: false,
+  justificativa: '',
   situacao: 0,
   dataAprovacao: '',
   numeroAta: 0,

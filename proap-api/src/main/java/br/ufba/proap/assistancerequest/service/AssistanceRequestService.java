@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.ufba.proap.assistancerequest.domain.AssistanceRequest;
+import br.ufba.proap.assistancerequest.domain.dto.ResponseAssistanceRequestDTO;
 import br.ufba.proap.assistancerequest.repository.AssistanceRequestQueryRepository;
 import br.ufba.proap.assistancerequest.repository.AssistanteRequestRepository;
 import br.ufba.proap.authentication.domain.User;
@@ -20,8 +21,12 @@ public class AssistanceRequestService {
 	@Autowired
 	private AssistanceRequestQueryRepository assistanceRequestQueryRepository;
 
-	public List<AssistanceRequest> findAll() {
-		return assistanteRequestRepository.findAll();
+	public List<ResponseAssistanceRequestDTO> findAll() {
+		List<AssistanceRequest> assistanceRequest = assistanteRequestRepository.findAll();
+
+		return assistanceRequest.stream().map((ar) -> {
+			return ResponseAssistanceRequestDTO.fromEntity(ar);
+		}).toList();
 	}
 
 	public List<AssistanceRequest> findByUser(User user) {
@@ -33,14 +38,23 @@ public class AssistanceRequestService {
 	}
 
 	public static class AssistanceRequestListFiltered {
-		public List<AssistanceRequest> list;
+		public List<ResponseAssistanceRequestDTO> list;
 		public long total;
 
-		public AssistanceRequestListFiltered(List<AssistanceRequest> list,
+		public AssistanceRequestListFiltered(List<ResponseAssistanceRequestDTO> list,
 				long total) {
 			this.list = list;
 			this.total = total;
 		}
+
+		public static AssistanceRequestListFiltered fromEntity(List<AssistanceRequest> list, long total) {
+			return new AssistanceRequestListFiltered(
+					list.stream().map((ar) -> {
+						return ResponseAssistanceRequestDTO.fromEntity(ar);
+					}).toList(),
+					total);
+		}
+
 	}
 
 	/**
@@ -70,7 +84,7 @@ public class AssistanceRequestService {
 		else
 			count = assistanteRequestRepository.countByUser(user);
 
-		return new AssistanceRequestListFiltered(
+		return AssistanceRequestListFiltered.fromEntity(
 				assistanceRequestQueryRepository.findFiltered(
 						sortBy,
 						ascending,

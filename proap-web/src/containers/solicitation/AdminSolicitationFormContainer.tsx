@@ -4,8 +4,8 @@ import { Typography } from '@mui/material';
 import { FormikValues } from 'formik';
 
 import SolicitantDataFormContainer from './create/SolicitationDataFormContainer';
-import FinancingDataFormContainer from './create/eventDetailFormContainer';
-import EventDataFormContainer from './create/financialDetailFormContainer';
+import FinancingDataFormContainer from './create/EventDetailFormContainer';
+import EventDataFormContainer from './create/FinancialDetailFormContainer';
 import ReviewDataFormContainer from './create/ReviewDataFormContainer';
 
 import {

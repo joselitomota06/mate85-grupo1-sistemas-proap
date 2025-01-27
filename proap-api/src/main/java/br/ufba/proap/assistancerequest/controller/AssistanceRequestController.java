@@ -76,6 +76,7 @@ public class AssistanceRequestController {
 					currentUser));
 
 		} catch (Exception e) {
+			logger.error(e.getMessage());
 			return ResponseEntity.internalServerError().body(
 					new AssistanceRequestService.AssistanceRequestListFiltered(
 							Collections.emptyList(), 0));
@@ -97,23 +98,24 @@ public class AssistanceRequestController {
 	}
 
 	@GetMapping("/find/{id}")
-	public ResponseEntity<Optional<AssistanceRequest>> findById(@PathVariable Long id) {
+	public ResponseEntity<ResponseAssistanceRequestDTO> findById(@PathVariable Long id) {
 		User currentUser = serviceUser.getLoggedUser();
 
 		if (currentUser == null)
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
 		try {
 			Optional<AssistanceRequest> request = service.findById(id);
 
 			if (!request.isPresent())
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
 			boolean currentUserHasPermission = currentUser.getPerfil() != null
 					&& currentUser.getPerfil().hasPermission("VIEW_ALL_REQUESTS");
 
 			if (request.get().getUser() == currentUser || currentUserHasPermission) {
-				return ResponseEntity.ok().body(request);
+				ResponseAssistanceRequestDTO response = ResponseAssistanceRequestDTO.fromEntity(request.get());
+				return ResponseEntity.ok().body(response);
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
@@ -147,16 +149,17 @@ public class AssistanceRequestController {
 	@PostMapping(value = "/create-with-file", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<ResponseAssistanceRequestDTO> createWithFile(
 			@RequestPart("form") CreateAssistanceRequestDTO form,
-			@RequestPart MultipartFile cartaAceite) {
+			@RequestPart(value = "file", required = false) MultipartFile file) {
 		User currentUser = serviceUser.getLoggedUser();
 		if (currentUser == null) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
 		try {
-			String savedFileName = fileUploadService.uploadPdf(cartaAceite);
-
 			AssistanceRequest assistanceRequest = form.toEntity();
-			assistanceRequest.setCartaAceite(savedFileName);
+			if (file != null) {
+				String savedFileName = fileUploadService.uploadPdf(file);
+				assistanceRequest.setCartaAceite(savedFileName);
+			}
 			assistanceRequest.setUser(currentUser);
 			assistanceRequest.setSituacao(0);
 
@@ -166,12 +169,15 @@ public class AssistanceRequestController {
 
 		} catch (IllegalArgumentException e) {
 			// Exemplo: não era PDF
+			logger.error(e.getMessage());
 			return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).build();
 		} catch (IOException e) {
 			// Erro de IO
+			logger.error(e.getMessage());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		} catch (Exception e) {
 			// Qualquer outro erro
+			logger.error(e.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
 	}

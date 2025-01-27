@@ -1,14 +1,9 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
 import { InitialSolicitationFormValues } from '../SolicitationFormSchema';
 import { Field, useFormikContext } from 'formik';
 import {
-  Grid,
-  TextField,
   FormControl,
-  RadioGroup,
-  Radio,
-  FormControlLabel,
   FormHelperText,
   MenuItem,
   Tooltip,
@@ -17,18 +12,16 @@ import {
   Alert,
   Link,
 } from '@mui/material';
-import ErrorIcon from '@mui/icons-material/Error';
 import Select from '@mui/material/Select';
 import {
   StyledFormLabel,
   StyledIconButton,
   StyledTextField,
 } from '../SolicitationFormContainer.style';
-import { CurrencyCustomFormikField } from '../../currency-input/CurrencyInputContainer';
 import { Info } from '@mui/icons-material';
 import useCalculeTotal from '../../../hooks/solicitation/useCalculeTotal';
 
-export default function financialDetailFormContainer() {
+export default function FinancialDetailFormContainer() {
   const { values, errors, touched, setFieldValue } =
     useFormikContext<InitialSolicitationFormValues>();
 
@@ -45,9 +38,6 @@ export default function financialDetailFormContainer() {
       setFieldValue('valorDiaria', 0);
     }
   }, [values.isDolar, values.quantidadeDiariasSolicitadas]);
-
-  console.log('Values', values);
-  console.log('Errors', errors);
 
   return (
     <Box

@@ -18,7 +18,7 @@ export const submitSolicitation = (values: InitialSolicitationFormValues) => {
   );
 
   if (file) {
-    formData.append('cartaAceite', file as File);
+    formData.append('file', file as File);
   }
 
   return api.post('assistancerequest/create-with-file', formData, {

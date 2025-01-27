@@ -23,7 +23,7 @@ import {
 import { Info } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 
-export default function eventDetailFormContainer() {
+export default function EventDetailFormContainer() {
   const { values, errors, touched, setFieldValue } =
     useFormikContext<InitialSolicitationFormValues>();
 

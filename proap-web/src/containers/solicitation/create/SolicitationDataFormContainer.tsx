@@ -1,5 +1,5 @@
 import { InitialSolicitationFormValues } from '../SolicitationFormSchema';
-import { Field, FieldArray, Form, useFormikContext } from 'formik';
+import { Field, FieldArray, useFormikContext } from 'formik';
 import {
   RadioGroup,
   FormControlLabel,
@@ -9,19 +9,31 @@ import {
   Box,
   IconButton,
   Button,
+  Stack,
+  Typography,
+  Tooltip,
+  Alert,
 } from '@mui/material';
 import {
   StyledFormLabel,
+  StyledIconButton,
   StyledTextField,
 } from '../SolicitationFormContainer.style';
-import { useAuth } from '../../../hooks';
-import { Add, Remove } from '@mui/icons-material';
+import { Add, CloudUpload, Info, Remove } from '@mui/icons-material';
+import { useState } from 'react';
 
 export default function SolicitationDataFormContainer() {
   const { errors, touched, values, setFieldValue } =
     useFormikContext<InitialSolicitationFormValues>();
 
-  const { name, email } = useAuth();
+  const [fileName, setFileName] = useState<string | null>(null);
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      setFieldValue('file', event.target.files[0]);
+      setFileName(event.target.files[0].name);
+    }
+  };
 
   return (
     <Box
@@ -139,6 +151,54 @@ export default function SolicitationDataFormContainer() {
           )}
         </FormControl>
       )}
+      <FormControl error={Boolean(touched.file && errors.file)}>
+        <Stack>
+          <StyledFormLabel>Envio de carta de aceite do artigo</StyledFormLabel>
+          <Stack direction="row">
+            <Button
+              component="label"
+              role="button"
+              variant="contained"
+              tabIndex={-1}
+              startIcon={<CloudUpload />}
+              sx={{
+                maxWidth: '200px',
+                padding: '0.5rem 1rem',
+              }}
+            >
+              <Typography
+                overflow="hidden"
+                textOverflow="ellipsis"
+                whiteSpace="nowrap"
+                fontWeight="bold"
+                fontSize="0.875rem"
+              >
+                {fileName ?? 'Escolher arquivo'}
+              </Typography>
+              <input
+                type="file"
+                onChange={handleFileChange}
+                hidden
+                accept=".pdf"
+              />
+            </Button>
+            <Tooltip
+              sx={{ position: 'relative' }}
+              title="Formato PDF. Tamanho máximo 10MB"
+            >
+              <StyledIconButton>
+                <Info />
+              </StyledIconButton>
+            </Tooltip>
+          </Stack>
+          {touched.file && errors.file && (
+            <FormHelperText>{errors.file}</FormHelperText>
+          )}
+        </Stack>
+      </FormControl>
+      <Alert severity="warning" sx={{ maxWidth: '800px' }}>
+        É obrigatória a carta de aceite para apoio a publicação científica.
+      </Alert>
     </Box>
   );
 }

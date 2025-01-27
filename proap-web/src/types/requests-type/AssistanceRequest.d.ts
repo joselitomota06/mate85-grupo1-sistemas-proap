@@ -33,6 +33,7 @@ export interface AssistanceRequest {
   valorTotal: number;
   valorAprovado: number;
   cartaAceite: string | null;
+  justificativa: string;
   comprovantePagamento: string | null;
   situacao: number;
   dataAprovacao: string;

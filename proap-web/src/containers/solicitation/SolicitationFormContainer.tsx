@@ -4,12 +4,8 @@ import { Typography } from '@mui/material';
 import { FormikValues } from 'formik';
 
 import SolicitationDataFormContainer from './create/SolicitationDataFormContainer';
-import eventDetailFormContainer from './create/eventDetailFormContainer';
-import DetailsDataFormContainer from './create/DetailsDataFormContainer';
-import financialDetailFormContainer from './create/financialDetailFormContainer';
 
 import {
-  acceptanceDataFormSchema,
   financialDetailFormSchema,
   eventDetailFormSchema,
   INITIAL_FORM_VALUES,
@@ -17,12 +13,15 @@ import {
   SolicitationFormValues,
   solicitantDetailFormSchema,
   InitialSolicitationFormValues,
+  confirmationDataFormSchema,
 } from './SolicitationFormSchema';
 import StepperForm, {
   FormStep,
 } from '../../components/stepper-form/StepperForm';
 import SolicitantDetailFormContainer from './create/SolicitantDetailFormContainer';
-import AcceptanceDataFormContainer from './create/acceptanceDataFormContainer';
+import ConfirmationFormContainer from './create/ConfirmationFormContainer';
+import FinancialDetailFormContainer from './create/FinancialDetailFormContainer';
+import EventDetailFormContainer from './create/EventDetailFormContainer';
 
 interface SolicitationFormContainerProps {
   onSubmit: (values: FormikValues) => void;
@@ -64,23 +63,23 @@ export default function SolicitationFormContainer({
       },
       {
         label: 'Detalhamento do Evento',
-        component: eventDetailFormContainer,
+        component: EventDetailFormContainer,
         schema: eventDetailFormSchema,
       },
       {
         label: 'Detalhamento Financeiro',
-        component: financialDetailFormContainer,
+        component: FinancialDetailFormContainer,
         schema: financialDetailFormSchema,
       },
+      // {
+      //   label: 'Aceite e Justificativa',
+      //   component: AcceptanceDataFormContainer,
+      //   schema: acceptanceDataFormSchema,
+      // },
       {
-        label: 'Aceite e Justificativa',
-        component: AcceptanceDataFormContainer,
-        schema: acceptanceDataFormSchema,
-      },
-      {
-        label: 'Confirmação',
-        component: DetailsDataFormContainer,
-        schema: acceptanceDataFormSchema,
+        label: 'Confirmação e Revisão',
+        component: ConfirmationFormContainer,
+        schema: confirmationDataFormSchema,
       },
     ],
     [],

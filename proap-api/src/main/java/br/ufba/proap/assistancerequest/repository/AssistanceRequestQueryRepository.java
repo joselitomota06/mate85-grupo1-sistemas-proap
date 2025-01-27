@@ -18,7 +18,7 @@ public class AssistanceRequestQueryRepository {
 
     public List<AssistanceRequest> findFiltered(String sortBy, boolean ascending, int page, int limitPerPage,
             User user) {
-        StringBuilder query = new StringBuilder("from AssistanceRequestDTO ar");
+        StringBuilder query = new StringBuilder("from AssistanceRequest ar");
 
         if (user != null)
             query.append(" where ar.user.id = :userId");

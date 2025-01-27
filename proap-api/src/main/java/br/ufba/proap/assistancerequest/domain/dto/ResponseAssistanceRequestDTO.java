@@ -7,8 +7,10 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import br.ufba.proap.assistancerequest.domain.AssistanceRequest;
+import br.ufba.proap.authentication.domain.dto.UserResponseDTO;
 
 public record ResponseAssistanceRequestDTO(
+        UserResponseDTO user,
         String tituloPublicacao,
         List<String> coautores,
         Boolean algumCoautorPGCOMP,
@@ -97,6 +99,7 @@ public record ResponseAssistanceRequestDTO(
 
     public static ResponseAssistanceRequestDTO fromEntity(AssistanceRequest entity) {
         return new ResponseAssistanceRequestDTO(
+                UserResponseDTO.fromUser(entity.getUser()),
                 entity.getTituloPublicacao(),
                 entity.getCoautores(),
                 entity.getAlgumCoautorPGCOMP(),
