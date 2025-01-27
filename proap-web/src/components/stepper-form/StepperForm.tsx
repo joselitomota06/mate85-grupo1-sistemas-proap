@@ -1,4 +1,4 @@
-import { Button, Grid, Step, StepLabel, Stepper } from '@mui/material';
+import { Box, Button, Step, StepLabel, Stepper } from '@mui/material';
 import {
   Form,
   Formik,
@@ -18,7 +18,7 @@ export interface FormStep {
 
 export interface StepperFormProps<T> extends FormikConfig<T> {
   steps: FormStep[];
-  activeStep: number;
+  activeStep?: number;
   labels: {
     previous?: string;
     submit?: string;
@@ -26,15 +26,17 @@ export interface StepperFormProps<T> extends FormikConfig<T> {
   };
 }
 
-export default function StepperForm(props: StepperFormProps<FormikValues>) {
-  const {
-    activeStep: initialActiveStep,
-    onSubmit,
-    labels,
-    steps,
-    ...formikProps
-  } = props;
-
+export default function StepperForm({
+  activeStep: initialActiveStep = 0,
+  onSubmit,
+  labels = {
+    previous: 'Anterior',
+    submit: 'Enviar',
+    next: 'Próximo',
+  },
+  steps,
+  ...formikProps
+}: StepperFormProps<FormikValues>) {
   const [activeStep, setActiveStep] = useState(initialActiveStep);
 
   const currentValidationSchema = useMemo(() => {
@@ -44,7 +46,7 @@ export default function StepperForm(props: StepperFormProps<FormikValues>) {
 
   const isLastStep = useMemo(
     () => activeStep === steps.length - 1,
-    [activeStep]
+    [activeStep],
   );
 
   const componentLabels = useMemo(
@@ -54,7 +56,7 @@ export default function StepperForm(props: StepperFormProps<FormikValues>) {
       next: 'Próximo',
       ...labels,
     }),
-    []
+    [],
   );
 
   const handleClickPreviousStep = useCallback(() => {
@@ -70,7 +72,7 @@ export default function StepperForm(props: StepperFormProps<FormikValues>) {
         helpers.setTouched({});
       }
     },
-    [isLastStep, activeStep, onSubmit]
+    [isLastStep, activeStep, onSubmit],
   );
 
   return (
@@ -93,11 +95,14 @@ export default function StepperForm(props: StepperFormProps<FormikValues>) {
               ({ component: FormComponent }, index) =>
                 index === activeStep && (
                   <FormComponent key={`form-wrapper-${index}`} />
-                )
+                ),
             )}
-            <Grid
-              container
-              justifyContent={activeStep === 0 ? 'end' : 'space-between'}
+            <Box
+              sx={{
+                display: 'flex',
+                marginTop: 2,
+                justifyContent: activeStep === 0 ? 'end' : 'space-between',
+              }}
             >
               {activeStep > 0 && (
                 <Button
@@ -120,14 +125,10 @@ export default function StepperForm(props: StepperFormProps<FormikValues>) {
                 )}
                 {!isLastStep ? componentLabels.next : componentLabels.submit}
               </Button>
-            </Grid>
+            </Box>
           </Form>
         )}
       </Formik>
     </>
   );
 }
-
-StepperForm.defaultProps = {
-  activeStep: 0,
-};

@@ -19,7 +19,6 @@ export default function EditSolicitationPage() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const { solicitation, isLoading, hasError } = useSolicitation(id);
-  const { isAdmin } = useAuth();
 
   const navigate = useNavigate();
 
@@ -42,7 +41,7 @@ export default function EditSolicitationPage() {
         navigate('/');
       });
     },
-    [dispatch]
+    [dispatch],
   );
 
   return (

@@ -1,5 +1,6 @@
 package br.ufba.proap.assistancerequest.controller;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -8,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,16 +19,21 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-import br.ufba.proap.assistancerequest.domain.AssistanceRequestDTO;
+import br.ufba.proap.assistancerequest.domain.AssistanceRequest;
 import br.ufba.proap.assistancerequest.domain.Review;
+import br.ufba.proap.assistancerequest.domain.dto.CreateAssistanceRequestDTO;
+import br.ufba.proap.assistancerequest.domain.dto.ResponseAssistanceRequestDTO;
 import br.ufba.proap.assistancerequest.domain.dto.ReviewDTO;
 import br.ufba.proap.assistancerequest.service.AssistanceRequestService;
 import br.ufba.proap.assistancerequest.service.ReviewService;
 import br.ufba.proap.assistancerequest.service.AssistanceRequestService.AssistanceRequestListFiltered;
 import br.ufba.proap.authentication.domain.User;
 import br.ufba.proap.authentication.service.UserService;
+import br.ufba.proap.filestorage.FileUploadService;
 
 @RestController
 @RequestMapping("assistancerequest")
@@ -42,6 +49,9 @@ public class AssistanceRequestController {
 
 	@Autowired
 	private UserService serviceUser;
+
+	@Autowired
+	private FileUploadService fileUploadService;
 
 	@GetMapping("/list")
 	public ResponseEntity<AssistanceRequestListFiltered> list(
@@ -66,6 +76,7 @@ public class AssistanceRequestController {
 					currentUser));
 
 		} catch (Exception e) {
+			logger.error(e.getMessage());
 			return ResponseEntity.internalServerError().body(
 					new AssistanceRequestService.AssistanceRequestListFiltered(
 							Collections.emptyList(), 0));
@@ -73,7 +84,7 @@ public class AssistanceRequestController {
 	}
 
 	@GetMapping("/list/{userId}")
-	public List<AssistanceRequestDTO> listById(@PathVariable Long userId) {
+	public List<AssistanceRequest> listById(@PathVariable Long userId) {
 		User currentUser = serviceUser.getLoggedUser();
 
 		if (currentUser == null)
@@ -87,23 +98,24 @@ public class AssistanceRequestController {
 	}
 
 	@GetMapping("/find/{id}")
-	public ResponseEntity<Optional<AssistanceRequestDTO>> findById(@PathVariable Long id) {
+	public ResponseEntity<ResponseAssistanceRequestDTO> findById(@PathVariable Long id) {
 		User currentUser = serviceUser.getLoggedUser();
 
 		if (currentUser == null)
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
 		try {
-			Optional<AssistanceRequestDTO> request = service.findById(id);
+			Optional<AssistanceRequest> request = service.findById(id);
 
 			if (!request.isPresent())
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
 			boolean currentUserHasPermission = currentUser.getPerfil() != null
 					&& currentUser.getPerfil().hasPermission("VIEW_ALL_REQUESTS");
 
 			if (request.get().getUser() == currentUser || currentUserHasPermission) {
-				return ResponseEntity.ok().body(request);
+				ResponseAssistanceRequestDTO response = ResponseAssistanceRequestDTO.fromEntity(request.get());
+				return ResponseEntity.ok().body(response);
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
@@ -114,7 +126,7 @@ public class AssistanceRequestController {
 	}
 
 	@PostMapping("/create")
-	public ResponseEntity<AssistanceRequestDTO> create(@RequestBody AssistanceRequestDTO assistanceReques) {
+	public ResponseEntity<AssistanceRequest> create(@RequestBody AssistanceRequest assistanceReques) {
 
 		User currentUser = serviceUser.getLoggedUser();
 
@@ -134,8 +146,44 @@ public class AssistanceRequestController {
 		}
 	}
 
+	@PostMapping(value = "/create-with-file", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<ResponseAssistanceRequestDTO> createWithFile(
+			@RequestPart("form") CreateAssistanceRequestDTO form,
+			@RequestPart(value = "file", required = false) MultipartFile file) {
+		User currentUser = serviceUser.getLoggedUser();
+		if (currentUser == null) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		}
+		try {
+			AssistanceRequest assistanceRequest = form.toEntity();
+			if (file != null) {
+				String savedFileName = fileUploadService.uploadPdf(file);
+				assistanceRequest.setCartaAceite(savedFileName);
+			}
+			assistanceRequest.setUser(currentUser);
+			assistanceRequest.setSituacao(0);
+
+			AssistanceRequest saved = service.save(assistanceRequest);
+
+			return ResponseEntity.ok().body(ResponseAssistanceRequestDTO.fromEntity(saved));
+
+		} catch (IllegalArgumentException e) {
+			// Exemplo: não era PDF
+			logger.error(e.getMessage());
+			return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).build();
+		} catch (IOException e) {
+			// Erro de IO
+			logger.error(e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		} catch (Exception e) {
+			// Qualquer outro erro
+			logger.error(e.getMessage());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		}
+	}
+
 	@PutMapping("/update")
-	public ResponseEntity<AssistanceRequestDTO> update(@RequestBody AssistanceRequestDTO assistanceReques) {
+	public ResponseEntity<AssistanceRequest> update(@RequestBody AssistanceRequest assistanceReques) {
 		try {
 			return ResponseEntity.ok().body(service.save(assistanceReques));
 		} catch (Exception e) {
@@ -145,10 +193,10 @@ public class AssistanceRequestController {
 	}
 
 	@PutMapping("/reviewsolicitation")
-	public ResponseEntity<AssistanceRequestDTO> reviewsolicitation(
-			@RequestBody AssistanceRequestDTO assistanceRequest) {
+	public ResponseEntity<AssistanceRequest> reviewsolicitation(
+			@RequestBody AssistanceRequest assistanceRequest) {
 		User currentUser = serviceUser.getLoggedUser();
-		Optional<AssistanceRequestDTO> assistancePersisted = service.findById(assistanceRequest.getId());
+		Optional<AssistanceRequest> assistancePersisted = service.findById(assistanceRequest.getId());
 
 		if (currentUser == null || !assistancePersisted.isPresent()) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -178,7 +226,7 @@ public class AssistanceRequestController {
 			return ResponseEntity.badRequest().build();
 
 		try {
-			Optional<AssistanceRequestDTO> assistanceReques = service.findById(id);
+			Optional<AssistanceRequest> assistanceReques = service.findById(id);
 
 			if (assistanceReques.isPresent()) {
 				service.delete(assistanceReques.get());

@@ -6,7 +6,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.ufba.proap.assistancerequest.domain.AssistanceRequestDTO;
+import br.ufba.proap.assistancerequest.domain.AssistanceRequest;
+import br.ufba.proap.assistancerequest.domain.dto.ResponseAssistanceRequestDTO;
 import br.ufba.proap.assistancerequest.repository.AssistanceRequestQueryRepository;
 import br.ufba.proap.assistancerequest.repository.AssistanteRequestRepository;
 import br.ufba.proap.authentication.domain.User;
@@ -20,27 +21,40 @@ public class AssistanceRequestService {
 	@Autowired
 	private AssistanceRequestQueryRepository assistanceRequestQueryRepository;
 
-	public List<AssistanceRequestDTO> findAll() {
-		return assistanteRequestRepository.findAll();
+	public List<ResponseAssistanceRequestDTO> findAll() {
+		List<AssistanceRequest> assistanceRequest = assistanteRequestRepository.findAll();
+
+		return assistanceRequest.stream().map((ar) -> {
+			return ResponseAssistanceRequestDTO.fromEntity(ar);
+		}).toList();
 	}
 
-	public List<AssistanceRequestDTO> findByUser(User user) {
+	public List<AssistanceRequest> findByUser(User user) {
 		return assistanteRequestRepository.findByUser(user);
 	}
 
-	public Optional<AssistanceRequestDTO> findById(Long id) {
+	public Optional<AssistanceRequest> findById(Long id) {
 		return assistanteRequestRepository.findById(id);
 	}
 
 	public static class AssistanceRequestListFiltered {
-		public List<AssistanceRequestDTO> list;
+		public List<ResponseAssistanceRequestDTO> list;
 		public long total;
 
-		public AssistanceRequestListFiltered(List<AssistanceRequestDTO> list,
+		public AssistanceRequestListFiltered(List<ResponseAssistanceRequestDTO> list,
 				long total) {
 			this.list = list;
 			this.total = total;
 		}
+
+		public static AssistanceRequestListFiltered fromEntity(List<AssistanceRequest> list, long total) {
+			return new AssistanceRequestListFiltered(
+					list.stream().map((ar) -> {
+						return ResponseAssistanceRequestDTO.fromEntity(ar);
+					}).toList(),
+					total);
+		}
+
 	}
 
 	/**
@@ -70,7 +84,7 @@ public class AssistanceRequestService {
 		else
 			count = assistanteRequestRepository.countByUser(user);
 
-		return new AssistanceRequestListFiltered(
+		return AssistanceRequestListFiltered.fromEntity(
 				assistanceRequestQueryRepository.findFiltered(
 						sortBy,
 						ascending,
@@ -80,11 +94,11 @@ public class AssistanceRequestService {
 				count);
 	}
 
-	public AssistanceRequestDTO save(AssistanceRequestDTO assistanceReques) {
+	public AssistanceRequest save(AssistanceRequest assistanceReques) {
 		return assistanteRequestRepository.save(assistanceReques);
 	}
 
-	public void delete(AssistanceRequestDTO assistanceRequestDTO) {
+	public void delete(AssistanceRequest assistanceRequestDTO) {
 		assistanteRequestRepository.delete(assistanceRequestDTO);
 	}
 }

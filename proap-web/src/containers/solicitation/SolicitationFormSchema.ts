@@ -1,67 +1,113 @@
 import * as Yup from 'yup';
 import { AssistanceRequest } from '../../types';
 
-export const solicitantDataFormSchema = Yup.object({
-  nomeCompleto: Yup.string(),
-  doi: Yup.string().notRequired(),
-  autores: Yup.string().required('Campo obrigatório'),
-  autoresPresentePGCOMP: Yup.string().required('Campo obrigatório'),
+export const solicitantionDataFormSchema = Yup.object({
+  tituloPublicacao: Yup.string().required('Campo obrigatório'),
+  coautores: Yup.array().of(Yup.string()),
+  algumCoautorPGCOMP: Yup.boolean().when('coautores', {
+    is: (coautores: string[]) => coautores && coautores.length > 0,
+    then: () => Yup.string().required('Campo obrigatório'),
+    otherwise: () => Yup.string().notRequired(),
+  }),
+  file: Yup.mixed<File>()
+    .nullable()
+    .notRequired()
+    .test('fileSize', 'O arquivo deve ter no máximo 10MB', (value) => {
+      if (!value) return true;
+      return value.size <= 10000000;
+    }),
 });
 
-export const financingDataFormSchema = Yup.object({
-  solicitacaoApoio: Yup.boolean().nullable().required('Campo obrigatório'),
-  valorSolicitado: Yup.number()
-    .nullable()
-    .when(['solicitacaoApoio'], ([solicitacaoApoio], schema) =>
-      solicitacaoApoio
-        ? schema.required('Campo obrigatório')
-        : schema.notRequired(),
-    ),
-  solicitacaoAuxilioOutrasFontes: Yup.boolean()
-    .nullable()
-    .required('Campo obrigatório'),
-  nomeAgenciaFomento: Yup.string().when(
-    ['solicitacaoAuxilioOutrasFontes'],
-    ([solicitacaoAuxilioOutrasFontes], schema) =>
-      solicitacaoAuxilioOutrasFontes
-        ? schema.required('Campo obrigatório')
-        : schema.notRequired(),
-  ),
-  valorSolicitadoAgenciaFomento: Yup.number().when(
-    ['solicitacaoAuxilioOutrasFontes'],
-    ([solicitacaoAuxilioOutrasFontes], schema) =>
-      solicitacaoAuxilioOutrasFontes
-        ? schema.required('Campo obrigatório')
-        : schema.notRequired(),
-  ),
+export const solicitantDetailFormSchema = Yup.object({
+  solicitanteDocente: Yup.boolean().required('Campo obrigatório'),
+  nomeDocente: Yup.string().required('Campo obrigatório'),
+  nomeDiscente: Yup.string().when('solicitanteDocente', {
+    is: false,
+    then: () => Yup.string().required('Campo obrigatório'),
+    otherwise: () => Yup.string().notRequired(),
+  }),
+  discenteNoPrazoDoCurso: Yup.boolean().when('solicitanteDocente', {
+    is: true,
+    then: () => Yup.boolean().notRequired(),
+    otherwise: () => Yup.boolean().required('Campo obrigatório'),
+  }),
+  mesesAtrasoCurso: Yup.number()
+    .when('discenteNoPrazoDoCurso', {
+      is: false,
+      then: () => Yup.number().required('Campo obrigatório'),
+      otherwise: () => Yup.number().notRequired(),
+    })
+    .integer('Deve ser um número inteiro')
+    .min(1, 'O valor mínimo é 1'),
 });
-
-export const eventDataFormSchema = Yup.object({
-  dataInicio: Yup.string().required('Campo obrigatório'),
-  dataFim: Yup.string().required('Campo obrigatório'),
-  pais: Yup.string().required('Campo obrigatório'),
-  cidade: Yup.string().required('Campo obrigatório'),
-  linkHomepage: Yup.string().required('Campo obrigatório'),
-  quantidadeDiariasSolicitadas: Yup.number()
-    .nullable()
-    .min(1, 'Insira um valor válido')
-    .defined()
-    .required('Campo obrigatório'),
-
-  valorInscricao: Yup.number()
-    .nullable()
-    .min(1, 'Insira um valor válido')
-    .defined()
-    .required('Campo obrigatório'),
-
-  cartaAceite: Yup.string().required('Campo obrigatório'),
-  qualis: Yup.string().required('Campo obrigatório'),
+export const eventDetailFormSchema = Yup.object({
   nomeEvento: Yup.string().required('Campo obrigatório'),
+  eventoInternacional: Yup.boolean().required('Campo obrigatório'),
+  dataInicio: Yup.string().required('Campo obrigatório'),
+  dataFim: Yup.string()
+    .required('Campo obrigatório')
+    .test(
+      'dataFim-maior-que-dataInicio',
+      'Data de término deve ser maior ou igual a data de início',
+      function (value) {
+        const { dataInicio } = this.parent;
+        return value && dataInicio && new Date(value) >= new Date(dataInicio);
+      },
+    ),
+  afastamentoParaParticipacao: Yup.boolean().required('Campo obrigatório'),
+  diasAfastamento: Yup.number().when('afastamentoParaParticipacao', {
+    is: true,
+    then: () => Yup.number().required('Campo obrigatório'),
+    otherwise: () => Yup.number().notRequired(),
+  }),
+  linkHomePageEvento: Yup.string(),
+  cidade: Yup.string().required('Campo obrigatório'),
+  pais: Yup.string().required('Campo obrigatório'),
+  qualis: Yup.string().required('Campo obrigatório'),
+  modalidadeParticipacao: Yup.string().required('Campo obrigatório'),
 });
 
-export const detailsEventDataFormSchema = Yup.object({
+export const financialDetailFormSchema = Yup.object({
+  valorInscricao: Yup.number()
+    .min(0, 'Insira um valor válido')
+    .defined()
+    .required('Campo obrigatório'),
+  linkPaginaInscricao: Yup.string().required('Campo obrigatório'),
+  quantidadeDiariasSolicitadas: Yup.number()
+    .min(0, 'Insira um valor válido')
+    .defined()
+    .required('Campo obrigatório'),
+  valorDiaria: Yup.number()
+    .min(0, 'Insira um valor válido')
+    .defined()
+    .when('quantidadeDiariasSolicitadas', {
+      is: (quantidadeDiariasSolicitadas: number) =>
+        quantidadeDiariasSolicitadas > 0,
+      then: () => Yup.number().required('Campo obrigatório'),
+      otherwise: () => Yup.number().notRequired(),
+    }),
+  isDolar: Yup.boolean().required('Campo obrigatório'),
+  cotacaoMoeda: Yup.number()
+    .when('isDolar', {
+      is: true,
+      then: () => Yup.number().required('Campo obrigatório'),
+      otherwise: () => Yup.number().notRequired(),
+    })
+    .defined()
+    .min(1, 'Insira um valor válido'),
+  valorPassagem: Yup.number()
+    .min(0, 'Insira um valor válido')
+    .defined()
+    .when('solitanteDocente', {
+      is: true,
+      then: () => Yup.number().required('Campo obrigatório'),
+      otherwise: () => Yup.number().notRequired(),
+    }),
+});
+export const confirmationDataFormSchema = Yup.object({
+  // justificativa: Yup.string(),
   aceiteFinal: Yup.boolean()
-    .nullable(false)
+    .nullable()
     .required('É necessário aceitar os termos para continuar')
     .isTrue('É necessário aceitar os termos para continuar'),
 });
@@ -80,45 +126,121 @@ export interface SolicitationFormValues
   aceiteFinal: boolean | undefined;
 }
 
-export const INITIAL_FORM_VALUES: SolicitationFormValues = {
-  nomeCompleto: '',
-  doi: '',
-  autores: '',
-  autoresPresentePGCOMP: 'false',
+export type InitialSolicitationFormValues = Pick<
+  AssistanceRequest,
+  | 'tituloPublicacao'
+  | 'coautores'
+  | 'algumCoautorPGCOMP'
+  | 'solicitanteDocente'
+  | 'nomeDocente'
+  | 'nomeDiscente'
+  | 'discenteNoPrazoDoCurso'
+  | 'mesesAtrasoCurso'
+  | 'nomeEvento'
+  | 'eventoInternacional'
+  | 'dataInicio'
+  | 'dataFim'
+  | 'afastamentoParaParticipacao'
+  | 'diasAfastamento'
+  | 'linkHomePageEvento'
+  | 'cidade'
+  | 'pais'
+  | 'qualis'
+  | 'modalidadeParticipacao'
+  | 'valorInscricao'
+  | 'linkPaginaInscricao'
+  | 'quantidadeDiariasSolicitadas'
+  | 'valorDiaria'
+  | 'isDolar'
+  | 'cotacaoMoeda'
+  | 'valorPassagem'
+  | 'valorTotal'
+  | 'justificativa'
+> & {
+  file: File | null;
+  aceiteFinal: boolean | undefined;
+};
 
-  solicitacaoApoio: '',
-  valorSolicitado: '',
-  solicitacaoAuxilioOutrasFontes: '',
-  nomeAgenciaFomento: '',
-  valorSolicitadoAgenciaFomento: '',
+export const INITIAL_FORM_VALUES: InitialSolicitationFormValues = {
+  tituloPublicacao: '',
+  coautores: [],
+  eventoInternacional: false,
+  afastamentoParaParticipacao: null,
+  diasAfastamento: null,
+  linkHomePageEvento: '',
+  modalidadeParticipacao: '',
+  linkPaginaInscricao: '',
+  valorDiaria: 0,
+  isDolar: false,
+  cotacaoMoeda: 1,
+  valorPassagem: 0,
+  valorTotal: 0,
+  algumCoautorPGCOMP: false,
+  solicitanteDocente: false,
+  nomeDocente: '',
+  nomeDiscente: '',
+  discenteNoPrazoDoCurso: null,
+  mesesAtrasoCurso: null,
   dataInicio: '',
   dataFim: '',
-  linkHomepage: '',
   pais: '',
   cidade: '',
-  valorInscricao: undefined,
-  comprovantePagamento: '',
-  cartaAceite: '',
+  valorInscricao: 0,
   qualis: 'A1',
+  nomeEvento: '',
+  quantidadeDiariasSolicitadas: 0,
+  file: null,
   aceiteFinal: false,
-  situacao: 2,
+  justificativa: '',
+};
+
+export const INITIAL_REVIEW_FORM_VALUES: SolicitationFormValues = {
+  tituloPublicacao: '',
+  coautores: [],
+  eventoInternacional: false,
+  afastamentoParaParticipacao: null,
+  diasAfastamento: null,
+  linkHomePageEvento: '',
+  modalidadeParticipacao: '',
+  linkPaginaInscricao: '',
+  valorDiaria: 0,
+  isDolar: false,
+  cotacaoMoeda: 1,
+  valorPassagem: 0,
+  valorTotal: 0,
+  algumCoautorPGCOMP: false,
+  solicitanteDocente: false,
+  nomeDocente: '',
+  nomeDiscente: '',
+  discenteNoPrazoDoCurso: null,
+  mesesAtrasoCurso: null,
+  dataInicio: '',
+  dataFim: '',
+  pais: '',
+  cidade: '',
+  valorInscricao: 0,
+  qualis: 'A1',
+  nomeEvento: '',
+  quantidadeDiariasSolicitadas: 0,
+  cartaAceite: null,
+  aceiteFinal: false,
+  justificativa: '',
+  situacao: 0,
   dataAprovacao: '',
   numeroAta: 0,
   numeroDiariasAprovadas: 0,
   observacao: '',
-  nomeEvento: '',
-  quantidadeDiariasSolicitadas: 0,
-  valorAprovado: undefined,
-
+  valorAprovado: 0,
+  comprovantePagamento: null,
   createdAt: undefined,
   updatedAt: undefined,
-
   user: {
-    id: 0,
-    alternativePhone: '',
+    name: '',
     cpf: '',
     email: '',
-    name: '',
-    password: '',
+    phone: '',
+    alternativePhone: '',
+    registrationNumber: '',
+    profileName: '',
   },
 };

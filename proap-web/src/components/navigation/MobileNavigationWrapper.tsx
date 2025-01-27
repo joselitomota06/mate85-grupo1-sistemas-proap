@@ -1,4 +1,9 @@
-import React, { PropsWithChildren, useCallback, useState } from 'react';
+import React, {
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import {
   useTheme,
   Toolbar,
@@ -30,6 +35,7 @@ import { logout } from '../../store/slices/auth-slice/authSlice';
 
 import logoIc from '../../assets/logo_ic.png';
 import { useAuth } from '../../hooks';
+import useCurrentUser from '../../hooks/auth/useCurrentUser';
 
 interface MobileNavigationWrapperProps extends PropsWithChildren {
   items: NavigationItem[];
@@ -42,8 +48,11 @@ export const MobileNavigationWrapper = ({
   const theme = useTheme();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { name } = useAuth();
+  const userProfileState = useCurrentUser();
 
   const [isDrawerOpen, setDrawerOpen] = useState(false);
+  const [viewName, setViewName] = useState(name);
 
   const handleDrawerOpen = () => setDrawerOpen(true);
   const handleDrawerClose = () => setDrawerOpen(false);
@@ -55,7 +64,11 @@ export const MobileNavigationWrapper = ({
     dispatch(logout());
   }, [dispatch]);
 
-  const { name } = useAuth();
+  useEffect(() => {
+    if (userProfileState.name !== '') {
+      setViewName(userProfileState.name);
+    }
+  }, [userProfileState]);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -103,7 +116,7 @@ export const MobileNavigationWrapper = ({
                 >
                   <PersonIcon />
                   <Typography variant="h6" noWrap component="div">
-                    {name}
+                    {viewName}
                   </Typography>
                 </IconButton>
               </Tooltip>

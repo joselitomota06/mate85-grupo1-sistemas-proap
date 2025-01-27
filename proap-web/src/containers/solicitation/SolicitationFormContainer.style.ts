@@ -1,5 +1,11 @@
 import styled from '@emotion/styled';
-import { Button, CircularProgress, TextField } from '@mui/material';
+import {
+  Button,
+  CircularProgress,
+  FormLabel,
+  IconButton,
+  TextField,
+} from '@mui/material';
 import { Field } from 'formik';
 
 export const RegisterButton = styled(Button)`
@@ -34,4 +40,13 @@ export const StyledDataInput = styled(Button)`
   &:hover {
     background-color: lightblue;
   }
+`;
+
+export const StyledFormLabel = styled(FormLabel)`
+  font-size: 0.8rem;
+  margin-bottom: 0.5rem;
+`;
+
+export const StyledIconButton = styled(IconButton)`
+  color: #184a7f;
 `;
