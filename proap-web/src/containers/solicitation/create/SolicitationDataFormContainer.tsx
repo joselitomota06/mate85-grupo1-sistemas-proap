@@ -21,6 +21,7 @@ import {
   StyledTextField,
 } from '../SolicitationFormContainer.style';
 import { Add, CloudUpload, Info, Remove } from '@mui/icons-material';
+import { BASE_PDF_URL } from '../../../helpers/api';
 
 export default function SolicitationDataFormContainer() {
   const { errors, touched, values, setFieldValue } =
@@ -191,7 +192,7 @@ export default function SolicitationDataFormContainer() {
             </Tooltip>
             {values.cartaAceite && (
               <Link
-                href="link"
+                href={BASE_PDF_URL + values.cartaAceite}
                 target="_blank"
                 rel="noopener"
                 sx={{ alignSelf: 'center' }}

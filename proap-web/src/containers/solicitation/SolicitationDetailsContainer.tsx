@@ -6,6 +6,7 @@ import styled from '@emotion/styled';
 import { InitialSolicitationFormValues } from './SolicitationFormSchema';
 import { booleanToYesOrNo, dateToLocalDate } from '../../helpers/conversion';
 import { useAuth } from '../../hooks';
+import { BASE_PDF_URL } from '../../helpers/api';
 
 const StyledData = styled.div`
   padding: 0.2rem;
@@ -97,7 +98,7 @@ export default function SolicitationDetailsContainer({
             <Typography style={{ color: 'gray' }} variant="subtitle2">
               {solicitation.cartaAceite ? (
                 <Link
-                  href="link"
+                  href={BASE_PDF_URL + solicitation.cartaAceite}
                   target="_blank"
                   rel="noopener"
                   sx={{ alignSelf: 'center' }}

@@ -33,7 +33,7 @@ import br.ufba.proap.assistancerequest.service.ReviewService;
 import br.ufba.proap.assistancerequest.service.AssistanceRequestService.AssistanceRequestListFiltered;
 import br.ufba.proap.authentication.domain.User;
 import br.ufba.proap.authentication.service.UserService;
-import br.ufba.proap.filestorage.FileUploadService;
+import br.ufba.proap.filestorage.FileService;
 
 @RestController
 @RequestMapping("assistancerequest")
@@ -51,7 +51,7 @@ public class AssistanceRequestController {
 	private UserService serviceUser;
 
 	@Autowired
-	private FileUploadService fileUploadService;
+	private FileService fileUploadService;
 
 	@GetMapping("/list")
 	public ResponseEntity<AssistanceRequestListFiltered> list(
