@@ -30,8 +30,6 @@ export default function FinancialDetailFormContainer() {
   useEffect(() => {
     if (!values.isDolar) {
       setFieldValue('valorDiaria', 320);
-    } else {
-      setFieldValue('valorDiaria', '');
     }
 
     if (values.quantidadeDiariasSolicitadas === 0) {

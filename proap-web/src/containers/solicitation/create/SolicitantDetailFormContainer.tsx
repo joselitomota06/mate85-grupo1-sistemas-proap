@@ -29,21 +29,9 @@ export default function SolicitantDetailFormContainer() {
   useEffect(() => {
     if (!userIsAdmin) {
       setFieldValue('solicitanteDocente', userIsDocente);
+      setFieldValue(userIsDocente ? 'nomeDocente' : 'nomeDiscente', name);
     }
   }, []);
-
-  useEffect(() => {
-    if (!userIsAdmin) {
-      setFieldValue(
-        values.solicitanteDocente ? 'nomeDocente' : 'nomeDiscente',
-        name,
-      );
-      setFieldValue(
-        !values.solicitanteDocente ? 'nomeDocente' : 'nomeDiscente',
-        '',
-      );
-    }
-  }, [values.solicitanteDocente]);
 
   return (
     <Box

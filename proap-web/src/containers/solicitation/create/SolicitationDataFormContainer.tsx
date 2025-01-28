@@ -13,6 +13,7 @@ import {
   Typography,
   Tooltip,
   Alert,
+  Link,
 } from '@mui/material';
 import {
   StyledFormLabel,
@@ -20,18 +21,15 @@ import {
   StyledTextField,
 } from '../SolicitationFormContainer.style';
 import { Add, CloudUpload, Info, Remove } from '@mui/icons-material';
-import { useState } from 'react';
+import { BASE_PDF_URL } from '../../../helpers/api';
 
 export default function SolicitationDataFormContainer() {
   const { errors, touched, values, setFieldValue } =
     useFormikContext<InitialSolicitationFormValues>();
 
-  const [fileName, setFileName] = useState<string | null>(null);
-
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       setFieldValue('file', event.target.files[0]);
-      setFileName(event.target.files[0].name);
     }
   };
 
@@ -173,7 +171,9 @@ export default function SolicitationDataFormContainer() {
                 fontWeight="bold"
                 fontSize="0.875rem"
               >
-                {fileName ?? 'Escolher arquivo'}
+                {values.cartaAceite
+                  ? (values.file?.name ?? 'Alterar arquivo')
+                  : (values.file?.name ?? 'Escolher arquivo')}
               </Typography>
               <input
                 type="file"
@@ -190,6 +190,18 @@ export default function SolicitationDataFormContainer() {
                 <Info />
               </StyledIconButton>
             </Tooltip>
+            {values.cartaAceite && (
+              <Link
+                href={BASE_PDF_URL + values.cartaAceite}
+                target="_blank"
+                rel="noopener"
+                sx={{ alignSelf: 'center' }}
+              >
+                <Typography sx={{ fontWeight: 'bold' }}>
+                  Visualizar Arquivo
+                </Typography>
+              </Link>
+            )}
           </Stack>
           {touched.file && errors.file && (
             <FormHelperText>{errors.file}</FormHelperText>

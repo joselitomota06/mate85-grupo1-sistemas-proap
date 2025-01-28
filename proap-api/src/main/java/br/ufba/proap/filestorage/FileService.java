@@ -1,6 +1,7 @@
 package br.ufba.proap.filestorage;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Random;
 
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
-public class FileUploadService {
+public class FileService {
     @Value("${file.upload-dir}")
     private String uploadDir;
 
@@ -42,12 +43,21 @@ public class FileUploadService {
     }
 
     private boolean isPdfFile(String filename) {
-        return (filename != null && filename.toLowerCase().endsWith(".pdf"));
+        return (filename != null && filename.toLowerCase().endsWith(PDF_EXTENSION));
     }
 
     private String generateUniqueFileName() {
         long timestamp = System.currentTimeMillis();
         int randomInt = new Random().nextInt(1000);
-        return timestamp + "_" + randomInt;
+
+        return (randomInt + "" + timestamp + "" + randomInt);
+    }
+
+    public File getPdfByFileName(String fileName) throws IOException {
+        File file = new File(uploadDir + PDF_DIRECTORY + "/" + fileName);
+        if (!file.exists() || !file.isFile()) {
+            throw new FileNotFoundException("Arquivo \"" + fileName + "\" não encontrado ou não é um arquivo válido.");
+        }
+        return file;
     }
 }

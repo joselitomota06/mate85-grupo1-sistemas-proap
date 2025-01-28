@@ -10,6 +10,7 @@ import br.ufba.proap.assistancerequest.domain.AssistanceRequest;
 import br.ufba.proap.authentication.domain.dto.UserResponseDTO;
 
 public record ResponseAssistanceRequestDTO(
+        Long id,
         UserResponseDTO user,
         String tituloPublicacao,
         List<String> coautores,
@@ -21,8 +22,8 @@ public record ResponseAssistanceRequestDTO(
         Integer mesesAtrasoCurso,
         String nomeEvento,
         Boolean eventoInternacional,
-        LocalDate dataInicio,
-        LocalDate dataFim,
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy") LocalDate dataInicio,
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy") LocalDate dataFim,
         Boolean afastamentoParaParticipacao,
         Integer diasAfastamento,
         String linkHomePageEvento,
@@ -44,7 +45,7 @@ public record ResponseAssistanceRequestDTO(
         Integer situacao,
         String comprovantePagamento,
         String numeroAta,
-        LocalDate dataAprovacao,
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy") LocalDate dataAprovacao,
         Integer numeroDiariasAprovadas,
         Float valorAprovado,
         String observacao,
@@ -91,14 +92,12 @@ public record ResponseAssistanceRequestDTO(
         entity.setNumeroDiariasAprovadas(this.numeroDiariasAprovadas());
         entity.setValorAprovado(this.valorAprovado());
         entity.setObservacao(this.observacao());
-        entity.setAutomaticDecText(this.automaticDecText());
-        entity.setCreatedAt(this.createdAt());
-        entity.setUpdatedAt(this.updatedAt());
         return entity;
     }
 
     public static ResponseAssistanceRequestDTO fromEntity(AssistanceRequest entity) {
         return new ResponseAssistanceRequestDTO(
+                entity.getId(),
                 UserResponseDTO.fromUser(entity.getUser()),
                 entity.getTituloPublicacao(),
                 entity.getCoautores(),

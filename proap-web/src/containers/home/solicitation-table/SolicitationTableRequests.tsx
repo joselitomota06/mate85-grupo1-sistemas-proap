@@ -40,8 +40,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import assistanceRequestSlice from '../../../store/slices/assistance-request-slice/assistanceRequestSlice';
-import { AssistanceRequest } from '../../../store/slices/assistance-request-slice/AssistanceRequest';
+
 import usePrevious from '../../../helpers/usePrevious';
 import useHasPermission from '../../../hooks/auth/useHasPermission';
 
@@ -286,7 +285,7 @@ export default function SolicitationTableRequests() {
                   automaticDecText,
                   dataAprovacao,
                 }) => (
-                  <TableRow key={user.name}>
+                  <TableRow key={id}>
                     <TableCell align="center">{createdAt}</TableCell>
 
                     <TableCell align="center">{user.name}</TableCell>
@@ -345,18 +344,18 @@ export default function SolicitationTableRequests() {
                               <Visibility />
                             </IconButton>
                             <IconButton
-                              onClick={() => handleClickReviewRequest(id)}
+                              onClick={() => handleClickReviewRequest(id!)}
                             >
                               <CheckCircle />
                             </IconButton>
                           </>
                         )}
 
-                        <IconButton onClick={() => handleClickEditRequest(id)}>
+                        <IconButton onClick={() => handleClickEditRequest(id!)}>
                           <ModeEditIcon />
                         </IconButton>
 
-                        <IconButton onClick={() => handleClickOpenModal(id)}>
+                        <IconButton onClick={() => handleClickOpenModal(id!)}>
                           <DeleteIcon />
                         </IconButton>
                       </Box>

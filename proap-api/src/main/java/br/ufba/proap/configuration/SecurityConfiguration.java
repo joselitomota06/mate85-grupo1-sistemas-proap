@@ -48,6 +48,7 @@ public class SecurityConfiguration {
 				.authorizeHttpRequests(authorize -> authorize
 						.requestMatchers(HttpMethod.POST, "/authentication/**", "/user/create", "/actuator/**")
 						.permitAll()
+						.requestMatchers(HttpMethod.GET, "/files/**").permitAll()
 						.requestMatchers(HttpMethod.GET, "/profile/**").authenticated()
 						.requestMatchers("/v3/api-docs/**", "/configuration/**",
 								"/swagger-resources/**",
