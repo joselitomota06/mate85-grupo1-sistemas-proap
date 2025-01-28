@@ -172,7 +172,7 @@ export default function SolicitationDataFormContainer() {
                 fontSize="0.875rem"
               >
                 {values.cartaAceite
-                  ? 'Alterar arquivo'
+                  ? (values.file?.name ?? 'Alterar arquivo')
                   : (values.file?.name ?? 'Escolher arquivo')}
               </Typography>
               <input

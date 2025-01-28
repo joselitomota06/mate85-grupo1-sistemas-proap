@@ -96,20 +96,20 @@ export default function SolicitationDetailsContainer({
           <StyledData>
             <Typography>Arquivo da carta de aceite do artigo</Typography>
             <Typography style={{ color: 'gray' }} variant="subtitle2">
-              {solicitation.cartaAceite ? (
-                <Link
-                  href={BASE_PDF_URL + solicitation.cartaAceite}
-                  target="_blank"
-                  rel="noopener"
-                  sx={{ alignSelf: 'center' }}
-                >
-                  <Typography sx={{ fontWeight: 'bold' }}>
-                    Visualizar
-                  </Typography>
-                </Link>
-              ) : (
-                (solicitation.file?.name ?? 'Nenhum arquivo enviado')
-              )}
+              {solicitation.cartaAceite
+                ? (solicitation.file?.name ?? (
+                    <Link
+                      href={BASE_PDF_URL + solicitation.cartaAceite}
+                      target="_blank"
+                      rel="noopener"
+                      sx={{ alignSelf: 'center' }}
+                    >
+                      <Typography sx={{ fontWeight: 'bold' }}>
+                        Visualizar
+                      </Typography>
+                    </Link>
+                  ))
+                : (solicitation.file?.name ?? 'Nenhum arquivo enviado')}
             </Typography>
           </StyledData>
         </Stack>
@@ -192,7 +192,7 @@ export default function SolicitationDetailsContainer({
               Data de início<span style={{ color: 'red' }}>*</span>
             </Typography>
             <Typography style={{ color: 'gray' }} variant="subtitle2">
-              {dateToLocalDate(new Date(solicitation.dataInicio))}
+              {dateToLocalDate(solicitation.dataInicio)}
             </Typography>
           </StyledData>
           <StyledData>
@@ -200,7 +200,7 @@ export default function SolicitationDetailsContainer({
               Data de término<span style={{ color: 'red' }}>*</span>
             </Typography>
             <Typography style={{ color: 'gray' }} variant="subtitle2">
-              {dateToLocalDate(new Date(solicitation.dataFim))}
+              {dateToLocalDate(solicitation.dataFim)}
             </Typography>
           </StyledData>
           <StyledData>

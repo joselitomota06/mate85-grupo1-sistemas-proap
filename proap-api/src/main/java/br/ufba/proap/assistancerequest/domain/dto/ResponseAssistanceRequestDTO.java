@@ -92,9 +92,6 @@ public record ResponseAssistanceRequestDTO(
         entity.setNumeroDiariasAprovadas(this.numeroDiariasAprovadas());
         entity.setValorAprovado(this.valorAprovado());
         entity.setObservacao(this.observacao());
-        entity.setAutomaticDecText(this.automaticDecText());
-        entity.setCreatedAt(this.createdAt());
-        entity.setUpdatedAt(this.updatedAt());
         return entity;
     }
 

@@ -182,10 +182,34 @@ public class AssistanceRequestController {
 		}
 	}
 
-	@PutMapping("/update")
-	public ResponseEntity<AssistanceRequest> update(@RequestBody AssistanceRequest assistanceReques) {
+	@PutMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<AssistanceRequest> update(@RequestPart("form") ResponseAssistanceRequestDTO assistanceRequest,
+			@RequestPart(value = "file", required = false) MultipartFile file) {
 		try {
-			return ResponseEntity.ok().body(service.save(assistanceReques));
+			User currentUser = serviceUser.getLoggedUser();
+			AssistanceRequest existingInstance = service.findById(assistanceRequest.id()).orElse(null);
+			if (existingInstance == null) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+			}
+			if (existingInstance.getUser().getEmail() != currentUser.getEmail()
+					&& !currentUser.getPerfil().hasPermission("APPROVE_REQUEST")) {
+				return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			}
+			AssistanceRequest updatedAssistanceRequest = assistanceRequest.toEntity();
+			updatedAssistanceRequest.setId(existingInstance.getId());
+			updatedAssistanceRequest.setUser(existingInstance.getUser());
+			updatedAssistanceRequest.setCreatedAt(existingInstance.getCreatedAt());
+			if (file != null) {
+				String savedFileName = fileUploadService.uploadPdf(file);
+				updatedAssistanceRequest.setCartaAceite(savedFileName);
+			}
+			return ResponseEntity.ok().body(service.save(updatedAssistanceRequest));
+		} catch (IllegalArgumentException e) {
+			logger.error(e.getMessage());
+			return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).build();
+		} catch (IOException e) {
+			logger.error(e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

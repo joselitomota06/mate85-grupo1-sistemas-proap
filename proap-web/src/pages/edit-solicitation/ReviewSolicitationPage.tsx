@@ -33,9 +33,9 @@ export default function ReviewSolicitationPage() {
     (values: FormikValues) => {
       const valuesWithCorrectDates: SolicitationFormValues = {
         ...(values as SolicitationFormValues),
-        dataInicio: dateToLocalDate(new Date(values.dataInicio)),
-        dataFim: dateToLocalDate(new Date(values.dataFim)),
-        dataAprovacao: dateToLocalDate(new Date(values.dataAprovacao)),
+        dataInicio: dateToLocalDate(values.dataInicio),
+        dataFim: dateToLocalDate(values.dataFim),
+        dataAprovacao: dateToLocalDate(values.dataAprovacao),
         createdAt: undefined,
         updatedAt: undefined,
       };

@@ -21,8 +21,8 @@ export default function SolicitationPage() {
     (values: FormikValues) => {
       const valuesWithCorrectDates: InitialSolicitationFormValues = {
         ...(values as InitialSolicitationFormValues),
-        dataInicio: dateToLocalDate(new Date(values.dataInicio)),
-        dataFim: dateToLocalDate(new Date(values.dataFim)),
+        dataInicio: dateToLocalDate(values.dataInicio),
+        dataFim: dateToLocalDate(values.dataFim),
       };
       return submitSolicitation(valuesWithCorrectDates).then(() => {
         Toast.success('Solicitação criada com sucesso!');

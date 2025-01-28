@@ -27,19 +27,17 @@ export default function EditSolicitationPage() {
   }, [hasError]);
 
   const handleEditSolicitationSubmit = useCallback(
-    (values: FormikValues) => {
+    async (values: FormikValues) => {
       const valuesWithCorrectDates: SolicitationFormValues = {
         ...(values as SolicitationFormValues),
-        dataInicio: dateToLocalDate(new Date(values.dataInicio)),
-        dataFim: dateToLocalDate(new Date(values.dataFim)),
+        dataInicio: dateToLocalDate(values.dataInicio),
+        dataFim: dateToLocalDate(values.dataFim),
         createdAt: undefined,
         updatedAt: undefined,
       };
-
-      return updateSolicitation(valuesWithCorrectDates).then(() => {
-        Toast.success('Solicitação avaliada com sucesso!');
-        navigate('/');
-      });
+      await updateSolicitation(valuesWithCorrectDates, values.file as File);
+      Toast.success('Solicitação avaliada com sucesso!');
+      navigate('/');
     },
     [dispatch],
   );

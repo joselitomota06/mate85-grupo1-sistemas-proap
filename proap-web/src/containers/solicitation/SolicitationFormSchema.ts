@@ -122,7 +122,7 @@ export const reviewDataFormSchema = Yup.object({
 });
 
 export interface SolicitationFormValues
-  extends Omit<AssistanceRequest, 'id' | 'automaticDecText'> {
+  extends Omit<AssistanceRequest, 'automaticDecText'> {
   aceiteFinal: boolean | undefined;
 }
 
@@ -197,6 +197,7 @@ export const INITIAL_FORM_VALUES: InitialSolicitationFormValues = {
 };
 
 export const INITIAL_REVIEW_FORM_VALUES: SolicitationFormValues = {
+  id: undefined,
   tituloPublicacao: '',
   coautores: [],
   eventoInternacional: false,

@@ -6,6 +6,7 @@ import { LoginFormValues } from '../containers/login/LoginFormSchema';
 import { authenticate } from '../store/slices/auth-slice/authSlice';
 import { AppDispatch } from '../store';
 import api from '.';
+import { AssistanceRequest } from '../types';
 
 export const submitSolicitation = (values: InitialSolicitationFormValues) => {
   const formData = new FormData();
@@ -28,8 +29,24 @@ export const submitSolicitation = (values: InitialSolicitationFormValues) => {
   });
 };
 
-export const updateSolicitation = (values: SolicitationFormValues) =>
-  api.put('assistancerequest/update', values);
+export const updateSolicitation = (
+  values: SolicitationFormValues,
+  file?: File,
+) => {
+  const formData = new FormData();
+  formData.append(
+    'form',
+    new Blob([JSON.stringify(values)], { type: 'application/json' }),
+  );
+  if (file) {
+    formData.append('file', file);
+  }
+  return api.put('assistancerequest/update', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};
 
 export const reviewSolicitation = (values: SolicitationFormValues) =>
   api.put('assistancerequest/reviewsolicitation', values);

@@ -1,7 +1,7 @@
 import { User } from '../auth-type/user';
 
 export interface AssistanceRequest {
-  id: number;
+  id: number | undefined;
   automaticDecText: string;
 
   tituloPublicacao: string;
