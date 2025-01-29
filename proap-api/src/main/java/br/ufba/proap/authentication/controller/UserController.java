@@ -57,7 +57,7 @@ public class UserController {
 			User currentUser = service.getLoggedUser();
 			if (currentUser.getPerfil() == null ||
 					!currentUser.getPerfil().hasPermission("VIEW_USER")) {
-				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+				return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 			}
 
 			List<User> users = service.getAllUsersWithPerfilAndPermissions();
