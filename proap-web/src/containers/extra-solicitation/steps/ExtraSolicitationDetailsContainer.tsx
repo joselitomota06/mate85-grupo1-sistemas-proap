@@ -16,7 +16,6 @@ import { ExtraSolicitationFormValues } from '../schema';
 export default function ExtraSolicitationDetailsFormContainer() {
   const { values, touched, errors } =
     useFormikContext<ExtraSolicitationFormValues>();
-  console.log(values);
 
   return (
     <Grid container>

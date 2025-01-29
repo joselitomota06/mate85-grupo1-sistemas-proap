@@ -227,13 +227,13 @@ public class AssistanceRequestController {
 		}
 
 		try {
-			assistancePersisted.get().setAutomaticDecText(" ");
 			assistancePersisted.get().setSituacao(assistanceRequest.getSituacao());
 			assistancePersisted.get().setNumeroAta(assistanceRequest.getNumeroAta());
 			assistancePersisted.get().setDataAprovacao(assistanceRequest.getDataAprovacao());
 			assistancePersisted.get().setNumeroDiariasAprovadas(assistanceRequest.getNumeroDiariasAprovadas());
 			assistancePersisted.get().setValorAprovado(assistanceRequest.getValorAprovado());
 			assistancePersisted.get().setObservacao(assistanceRequest.getObservacao());
+			assistancePersisted.get().setAutomaticDecText();
 			return ResponseEntity.ok().body(service.save(assistancePersisted.get()));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -247,7 +247,7 @@ public class AssistanceRequestController {
 		User currentUser = serviceUser.getLoggedUser();
 
 		if (currentUser == null)
-			return ResponseEntity.badRequest().build();
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
 		try {
 			Optional<AssistanceRequest> assistanceReques = service.findById(id);

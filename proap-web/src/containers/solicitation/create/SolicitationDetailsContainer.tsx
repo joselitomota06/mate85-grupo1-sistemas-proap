@@ -3,14 +3,11 @@ import React from 'react';
 import { Grid, Link, Stack, Typography } from '@mui/material';
 import styled from '@emotion/styled';
 
-import { InitialSolicitationFormValues } from './SolicitationFormSchema';
-import { booleanToYesOrNo, dateToLocalDate } from '../../helpers/conversion';
-import { useAuth } from '../../hooks';
-import { BASE_PDF_URL } from '../../helpers/api';
-
-const StyledData = styled.div`
-  padding: 0.2rem;
-`;
+import { InitialSolicitationFormValues } from '../SolicitationFormSchema';
+import { booleanToYesOrNo, dateToLocalDate } from '../../../helpers/conversion';
+import { useAuth } from '../../../hooks';
+import { BASE_PDF_URL } from '../../../helpers/api';
+import { columnStyle, StyledData } from '../SolicitationFormContainer.style';
 
 export default function SolicitationDetailsContainer({
   solicitation,
@@ -18,13 +15,6 @@ export default function SolicitationDetailsContainer({
   solicitation: InitialSolicitationFormValues;
 }) {
   const currentUser = useAuth();
-
-  const columnStyle = {
-    flex: 1,
-    flexBasis: '25%',
-    maxWidth: { md: '25%', sm: '100%' },
-    minWidth: '200px',
-  };
 
   return (
     <>
@@ -47,74 +37,6 @@ export default function SolicitationDetailsContainer({
             </Typography>
           </StyledData>
 
-          <StyledData>
-            <Typography>
-              Título completo da publicação a ser apoiada
-              <span style={{ color: 'red' }}> *</span>
-            </Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
-              {solicitation.tituloPublicacao}
-            </Typography>
-          </StyledData>
-
-          <StyledData>
-            <Typography>
-              Lista completa de co-autor(es) da publicação a ser apoiada
-            </Typography>
-            {solicitation.coautores ? (
-              solicitation.coautores.map((coautor) => {
-                return (
-                  <Typography
-                    key={coautor}
-                    style={{ color: 'gray' }}
-                    variant="subtitle2"
-                  >
-                    {coautor}
-                  </Typography>
-                );
-              })
-            ) : (
-              <Typography style={{ color: 'gray' }} variant="subtitle2">
-                'Nenhum co-autor informado'
-              </Typography>
-            )}
-            <Typography
-              style={{ color: 'gray' }}
-              variant="subtitle2"
-            ></Typography>
-          </StyledData>
-          <StyledData>
-            <Typography>
-              Há alunos ativos do PGCOMP coautores/coparticipantes direto na
-              solicitação?
-            </Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
-              {booleanToYesOrNo(solicitation.algumCoautorPGCOMP ?? false)}
-            </Typography>
-          </StyledData>
-
-          <StyledData>
-            <Typography>Arquivo da carta de aceite do artigo</Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
-              {solicitation.cartaAceite
-                ? (solicitation.file?.name ?? (
-                    <Link
-                      href={BASE_PDF_URL + solicitation.cartaAceite}
-                      target="_blank"
-                      rel="noopener"
-                      sx={{ alignSelf: 'center' }}
-                    >
-                      <Typography sx={{ fontWeight: 'bold' }}>
-                        Visualizar
-                      </Typography>
-                    </Link>
-                  ))
-                : (solicitation.file?.name ?? 'Nenhum arquivo enviado')}
-            </Typography>
-          </StyledData>
-        </Stack>
-        {/* Segunda Coluna - Detalhes do Solicitante ... */}
-        <Stack sx={columnStyle}>
           <StyledData>
             <Typography>
               Solicitação em nome do
@@ -167,6 +89,75 @@ export default function SolicitationDetailsContainer({
               </StyledData>
             )}
         </Stack>
+        {/* Segunda Coluna - Detalhes do Solicitante ... */}
+        <Stack sx={columnStyle}>
+          <StyledData>
+            <Typography>
+              Título completo da publicação a ser apoiada
+              <span style={{ color: 'red' }}> *</span>
+            </Typography>
+            <Typography style={{ color: 'gray' }} variant="subtitle2">
+              {solicitation.tituloPublicacao}
+            </Typography>
+          </StyledData>
+
+          <StyledData>
+            <Typography>
+              Lista completa de co-autor(es) da publicação a ser apoiada
+            </Typography>
+            {solicitation.coautores.length > 0 ? (
+              solicitation.coautores.map((coautor) => {
+                return (
+                  <Typography
+                    key={coautor}
+                    style={{ color: 'gray' }}
+                    variant="subtitle2"
+                  >
+                    {coautor}
+                  </Typography>
+                );
+              })
+            ) : (
+              <Typography style={{ color: 'gray' }} variant="subtitle2">
+                Nenhum co-autor informado
+              </Typography>
+            )}
+            <Typography
+              style={{ color: 'gray' }}
+              variant="subtitle2"
+            ></Typography>
+          </StyledData>
+          <StyledData>
+            <Typography>
+              Há alunos ativos do PGCOMP coautores/coparticipantes direto na
+              solicitação?
+            </Typography>
+            <Typography style={{ color: 'gray' }} variant="subtitle2">
+              {booleanToYesOrNo(solicitation.algumCoautorPGCOMP ?? false)}
+            </Typography>
+          </StyledData>
+
+          <StyledData>
+            <Typography>Arquivo da carta de aceite do artigo</Typography>
+            <Typography style={{ color: 'gray' }} variant="subtitle2">
+              {solicitation.cartaAceite
+                ? (solicitation.file?.name ?? (
+                    <Link
+                      href={BASE_PDF_URL + solicitation.cartaAceite}
+                      target="_blank"
+                      rel="noopener"
+                      sx={{ alignSelf: 'center' }}
+                    >
+                      <Typography sx={{ fontWeight: 'bold' }}>
+                        Visualizar
+                      </Typography>
+                    </Link>
+                  ))
+                : (solicitation.file?.name ?? 'Nenhum arquivo enviado')}
+            </Typography>
+          </StyledData>
+        </Stack>
+
         {/* Terceira Coluna Detalhamento do Evento ... */}
         <Stack sx={columnStyle}>
           <StyledData>

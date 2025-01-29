@@ -48,6 +48,7 @@ export default function SolicitationTableRequests() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const userCanViewAllRequests = useHasPermission('VIEW_ALL_REQUESTS');
+  const currentUser = useAuth();
 
   //#region table data
   // TODO : Não usar mais o slice já que request e extra request agora estão em abas separadas
@@ -99,6 +100,8 @@ export default function SolicitationTableRequests() {
 
   const [open, setOpen] = React.useState(false);
   const [solicitationId, setSolicitationId] = React.useState(0);
+  const [openTextModal, setOpenTextModal] = React.useState(false);
+  const [textToShow, setTextToShow] = React.useState('');
 
   const handleClickOpenModal = (id: number, isExtra: boolean = false) => {
     setSolicitationId(id);
@@ -106,18 +109,31 @@ export default function SolicitationTableRequests() {
   };
 
   const handleClickTextOpenModal = (texto: string) => {
-    if (texto == null) {
-      var texto =
-        'Texto de solicitação ' +
-        '\n' +
-        '\n' +
-        'Texto não disponível, solicitação ainda não foi avaliada. Avalie a solicitação e volte para conferir.' +
-        '\n';
-      alert(texto);
-    } else {
-      alert('Texto de solicitação ' + '\n' + '\n' + texto + '\n');
+    if (!texto) {
+      texto =
+        'Texto não disponível, solicitação ainda não foi avaliada. Avalie a solicitação e volte para conferir.';
     }
+    setTextToShow(texto);
+    setOpenTextModal(true);
   };
+
+  const handleCloseTextModal = () => {
+    setOpenTextModal(false);
+  };
+
+  // const handleClickTextOpenModal = (texto: string) => {
+  //   if (texto == null) {
+  //     var texto =
+  //       'Texto de solicitação ' +
+  //       '\n' +
+  //       '\n' +
+  //       'Texto não disponível, solicitação ainda não foi avaliada. Avalie a solicitação e volte para conferir.' +
+  //       '\n';
+  //     alert(texto);
+  //   } else {
+  //     alert('Texto de solicitação ' + '\n' + '\n' + texto + '\n');
+  //   }
+  // };
 
   const handleClose = () => {
     setOpen(false);
@@ -243,8 +259,8 @@ export default function SolicitationTableRequests() {
               </TableCell>
               <TableCell align="center">
                 <TableCellHeader
-                  text="Valor da Inscrição"
-                  sortBy="valorInscricao"
+                  text="Valor total da solicitação"
+                  sortBy="valorTotal"
                 ></TableCellHeader>
               </TableCell>
               <TableCell align="center">
@@ -278,7 +294,7 @@ export default function SolicitationTableRequests() {
                 ({
                   id,
                   user,
-                  valorInscricao,
+                  valorTotal,
                   createdAt,
                   situacao,
                   valorAprovado,
@@ -289,6 +305,14 @@ export default function SolicitationTableRequests() {
                     <TableCell align="center">{createdAt}</TableCell>
 
                     <TableCell align="center">{user.name}</TableCell>
+                    {situacao === 3 && (
+                      <TableCell
+                        align="center"
+                        style={{ backgroundColor: 'darkorange' }}
+                      >
+                        Aguardando informações
+                      </TableCell>
+                    )}
                     {situacao === 2 && (
                       <TableCell
                         align="center"
@@ -315,7 +339,7 @@ export default function SolicitationTableRequests() {
                         Pendente de avaliação
                       </TableCell>
                     )}
-                    <TableCell align="center">R$ {valorInscricao}</TableCell>
+                    <TableCell align="center">R$ {valorTotal}</TableCell>
                     {valorAprovado === null && (
                       <TableCell align="center">-</TableCell>
                     )}
@@ -351,9 +375,13 @@ export default function SolicitationTableRequests() {
                           </>
                         )}
 
-                        <IconButton onClick={() => handleClickEditRequest(id!)}>
-                          <ModeEditIcon />
-                        </IconButton>
+                        {user.email === currentUser.email && (
+                          <IconButton
+                            onClick={() => handleClickEditRequest(id!)}
+                          >
+                            <ModeEditIcon />
+                          </IconButton>
+                        )}
 
                         <IconButton onClick={() => handleClickOpenModal(id!)}>
                           <DeleteIcon />
@@ -405,6 +433,23 @@ export default function SolicitationTableRequests() {
           <Button onClick={handleRemoveSolicitation} autoFocus>
             Sim
           </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={openTextModal}
+        onClose={handleCloseTextModal}
+        aria-labelledby="text-dialog-title"
+        aria-describedby="text-dialog-description"
+      >
+        <DialogTitle id="text-dialog-title">Texto da Solicitação</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="text-dialog-description">
+            {textToShow}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseTextModal}>Fechar</Button>
         </DialogActions>
       </Dialog>
     </>

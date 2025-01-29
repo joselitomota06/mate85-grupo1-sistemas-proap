@@ -1,7 +1,7 @@
 import { useFormikContext } from 'formik';
 import { InitialSolicitationFormValues } from '../SolicitationFormSchema';
 import { Box } from '@mui/material';
-import SolicitationDetailsContainer from '../SolicitationDetailsContainer';
+import SolicitationDetailsContainer from './SolicitationDetailsContainer';
 import AcceptanceFormContainer from './AcceptanceFormContainer';
 
 export default function ConfirmationFormContainer() {

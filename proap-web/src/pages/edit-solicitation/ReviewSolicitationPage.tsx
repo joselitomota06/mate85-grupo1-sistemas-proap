@@ -16,12 +16,14 @@ import Toast from '../../helpers/notification';
 import { dateToLocalDate } from '../../helpers/conversion';
 import AdminSolicitationFormContainer from '../../containers/solicitation/AdminSolicitationFormContainer';
 import { useDispatch } from 'react-redux';
+import useHasPermission from '../../hooks/auth/useHasPermission';
+import { UnauthorizedPage } from '../unauthorized/UnauthorizedPage';
 
 export default function ReviewSolicitationPage() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const { solicitation, isLoading, hasError } = useSolicitation(id);
-  // const { isAdmin } = useAuth();
+  const userHasPermission = useHasPermission('APPROVE_REQUEST');
 
   const navigate = useNavigate();
 
@@ -48,6 +50,10 @@ export default function ReviewSolicitationPage() {
     [dispatch],
   );
 
+  if (!userHasPermission) {
+    return <UnauthorizedPage />;
+  }
+
   return (
     <>
       {isLoading && <LinearProgress />}
@@ -57,7 +63,6 @@ export default function ReviewSolicitationPage() {
             <AdminSolicitationFormContainer
               onSubmit={handleReviewSolicitationSubmit}
               initialValues={{
-                ...INITIAL_REVIEW_FORM_VALUES,
                 ...solicitation,
               }}
               title="Avaliar solicitação de auxílio"

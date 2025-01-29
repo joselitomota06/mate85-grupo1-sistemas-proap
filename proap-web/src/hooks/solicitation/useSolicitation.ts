@@ -5,16 +5,16 @@ import { getAssistanceRequestById } from '../../services/assistanceRequestServic
 
 export default function useSolicitation(id: string | undefined) {
   const [solicitation, setSolicitation] = useState(INITIAL_REVIEW_FORM_VALUES);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
     if (id) {
-      setIsLoading(true);
       getAssistanceRequestById(id)
         .then(({ data }) => {
-          const { dataInicio, dataFim } = data;
-          const { dataAprovacao } = data;
+          const { dataInicio, dataFim, dataAprovacao, coautores } = data;
+
+          if (coautores.length == 1 && coautores[0] == '') coautores.pop();
 
           if (dataAprovacao !== null) {
             setSolicitation({
@@ -22,12 +22,14 @@ export default function useSolicitation(id: string | undefined) {
               dataInicio: localDateToDate(dataInicio),
               dataFim: localDateToDate(dataFim),
               dataAprovacao: localDateToDate(dataAprovacao),
+              coautores: coautores,
             });
           } else {
             setSolicitation({
               ...data,
               dataInicio: localDateToDate(dataInicio),
               dataFim: localDateToDate(dataFim),
+              coautores: coautores,
             });
           }
         })

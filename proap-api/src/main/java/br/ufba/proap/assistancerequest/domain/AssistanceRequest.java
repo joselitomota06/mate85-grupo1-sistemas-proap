@@ -159,12 +159,11 @@ public class AssistanceRequest {
 		this.coautores = coautores != null ? String.join(",", coautores) : null;
 	}
 
-	public void setAutomaticDecText(String automaticDecText) {
+	public void setAutomaticDecText() {
 		String name = this.user.getName();
-		String valorSolicitado = this.valorInscricao.toString();
 		String quantDiarias = String.valueOf(this.quantidadeDiariasSolicitadas);
-		// String calculoDiarias = String.valueOf(this.valorSolicitado /
-		// this.quantidadeDiariasSolicitadas);
+		String valorTotal = this.valorTotal.toString();
+		String cargo = this.solicitanteDocente ? "docente" : "discente";
 		String nomeTrabalho = this.tituloPublicacao;
 		String evento = this.nomeEvento;
 		String qualis = this.qualis;
@@ -172,44 +171,59 @@ public class AssistanceRequest {
 		String pais = this.pais;
 		String inicio = this.dataInicio.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
 		String fim = this.dataFim.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+		String cotacao = this.cotacaoMoeda.toString();
 
-		if (this.situacao == 1) {
-			if (this.isDolar == false) {
-				this.automaticDecText = "O discente " + name + " solicita apoio de inscrição (R$" + valorSolicitado
-						+ " e " + quantDiarias + " diárias ) para apresentação de trabalho oral (" + nomeTrabalho
-						+ ") no evento "
-						+ evento + ", Qualis " + qualis + ", a ser realizado em " + cidade + "-" + pais
-						+ ", no período de " + inicio + " a " + fim
-						+ ". Após verificação da documentação enviada, a comissão Proap entende que a solicitação está de acordo com a resolução vigente e recomenda sua aprovação.";
-			} else {
-				this.automaticDecText = "O discente " + name + " solicita apoio de inscrição em dolar ($"
-						+ valorSolicitado + " e " + quantDiarias
-						+ " diárias ) com variação cambial atual informada de (R$ "
-						+ this.cotacaoMoeda + " para apresentação de trabalho oral (" + nomeTrabalho + ") no evento "
-						+ evento + ", Qualis " + qualis + ", a ser realizado em " + cidade + "-" + pais
-						+ ", no período de " + inicio + " a " + fim
-						+ ". Após verificação da documentação enviada, a comissão Proap entende que a solicitação está de acordo com a resolução vigente e recomenda sua aprovação.";
-			}
-		} else {
-			if (this.situacao == 2) {
-				if (this.isDolar == false) {
-					this.automaticDecText = "O discente " + name + " solicita apoio de inscrição (R$" + valorSolicitado
-							+ " e " + quantDiarias + " diárias) para apresentação de trabalho oral (" + nomeTrabalho
-							+ ") no evento "
-							+ evento + ", Qualis " + qualis + ", a ser realizado em " + cidade + "-" + pais
+		switch (this.situacao) {
+			case 1: // Aprovado
+				if (!this.isDolar) {
+					this.automaticDecText = "O " + cargo + " " + name + " solicita apoio no valor total de (R$"
+							+ valorTotal
+							+ " e " + quantDiarias + " diárias ) para apresentação do trabalho (" + nomeTrabalho
+							+ ") no evento " + evento + ", Qualis " + qualis + ", a ser realizado em " + cidade + "-"
+							+ pais
 							+ ", no período de " + inicio + " a " + fim
-							+ ". Após verificação da documentação enviada, a comissão Proap entende que a solicitação não está de acordo com a resolução vigente e recomenda sua reprovação.";
+							+ ". Após verificação da documentação enviada, a comissão PROAP entende que a solicitação está de acordo com a resolução vigente e recomenda sua aprovação.";
 				} else {
-					this.automaticDecText = "O discente " + name + " solicita apoio de inscrição em dolar ($"
-							+ valorSolicitado + " e " + quantDiarias
-							+ " diárias) com variação cambial atual informada de (R$ "
-							+ this.cotacaoMoeda + " para apresentação de trabalho oral (" + nomeTrabalho
-							+ ") no evento "
+					this.automaticDecText = "O " + cargo + " " + name + " solicita apoio no valor total em dólar de ($"
+							+ valorTotal + " e " + quantDiarias
+							+ " diárias ) com variação cambial atual informada de (R$ "
+							+ cotacao + ") para apresentação do trabalho (" + nomeTrabalho + ") no evento "
 							+ evento + ", Qualis " + qualis + ", a ser realizado em " + cidade + "-" + pais
 							+ ", no período de " + inicio + " a " + fim
-							+ ". Após verificação da documentação enviada, a comissão Proap entende que a solicitação não está de acordo com a resolução vigente e recomenda sua reprovação.";
+							+ ". Após verificação da documentação enviada, a comissão PROAP entende que a solicitação está de acordo com a resolução vigente e recomenda sua aprovação.";
 				}
-			}
+				break;
+
+			case 2: // Rejeitado
+				if (!this.isDolar) {
+					this.automaticDecText = "O " + cargo + " " + name + " solicita apoio no valor total de (R$"
+							+ valorTotal + " e " + quantDiarias + " diárias ) para apresentação do trabalho ("
+							+ nomeTrabalho
+							+ ") no evento " + evento + ", Qualis " + qualis + ", a ser realizado em " + cidade + "-"
+							+ pais
+							+ ", no período de " + inicio + " a " + fim
+							+ ". Após verificação da documentação enviada, a comissão PROAP entende que a solicitação não está de acordo com a resolução vigente e recomenda sua reprovação.";
+				} else {
+					this.automaticDecText = "O " + cargo + " " + name + " solicita apoio no valor total em dólar de ($"
+							+ valorTotal + " e " + quantDiarias
+							+ " diárias ) com variação cambial atual informada de (R$ "
+							+ cotacao + ") para apresentação do trabalho (" + nomeTrabalho + ") no evento "
+							+ evento + ", Qualis " + qualis + ", a ser realizado em " + cidade + "-" + pais
+							+ ", no período de " + inicio + " a " + fim
+							+ ". Após verificação da documentação enviada, a comissão PROAP entende que a solicitação não está de acordo com a resolução vigente e recomenda sua reprovação.";
+				}
+				break;
+
+			case 3: // Aguardando informações
+				this.automaticDecText = "O " + cargo + " " + name + " solicitou apoio para apresentação do trabalho ("
+						+ nomeTrabalho + ") no evento " + evento + ", Qualis " + qualis + ", a ser realizado em "
+						+ cidade
+						+ "-" + pais + ", no período de " + inicio + " a " + fim
+						+ ". A solicitação está aguardando informações adicionais do solicitante para ser avaliada.";
+				break;
+			default:
+				this.automaticDecText = null;
+				break;
 		}
 	}
 

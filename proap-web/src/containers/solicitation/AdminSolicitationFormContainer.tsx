@@ -6,7 +6,7 @@ import { FormikValues } from 'formik';
 import SolicitantDataFormContainer from './create/SolicitationDataFormContainer';
 import FinancingDataFormContainer from './create/EventDetailFormContainer';
 import EventDataFormContainer from './create/FinancialDetailFormContainer';
-import ReviewDataFormContainer from './create/ReviewDataFormContainer';
+import ReviewDataFormContainer from './review/ReviewDataFormContainer';
 
 import {
   financialDetailFormSchema,
@@ -20,6 +20,7 @@ import {
 import StepperForm, {
   FormStep,
 } from '../../components/stepper-form/StepperForm';
+import SolicitationReviewContainer from './review/SolicitationReviewContainer';
 
 interface SolicitationFormContainerProps {
   onSubmit: (values: FormikValues) => void;
@@ -50,19 +51,8 @@ export default function AdminSolicitationFormContainer({
   const evaluateFormSteps: FormStep[] = useMemo(
     () => [
       {
-        label: 'Solicitante',
-        component: SolicitantDataFormContainer,
-        schema: solicitantionDataFormSchema,
-      },
-      {
-        label: 'Financiamento',
-        component: FinancingDataFormContainer,
-        schema: eventDetailFormSchema,
-      },
-      {
-        label: 'Evento',
-        component: EventDataFormContainer,
-        schema: financialDetailFormSchema,
+        label: 'Resumo da Solicitação',
+        component: SolicitationReviewContainer,
       },
       {
         label: 'Avaliação',
