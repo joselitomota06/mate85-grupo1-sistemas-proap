@@ -40,11 +40,6 @@ export default function ReviewDataFormContainer() {
           >
             <FormControlLabel value="1" control={<Radio />} label="Aprovado" />
             <FormControlLabel value="2" control={<Radio />} label="Reprovado" />
-            <FormControlLabel
-              value="3"
-              control={<Radio />}
-              label="Aguardando informações"
-            />
           </Field>
           {touched.situacao && errors.situacao && (
             <FormHelperText>{errors.situacao}</FormHelperText>

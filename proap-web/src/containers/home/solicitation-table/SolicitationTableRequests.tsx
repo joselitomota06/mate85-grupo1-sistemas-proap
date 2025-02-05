@@ -5,6 +5,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -19,7 +20,16 @@ import { IRootState, useAppDispatch } from '../../../store';
 
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import Visibility from '@mui/icons-material/Visibility';
-import { CheckCircle } from '@mui/icons-material';
+import {
+  Article,
+  ArticleOutlined,
+  AssignmentOutlined,
+  CheckCircle,
+  Description,
+  DescriptionTwoTone,
+  FindInPage,
+  OpenInBrowser,
+} from '@mui/icons-material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -43,6 +53,12 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 import usePrevious from '../../../helpers/usePrevious';
 import useHasPermission from '../../../hooks/auth/useHasPermission';
+import SolicitationDetailsDialog, {
+  SolicitationDetailsDialogProps,
+} from '../request-dialog/SolicitationDetailsDialog';
+import useSolicitation from '../../../hooks/solicitation/useSolicitation';
+import SolicitationViewContainer from '../../solicitation/view/SolicitationViewContainer';
+import SolicitationViewDialog from '../request-dialog/SolicitationViewDialog';
 
 export default function SolicitationTableRequests() {
   const dispatch = useAppDispatch();
@@ -97,23 +113,44 @@ export default function SolicitationTableRequests() {
       toast.success('Solicitação removida com sucesso');
     });
   };
-
-  const [open, setOpen] = React.useState(false);
+  const [openViewSolicitation, setOpenViewSolicitation] = React.useState(false);
+  const [solicitationValues, setSolicitationValues] = React.useState<any>({});
+  const [selectedSolicitationId, setSelectedSolicitationId] = useState<
+    number | null
+  >(null);
+  const [openResume, setOpenResume] = React.useState(false);
   const [solicitationId, setSolicitationId] = React.useState(0);
   const [openTextModal, setOpenTextModal] = React.useState(false);
-  const [textToShow, setTextToShow] = React.useState('');
+  const [textDialog, setTextDialog] =
+    React.useState<SolicitationDetailsDialogProps>({
+      nomeSolicitante: '',
+      solicitanteDocente: false,
+      valorTotal: 0,
+      variacaoCambial: 0,
+      valorDiarias: 0,
+      nomeEvento: '',
+      tituloPublicacao: '',
+      isDolar: false,
+      qualisEvento: '',
+      cidade: '',
+      pais: '',
+      dataInicio: '',
+      dataFim: '',
+      situacao: 0,
+      observacoes: '',
+    });
 
   const handleClickOpenModal = (id: number, isExtra: boolean = false) => {
     setSolicitationId(id);
-    setOpen(true);
+    setOpenResume(true);
   };
 
-  const handleClickTextOpenModal = (texto: string) => {
-    if (!texto) {
-      texto =
-        'Texto não disponível, solicitação ainda não foi avaliada. Avalie a solicitação e volte para conferir.';
-    }
-    setTextToShow(texto);
+  const handleClickTextOpenModal = (props: any) => {
+    // if (!texto) {
+    //   texto =
+    //     'Texto não disponível, solicitação ainda não foi avaliada. Avalie a solicitação e volte para conferir.';
+    // }
+    setTextDialog(props);
     setOpenTextModal(true);
   };
 
@@ -136,7 +173,7 @@ export default function SolicitationTableRequests() {
   // };
 
   const handleClose = () => {
-    setOpen(false);
+    setOpenResume(false);
   };
 
   const handleRemoveSolicitation = () => {
@@ -233,6 +270,21 @@ export default function SolicitationTableRequests() {
     );
   }, [currentPageAssistance, size, selectedPropToSortTable]);
 
+  useEffect(() => {
+    if (selectedSolicitationId !== null) {
+      setOpenViewSolicitation(true);
+    }
+  }, [selectedSolicitationId]);
+
+  function handleClickViewSolicitation(id: number): void {
+    navigate(`/solicitation/view/${id}`);
+  }
+
+  function handleCloseViewSolicitation() {
+    setSelectedSolicitationId(null);
+    setOpenViewSolicitation(false);
+  }
+
   return (
     <>
       <TableContainer sx={{ maxHeight: '500px' }}>
@@ -300,19 +352,23 @@ export default function SolicitationTableRequests() {
                   valorAprovado,
                   automaticDecText,
                   dataAprovacao,
+                  solicitanteDocente,
+                  tituloPublicacao,
+                  valorDiaria,
+                  cotacaoMoeda,
+                  nomeEvento,
+                  isDolar,
+                  qualis,
+                  cidade,
+                  pais,
+                  dataInicio,
+                  dataFim,
+                  observacao,
                 }) => (
                   <TableRow key={id}>
                     <TableCell align="center">{createdAt}</TableCell>
 
                     <TableCell align="center">{user.name}</TableCell>
-                    {situacao === 3 && (
-                      <TableCell
-                        align="center"
-                        style={{ backgroundColor: 'darkorange' }}
-                      >
-                        Aguardando informações
-                      </TableCell>
-                    )}
                     {situacao === 2 && (
                       <TableCell
                         align="center"
@@ -334,7 +390,7 @@ export default function SolicitationTableRequests() {
                     {situacao === 0 && (
                       <TableCell
                         align="center"
-                        style={{ backgroundColor: 'gray' }}
+                        style={{ backgroundColor: 'yellow' }}
                       >
                         Pendente de avaliação
                       </TableCell>
@@ -358,34 +414,65 @@ export default function SolicitationTableRequests() {
 
                     <TableCell align="center">
                       <Box>
-                        {userCanViewAllRequests && (
-                          <>
+                        <>
+                          <Tooltip title="Ver Detalhes da Solicitação">
+                            <IconButton
+                              onClick={() => handleClickViewSolicitation(id!)}
+                            >
+                              <Description />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title="Ver resumo da Solicitação">
                             <IconButton
                               onClick={() =>
-                                handleClickTextOpenModal(automaticDecText)
+                                handleClickTextOpenModal({
+                                  nomeSolicitante: user.name,
+                                  solicitanteDocente: solicitanteDocente,
+                                  valorTotal: valorTotal,
+                                  valorDiarias: valorDiaria,
+                                  variacaoCambial: cotacaoMoeda,
+                                  nomeEvento: nomeEvento,
+                                  tituloPublicacao: tituloPublicacao,
+                                  isDolar: isDolar,
+                                  qualisEvento: qualis,
+                                  cidade: cidade,
+                                  pais: pais,
+                                  dataInicio: dataInicio,
+                                  dataFim: dataFim,
+                                  situacao: situacao,
+                                  observacoes: observacao,
+                                })
                               }
                             >
                               <Visibility />
                             </IconButton>
-                            <IconButton
-                              onClick={() => handleClickReviewRequest(id!)}
-                            >
-                              <CheckCircle />
-                            </IconButton>
-                          </>
-                        )}
+                          </Tooltip>
+                          {userCanViewAllRequests && (
+                            <Tooltip title="Revisar Solicitação">
+                              <IconButton
+                                onClick={() => handleClickReviewRequest(id!)}
+                              >
+                                <CheckCircle />
+                              </IconButton>
+                            </Tooltip>
+                          )}
+                        </>
 
                         {user.email === currentUser.email && (
-                          <IconButton
-                            onClick={() => handleClickEditRequest(id!)}
-                          >
-                            <ModeEditIcon />
-                          </IconButton>
+                          <Tooltip title="Editar Solicitação">
+                            <IconButton
+                              onClick={() => handleClickEditRequest(id!)}
+                            >
+                              <ModeEditIcon />
+                            </IconButton>
+                          </Tooltip>
                         )}
 
-                        <IconButton onClick={() => handleClickOpenModal(id!)}>
-                          <DeleteIcon />
-                        </IconButton>
+                        <Tooltip title="Excluir Solicitação">
+                          <IconButton onClick={() => handleClickOpenModal(id!)}>
+                            <DeleteIcon />
+                          </IconButton>
+                        </Tooltip>
                       </Box>
                     </TableCell>
                   </TableRow>
@@ -415,7 +502,7 @@ export default function SolicitationTableRequests() {
       </div>
 
       <Dialog
-        open={open}
+        open={openResume}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
@@ -437,21 +524,29 @@ export default function SolicitationTableRequests() {
       </Dialog>
 
       <Dialog
-        open={openTextModal}
+        open={false}
         onClose={handleCloseTextModal}
         aria-labelledby="text-dialog-title"
         aria-describedby="text-dialog-description"
       >
         <DialogTitle id="text-dialog-title">Texto da Solicitação</DialogTitle>
         <DialogContent>
-          <DialogContentText id="text-dialog-description">
-            {textToShow}
-          </DialogContentText>
+          <DialogContentText id="text-dialog-description">{}</DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseTextModal}>Fechar</Button>
         </DialogActions>
       </Dialog>
+      <SolicitationDetailsDialog
+        open={openTextModal}
+        onClose={handleCloseTextModal}
+        solicitationData={{ ...textDialog }}
+      />
+      <SolicitationViewDialog
+        open={openViewSolicitation}
+        onClose={handleCloseViewSolicitation}
+        id={String(selectedSolicitationId ?? '')}
+      />
     </>
   );
 }
