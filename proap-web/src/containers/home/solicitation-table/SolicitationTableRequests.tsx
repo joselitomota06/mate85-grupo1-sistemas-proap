@@ -64,6 +64,7 @@ export default function SolicitationTableRequests() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const userCanViewAllRequests = useHasPermission('VIEW_ALL_REQUESTS');
+  const userCanApproveRequests = useHasPermission('APPROVE_REQUEST');
   const currentUser = useAuth();
 
   //#region table data
@@ -415,31 +416,33 @@ export default function SolicitationTableRequests() {
                     <TableCell align="center">
                       <Box>
                         <>
-                          <Tooltip title="Ver resumo da Solicitação">
-                            <IconButton
-                              onClick={() =>
-                                handleClickTextOpenModal({
-                                  nomeSolicitante: user.name,
-                                  solicitanteDocente: solicitanteDocente,
-                                  valorTotal: valorTotal,
-                                  valorDiarias: valorDiaria,
-                                  variacaoCambial: cotacaoMoeda,
-                                  nomeEvento: nomeEvento,
-                                  tituloPublicacao: tituloPublicacao,
-                                  isDolar: isDolar,
-                                  qualisEvento: qualis,
-                                  cidade: cidade,
-                                  pais: pais,
-                                  dataInicio: dataInicio,
-                                  dataFim: dataFim,
-                                  situacao: situacao,
-                                  observacoes: observacao,
-                                })
-                              }
-                            >
-                              <Visibility />
-                            </IconButton>
-                          </Tooltip>
+                          {userCanViewAllRequests && (
+                            <Tooltip title="Ver resumo da Solicitação">
+                              <IconButton
+                                onClick={() =>
+                                  handleClickTextOpenModal({
+                                    nomeSolicitante: user.name,
+                                    solicitanteDocente: solicitanteDocente,
+                                    valorTotal: valorTotal,
+                                    valorDiarias: valorDiaria,
+                                    variacaoCambial: cotacaoMoeda,
+                                    nomeEvento: nomeEvento,
+                                    tituloPublicacao: tituloPublicacao,
+                                    isDolar: isDolar,
+                                    qualisEvento: qualis,
+                                    cidade: cidade,
+                                    pais: pais,
+                                    dataInicio: dataInicio,
+                                    dataFim: dataFim,
+                                    situacao: situacao,
+                                    observacoes: observacao,
+                                  })
+                                }
+                              >
+                                <Visibility />
+                              </IconButton>
+                            </Tooltip>
+                          )}
                           <Tooltip title="Ver Detalhes da Solicitação">
                             <IconButton
                               onClick={() => handleClickViewSolicitation(id!)}
@@ -447,7 +450,7 @@ export default function SolicitationTableRequests() {
                               <Description />
                             </IconButton>
                           </Tooltip>
-                          {userCanViewAllRequests && (
+                          {userCanApproveRequests && (
                             <Tooltip title="Revisar Solicitação">
                               <IconButton
                                 onClick={() => handleClickReviewRequest(id!)}
@@ -541,11 +544,6 @@ export default function SolicitationTableRequests() {
         open={openTextModal}
         onClose={handleCloseTextModal}
         solicitationData={{ ...textDialog }}
-      />
-      <SolicitationViewDialog
-        open={openViewSolicitation}
-        onClose={handleCloseViewSolicitation}
-        id={String(selectedSolicitationId ?? '')}
       />
     </>
   );

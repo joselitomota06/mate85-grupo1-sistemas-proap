@@ -60,7 +60,11 @@ export default function SolicitationDetailsDialog({
           <b>{solicitationData.qualisEvento}</b>, a ser realizado em{' '}
           <b>{solicitationData.cidade}</b>-<b>{solicitationData.pais}</b>, no
           período de <b>{solicitationData.dataInicio}</b> a{' '}
-          <b>{solicitationData.dataFim}</b>. <h4>Avaliação</h4>
+          <b>{solicitationData.dataFim}</b>.
+          <br />
+          <br />
+          <b>Avaliação</b>
+          <br />
           {solicitationData.situacao !== 0 ? (
             <>
               Após verificação da documentação enviada, a comissão PROAP entende
@@ -74,7 +78,9 @@ export default function SolicitationDetailsDialog({
           {solicitationData.observacoes?.length > 0 && (
             <>
               {' '}
-              <h4>Observações do Avaliador</h4>
+              <br /> <br />
+              <b>Observações do Avaliador</b>
+              <br />
               {solicitationData.observacoes}
             </>
           )}
