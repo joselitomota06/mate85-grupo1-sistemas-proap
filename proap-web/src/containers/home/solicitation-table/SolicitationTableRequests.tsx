@@ -415,13 +415,6 @@ export default function SolicitationTableRequests() {
                     <TableCell align="center">
                       <Box>
                         <>
-                          <Tooltip title="Ver Detalhes da Solicitação">
-                            <IconButton
-                              onClick={() => handleClickViewSolicitation(id!)}
-                            >
-                              <Description />
-                            </IconButton>
-                          </Tooltip>
                           <Tooltip title="Ver resumo da Solicitação">
                             <IconButton
                               onClick={() =>
@@ -445,6 +438,13 @@ export default function SolicitationTableRequests() {
                               }
                             >
                               <Visibility />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title="Ver Detalhes da Solicitação">
+                            <IconButton
+                              onClick={() => handleClickViewSolicitation(id!)}
+                            >
+                              <Description />
                             </IconButton>
                           </Tooltip>
                           {userCanViewAllRequests && (

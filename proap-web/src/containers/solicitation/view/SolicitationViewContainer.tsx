@@ -79,11 +79,62 @@ export default function SolicitationViewContainer({ id }: { id: string }) {
         Consulta da Solicitação
       </Typography>
 
-      <Stack
-        direction={{ xs: 'column', lg: 'row' }}
-        spacing={3}
-        sx={{ mb: { xs: 3, lg: 9 } }} // Changed from mb: 3 to mb: 4
-      >
+      <Fade in timeout={900}>
+        <Box sx={{ mb: 3 }}>
+          {' '}
+          {/* Added margin top */}
+          <SectionPaper title="Status da Avaliação">
+            <Stack direction={{ xs: 'column', md: 'row' }} spacing={3}>
+              <Box sx={{ width: { xs: '100%', md: '50%' } }}>
+                <InfoItem
+                  label="Situação"
+                  value={
+                    solicitation.situacao === 1
+                      ? 'Aprovado'
+                      : solicitation.situacao === 2
+                        ? 'Reprovado'
+                        : 'Pendente'
+                  }
+                />
+                {solicitation.situacao === 1 && (
+                  <>
+                    <InfoItem
+                      label="Data de Aprovação"
+                      value={dateToLocalDate(solicitation.dataAprovacao)}
+                    />
+                    <InfoItem
+                      label="Valor Total Aprovado"
+                      value={`R$${solicitation.valorAprovado}`}
+                    />
+                  </>
+                )}
+              </Box>
+              <Box sx={{ width: { xs: '100%', md: '50%' } }}>
+                {solicitation.situacao === 1 && (
+                  <>
+                    <InfoItem
+                      label="Número da ATA"
+                      value={solicitation.numeroAta}
+                    />
+                    <InfoItem
+                      label="Diárias Aprovadas"
+                      value={solicitation.numeroDiariasAprovadas}
+                    />
+                  </>
+                )}
+                {solicitation.observacao && (
+                  <InfoItem
+                    label="Observação"
+                    value={solicitation.observacao}
+                  />
+                )}
+              </Box>
+            </Stack>
+          </SectionPaper>
+        </Box>
+      </Fade>
+
+      <Stack direction={{ xs: 'column', lg: 'row' }} spacing={3} sx={{ mb: 3 }}>
         <Fade in timeout={500}>
           <Box sx={{ width: { xs: '100%', lg: '25%' } }}>
             <SectionPaper title="Detalhes do Solicitante">
@@ -111,6 +162,19 @@ export default function SolicitationViewContainer({ id }: { id: string }) {
                 label="Nome do Docente PGCOMP"
                 value={solicitation.nomeDocente}
               />
+              {!solicitation.solicitanteDocente && (
+                <InfoItem
+                  label="Está no prazo regular do curso?"
+                  value={booleanToYesOrNo(solicitation.discenteNoPrazoDoCurso!)}
+                />
+              )}
+              {!solicitation.solicitanteDocente &&
+                !solicitation.discenteNoPrazoDoCurso && (
+                  <InfoItem
+                    label="Quantidade de meses de atraso do curso"
+                    value={solicitation.mesesAtrasoCurso}
+                  />
+                )}
             </SectionPaper>
           </Box>
         </Fade>
@@ -183,6 +247,24 @@ export default function SolicitationViewContainer({ id }: { id: string }) {
                 label="Modalidade de Participação"
                 value={solicitation.modalidadeParticipacao}
               />
+              <InfoItem
+                label="Afastamento para participação no evento"
+                value={booleanToYesOrNo(
+                  solicitation.afastamentoParaParticipacao!,
+                )}
+              />
+              {solicitation.afastamentoParaParticipacao && (
+                <InfoItem
+                  label="Dias de afastamento"
+                  value={solicitation.diasAfastamento}
+                />
+              )}
+              <InfoItem
+                label="Link da Homepage do Evento"
+                value={solicitation.linkHomePageEvento}
+              />
+              <InfoItem label="País" value={solicitation.pais} />
+              <InfoItem label="Cidade" value={solicitation.cidade} />
               <InfoItem label="Qualis" value={solicitation.qualis} />
             </SectionPaper>
           </Box>
@@ -196,68 +278,44 @@ export default function SolicitationViewContainer({ id }: { id: string }) {
                 value={`R$${solicitation.valorInscricao}`}
               />
               <InfoItem
+                label="Link da Página de Inscrição"
+                value={solicitation.linkPaginaInscricao}
+              />
+              {solicitation.quantidadeDiariasSolicitadas > 0 && (
+                <InfoItem
+                  label="Número de Diárias"
+                  value={solicitation.quantidadeDiariasSolicitadas}
+                />
+              )}
+              {solicitation.quantidadeDiariasSolicitadas > 0 && (
+                <InfoItem
+                  label="Valor da Diária"
+                  value={`${solicitation.isDolar ? '$' : 'R$'}${solicitation.valorDiaria}`}
+                />
+              )}
+              {solicitation.quantidadeDiariasSolicitadas > 0 &&
+                solicitation.isDolar && (
+                  <InfoItem
+                    label="Cotação do Dólar"
+                    value={`$${solicitation.cotacaoMoeda}`}
+                  />
+                )}
+
+              {solicitation.solicitanteDocente && (
+                <InfoItem
+                  label="Valor da Passagem Aérea"
+                  value={`R$${solicitation.valorPassagem}`}
+                />
+              )}
+              <InfoItem
                 label="Valor Total"
                 value={`R$${solicitation.valorTotal}`}
               />
+              {/* TODO: Adding remaining fields */}
             </SectionPaper>
           </Box>
         </Fade>
       </Stack>
-
-      <Fade in timeout={900}>
-        <Box sx={{ mt: { xs: 2, lg: 0 } }}>
-          {' '}
-          {/* Added margin top */}
-          <SectionPaper title="Status da Avaliação">
-            <Stack direction={{ xs: 'column', md: 'row' }} spacing={3}>
-              <Box sx={{ width: { xs: '100%', md: '50%' } }}>
-                <InfoItem
-                  label="Situação"
-                  value={
-                    solicitation.situacao === 1
-                      ? 'Aprovado'
-                      : solicitation.situacao === 2
-                        ? 'Reprovado'
-                        : 'Pendente'
-                  }
-                />
-                {solicitation.situacao === 1 && (
-                  <>
-                    <InfoItem
-                      label="Data de Aprovação"
-                      value={dateToLocalDate(solicitation.dataAprovacao)}
-                    />
-                    <InfoItem
-                      label="Valor Total Aprovado"
-                      value={`R$${solicitation.valorAprovado}`}
-                    />
-                  </>
-                )}
-              </Box>
-              <Box sx={{ width: { xs: '100%', md: '50%' } }}>
-                {solicitation.situacao === 1 && (
-                  <>
-                    <InfoItem
-                      label="Número da ATA"
-                      value={solicitation.numeroAta}
-                    />
-                    <InfoItem
-                      label="Diárias Aprovadas"
-                      value={solicitation.numeroDiariasAprovadas}
-                    />
-                  </>
-                )}
-                {solicitation.observacao && (
-                  <InfoItem
-                    label="Observação"
-                    value={solicitation.observacao}
-                  />
-                )}
-              </Box>
-            </Stack>
-          </SectionPaper>
-        </Box>
-      </Fade>
     </Container>
   );
 }
