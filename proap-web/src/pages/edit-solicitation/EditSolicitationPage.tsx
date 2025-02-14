@@ -14,11 +14,14 @@ import {
 import Toast from '../../helpers/notification';
 import { dateToLocalDate } from '../../helpers/conversion';
 import { useDispatch } from 'react-redux';
+import useHasPermission from '../../hooks/auth/useHasPermission';
+import { UnauthorizedPage } from '../unauthorized/UnauthorizedPage';
 
 export default function EditSolicitationPage() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const { solicitation, isLoading, hasError } = useSolicitation(id);
+  const userCanApproveRequests = useHasPermission('APPROVE_REQUEST');
 
   const navigate = useNavigate();
 
@@ -32,6 +35,8 @@ export default function EditSolicitationPage() {
         ...(values as SolicitationFormValues),
         dataInicio: dateToLocalDate(values.dataInicio),
         dataFim: dateToLocalDate(values.dataFim),
+        dataAprovacao:
+          values.dataAprovacao && dateToLocalDate(values.dataAprovacao),
         createdAt: undefined,
         updatedAt: undefined,
       };
@@ -41,6 +46,12 @@ export default function EditSolicitationPage() {
     },
     [dispatch],
   );
+
+  const statusIsNotPending = solicitation.situacao !== 0;
+
+  if (statusIsNotPending && !userCanApproveRequests) {
+    return <UnauthorizedPage />;
+  }
 
   return (
     <>

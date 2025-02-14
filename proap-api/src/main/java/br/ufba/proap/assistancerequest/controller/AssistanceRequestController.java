@@ -191,10 +191,14 @@ public class AssistanceRequestController {
 			if (existingInstance == null) {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 			}
-			if (existingInstance.getUser().getEmail() != currentUser.getEmail()
-					&& !currentUser.getPerfil().hasPermission("APPROVE_REQUEST")) {
+			boolean isNotOwner = !existingInstance.getUser().getEmail().equals(currentUser.getEmail());
+			boolean cannotApprove = !currentUser.getPerfil().hasPermission("APPROVE_REQUEST");
+			boolean isNotPending = existingInstance.getSituacao() != 0;
+
+			if ((isNotOwner && cannotApprove) || (isNotPending && cannotApprove)) {
 				return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 			}
+
 			AssistanceRequest updatedAssistanceRequest = assistanceRequest.toEntity();
 			updatedAssistanceRequest.setId(existingInstance.getId());
 			updatedAssistanceRequest.setUser(existingInstance.getUser());

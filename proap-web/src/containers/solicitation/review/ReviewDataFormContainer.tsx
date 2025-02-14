@@ -50,7 +50,7 @@ export default function ReviewDataFormContainer() {
           as={StyledTextField}
           style={{ maxWidth: '170px' }}
           required
-          label="Data de aprovação da solicitação"
+          label="Data da avaliação da solicitação"
           name="dataAprovacao"
           type="date"
           error={Boolean(touched.dataAprovacao && errors.dataAprovacao)}

@@ -461,7 +461,7 @@ export default function SolicitationTableRequests() {
                           )}
                         </>
 
-                        {user.email === currentUser.email && (
+                        {(situacao == 0 || userCanApproveRequests) && (
                           <Tooltip title="Editar Solicitação">
                             <IconButton
                               onClick={() => handleClickEditRequest(id!)}
