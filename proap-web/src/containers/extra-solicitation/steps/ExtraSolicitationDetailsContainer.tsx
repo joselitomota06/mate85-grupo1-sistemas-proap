@@ -11,7 +11,7 @@ import {
 import { Field, useFormikContext } from 'formik';
 
 import ExtraSolicitationDetailsContainer from '../ExtraSolicitationDetailsContainer';
-import { ExtraSolicitationFormValues } from '../schema';
+import { ExtraSolicitationFormValues } from '../ExtraSolicitationFormSchema';
 
 export default function ExtraSolicitationDetailsFormContainer() {
   const { values, touched, errors } =
