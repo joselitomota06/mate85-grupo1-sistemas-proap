@@ -8,7 +8,7 @@ import ExtraSolicitationFormContainer from '../../containers/extra-solicitation/
 import useExtraSolicitation from '../../hooks/solicitation/useExtraSolicitation';
 import Toast from '../../helpers/notification';
 import { updateExtraAssistanceRequest } from '../../services/extraAssistanceRequestService';
-import { ExtraSolicitation } from '../../containers/extra-solicitation/schema';
+import { ExtraSolicitation } from '../../containers/extra-solicitation/ExtraSolicitationFormSchema';
 
 export default function EditExtraSolicitationPage() {
   const { id } = useParams();

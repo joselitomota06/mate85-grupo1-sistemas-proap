@@ -1,10 +1,14 @@
 import React from 'react';
 import { Field, useFormikContext } from 'formik';
-import { Grid } from '@mui/material';
+import { Box, Stack, Tooltip } from '@mui/material';
 
-import { StyledTextField } from '../../solicitation/SolicitationFormContainer.style';
+import {
+  StyledIconButton,
+  StyledTextField,
+} from '../../solicitation/SolicitationFormContainer.style';
 import { ExtraRequest } from '../../../types/requests-type/ExtraRequest';
 import { useAuth } from '../../../hooks';
+import { Info } from '@mui/icons-material';
 
 export default function ExtraSolicitantDataContainer() {
   const { errors, touched, values } = useFormikContext<ExtraRequest>();
@@ -12,7 +16,7 @@ export default function ExtraSolicitantDataContainer() {
   const { name, email } = useAuth();
 
   return (
-    <Grid container direction="column" paddingTop={2} paddingBottom={2}>
+    <Box display="flex" flexDirection="column" gap={2} pt={2} pb={2}>
       <StyledTextField
         label="Solicitante"
         value={values.user.name != '' ? values.user.name : name}
@@ -32,6 +36,29 @@ export default function ExtraSolicitantDataContainer() {
         required
         style={{ padding: 'none' }}
       />
+      <Stack direction={'row'}>
+        <Field
+          as={StyledTextField}
+          label="Valor da Solicitação (R$)"
+          sx={{ width: '200px' }}
+          name="valorSolicitado"
+          type="number"
+          InputProps={{
+            inputProps: { min: 0, step: 0.01 },
+          }}
+          error={Boolean(touched.valorSolicitado && errors.valorSolicitado)}
+          helperText={touched.valorSolicitado && errors.valorSolicitado}
+          required
+        />
+        <Tooltip
+          sx={{ position: 'relative', top: '10px' }}
+          title="Informe o valor conforme seu extrato bancário"
+        >
+          <StyledIconButton>
+            <Info />
+          </StyledIconButton>
+        </Tooltip>
+      </Stack>
       <Field
         as={StyledTextField}
         label="Justificativa"
@@ -43,6 +70,6 @@ export default function ExtraSolicitantDataContainer() {
         rows={5}
         multiline
       />
-    </Grid>
+    </Box>
   );
 }

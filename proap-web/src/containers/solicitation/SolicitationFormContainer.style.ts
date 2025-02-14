@@ -50,3 +50,14 @@ export const StyledFormLabel = styled(FormLabel)`
 export const StyledIconButton = styled(IconButton)`
   color: #184a7f;
 `;
+
+export const StyledData = styled.div`
+  padding: 0.2rem;
+`;
+
+export const columnStyle = {
+  flex: 1,
+  flexBasis: '25%',
+  maxWidth: { md: '25%', sm: '100%' },
+  minWidth: '200px',
+};

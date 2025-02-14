@@ -52,14 +52,14 @@ export default function SolicitationFormContainer({
   const registerFormSteps: FormStep[] = useMemo(
     () => [
       {
-        label: 'Dados da Solicitação',
-        component: SolicitationDataFormContainer,
-        schema: solicitantionDataFormSchema,
-      },
-      {
         label: 'Detalhes do Solicitante',
         component: SolicitantDetailFormContainer,
         schema: solicitantDetailFormSchema,
+      },
+      {
+        label: 'Dados da Solicitação',
+        component: SolicitationDataFormContainer,
+        schema: solicitantionDataFormSchema,
       },
       {
         label: 'Detalhamento do Evento',

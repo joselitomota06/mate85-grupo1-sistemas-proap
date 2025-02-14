@@ -117,7 +117,7 @@ export const reviewDataFormSchema = Yup.object({
   dataAprovacao: Yup.string().required('Campo obrigatório'),
   numeroAta: Yup.number().required('Campo obrigatório'),
   numeroDiariasAprovadas: Yup.number().required('Campo obrigatório'),
-  observacao: Yup.string().required('Campo obrigatório'),
+  observacao: Yup.string().notRequired(),
   valorAprovado: Yup.number().required('Campo obrigatório'),
 });
 

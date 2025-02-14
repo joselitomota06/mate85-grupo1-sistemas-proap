@@ -9,6 +9,10 @@ export interface ExtraSolicitationFormValues
 
 export const extraSolicitantDataSchema = Yup.object({
   titulo: Yup.string().required('Campo obrigatório'),
+  valorSolicitado: Yup.number()
+    .min(0, 'Insira um valor válido')
+    .defined()
+    .required('Campo obrigatório'),
   justificativa: Yup.string()
     .required('Campo obrigatório')
     .max(255, 'A justificativa não pode conter mais que 255 caracteres.'),

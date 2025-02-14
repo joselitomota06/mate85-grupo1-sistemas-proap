@@ -31,7 +31,10 @@ export default function AcceptanceFormContainer() {
             href="https://pgcomp.ufba.br/normas"
             target="_blank"
             rel="noopener"
-            sx={{ color: 'inherit', fontWeight: 'bold' }}
+            sx={{
+              color: 'black',
+              fontWeight: 'bold',
+            }}
           >
             site da PGCOMP
           </Link>

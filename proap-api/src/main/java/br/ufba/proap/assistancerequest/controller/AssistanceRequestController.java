@@ -191,10 +191,14 @@ public class AssistanceRequestController {
 			if (existingInstance == null) {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 			}
-			if (existingInstance.getUser().getEmail() != currentUser.getEmail()
-					&& !currentUser.getPerfil().hasPermission("APPROVE_REQUEST")) {
+			boolean isNotOwner = !existingInstance.getUser().getEmail().equals(currentUser.getEmail());
+			boolean cannotApprove = !currentUser.getPerfil().hasPermission("APPROVE_REQUEST");
+			boolean isNotPending = existingInstance.getSituacao() != 0;
+
+			if ((isNotOwner && cannotApprove) || (isNotPending && cannotApprove)) {
 				return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 			}
+
 			AssistanceRequest updatedAssistanceRequest = assistanceRequest.toEntity();
 			updatedAssistanceRequest.setId(existingInstance.getId());
 			updatedAssistanceRequest.setUser(existingInstance.getUser());
@@ -227,13 +231,13 @@ public class AssistanceRequestController {
 		}
 
 		try {
-			assistancePersisted.get().setAutomaticDecText(" ");
 			assistancePersisted.get().setSituacao(assistanceRequest.getSituacao());
 			assistancePersisted.get().setNumeroAta(assistanceRequest.getNumeroAta());
 			assistancePersisted.get().setDataAprovacao(assistanceRequest.getDataAprovacao());
 			assistancePersisted.get().setNumeroDiariasAprovadas(assistanceRequest.getNumeroDiariasAprovadas());
 			assistancePersisted.get().setValorAprovado(assistanceRequest.getValorAprovado());
 			assistancePersisted.get().setObservacao(assistanceRequest.getObservacao());
+			assistancePersisted.get().setAutomaticDecText();
 			return ResponseEntity.ok().body(service.save(assistancePersisted.get()));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -247,7 +251,7 @@ public class AssistanceRequestController {
 		User currentUser = serviceUser.getLoggedUser();
 
 		if (currentUser == null)
-			return ResponseEntity.badRequest().build();
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
 		try {
 			Optional<AssistanceRequest> assistanceReques = service.findById(id);

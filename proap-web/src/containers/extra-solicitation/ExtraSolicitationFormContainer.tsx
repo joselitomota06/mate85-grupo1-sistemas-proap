@@ -10,7 +10,7 @@ import ExtraSolicitantDataContainer from './steps/ExtraSolicitantDataContainer';
 import {
   ExtraSolicitationFormValues,
   extraSolicitantDataSchema,
-} from './schema';
+} from './ExtraSolicitationFormSchema';
 import { confirmationDataFormSchema } from '../solicitation/SolicitationFormSchema';
 
 interface ExtraSolicitationFormContainerProps {

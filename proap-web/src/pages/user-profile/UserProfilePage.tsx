@@ -11,7 +11,7 @@ import {
   updateUserProfile,
 } from '../../services/authService';
 import { User } from '../../types';
-import { Box, Container, Paper, Typography } from '@mui/material';
+import { Box, Container, Fade, Paper, Typography } from '@mui/material';
 import UserProfileFormContainer from '../../containers/user-profile/UserProfileFormContainer';
 import Toast from '../../helpers/notification';
 import ChangePasswordContainer from '../../containers/change-password/ChangePasswordContainer';
@@ -94,18 +94,22 @@ export default function UserProfilePage() {
       <Typography variant="h4" color="primary" fontWeight="bold" paddingTop={4}>
         Informações do Usuário
       </Typography>
-      <Paper elevation={3} style={{ padding: '2rem', marginTop: '2rem' }}>
-        <UserProfileFormContainer
-          initialValues={currentUser}
-          onSubmit={handleSubmit}
-        />
-      </Paper>
+      <Fade in timeout={500}>
+        <Paper elevation={3} style={{ padding: '2rem', marginTop: '2rem' }}>
+          <UserProfileFormContainer
+            initialValues={currentUser}
+            onSubmit={handleSubmit}
+          />
+        </Paper>
+      </Fade>
       <Typography variant="h4" color="primary" fontWeight="bold" paddingTop={4}>
         Alterar Senha
       </Typography>
-      <Paper elevation={3} style={{ padding: '2rem', marginTop: '2rem' }}>
-        <ChangePasswordContainer onSubmit={handleChangePasswordSubmit} />
-      </Paper>
+      <Fade in timeout={500}>
+        <Paper elevation={3} style={{ padding: '2rem', marginTop: '2rem' }}>
+          <ChangePasswordContainer onSubmit={handleChangePasswordSubmit} />
+        </Paper>
+      </Fade>
     </Container>
   );
 }

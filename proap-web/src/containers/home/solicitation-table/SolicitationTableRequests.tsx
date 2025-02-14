@@ -5,6 +5,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -19,7 +20,16 @@ import { IRootState, useAppDispatch } from '../../../store';
 
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import Visibility from '@mui/icons-material/Visibility';
-import { CheckCircle } from '@mui/icons-material';
+import {
+  Article,
+  ArticleOutlined,
+  AssignmentOutlined,
+  CheckCircle,
+  Description,
+  DescriptionTwoTone,
+  FindInPage,
+  OpenInBrowser,
+} from '@mui/icons-material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -43,11 +53,19 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 import usePrevious from '../../../helpers/usePrevious';
 import useHasPermission from '../../../hooks/auth/useHasPermission';
+import SolicitationDetailsDialog, {
+  SolicitationDetailsDialogProps,
+} from '../request-dialog/SolicitationDetailsDialog';
+import useSolicitation from '../../../hooks/solicitation/useSolicitation';
+import SolicitationViewContainer from '../../solicitation/view/SolicitationViewContainer';
+import SolicitationViewDialog from '../request-dialog/SolicitationViewDialog';
 
 export default function SolicitationTableRequests() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const userCanViewAllRequests = useHasPermission('VIEW_ALL_REQUESTS');
+  const userCanApproveRequests = useHasPermission('APPROVE_REQUEST');
+  const currentUser = useAuth();
 
   //#region table data
   // TODO : Não usar mais o slice já que request e extra request agora estão em abas separadas
@@ -96,31 +114,67 @@ export default function SolicitationTableRequests() {
       toast.success('Solicitação removida com sucesso');
     });
   };
-
-  const [open, setOpen] = React.useState(false);
+  const [openViewSolicitation, setOpenViewSolicitation] = React.useState(false);
+  const [solicitationValues, setSolicitationValues] = React.useState<any>({});
+  const [selectedSolicitationId, setSelectedSolicitationId] = useState<
+    number | null
+  >(null);
+  const [openResume, setOpenResume] = React.useState(false);
   const [solicitationId, setSolicitationId] = React.useState(0);
+  const [openTextModal, setOpenTextModal] = React.useState(false);
+  const [textDialog, setTextDialog] =
+    React.useState<SolicitationDetailsDialogProps>({
+      nomeSolicitante: '',
+      solicitanteDocente: false,
+      valorTotal: 0,
+      variacaoCambial: 0,
+      valorDiarias: 0,
+      nomeEvento: '',
+      tituloPublicacao: '',
+      isDolar: false,
+      qualisEvento: '',
+      cidade: '',
+      pais: '',
+      dataInicio: '',
+      dataFim: '',
+      situacao: 0,
+      observacoes: '',
+    });
 
   const handleClickOpenModal = (id: number, isExtra: boolean = false) => {
     setSolicitationId(id);
-    setOpen(true);
+    setOpenResume(true);
   };
 
-  const handleClickTextOpenModal = (texto: string) => {
-    if (texto == null) {
-      var texto =
-        'Texto de solicitação ' +
-        '\n' +
-        '\n' +
-        'Texto não disponível, solicitação ainda não foi avaliada. Avalie a solicitação e volte para conferir.' +
-        '\n';
-      alert(texto);
-    } else {
-      alert('Texto de solicitação ' + '\n' + '\n' + texto + '\n');
-    }
+  const handleClickTextOpenModal = (props: any) => {
+    // if (!texto) {
+    //   texto =
+    //     'Texto não disponível, solicitação ainda não foi avaliada. Avalie a solicitação e volte para conferir.';
+    // }
+    setTextDialog(props);
+    setOpenTextModal(true);
   };
+
+  const handleCloseTextModal = () => {
+    setOpenTextModal(false);
+  };
+
+  // const handleClickTextOpenModal = (texto: string) => {
+  //   if (texto == null) {
+  //     var texto =
+  //       'Texto de solicitação ' +
+  //       '\n' +
+  //       '\n' +
+  //       'Texto não disponível, solicitação ainda não foi avaliada. Avalie a solicitação e volte para conferir.' +
+  //       '\n';
+  //     alert(texto);
+  //   } else {
+  //     alert('Texto de solicitação ' + '\n' + '\n' + texto + '\n');
+  //   }
+  // };
 
   const handleClose = () => {
-    setOpen(false);
+    setOpenResume(false);
   };
 
   const handleRemoveSolicitation = () => {
@@ -217,6 +271,21 @@ export default function SolicitationTableRequests() {
     );
   }, [currentPageAssistance, size, selectedPropToSortTable]);
 
+  useEffect(() => {
+    if (selectedSolicitationId !== null) {
+      setOpenViewSolicitation(true);
+    }
+  }, [selectedSolicitationId]);
+
+  function handleClickViewSolicitation(id: number): void {
+    navigate(`/solicitation/view/${id}`);
+  }
+
+  function handleCloseViewSolicitation() {
+    setSelectedSolicitationId(null);
+    setOpenViewSolicitation(false);
+  }
+
   return (
     <>
       <TableContainer sx={{ maxHeight: '500px' }}>
@@ -243,8 +312,8 @@ export default function SolicitationTableRequests() {
               </TableCell>
               <TableCell align="center">
                 <TableCellHeader
-                  text="Valor da Inscrição"
-                  sortBy="valorInscricao"
+                  text="Valor total da solicitação"
+                  sortBy="valorTotal"
                 ></TableCellHeader>
               </TableCell>
               <TableCell align="center">
@@ -278,12 +347,24 @@ export default function SolicitationTableRequests() {
                 ({
                   id,
                   user,
-                  valorInscricao,
+                  valorTotal,
                   createdAt,
                   situacao,
                   valorAprovado,
                   automaticDecText,
                   dataAprovacao,
+                  solicitanteDocente,
+                  tituloPublicacao,
+                  valorDiaria,
+                  cotacaoMoeda,
+                  nomeEvento,
+                  isDolar,
+                  qualis,
+                  cidade,
+                  pais,
+                  dataInicio,
+                  dataFim,
+                  observacao,
                 }) => (
                   <TableRow key={id}>
                     <TableCell align="center">{createdAt}</TableCell>
@@ -310,12 +391,12 @@ export default function SolicitationTableRequests() {
                     {situacao === 0 && (
                       <TableCell
                         align="center"
-                        style={{ backgroundColor: 'gray' }}
+                        style={{ backgroundColor: 'yellow' }}
                       >
                         Pendente de avaliação
                       </TableCell>
                     )}
-                    <TableCell align="center">R$ {valorInscricao}</TableCell>
+                    <TableCell align="center">R$ {valorTotal}</TableCell>
                     {valorAprovado === null && (
                       <TableCell align="center">-</TableCell>
                     )}
@@ -334,30 +415,67 @@ export default function SolicitationTableRequests() {
 
                     <TableCell align="center">
                       <Box>
-                        {userCanViewAllRequests && (
-                          <>
+                        <>
+                          {userCanViewAllRequests && (
+                            <Tooltip title="Ver resumo da Solicitação">
+                              <IconButton
+                                onClick={() =>
+                                  handleClickTextOpenModal({
+                                    nomeSolicitante: user.name,
+                                    solicitanteDocente: solicitanteDocente,
+                                    valorTotal: valorTotal,
+                                    valorDiarias: valorDiaria,
+                                    variacaoCambial: cotacaoMoeda,
+                                    nomeEvento: nomeEvento,
+                                    tituloPublicacao: tituloPublicacao,
+                                    isDolar: isDolar,
+                                    qualisEvento: qualis,
+                                    cidade: cidade,
+                                    pais: pais,
+                                    dataInicio: dataInicio,
+                                    dataFim: dataFim,
+                                    situacao: situacao,
+                                    observacoes: observacao,
+                                  })
+                                }
+                              >
+                                <Visibility />
+                              </IconButton>
+                            </Tooltip>
+                          )}
+                          <Tooltip title="Ver Detalhes da Solicitação">
                             <IconButton
-                              onClick={() =>
-                                handleClickTextOpenModal(automaticDecText)
-                              }
+                              onClick={() => handleClickViewSolicitation(id!)}
                             >
-                              <Visibility />
+                              <Description />
                             </IconButton>
+                          </Tooltip>
+                          {userCanApproveRequests && (
+                            <Tooltip title="Revisar Solicitação">
+                              <IconButton
+                                onClick={() => handleClickReviewRequest(id!)}
+                              >
+                                <CheckCircle />
+                              </IconButton>
+                            </Tooltip>
+                          )}
+                        </>
+
+                        {(situacao == 0 || userCanApproveRequests) && (
+                          <Tooltip title="Editar Solicitação">
                             <IconButton
-                              onClick={() => handleClickReviewRequest(id!)}
+                              onClick={() => handleClickEditRequest(id!)}
                             >
-                              <CheckCircle />
+                              <ModeEditIcon />
                             </IconButton>
-                          </>
+                          </Tooltip>
                         )}
 
-                        <IconButton onClick={() => handleClickEditRequest(id!)}>
-                          <ModeEditIcon />
-                        </IconButton>
-
-                        <IconButton onClick={() => handleClickOpenModal(id!)}>
-                          <DeleteIcon />
-                        </IconButton>
+                        <Tooltip title="Excluir Solicitação">
+                          <IconButton onClick={() => handleClickOpenModal(id!)}>
+                            <DeleteIcon />
+                          </IconButton>
+                        </Tooltip>
                       </Box>
                     </TableCell>
                   </TableRow>
@@ -387,7 +505,7 @@ export default function SolicitationTableRequests() {
       </div>
 
       <Dialog
-        open={open}
+        open={openResume}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
@@ -407,6 +525,26 @@ export default function SolicitationTableRequests() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <Dialog
+        open={false}
+        onClose={handleCloseTextModal}
+        aria-labelledby="text-dialog-title"
+        aria-describedby="text-dialog-description"
+      >
+        <DialogTitle id="text-dialog-title">Texto da Solicitação</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="text-dialog-description">{}</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseTextModal}>Fechar</Button>
+        </DialogActions>
+      </Dialog>
+      <SolicitationDetailsDialog
+        open={openTextModal}
+        onClose={handleCloseTextModal}
+        solicitationData={{ ...textDialog }}
+      />
     </>
   );
 }

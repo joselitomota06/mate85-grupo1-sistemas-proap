@@ -12,6 +12,7 @@ import {
 
 import NavigationWrapper from '../navigation/NavigationWrapper';
 import UserProfilePage from '../../pages/user-profile/UserProfilePage';
+import ViewSolicitationPage from '../../pages/view-solicitation/ViewSolicitationPage';
 
 export default function PrivateRoutes() {
   return (
@@ -34,6 +35,10 @@ export default function PrivateRoutes() {
         <Route
           path="/solicitation/review/:id"
           element={<ReviewSolicitationPage />}
+        />
+        <Route
+          path="/solicitation/view/:id"
+          element={<ViewSolicitationPage />}
         />
         <Route path="/users" element={<UsersPage />} />
         <Route path="/user-profile" element={<UserProfilePage />} />
