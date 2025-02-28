@@ -119,9 +119,13 @@ public class UserService implements UserDetailsService {
 		if (currentPassword.equals(newPassword)) {
 			throw new ValidationException("A nova senha não pode ser igual a senha atual");
 		}
-		loggedUser.setPassword(passwordEncoder.encode(newPassword));
-		userRepository.save(loggedUser);
+		this.updatePassword(loggedUser, newPassword);
 
+	}
+
+	public void updatePassword(User user, String password) {
+		user.setPassword(passwordEncoder.encode(password));
+		userRepository.save(user);
 	}
 
 }

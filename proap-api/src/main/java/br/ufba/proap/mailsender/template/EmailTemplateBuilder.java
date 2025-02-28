@@ -7,10 +7,10 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 @Service
-public class EmailTemplateService {
+public class EmailTemplateBuilder {
     private final TemplateEngine templateEngine;
 
-    public EmailTemplateService(TemplateEngine templateEngine) {
+    public EmailTemplateBuilder(TemplateEngine templateEngine) {
         this.templateEngine = templateEngine;
     }
 
