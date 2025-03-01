@@ -70,7 +70,6 @@ public class PasswordResetTokenService {
     }
 
     public Boolean isPasswordResetTokenValid(String token) {
-        System.out.println("Validating token " + token);
         Optional<PasswordResetToken> tokenOpt = tokenRepository.findByToken(token);
         if (tokenOpt.isEmpty()) {
             throw new NotFoundException("Token not found");

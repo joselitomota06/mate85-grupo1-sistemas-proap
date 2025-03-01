@@ -85,17 +85,6 @@ public class UserController {
 		}
 	}
 
-	@PutMapping("/forgot")
-	public ResponseEntity<String> updateCustomerContacts(@RequestBody UpdatePasswordDTO up) {
-		try {
-			service.updateCustomerContacts(up);
-			return ResponseEntity.ok().body("Senha alterada com sucesso!");
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-			return ResponseEntity.ok().body("Usuário Não encontrado");
-		}
-	}
-
 	@PutMapping("/set-admin/{email}")
 	public ResponseEntity<String> setAdminUser(@PathVariable String email) {
 		try {

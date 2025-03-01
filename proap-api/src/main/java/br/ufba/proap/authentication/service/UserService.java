@@ -94,19 +94,6 @@ public class UserService implements UserDetailsService {
 		return userRepository.findByEmail(email);
 	}
 
-	public User updateCustomerContacts(UpdatePasswordDTO up) throws IllegalArgumentException {
-		User myCustomer = userRepository.findByEmailAndCPF(up.getEmail(), up.getCpf());
-
-		if (myCustomer == null)
-			throw new IllegalArgumentException("Algum parâmetro informado está incorreto. Favor verificar.");
-
-		if (up.getPassword() == null)
-			throw new IllegalArgumentException("Algum parâmetro informado está incorreto. Favor verificar.");
-
-		myCustomer.setPassword(passwordEncoder.encode(up.getPassword()));
-		return userRepository.save(myCustomer);
-	}
-
 	public void remove(User user) {
 		userRepository.delete(user);
 	}

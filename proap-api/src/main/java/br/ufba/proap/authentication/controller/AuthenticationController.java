@@ -59,17 +59,35 @@ public class AuthenticationController {
 		}
 	}
 
-	@PostMapping("/reset-password/confirm")
+	@PostMapping("/reset-password/validate")
 	public ResponseEntity<StatusResponseDTO> validateToken(@RequestParam @NotBlank String token) {
 		try {
 			Boolean validatedStatus = passwordResetTokenService.isPasswordResetTokenValid(token);
 			if (!validatedStatus) {
-				return ResponseEntity.ok().body(new StatusResponseDTO("Erro", "Token inválido"));
+				return ResponseEntity.badRequest().body(new StatusResponseDTO("Erro", "Token inválido"));
 			}
 			return ResponseEntity.ok().body(new StatusResponseDTO("Sucesso", "Token válido"));
 		} catch (NotFoundException e) {
 			return ResponseEntity.badRequest().body(new StatusResponseDTO("Erro", e.getMessage()));
 
+		}
+	}
+
+	@PostMapping("/reset-password/confirm")
+	public ResponseEntity<StatusResponseDTO> recoverPassword(@NotBlank @RequestParam String token,
+			@NotBlank @RequestBody String newPassword) {
+		try {
+			Boolean validatedStatus = passwordResetTokenService.isPasswordResetTokenValid(token);
+			if (!validatedStatus) {
+				return ResponseEntity.badRequest().body(new StatusResponseDTO("Erro", "Token inválido"));
+			}
+			passwordResetTokenService.updatePassword(token, newPassword);
+
+			// TODO: Implementar apagar token de recuperação do usuário após alteração da
+			// senha
+			return ResponseEntity.ok().body(new StatusResponseDTO("Sucesso", "Senha alterada com sucesso"));
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(new StatusResponseDTO("Erro", e.getMessage()));
 		}
 	}
 
