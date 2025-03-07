@@ -1,4 +1,4 @@
-package br.ufba.proap.authentication.controller;
+package br.ufba.proap.authentication.service;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -9,7 +9,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import br.ufba.proap.authentication.domain.User;
 import br.ufba.proap.authentication.repository.UserRepository;
-import br.ufba.proap.authentication.service.PasswordResetTokenService;
 
 @SpringBootTest
 public class PasswordResetTest {
