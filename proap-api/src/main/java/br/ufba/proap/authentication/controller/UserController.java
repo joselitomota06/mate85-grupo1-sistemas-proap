@@ -21,7 +21,6 @@ import br.ufba.proap.authentication.domain.Perfil;
 import br.ufba.proap.authentication.domain.User;
 import br.ufba.proap.authentication.domain.dto.ChangePasswordDTO;
 import br.ufba.proap.authentication.domain.dto.StatusResponseDTO;
-import br.ufba.proap.authentication.domain.dto.UpdatePasswordDTO;
 import br.ufba.proap.authentication.domain.dto.UserResponseDTO;
 import br.ufba.proap.authentication.domain.dto.UserUpdateDTO;
 import br.ufba.proap.authentication.service.PerfilService;

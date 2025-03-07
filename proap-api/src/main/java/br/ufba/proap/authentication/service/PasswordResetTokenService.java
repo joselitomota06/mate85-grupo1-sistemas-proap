@@ -35,7 +35,7 @@ public class PasswordResetTokenService {
         return UUID.randomUUID().toString();
     }
 
-    public void createResetToken(String email) {
+    public String createResetToken(String email) {
         Optional<User> userOpt = userService.findByEmail(email);
         if (userOpt.isEmpty()) {
             throw new NotFoundException("User not found");
@@ -65,8 +65,12 @@ public class PasswordResetTokenService {
                 };
             }
         }
-        eventPublisher.publishEvent(new PasswordResetTokenEvent(email, token));
+        return token;
+    }
 
+    public void sendResetToken(String email) {
+        String token = createResetToken(email);
+        eventPublisher.publishEvent(new PasswordResetTokenEvent(email, token));
     }
 
     public Boolean isPasswordResetTokenValid(String token) {
@@ -87,6 +91,19 @@ public class PasswordResetTokenService {
             userService.updatePassword(user, newPassword);
         } catch (DataAccessException e) {
             throw new DataAccessException("Error updating password") {
+            };
+        }
+    }
+
+    public void deleteToken(String token) {
+        Optional<PasswordResetToken> tokenOpt = tokenRepository.findByToken(token);
+        if (tokenOpt.isEmpty()) {
+            throw new NotFoundException("Token not found");
+        }
+        try {
+            tokenRepository.delete(tokenOpt.get());
+        } catch (DataAccessException e) {
+            throw new DataAccessException("Error deleting token") {
             };
         }
     }

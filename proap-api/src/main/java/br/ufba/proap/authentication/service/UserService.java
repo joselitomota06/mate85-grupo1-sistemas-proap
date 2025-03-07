@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import br.ufba.proap.authentication.domain.Perfil;
 import br.ufba.proap.authentication.domain.User;
-import br.ufba.proap.authentication.domain.dto.UpdatePasswordDTO;
 import br.ufba.proap.authentication.domain.dto.UserUpdateDTO;
 import br.ufba.proap.authentication.repository.UserRepository;
 import jakarta.validation.ValidationException;
@@ -112,7 +111,7 @@ public class UserService implements UserDetailsService {
 
 	public void updatePassword(User user, String password) {
 		user.setPassword(passwordEncoder.encode(password));
-		userRepository.save(user);
+		userRepository.saveAndFlush(user);
 	}
 
 }

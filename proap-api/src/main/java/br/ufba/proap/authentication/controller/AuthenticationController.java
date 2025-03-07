@@ -3,7 +3,10 @@ package br.ufba.proap.authentication.controller;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.ws.rs.NotFoundException;
+
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -52,7 +55,7 @@ public class AuthenticationController {
 	public ResponseEntity<StatusResponseDTO> resetPassword(
 			@RequestParam @Email(message = "Email inválido") String email) {
 		try {
-			passwordResetTokenService.createResetToken(email);
+			passwordResetTokenService.sendResetToken(email);
 			return ResponseEntity.ok().body(new StatusResponseDTO("Sucesso", "Token enviado com sucesso"));
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body(new StatusResponseDTO("erro", e.getMessage()));
@@ -75,16 +78,15 @@ public class AuthenticationController {
 
 	@PostMapping("/reset-password/confirm")
 	public ResponseEntity<StatusResponseDTO> recoverPassword(@NotBlank @RequestParam String token,
-			@NotBlank @RequestBody String newPassword) {
+			@NotEmpty @RequestBody Map<String, String> body) {
+		String newPassword = body.get("newPassword");
 		try {
 			Boolean validatedStatus = passwordResetTokenService.isPasswordResetTokenValid(token);
 			if (!validatedStatus) {
 				return ResponseEntity.badRequest().body(new StatusResponseDTO("Erro", "Token inválido"));
 			}
 			passwordResetTokenService.updatePassword(token, newPassword);
-
-			// TODO: Implementar apagar token de recuperação do usuário após alteração da
-			// senha
+			passwordResetTokenService.deleteToken(token);
 			return ResponseEntity.ok().body(new StatusResponseDTO("Sucesso", "Senha alterada com sucesso"));
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body(new StatusResponseDTO("Erro", e.getMessage()));
