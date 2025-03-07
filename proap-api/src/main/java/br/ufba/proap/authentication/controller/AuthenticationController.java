@@ -1,6 +1,12 @@
 package br.ufba.proap.authentication.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.ws.rs.NotFoundException;
+
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,9 +17,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.ufba.proap.authentication.domain.dto.LoginDTO;
+import br.ufba.proap.authentication.domain.dto.StatusResponseDTO;
+import br.ufba.proap.authentication.service.PasswordResetTokenService;
 import br.ufba.proap.security.JwtAuthenticationResponse;
 import br.ufba.proap.security.JwtTokenProvider;
 
@@ -27,6 +36,9 @@ public class AuthenticationController {
 	@Autowired
 	private JwtTokenProvider tokenProvider;
 
+	@Autowired
+	private PasswordResetTokenService passwordResetTokenService;
+
 	@PostMapping("/signin")
 	public ResponseEntity<JwtAuthenticationResponse> authenticateUser(@Valid @RequestBody LoginDTO loginInfo) {
 		Authentication authentication = authenticationManager
@@ -37,6 +49,48 @@ public class AuthenticationController {
 		String jwt = tokenProvider.generateToken(authentication);
 
 		return ResponseEntity.ok().body(new JwtAuthenticationResponse(jwt));
+	}
+
+	@PostMapping("/reset-password")
+	public ResponseEntity<StatusResponseDTO> resetPassword(
+			@RequestParam @Email(message = "Email inválido") String email) {
+		try {
+			passwordResetTokenService.sendResetToken(email);
+			return ResponseEntity.ok().body(new StatusResponseDTO("Sucesso", "Token enviado com sucesso"));
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(new StatusResponseDTO("erro", e.getMessage()));
+		}
+	}
+
+	@PostMapping("/reset-password/validate")
+	public ResponseEntity<StatusResponseDTO> validateToken(@RequestParam @NotBlank String token) {
+		try {
+			Boolean validatedStatus = passwordResetTokenService.isPasswordResetTokenValid(token);
+			if (!validatedStatus) {
+				return ResponseEntity.badRequest().body(new StatusResponseDTO("Erro", "Token inválido"));
+			}
+			return ResponseEntity.ok().body(new StatusResponseDTO("Sucesso", "Token válido"));
+		} catch (NotFoundException e) {
+			return ResponseEntity.badRequest().body(new StatusResponseDTO("Erro", e.getMessage()));
+
+		}
+	}
+
+	@PostMapping("/reset-password/confirm")
+	public ResponseEntity<StatusResponseDTO> recoverPassword(@NotBlank @RequestParam String token,
+			@NotEmpty @RequestBody Map<String, String> body) {
+		String newPassword = body.get("newPassword");
+		try {
+			Boolean validatedStatus = passwordResetTokenService.isPasswordResetTokenValid(token);
+			if (!validatedStatus) {
+				return ResponseEntity.badRequest().body(new StatusResponseDTO("Erro", "Token inválido"));
+			}
+			passwordResetTokenService.updatePassword(token, newPassword);
+			passwordResetTokenService.deleteToken(token);
+			return ResponseEntity.ok().body(new StatusResponseDTO("Sucesso", "Senha alterada com sucesso"));
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(new StatusResponseDTO("Erro", e.getMessage()));
+		}
 	}
 
 }

@@ -21,7 +21,6 @@ import br.ufba.proap.authentication.domain.Perfil;
 import br.ufba.proap.authentication.domain.User;
 import br.ufba.proap.authentication.domain.dto.ChangePasswordDTO;
 import br.ufba.proap.authentication.domain.dto.StatusResponseDTO;
-import br.ufba.proap.authentication.domain.dto.UpdatePasswordDTO;
 import br.ufba.proap.authentication.domain.dto.UserResponseDTO;
 import br.ufba.proap.authentication.domain.dto.UserUpdateDTO;
 import br.ufba.proap.authentication.service.PerfilService;
@@ -82,17 +81,6 @@ public class UserController {
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-		}
-	}
-
-	@PutMapping("/forgot")
-	public ResponseEntity<String> updateCustomerContacts(@RequestBody UpdatePasswordDTO up) {
-		try {
-			service.updateCustomerContacts(up);
-			return ResponseEntity.ok().body("Senha alterada com sucesso!");
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-			return ResponseEntity.ok().body("Usuário Não encontrado");
 		}
 	}
 

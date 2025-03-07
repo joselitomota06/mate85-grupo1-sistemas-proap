@@ -5,20 +5,23 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
+import org.springframework.http.converter.HttpMessageConversionException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleGeneralException(Exception ex) {
+    public ResponseEntity<Map<String, String>> handleGeneralException(Exception ex) {
         ex.printStackTrace(); // Para log de depuração
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Ocorreu um erro inesperado");
+        Map<String, String> errors = new HashMap<>();
+        errors.put("message", "Erro interno no servidor");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errors);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -27,6 +30,30 @@ public class GlobalExceptionHandler {
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
             errors.put(error.getField(), error.getDefaultMessage());
         }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
+
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<Map<String, String>> handleValidationExceptions(ResponseStatusException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("status", "Error");
+        errors.put("message", ex.getReason());
+        return ResponseEntity.status(ex.getStatusCode()).body(errors);
+    }
+
+    @ExceptionHandler(HttpMessageConversionException.class)
+    public ResponseEntity<Map<String, String>> handleValidationExceptions(HttpMessageConversionException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("status", "Error");
+        errors.put("message", "Ocorreu um erro na requisição");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<Map<String, String>> handleValidationExceptions(AuthenticationException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("status", "Error");
+        errors.put("message", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 }

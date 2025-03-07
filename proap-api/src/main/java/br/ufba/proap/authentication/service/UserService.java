@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import br.ufba.proap.authentication.domain.Perfil;
 import br.ufba.proap.authentication.domain.User;
-import br.ufba.proap.authentication.domain.dto.UpdatePasswordDTO;
 import br.ufba.proap.authentication.domain.dto.UserUpdateDTO;
 import br.ufba.proap.authentication.repository.UserRepository;
 import jakarta.validation.ValidationException;
@@ -94,19 +93,6 @@ public class UserService implements UserDetailsService {
 		return userRepository.findByEmail(email);
 	}
 
-	public User updateCustomerContacts(UpdatePasswordDTO up) throws IllegalArgumentException {
-		User myCustomer = userRepository.findByEmailAndCPF(up.getEmail(), up.getCpf());
-
-		if (myCustomer == null)
-			throw new IllegalArgumentException("Algum parâmetro informado está incorreto. Favor verificar.");
-
-		if (up.getPassword() == null)
-			throw new IllegalArgumentException("Algum parâmetro informado está incorreto. Favor verificar.");
-
-		myCustomer.setPassword(passwordEncoder.encode(up.getPassword()));
-		return userRepository.save(myCustomer);
-	}
-
 	public void remove(User user) {
 		userRepository.delete(user);
 	}
@@ -119,9 +105,13 @@ public class UserService implements UserDetailsService {
 		if (currentPassword.equals(newPassword)) {
 			throw new ValidationException("A nova senha não pode ser igual a senha atual");
 		}
-		loggedUser.setPassword(passwordEncoder.encode(newPassword));
-		userRepository.save(loggedUser);
+		this.updatePassword(loggedUser, newPassword);
 
+	}
+
+	public void updatePassword(User user, String password) {
+		user.setPassword(passwordEncoder.encode(password));
+		userRepository.saveAndFlush(user);
 	}
 
 }
