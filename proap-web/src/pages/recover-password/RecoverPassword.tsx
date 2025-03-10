@@ -1,14 +1,26 @@
-import { Grid, Paper, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import RecoverPasswordFormContainer from '../../containers/recover-password/RecoverPasswordContainer';
 import {
-  RecoverPasswordGrid,
+  RecoverPasswordBox,
   RecoverPasswordPaperContainer,
 } from './RecoverPassword.style';
 
 export default function RecoverPassword() {
   return (
-    <RecoverPasswordGrid container justifyContent="center" alignItems="center">
-      <Grid item xs={10} md={4}>
+    <RecoverPasswordBox
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+      }}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
         <RecoverPasswordPaperContainer elevation={2}>
           <Typography
             color="primary"
@@ -16,11 +28,11 @@ export default function RecoverPassword() {
             variant="h4"
             fontWeight="bold"
           >
-            Proap
+            Recuperar Senha
           </Typography>
           <RecoverPasswordFormContainer />
         </RecoverPasswordPaperContainer>
-      </Grid>
-    </RecoverPasswordGrid>
+      </Box>
+    </RecoverPasswordBox>
   );
 }
