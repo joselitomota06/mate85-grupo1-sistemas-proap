@@ -13,7 +13,7 @@ export default function LoginPage() {
             variant="h4"
             fontWeight="bold"
           >
-            Proap
+            Fazer Login
           </Typography>
           <LoginFormContainer />
         </LoginPaperContainer>

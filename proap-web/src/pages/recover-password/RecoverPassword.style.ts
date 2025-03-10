@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { Grid, Paper } from '@mui/material';
+import { Box, Paper } from '@mui/material';
 
-export const RecoverPasswordGrid = styled(Grid)`
+export const RecoverPasswordBox = styled(Box)`
   height: 100%;
 `;
 

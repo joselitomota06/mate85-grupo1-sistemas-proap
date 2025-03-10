@@ -1,13 +1,11 @@
-import { CircularProgress, Grid, TextField } from '@mui/material';
+import { Box, TextField } from '@mui/material';
 import { Field, Form, Formik, FormikHelpers } from 'formik';
-import { useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useCallback, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { recoverPassword } from '../../services/recoverPasswordService';
-import { useAppDispatch } from '../../store';
 import {
   RecoverPasswordButton,
   RecoverPasswordCircularProgress,
-  PasswordRecoveryTypography,
   RecoverPasswordLinkTypography,
 } from './RecoverPasswordContainer.style';
 import {
@@ -15,22 +13,45 @@ import {
   recoverPasswordFormSchema,
   RecoverPasswordFormValues,
 } from './RecoverPasswordSchema';
+import Toast from '../../helpers/notification';
+import SentEmailRecoverPasswordContainer from './SentEmailRecoverPasswordContainer';
+
+type EmailSentProps = {
+  email: string;
+  status: boolean;
+};
 
 export default function RecoverPasswordFormContainer() {
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
+  const [sentEmail, setSentEmail] = useState<EmailSentProps>({
+    email: '',
+    status: false,
+  });
   const handleSubmit = useCallback(
     (
       values: RecoverPasswordFormValues,
-      actions: FormikHelpers<RecoverPasswordFormValues>
+      actions: FormikHelpers<RecoverPasswordFormValues>,
     ) => {
-      return dispatch(recoverPassword(values)).then(() => navigate('/'));
+      return recoverPassword(values)
+        .then(() => {
+          setSentEmail({ email: values.email, status: true });
+        })
+        .catch((error) => {
+          Toast.error(
+            'Erro ao enviar e-mail de recuperação: ' + error.message ||
+              'Erro ao enviar e-mail de recuperação',
+          );
+        })
+        .finally(() => {
+          actions.setSubmitting(false);
+        });
     },
-    [dispatch]
+    [],
   );
 
-  return (
+  return sentEmail.status ? (
+    <SentEmailRecoverPasswordContainer email={sentEmail.email} />
+  ) : (
     <Formik
       initialValues={INITIAL_FORM_VALUES}
       validationSchema={recoverPasswordFormSchema}
@@ -39,10 +60,9 @@ export default function RecoverPasswordFormContainer() {
     >
       {({ errors, touched, isSubmitting }) => (
         <Form>
-          <Grid container direction="column" paddingTop={2} paddingBottom={2}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', pt: 2, pb: 2 }}>
             <RecoverPasswordLinkTypography>
-              Para recuperar seu acesso, preencha o e-mail e o CPF informados no
-              cadastrados.
+              Para recuperar seu acesso, informe o e-mail da sua conta.
             </RecoverPasswordLinkTypography>
             <Field
               as={TextField}
@@ -52,33 +72,7 @@ export default function RecoverPasswordFormContainer() {
               helperText={touched.email && errors.email}
               required
             />
-            <Field
-              as={TextField}
-              label="CPF"
-              name="cpf"
-              error={Boolean(touched.cpf && errors.cpf)}
-              helperText={touched.cpf && errors.cpf}
-              required
-            />
-            <Field
-              as={TextField}
-              label="Nova senha"
-              name="password"
-              type="password"
-              error={Boolean(touched.password && errors.password)}
-              helperText={touched.password && errors.password}
-              required
-            />
-            <Field
-              as={TextField}
-              label="Confirmar senha"
-              name="confirmPassword"
-              type="password"
-              error={Boolean(touched.confirmPassword && errors.confirmPassword)}
-              helperText={touched.confirmPassword && errors.confirmPassword}
-              required
-            />
-          </Grid>
+          </Box>
           <RecoverPasswordButton
             variant="contained"
             type="submit"
@@ -87,7 +81,7 @@ export default function RecoverPasswordFormContainer() {
             {isSubmitting && (
               <RecoverPasswordCircularProgress color="info" size={25} />
             )}
-            Enviar
+            Enviar e-mail de recuperação
           </RecoverPasswordButton>
         </Form>
       )}

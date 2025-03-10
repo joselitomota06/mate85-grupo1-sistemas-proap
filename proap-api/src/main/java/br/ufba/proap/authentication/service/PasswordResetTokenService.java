@@ -38,7 +38,7 @@ public class PasswordResetTokenService {
     public String createResetToken(String email) {
         Optional<User> userOpt = userService.findByEmail(email);
         if (userOpt.isEmpty()) {
-            throw new NotFoundException("User not found");
+            throw new NotFoundException("Usuário não encontrado");
         }
         User user = userOpt.get();
         String token = generateToken();
@@ -50,7 +50,7 @@ public class PasswordResetTokenService {
             try {
                 tokenRepository.save(tokenOpt.get());
             } catch (DataAccessException e) {
-                throw new DataAccessException("Error saving token") {
+                throw new DataAccessException("Erro ao salvar token") {
                 };
             }
         } else {
@@ -61,7 +61,7 @@ public class PasswordResetTokenService {
             try {
                 tokenRepository.save(passwordResetToken);
             } catch (DataAccessException e) {
-                throw new DataAccessException("Error saving token") {
+                throw new DataAccessException("Erro ao salvar token") {
                 };
             }
         }
@@ -76,11 +76,11 @@ public class PasswordResetTokenService {
     public Boolean isPasswordResetTokenValid(String token) {
         Optional<PasswordResetToken> tokenOpt = tokenRepository.findByToken(token);
         if (tokenOpt.isEmpty()) {
-            throw new NotFoundException("Token not found");
+            throw new NotFoundException("Token não encontrado");
         }
         PasswordResetToken passwordResetToken = tokenOpt.get();
         if (passwordResetToken.getExpiryDate().isBefore(LocalDateTime.now())) {
-            throw new NotFoundException("Token expired");
+            throw new NotFoundException("Token expirado");
         }
         return true;
     }
@@ -90,7 +90,7 @@ public class PasswordResetTokenService {
         try {
             userService.updatePassword(user, newPassword);
         } catch (DataAccessException e) {
-            throw new DataAccessException("Error updating password") {
+            throw new DataAccessException("Erro ao atualizar senha") {
             };
         }
     }
@@ -98,12 +98,12 @@ public class PasswordResetTokenService {
     public void deleteToken(String token) {
         Optional<PasswordResetToken> tokenOpt = tokenRepository.findByToken(token);
         if (tokenOpt.isEmpty()) {
-            throw new NotFoundException("Token not found");
+            throw new NotFoundException("Token não encontrado");
         }
         try {
             tokenRepository.delete(tokenOpt.get());
         } catch (DataAccessException e) {
-            throw new DataAccessException("Error deleting token") {
+            throw new DataAccessException("Erro ao deletar token") {
             };
         }
     }
