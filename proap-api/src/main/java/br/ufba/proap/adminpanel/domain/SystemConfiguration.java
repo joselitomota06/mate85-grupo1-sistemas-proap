@@ -73,6 +73,9 @@ public class SystemConfiguration {
     @OneToMany(mappedBy = "systemConfiguration", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UrlMapper> resourceLinks;
 
+    @OneToMany(mappedBy = "systemConfiguration", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CountryGroup> countryGroups = new ArrayList<>();
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime createdAt;
 

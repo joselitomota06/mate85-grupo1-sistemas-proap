@@ -5,6 +5,13 @@ export interface UrlMapper {
   urlTitle: string;
 }
 
+export interface CountryGroup {
+  id?: string;
+  groupName: string;
+  valueUSD: number;
+  countries: string[];
+}
+
 export interface SystemConfiguration {
   id: string;
   qualis: string[];
@@ -20,4 +27,5 @@ export interface SystemConfiguration {
   textoInformacaoValorDiaria: string;
   textoInformacaoValorPassagem: string;
   resourceLinks?: UrlMapper[];
+  countryGroups?: CountryGroup[];
 }

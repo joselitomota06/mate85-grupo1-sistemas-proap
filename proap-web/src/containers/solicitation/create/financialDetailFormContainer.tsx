@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import { InitialSolicitationFormValues } from '../SolicitationFormSchema';
 import { Field, useFormikContext } from 'formik';
@@ -14,6 +14,18 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
+  Typography,
+  Button,
+  TableBody,
+  TableCell,
+  Table,
+  TableContainer,
+  DialogContent,
+  DialogTitle,
+  Dialog,
+  TableHead,
+  TableRow,
+  DialogActions,
 } from '@mui/material';
 import Select from '@mui/material/Select';
 import {
@@ -30,6 +42,7 @@ export default function FinancialDetailFormContainer() {
   const { config } = useSysConfig();
   const { values, errors, touched, setFieldValue } =
     useFormikContext<InitialSolicitationFormValues>();
+  const [showCountryGroupsDialog, setShowCountryGroupsDialog] = useState(false);
 
   useCalculeTotal();
 
@@ -183,7 +196,7 @@ export default function FinancialDetailFormContainer() {
                 as={StyledTextField}
                 sx={{ margin: 0 }}
                 name="valorDiaria"
-                disabled={!values.isDolar}
+                disabled
                 type="number"
                 InputProps={{
                   inputProps: { min: 0, step: 0.01 },
@@ -193,7 +206,7 @@ export default function FinancialDetailFormContainer() {
               />
               <Tooltip
                 sx={{ position: 'relative' }}
-                title="Informe o valor referente a uma diária"
+                title="O valor é referente a uma diária"
               >
                 <StyledIconButton sx={{ padding: 0 }}>
                   <Info />
@@ -218,6 +231,64 @@ export default function FinancialDetailFormContainer() {
           />
         </Stack>
       )}
+
+      {values.isDolar && (
+        <FormControl
+          error={Boolean(touched.countryGroup && errors.countryGroup)}
+        >
+          <StyledFormLabel>
+            Selecione o grupo de país de destino
+          </StyledFormLabel>
+          <Box sx={{ mb: 2 }}>
+            <Alert
+              severity={values.countryGroup ? 'success' : 'error'}
+              sx={{ maxWidth: '800px', mb: 1 }}
+            >
+              <Typography variant="body2">
+                Consulte a tabela de auxílio diário no exterior para identificar
+                o grupo do país de destino
+              </Typography>
+              <Button
+                variant="text"
+                size="small"
+                onClick={() => {
+                  setShowCountryGroupsDialog(true);
+                }}
+              >
+                Ver tabela de países
+              </Button>
+            </Alert>
+          </Box>
+          <Field
+            as={Select}
+            sx={{ width: 200 }}
+            displayEmpty
+            name="countryGroup"
+            onChange={(e: any) => {
+              const selectedGroup = config.countryGroups?.find(
+                (group) => group.groupName === e.target.value,
+              );
+              if (selectedGroup) {
+                setFieldValue('valorDiaria', selectedGroup.valueUSD);
+              }
+              setFieldValue('countryGroup', e.target.value);
+            }}
+          >
+            <MenuItem value="" disabled>
+              Selecione o grupo
+            </MenuItem>
+            {config.countryGroups?.map((group) => (
+              <MenuItem key={group.groupName} value={group.groupName}>
+                Grupo {group.groupName} - ${group.valueUSD}
+              </MenuItem>
+            ))}
+          </Field>
+          {touched.countryGroup && errors.countryGroup && (
+            <FormHelperText>{errors.countryGroup}</FormHelperText>
+          )}
+        </FormControl>
+      )}
+
       {values.isDolar && (
         <Stack direction={'row'}>
           <Field
@@ -328,6 +399,48 @@ export default function FinancialDetailFormContainer() {
         }}
         required
       />
+
+      <Dialog
+        open={showCountryGroupsDialog}
+        onClose={() => setShowCountryGroupsDialog(false)}
+        maxWidth="lg"
+        fullWidth
+      >
+        <DialogTitle>Tabela de Auxílio Diário no Exterior</DialogTitle>
+        <DialogContent>
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Grupo</TableCell>
+                  <TableCell>Países</TableCell>
+                  <TableCell sx={{ minWidth: 150, textAlign: 'center' }}>
+                    Valor Diário (USD)
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {config.countryGroups?.map((group) => (
+                  <TableRow key={group.groupName}>
+                    <TableCell sx={{ textAlign: 'center' }}>
+                      {group.groupName}
+                    </TableCell>
+                    <TableCell>{group.countries.join(', ')}</TableCell>
+                    <TableCell sx={{ textAlign: 'center' }}>
+                      {group.valueUSD}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setShowCountryGroupsDialog(false)}>
+            Fechar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

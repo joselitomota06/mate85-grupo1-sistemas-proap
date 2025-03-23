@@ -12,6 +12,8 @@ import br.ufba.proap.adminpanel.domain.UrlMapper;
 import br.ufba.proap.adminpanel.domain.dto.SystemConfigurationDTO;
 import br.ufba.proap.adminpanel.domain.dto.UrlMapperDTO;
 import br.ufba.proap.adminpanel.repository.SystemConfigurationRepository;
+import br.ufba.proap.adminpanel.domain.CountryGroup;
+import br.ufba.proap.adminpanel.domain.dto.CountryGroupDTO;
 
 @Service
 public class SystemConfigurationService {
@@ -103,10 +105,9 @@ public class SystemConfigurationService {
         }
 
         if (dto.getResourceLinks() != null) {
-            // Limpar a lista atual mantendo a mesma referência
+
             config.getResourceLinks().clear();
 
-            // Adicionar os novos links à coleção existente
             for (UrlMapperDTO urlDto : dto.getResourceLinks()) {
                 UrlMapper url = new UrlMapper();
                 if (urlDto.getId() != null) {
@@ -117,6 +118,19 @@ public class SystemConfigurationService {
                 url.setUrlTitle(urlDto.getUrlTitle());
                 url.setSystemConfiguration(config);
                 config.getResourceLinks().add(url);
+            }
+        }
+
+        if (dto.getCountryGroups() != null) {
+            config.getCountryGroups().clear();
+
+            for (CountryGroupDTO groupDTO : dto.getCountryGroups()) {
+                CountryGroup group = new CountryGroup();
+                group.setGroupName(groupDTO.getGroupName());
+                group.setValueUSD(groupDTO.getValueUSD());
+                group.setCountriesList(groupDTO.getCountries());
+                group.setSystemConfiguration(config);
+                config.getCountryGroups().add(group);
             }
         }
 
@@ -168,6 +182,62 @@ public class SystemConfigurationService {
         config.setTextoInformacaoValorPassagem(
                 "As passagens serão adquiridas pelo SCDP.");
         config.setResourceLinks(new ArrayList<>());
+
+        List<CountryGroup> countryGroups = new ArrayList<>();
+
+        CountryGroup groupA = new CountryGroup();
+        groupA.setGroupName("A");
+        groupA.setValueUSD(180.0f);
+        groupA.setCountriesList(List.of("Afeganistão", "Armênia", "Bangladesh", "Belarus", "Benin", "Bolívia",
+                "Burkina Faso", "Butão", "Chile", "Comores", "República Popular Democrática da Coréia", "Costa Rica",
+                "El Salvador", "Equador", "Eslovênia", "Filipinas", "Gâmbia", "Guiana", "Guiné Bissau", "Guiné",
+                "Honduras", "Indonésia", "Irã", "Iraque", "Laos", "Líbano", "Malásia", "Maldivas", "Marrocos",
+                "Mongólia", "Myanmar", "Namíbia", "Nauru", "Nepal", "Nicarágua", "Panamá", "Paraguai",
+                "Rep. Centro Africana", "República Togolesa", "Romênia", "Samoa", "Serra Leoa", "Síria", "Somália",
+                "Sri Lanka", "Suriname", "Tadjiquistão", "Tailândia", "Timor-Leste", "Turcomenistão", "Uzbequistão",
+                "Vietnã", "Zimbábue"));
+        groupA.setSystemConfiguration(config);
+
+        CountryGroup groupB = new CountryGroup();
+        groupB.setGroupName("B");
+        groupB.setValueUSD(260.0f);
+        groupB.setCountriesList(List.of("África do Sul", "Albânia", "Andorra", "Argélia", "Argentina", "Austrália",
+                "Belize", "Bósnia-Herzegovina", "Burundi", "Cabo Verde", "Camarões", "Camboja", "Catar", "Chade",
+                "China", "Chipre", "Colômbia", "Dominica", "Egito", "Eritréia", "Estônia", "Etiópia", "Gana", "Geórgia",
+                "Guatemala", "Haiti", "Hong Kong", "Kiribati", "Letônia", "Líbia", "Macedônia", "Madagascar", "Malauí",
+                "Micronésia", "Moçambique", "Moldávia", "Níger", "Nigéria", "Nova Zelândia", "Palau",
+                "Papua Nova Guiné", "Paquistão", "Peru", "Polônia", "Quênia", "República Dominicana",
+                "República Eslovaca", "Romênia", "Ruanda", "São Tomé e Príncipe", "Senegal", "Sudão", "Tanzânia",
+                "Turcomenistão", "Turquia", "Ucrânia"));
+        groupB.setSystemConfiguration(config);
+
+        CountryGroup groupC = new CountryGroup();
+        groupC.setGroupName("C");
+        groupC.setValueUSD(310.0f);
+        groupC.setCountriesList(List.of("Antígua e Barbuda", "Arábia Saudita", "Azerbaijão", "Bahamas", "Bahrein",
+                "Barbados", "Brunei Darussalam", "Bulgária", "Canadá", "Cingapura", "Congo", "Costa do Marfim", "Cuba",
+                "Djibuti", "Emirados Árabes", "Fiji", "Gabão", "Guatemala", "Jamaica", "Jordânia", "Letônia", "Libéria",
+                "Lituânia", "Mali", "Malta", "Maurício", "Mauritânia", "México", "República Democrática do Congo",
+                "República Tcheca", "Rússia", "San Marino", "Santa Lúcia", "São Cristóvão e Nêvis",
+                "São Vicente e Granadinas", "Taiwan", "Trinidad e Tobago", "Ucrânia", "Uganda", "Zâmbia"));
+        groupC.setSystemConfiguration(config);
+
+        CountryGroup groupD = new CountryGroup();
+        groupD.setGroupName("D");
+        groupD.setValueUSD(370.0f);
+        groupD.setCountriesList(List.of("Alemanha", "Áustria", "Barbados", "Bélgica", "Canadá", "Coréia do Sul",
+                "Croácia", "Dinamarca", "Espanha", "Estados Unidos da América", "Finlândia", "França", "Granada",
+                "Grécia", "Hong Kong", "Irlanda", "Islândia", "Israel", "Itália", "Japão", "Kuaite", "Liechtenstein",
+                "Luxemburgo", "Mônaco", "Montenegro", "Noruega", "Omã", "Países Baixos", "Portugal", "Reino Unido",
+                "República Quirguiz", "Seicheles", "Sérvia", "Suazilândia", "Suécia", "Suíça", "Vanuatu"));
+        groupD.setSystemConfiguration(config);
+
+        countryGroups.add(groupA);
+        countryGroups.add(groupB);
+        countryGroups.add(groupC);
+        countryGroups.add(groupD);
+
+        config.setCountryGroups(countryGroups);
 
         return repository.save(config);
     }

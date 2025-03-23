@@ -16,6 +16,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import { useState } from 'react';
 import TextFieldWithPreview from '../../components/FormFields/TextFieldWithPreview';
+import CountryGroupField from '../../components/FormFields/CountryGroupField';
 
 interface SystemConfigFormProps {
   initialValues: SystemConfiguration;
@@ -250,6 +251,12 @@ export default function SystemConfigFormContainer(
                 resourceLinks={values.resourceLinks}
                 onAddResourceLink={handleAddResourceLink}
                 onRemoveResourceLink={handleRemoveResourceLink}
+              />
+              <Divider sx={{ my: 3 }} />
+
+              <CountryGroupField
+                groups={values.countryGroups || []}
+                onChange={(groups) => setFieldValue('countryGroups', groups)}
               />
 
               <Box>

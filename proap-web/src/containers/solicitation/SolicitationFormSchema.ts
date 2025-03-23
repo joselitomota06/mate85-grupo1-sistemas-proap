@@ -106,6 +106,11 @@ export const financialDetailFormSchema = Yup.object({
       then: () => Yup.number().required('Campo obrigatório'),
       otherwise: () => Yup.number().notRequired(),
     }),
+  countryGroup: Yup.string().when('isDolar', {
+    is: true,
+    then: () => Yup.string().required('Selecione o grupo do país'),
+    otherwise: () => Yup.string().notRequired(),
+  }),
 });
 export const confirmationDataFormSchema = Yup.object({
   // justificativa: Yup.string(),
@@ -164,6 +169,7 @@ export type InitialSolicitationFormValues = Pick<
 > & {
   file: File | null;
   aceiteFinal: boolean | undefined;
+  countryGroup?: string;
 };
 
 export const INITIAL_FORM_VALUES: InitialSolicitationFormValues = {
@@ -199,6 +205,7 @@ export const INITIAL_FORM_VALUES: InitialSolicitationFormValues = {
   aceiteFinal: false,
   justificativa: '',
   cartaAceite: null,
+  countryGroup: '',
 };
 
 export const INITIAL_REVIEW_FORM_VALUES: SolicitationFormValues = {

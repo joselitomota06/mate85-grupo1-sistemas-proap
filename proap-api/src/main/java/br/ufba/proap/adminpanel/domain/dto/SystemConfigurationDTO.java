@@ -3,6 +3,7 @@ package br.ufba.proap.adminpanel.domain.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.ufba.proap.adminpanel.domain.CountryGroup;
 import br.ufba.proap.adminpanel.domain.SystemConfiguration;
 import br.ufba.proap.adminpanel.domain.UrlMapper;
 import lombok.AllArgsConstructor;
@@ -30,6 +31,7 @@ public class SystemConfigurationDTO {
     private String textoInformacaoValorDiaria;
     private String textoInformacaoValorPassagem;
     private List<UrlMapperDTO> resourceLinks;
+    private List<CountryGroupDTO> countryGroups;
 
     public static SystemConfigurationDTO fromEntity(SystemConfiguration config) {
         if (config == null) {
@@ -47,7 +49,18 @@ public class SystemConfigurationDTO {
             }
         }
 
-        return new SystemConfigurationDTO(
+        List<CountryGroupDTO> countryGroupDTOs = new ArrayList<>();
+        if (config.getCountryGroups() != null) {
+            for (CountryGroup countryGroup : config.getCountryGroups()) {
+                countryGroupDTOs.add(new CountryGroupDTO(
+                        countryGroup.getId(),
+                        countryGroup.getGroupName(),
+                        countryGroup.getValueUSD(),
+                        countryGroup.getCountriesList()));
+            }
+        }
+
+        SystemConfigurationDTO dto = new SystemConfigurationDTO(
                 config.getId(),
                 config.getQualisList(),
                 config.getSitePgcompURL(),
@@ -61,7 +74,10 @@ public class SystemConfigurationDTO {
                 config.getTextoInformacaoCalcularQualis(),
                 config.getTextoInformacaoValorDiaria(),
                 config.getTextoInformacaoValorPassagem(),
-                resourceLinksDTO);
+                resourceLinksDTO,
+                countryGroupDTOs);
+
+        return dto;
     }
 
     public SystemConfiguration toEntity() {
@@ -91,6 +107,20 @@ public class SystemConfigurationDTO {
                 urlMappers.add(urlMapper);
             }
             config.setResourceLinks(urlMappers);
+        }
+
+        if (this.countryGroups != null) {
+            List<CountryGroup> countryGroups = new ArrayList<>();
+            for (CountryGroupDTO dto : this.countryGroups) {
+                CountryGroup countryGroup = new CountryGroup();
+                countryGroup.setId(dto.getId());
+                countryGroup.setGroupName(dto.getGroupName());
+                countryGroup.setValueUSD(dto.getValueUSD());
+                countryGroup.setCountriesList(dto.getCountries());
+                countryGroup.setSystemConfiguration(config);
+                countryGroups.add(countryGroup);
+            }
+            config.setCountryGroups(countryGroups);
         }
 
         return config;
