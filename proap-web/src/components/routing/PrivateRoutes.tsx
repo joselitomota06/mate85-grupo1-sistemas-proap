@@ -8,13 +8,17 @@ import {
   EditExtraSolicitationPage,
   ReviewSolicitationPage,
   UsersPage,
+  AdminPanelPage,
 } from '../../pages';
 
 import NavigationWrapper from '../navigation/NavigationWrapper';
 import UserProfilePage from '../../pages/user-profile/UserProfilePage';
 import ViewSolicitationPage from '../../pages/view-solicitation/ViewSolicitationPage';
+import useHasPermission from '../../hooks/auth/useHasPermission';
 
 export default function PrivateRoutes() {
+  const isAdmin = useHasPermission('ADMIN_ROLE');
+
   return (
     <NavigationWrapper>
       <Routes>
@@ -42,6 +46,7 @@ export default function PrivateRoutes() {
         />
         <Route path="/users" element={<UsersPage />} />
         <Route path="/user-profile" element={<UserProfilePage />} />
+        {isAdmin && <Route path="/admin-panel" element={<AdminPanelPage />} />}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </NavigationWrapper>

@@ -11,6 +11,9 @@ import {
   Stack,
   Alert,
   Link,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
 } from '@mui/material';
 import Select from '@mui/material/Select';
 import {
@@ -20,8 +23,11 @@ import {
 } from '../SolicitationFormContainer.style';
 import { Info } from '@mui/icons-material';
 import useCalculeTotal from '../../../hooks/solicitation/useCalculeTotal';
+import { useSysConfig } from '../../../hooks/admin/useSysConfig';
+import TextPreviewAlert from '../../../components/FormFields/TextPreviewAlert';
 
 export default function FinancialDetailFormContainer() {
+  const { config } = useSysConfig();
   const { values, errors, touched, setFieldValue } =
     useFormikContext<InitialSolicitationFormValues>();
 
@@ -29,7 +35,7 @@ export default function FinancialDetailFormContainer() {
 
   useEffect(() => {
     if (!values.isDolar) {
-      setFieldValue('valorDiaria', 320);
+      setFieldValue('valorDiaria', config.valorDiariaBRL);
     }
 
     if (values.quantidadeDiariasSolicitadas === 0) {
@@ -70,10 +76,13 @@ export default function FinancialDetailFormContainer() {
           </StyledIconButton>
         </Tooltip>
       </Stack>
-      <Alert severity="warning" sx={{ maxWidth: '800px' }}>
-        {`O PROAP não reembolsa taxa de filiação, a não ser que 
-        seja uma opção obrigatória associada à taxa de inscrição.`}
-      </Alert>
+      <TextPreviewAlert
+        value={config.textoAvisoValorInscricao}
+        links={config.resourceLinks?.filter(
+          (link) => link.fieldName == 'textoAvisoValorInscricao',
+        )}
+        alertSeverity="warning"
+      />
       <Stack direction={'row'}>
         <Field
           required
@@ -114,12 +123,15 @@ export default function FinancialDetailFormContainer() {
               name="quantidadeDiariasSolicitadas"
               defaultValue={0}
             >
-              <MenuItem value={0}>0</MenuItem>
-              <MenuItem value={1}>1</MenuItem>
-              <MenuItem value={2}>2</MenuItem>
-              <MenuItem value={3}>3</MenuItem>
-              <MenuItem value={4}>4</MenuItem>
-              {!values.solicitanteDocente && <MenuItem value={5}>5</MenuItem>}
+              <MenuItem key={0} value={0}>
+                0
+              </MenuItem>
+              {config.numMaxDiarias &&
+                Array.from({ length: config.numMaxDiarias }, (_, i) => (
+                  <MenuItem key={i + 1} value={i + 1}>
+                    {i + 1}
+                  </MenuItem>
+                ))}
             </Field>
             {touched.quantidadeDiariasSolicitadas &&
               errors.quantidadeDiariasSolicitadas && (
@@ -138,19 +150,13 @@ export default function FinancialDetailFormContainer() {
           </Tooltip>
         </Stack>
       </FormControl>
-      <Alert severity="info" sx={{ maxWidth: '800px' }}>
-        Conforme a resolução do PROAP, a quantidade de diárias é limitada ao
-        número de dias do evento, e a última diária é de 50% do valor. Leia a{' '}
-        <Link
-          href="https://pgcomp.ufba.br/sites/pgcomp.ufba.br/files/2024_resolucao_01_-_pgcomp_-_proap.pdf"
-          target="_blank"
-          rel="noopener"
-          style={{ color: 'inherit', fontWeight: 'bold' }}
-        >
-          Resolução 01/2024
-        </Link>{' '}
-        antes de inserir esta informação.
-      </Alert>
+      <TextPreviewAlert
+        value={config.textoInformacaoQtdDiarias}
+        links={config.resourceLinks?.filter(
+          (link) => link.fieldName == 'textoInformacaoQtdDiarias',
+        )}
+        alertSeverity="info"
+      />
       {values.quantidadeDiariasSolicitadas > 0 && (
         <Stack gap={2}>
           <FormControl
@@ -203,20 +209,13 @@ export default function FinancialDetailFormContainer() {
               <FormHelperText>{errors.isDolar}</FormHelperText>
             )}
           </FormControl>
-          <Alert severity="info" sx={{ maxWidth: '800px' }}>
-            O valor atual da diária no Brasil é R$320. No exterior, indique o
-            valor em USD, conforme a tabela de auxílio diário no exterior mais
-            recente, disponível na{' '}
-            <Link
-              href="https://acrobat.adobe.com/id/urn:aaid:sc:US:2f1cb5ef-adf6-4c35-8258-63444225af4e"
-              target="_blank"
-              rel="noopener"
-              style={{ color: 'inherit', fontWeight: 'bold' }}
-            >
-              neste link
-            </Link>{' '}
-            .
-          </Alert>
+          <TextPreviewAlert
+            value={config.textoInformacaoValorDiaria}
+            links={config.resourceLinks?.filter(
+              (link) => link.fieldName == 'textoInformacaoValorDiaria',
+            )}
+            alertSeverity="info"
+          />
         </Stack>
       )}
       {values.isDolar && (
@@ -244,6 +243,44 @@ export default function FinancialDetailFormContainer() {
           </Tooltip>
         </Stack>
       )}
+      {values.quantidadeDiariasSolicitadas > 1 && (
+        <FormControl
+          error={Boolean(
+            touched.ultimaDiariaIntegral && errors.ultimaDiariaIntegral,
+          )}
+        >
+          <StyledFormLabel required>
+            Deseja que a última diária seja no valor integral?
+          </StyledFormLabel>
+          <Field name="ultimaDiariaIntegral">
+            {({ field }: { field: any }) => (
+              <RadioGroup
+                {...field}
+                row
+                value={field.value}
+                onChange={(event) => {
+                  setFieldValue(field.name, event.target.value === 'true');
+                }}
+                aria-labelledby="demo-row-radio-buttons-group-label"
+              >
+                <FormControlLabel
+                  value={true}
+                  control={<Radio />}
+                  label="Sim"
+                />
+                <FormControlLabel
+                  value={false}
+                  control={<Radio />}
+                  label="Não"
+                />
+              </RadioGroup>
+            )}
+          </Field>
+          {touched.ultimaDiariaIntegral && errors.ultimaDiariaIntegral && (
+            <FormHelperText>{errors.ultimaDiariaIntegral}</FormHelperText>
+          )}
+        </FormControl>
+      )}
       {values.solicitanteDocente && (
         <Stack>
           <Stack direction={'row'}>
@@ -269,11 +306,16 @@ export default function FinancialDetailFormContainer() {
               </StyledIconButton>
             </Tooltip>
           </Stack>
-          <Alert severity="info" sx={{ maxWidth: '800px' }}>
-            As passagens serão adquiridas pelo SCDP.
-          </Alert>
+          <TextPreviewAlert
+            value={config.textoInformacaoValorPassagem}
+            links={config.resourceLinks?.filter(
+              (link) => link.fieldName == 'textoInformacaoValorPassagem',
+            )}
+            alertSeverity="info"
+          />
         </Stack>
       )}
+
       <Field
         as={StyledTextField}
         label="Valor total da solicitação (R$)"

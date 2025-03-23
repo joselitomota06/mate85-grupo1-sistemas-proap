@@ -7,11 +7,13 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -36,7 +38,7 @@ public class SystemConfiguration {
     private String qualis;
 
     @Column(nullable = true)
-    private String guiaQualisURL;
+    private String sitePgcompURL;
 
     @Column(nullable = true)
     private String resolucaoProapURL;
@@ -48,13 +50,28 @@ public class SystemConfiguration {
     private Float valorDiariaBRL;
 
     @Column(columnDefinition = "text", nullable = true)
+    private String textoAvisoEnvioArquivoCarta;
+
+    @Column(columnDefinition = "text", nullable = true)
     private String textoAvisoQualis;
+
+    @Column(columnDefinition = "text", nullable = true)
+    private String textoInformacaoCalcularQualis;
 
     @Column(columnDefinition = "text", nullable = true)
     private String textoAvisoValorInscricao;
 
     @Column(columnDefinition = "text", nullable = true)
     private String textoInformacaoQtdDiarias;
+
+    @Column(columnDefinition = "text", nullable = true)
+    private String textoInformacaoValorDiaria;
+
+    @Column(columnDefinition = "text", nullable = true)
+    private String textoInformacaoValorPassagem;
+
+    @OneToMany(mappedBy = "systemConfiguration", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UrlMapper> resourceLinks;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime createdAt;

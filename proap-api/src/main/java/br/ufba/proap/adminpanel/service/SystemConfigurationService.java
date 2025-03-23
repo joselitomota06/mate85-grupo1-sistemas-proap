@@ -1,5 +1,6 @@
 package br.ufba.proap.adminpanel.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.ufba.proap.adminpanel.domain.SystemConfiguration;
+import br.ufba.proap.adminpanel.domain.UrlMapper;
 import br.ufba.proap.adminpanel.domain.dto.SystemConfigurationDTO;
+import br.ufba.proap.adminpanel.domain.dto.UrlMapperDTO;
 import br.ufba.proap.adminpanel.repository.SystemConfigurationRepository;
 
 @Service
@@ -41,8 +44,13 @@ public class SystemConfigurationService {
         SystemConfiguration config;
         if (configs.isEmpty()) {
             config = new SystemConfiguration();
+            config.setResourceLinks(new ArrayList<>());
         } else {
             config = configs.get(0);
+            // Inicializa a lista se for nula
+            if (config.getResourceLinks() == null) {
+                config.setResourceLinks(new ArrayList<>());
+            }
         }
 
         // Atualiza apenas os campos não nulos
@@ -50,8 +58,8 @@ public class SystemConfigurationService {
             config.setQualisList(dto.getQualis());
         }
 
-        if (dto.getGuiaQualisURL() != null) {
-            config.setGuiaQualisURL(dto.getGuiaQualisURL());
+        if (dto.getSitePgcompURL() != null) {
+            config.setSitePgcompURL(dto.getSitePgcompURL());
         }
 
         if (dto.getResolucaoProapURL() != null) {
@@ -78,6 +86,40 @@ public class SystemConfigurationService {
             config.setTextoInformacaoQtdDiarias(dto.getTextoInformacaoQtdDiarias());
         }
 
+        if (dto.getTextoAvisoEnvioArquivoCarta() != null) {
+            config.setTextoAvisoEnvioArquivoCarta(dto.getTextoAvisoEnvioArquivoCarta());
+        }
+
+        if (dto.getTextoInformacaoCalcularQualis() != null) {
+            config.setTextoInformacaoCalcularQualis(dto.getTextoInformacaoCalcularQualis());
+        }
+
+        if (dto.getTextoInformacaoValorDiaria() != null) {
+            config.setTextoInformacaoValorDiaria(dto.getTextoInformacaoValorDiaria());
+        }
+
+        if (dto.getTextoInformacaoValorPassagem() != null) {
+            config.setTextoInformacaoValorPassagem(dto.getTextoInformacaoValorPassagem());
+        }
+
+        if (dto.getResourceLinks() != null) {
+            // Limpar a lista atual mantendo a mesma referência
+            config.getResourceLinks().clear();
+
+            // Adicionar os novos links à coleção existente
+            for (UrlMapperDTO urlDto : dto.getResourceLinks()) {
+                UrlMapper url = new UrlMapper();
+                if (urlDto.getId() != null) {
+                    url.setId(urlDto.getId());
+                }
+                url.setUrl(urlDto.getUrl());
+                url.setFieldName(urlDto.getFieldName());
+                url.setUrlTitle(urlDto.getUrlTitle());
+                url.setSystemConfiguration(config);
+                config.getResourceLinks().add(url);
+            }
+        }
+
         config = repository.save(config);
         return SystemConfigurationDTO.fromEntity(config);
     }
@@ -94,6 +136,17 @@ public class SystemConfigurationService {
     }
 
     /**
+     * Atualiza os links de recursos
+     */
+    @Transactional
+    public List<UrlMapperDTO> updateResourceLinks(List<UrlMapperDTO> resourceLinks) {
+        SystemConfigurationDTO config = getCurrentConfiguration();
+        config.setResourceLinks(resourceLinks);
+        SystemConfigurationDTO updated = updateConfiguration(config);
+        return updated.getResourceLinks();
+    }
+
+    /**
      * Cria uma configuração padrão
      */
     private SystemConfiguration createDefaultConfiguration() {
@@ -101,10 +154,20 @@ public class SystemConfigurationService {
         config.setQualisList(List.of("A1", "A2", "A3", "A4", "B1", "B2", "B3", "B4"));
         config.setNumMaxDiarias(5);
         config.setValorDiariaBRL(320.0f);
-        config.setTextoAvisoQualis("Consulte a classificação Qualis do evento antes de submeter uma solicitação.");
+        config.setTextoAvisoQualis(
+                "Nos casos de artigos aceitos em conferências, o Qualis deve ser atribubído quando o artigo é aceito no evento principal, e não em eventos satélites como workshops, minicursos ou CTDs.");
         config.setTextoAvisoValorInscricao(
-                "Informe o valor da inscrição em reais ou em dólar, de acordo com o evento.");
-        config.setTextoInformacaoQtdDiarias("O número máximo de diárias permitido é de 5 diárias.");
+                "O PROAP não reembolsa taxa de filiação, a não ser que seja uma opção obrigatória associada à taxa de inscrição.");
+        config.setTextoInformacaoQtdDiarias(
+                "Conforme a resolução do PROAP, a quantidade de diárias é limitada ao número de dias do evento, e a última diária pode ser 50% do valor. Leia a resolução antes de finalizar.");
+        config.setTextoAvisoEnvioArquivoCarta("É obrigatória a carta de aceite para apoio a publicação científica.");
+        config.setTextoInformacaoCalcularQualis(
+                "Para calcular o Qualis do seu evento, siga as instruções disponíveis no site da PGCOMP.");
+        config.setTextoInformacaoValorDiaria(
+                "O valor atual da diária no Brasil é R$320. No exterior, indique o valor em USD, conforme a tabela de auxílio diário no exterior mais recente.");
+        config.setTextoInformacaoValorPassagem(
+                "As passagens serão adquiridas pelo SCDP.");
+        config.setResourceLinks(new ArrayList<>());
 
         return repository.save(config);
     }

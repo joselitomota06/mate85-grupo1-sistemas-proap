@@ -60,7 +60,7 @@ export const eventDetailFormSchema = Yup.object({
     then: () => Yup.number().required('Campo obrigatório'),
     otherwise: () => Yup.number().notRequired(),
   }),
-  linkHomePageEvento: Yup.string(),
+  linkHomePageEvento: Yup.string().url('Insira uma URL válida'),
   cidade: Yup.string().required('Campo obrigatório'),
   pais: Yup.string().required('Campo obrigatório'),
   qualis: Yup.string().required('Campo obrigatório'),
@@ -72,7 +72,9 @@ export const financialDetailFormSchema = Yup.object({
     .min(0, 'Insira um valor válido')
     .defined()
     .required('Campo obrigatório'),
-  linkPaginaInscricao: Yup.string().required('Campo obrigatório'),
+  linkPaginaInscricao: Yup.string()
+    .url('Insira uma URL válida')
+    .required('Campo obrigatório'),
   quantidadeDiariasSolicitadas: Yup.number()
     .min(0, 'Insira um valor válido')
     .defined()
@@ -86,6 +88,7 @@ export const financialDetailFormSchema = Yup.object({
       then: () => Yup.number().required('Campo obrigatório'),
       otherwise: () => Yup.number().notRequired(),
     }),
+  ultimaDiariaIntegral: Yup.boolean().required('Campo obrigatório'),
   isDolar: Yup.boolean().required('Campo obrigatório'),
   cotacaoMoeda: Yup.number()
     .when('isDolar', {
@@ -151,6 +154,7 @@ export type InitialSolicitationFormValues = Pick<
   | 'linkPaginaInscricao'
   | 'quantidadeDiariasSolicitadas'
   | 'valorDiaria'
+  | 'ultimaDiariaIntegral'
   | 'isDolar'
   | 'cotacaoMoeda'
   | 'valorPassagem'
@@ -172,6 +176,7 @@ export const INITIAL_FORM_VALUES: InitialSolicitationFormValues = {
   modalidadeParticipacao: '',
   linkPaginaInscricao: '',
   valorDiaria: 0,
+  ultimaDiariaIntegral: false,
   isDolar: false,
   cotacaoMoeda: 1,
   valorPassagem: 0,
@@ -207,6 +212,7 @@ export const INITIAL_REVIEW_FORM_VALUES: SolicitationFormValues = {
   modalidadeParticipacao: '',
   linkPaginaInscricao: '',
   valorDiaria: 0,
+  ultimaDiariaIntegral: false,
   isDolar: false,
   cotacaoMoeda: 1,
   valorPassagem: 0,

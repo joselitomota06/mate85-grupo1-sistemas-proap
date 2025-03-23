@@ -2,10 +2,9 @@ import { PropsWithChildren } from 'react';
 
 import { useMediaQuery, useTheme } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
+import { AddRounded, AdminPanelSettings, Group } from '@mui/icons-material';
 
 import MobileNavigationWrapper from './MobileNavigationWrapper';
-import { AddRounded } from '@mui/icons-material';
-import { useAuth } from '../../hooks';
 import useHasPermission from '../../hooks/auth/useHasPermission';
 
 export interface NavigationItem {
@@ -19,6 +18,7 @@ export const NavigationWrapper = ({ children }: PropsWithChildren) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const userCanViewPage = useHasPermission('VIEW_USER');
+  const isAdmin = useHasPermission('ADMIN_ROLE');
 
   const navigationItems: NavigationItem[] = [
     {
@@ -29,9 +29,15 @@ export const NavigationWrapper = ({ children }: PropsWithChildren) => {
     },
     {
       label: 'Usuários cadastrados',
-      icon: <AddRounded />,
+      icon: <Group />,
       link: '/users',
       visible: userCanViewPage,
+    },
+    {
+      label: 'Painel Administrativo',
+      icon: <AdminPanelSettings />,
+      link: '/admin-panel',
+      visible: isAdmin,
     },
   ];
 

@@ -19,10 +19,15 @@ import {
   StyledTextField,
 } from '../SolicitationFormContainer.style';
 import { FormControlLabel, Radio, RadioGroup } from '@mui/material';
+import { useSysConfig } from '../../../hooks/admin/useSysConfig';
 
 export default function ReviewDataFormContainer() {
   const { values, errors, touched } =
     useFormikContext<SolicitationFormValues>();
+  const { config } = useSysConfig();
+
+  const maxDiarias = values.quantidadeDiariasSolicitadas || 0;
+  const diariasOptions = Array.from({ length: maxDiarias + 1 }, (_, i) => i);
 
   return (
     <Box display="flex" flexDirection="column" pt={2} pb={2}>
@@ -113,12 +118,11 @@ export default function ReviewDataFormContainer() {
               name="numeroDiariasAprovadas"
               defaultValue={0}
             >
-              <MenuItem value={0}>0</MenuItem>
-              <MenuItem value={1}>1</MenuItem>
-              <MenuItem value={2}>2</MenuItem>
-              <MenuItem value={3}>3</MenuItem>
-              <MenuItem value={4}>4</MenuItem>
-              {!values.solicitanteDocente && <MenuItem value={5}>5</MenuItem>}
+              {diariasOptions.map((num) => (
+                <MenuItem key={num} value={num}>
+                  {num}
+                </MenuItem>
+              ))}
             </Field>
             {touched.numeroDiariasAprovadas &&
               errors.numeroDiariasAprovadas && (

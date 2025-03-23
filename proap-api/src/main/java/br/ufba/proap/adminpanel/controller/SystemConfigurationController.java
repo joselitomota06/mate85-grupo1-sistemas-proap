@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.ufba.proap.adminpanel.domain.dto.SystemConfigurationDTO;
+import br.ufba.proap.adminpanel.domain.dto.UrlMapperDTO;
 import br.ufba.proap.adminpanel.service.SystemConfigurationService;
 import br.ufba.proap.authentication.domain.User;
 import br.ufba.proap.authentication.service.UserService;
@@ -112,5 +113,26 @@ public class SystemConfigurationController {
         }
 
         return ResponseEntity.ok(service.updateQualisList(qualisList));
+    }
+
+    /**
+     * Obtém a lista de links de recursos
+     */
+    @GetMapping("/resource-links")
+    public ResponseEntity<List<UrlMapperDTO>> getResourceLinks() {
+        return ResponseEntity.ok(service.getCurrentConfiguration().getResourceLinks());
+    }
+
+    /**
+     * Atualiza a lista de links de recursos (apenas para administradores)
+     */
+    @PostMapping("/resource-links")
+    public ResponseEntity<List<UrlMapperDTO>> updateResourceLinks(@RequestBody List<UrlMapperDTO> resourceLinks) {
+        ResponseEntity<List<UrlMapperDTO>> permissionCheck = checkAdminPermission();
+        if (permissionCheck != null) {
+            return permissionCheck;
+        }
+
+        return ResponseEntity.ok(service.updateResourceLinks(resourceLinks));
     }
 }

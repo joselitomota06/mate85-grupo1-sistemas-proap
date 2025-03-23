@@ -39,7 +39,7 @@ public class SystemConfigurationServiceTest {
         sampleConfig.setQualisList(Arrays.asList("A1", "A2", "B1"));
         sampleConfig.setNumMaxDiarias(5);
         sampleConfig.setValorDiariaBRL(320.0f);
-        sampleConfig.setGuiaQualisURL("http://example.com/guia-qualis");
+        sampleConfig.setSitePgcompURL("http://example.com/guia-qualis");
         sampleConfig.setResolucaoProapURL("http://example.com/resolucao-proap");
         sampleConfig.setTextoAvisoQualis("Aviso sobre Qualis");
         sampleConfig.setTextoAvisoValorInscricao("Aviso sobre inscrição");

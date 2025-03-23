@@ -7,19 +7,12 @@ const useCalculeTotal = () => {
 
   useEffect(() => {
     let fatorQuantidadeDiarias = values.quantidadeDiariasSolicitadas;
-    if (values.quantidadeDiariasSolicitadas > 1) {
+    if (
+      values.quantidadeDiariasSolicitadas > 1 &&
+      !values.ultimaDiariaIntegral
+    ) {
       fatorQuantidadeDiarias -= 0.5;
     }
-    // if (values.quantidadeDiariasSolicitadas >= 4) {
-    //   fatorQuantidadeDiarias -= 0.5;
-    //   if (
-    //     !values.solicitanteDocente &&
-    //     values.quantidadeDiariasSolicitadas === 4
-    //   ) {
-    //     fatorQuantidadeDiarias = values.quantidadeDiariasSolicitadas;
-    //   }
-    // }
-
     const valorTotal = values.isDolar
       ? values.valorInscricao +
         values.valorDiaria * values.cotacaoMoeda * fatorQuantidadeDiarias +
@@ -35,6 +28,7 @@ const useCalculeTotal = () => {
     values.isDolar,
     values.cotacaoMoeda,
     values.quantidadeDiariasSolicitadas,
+    values.ultimaDiariaIntegral,
   ]);
 };
 export default useCalculeTotal;

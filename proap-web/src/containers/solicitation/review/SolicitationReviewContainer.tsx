@@ -298,6 +298,14 @@ export default function SolicitationReviewContainer() {
                   </Typography>
                 </StyledData>
               )}
+              {values.quantidadeDiariasSolicitadas > 1 && (
+                <StyledData>
+                  <Typography>Última diária no valor integral?</Typography>
+                  <Typography style={{ color: 'gray' }} variant="subtitle2">
+                    {booleanToYesOrNo(values.ultimaDiariaIntegral ?? false)}
+                  </Typography>
+                </StyledData>
+              )}
             </>
           )}
           {values.solicitanteDocente && (
