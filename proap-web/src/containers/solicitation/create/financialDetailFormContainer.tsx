@@ -26,6 +26,9 @@ import {
   TableHead,
   TableRow,
   DialogActions,
+  InputAdornment,
+  CircularProgress,
+  IconButton,
 } from '@mui/material';
 import Select from '@mui/material/Select';
 import {
@@ -33,13 +36,16 @@ import {
   StyledIconButton,
   StyledTextField,
 } from '../SolicitationFormContainer.style';
-import { Info } from '@mui/icons-material';
+import { Info, Refresh } from '@mui/icons-material';
 import useCalculeTotal from '../../../hooks/solicitation/useCalculeTotal';
 import { useSysConfig } from '../../../hooks/admin/useSysConfig';
 import TextPreviewAlert from '../../../components/FormFields/TextPreviewAlert';
-
+import useDollarRate from '../../../hooks/useDollarRate';
+import Toast from '../../../helpers/notification';
 export default function FinancialDetailFormContainer() {
   const { config } = useSysConfig();
+  const { dollarRate, errorDollarRate, loadingDollarRate, reloadDollarRate } =
+    useDollarRate();
   const { values, errors, touched, setFieldValue } =
     useFormikContext<InitialSolicitationFormValues>();
   const [showCountryGroupsDialog, setShowCountryGroupsDialog] = useState(false);
@@ -55,6 +61,25 @@ export default function FinancialDetailFormContainer() {
       setFieldValue('valorDiaria', 0);
     }
   }, [values.isDolar, values.quantidadeDiariasSolicitadas]);
+
+  useEffect(() => {
+    if (loadingDollarRate) return;
+
+    if (errorDollarRate) {
+      console.error(errorDollarRate);
+    }
+    if (dollarRate && values.isDolar)
+      setFieldValue('cotacaoMoeda', dollarRate.rate);
+  }, [loadingDollarRate, dollarRate, errorDollarRate, values.isDolar]);
+
+  const handleReload = async () => {
+    const result = await reloadDollarRate();
+    if (result.success) {
+      Toast.success('Cotação do dólar atualizada com sucesso');
+    } else {
+      Toast.error('Erro ao obter cotação do dólar');
+    }
+  };
 
   return (
     <Box
@@ -291,27 +316,52 @@ export default function FinancialDetailFormContainer() {
 
       {values.isDolar && (
         <Stack direction={'row'}>
-          <Field
-            as={StyledTextField}
-            label="Informe o valor da cotação do dólar americano (USD)"
-            sx={{ width: '200px' }}
-            name="cotacaoMoeda"
-            type="number"
-            InputProps={{
-              inputProps: { min: 0, step: 0.01 },
-            }}
-            error={Boolean(touched.cotacaoMoeda && errors.cotacaoMoeda)}
-            helperText={touched.cotacaoMoeda && errors.cotacaoMoeda}
-            required
-          />
-          <Tooltip
-            sx={{ position: 'relative', top: '10px' }}
-            title="A cotação deve ser do dia desta solicitação"
-          >
-            <StyledIconButton>
-              <Info />
-            </StyledIconButton>
-          </Tooltip>
+          <Box sx={{ position: 'relative' }}>
+            <Stack direction={'row'}>
+              <Field
+                as={StyledTextField}
+                label="Valor da cotação do dólar americano (USD)"
+                sx={{ width: '200px' }}
+                name="cotacaoMoeda"
+                disabled
+                type="number"
+                InputProps={{
+                  inputProps: { min: 0, step: 0.01 },
+                  endAdornment: loadingDollarRate ? (
+                    <InputAdornment position="end">
+                      <CircularProgress size={20} />
+                    </InputAdornment>
+                  ) : null,
+                }}
+                error={Boolean(touched.cotacaoMoeda && errors.cotacaoMoeda)}
+                helperText={
+                  touched.cotacaoMoeda && errors.cotacaoMoeda
+                    ? errors.cotacaoMoeda
+                    : undefined
+                }
+                required
+              />
+              <IconButton
+                onClick={handleReload}
+                size="small"
+                sx={{ ml: 1, position: 'relative', top: '10px' }}
+                disabled={loadingDollarRate}
+              >
+                {loadingDollarRate ? (
+                  <CircularProgress size={16} />
+                ) : (
+                  <Refresh fontSize="small" />
+                )}
+              </IconButton>
+            </Stack>
+            <Box sx={{ display: 'flex', alignItems: 'center', mt: 0.5, ml: 1 }}>
+              <Typography variant="caption" color="text.secondary">
+                {!loadingDollarRate && dollarRate?.updatedAt
+                  ? `Atualizado em ${new Date(parseInt(dollarRate.updatedAt)).toLocaleString()}`
+                  : ''}
+              </Typography>
+            </Box>
+          </Box>
         </Stack>
       )}
       {values.quantidadeDiariasSolicitadas > 1 && (
