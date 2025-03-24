@@ -22,8 +22,11 @@ import {
 } from '../SolicitationFormContainer.style';
 import { Add, CloudUpload, Info, Remove } from '@mui/icons-material';
 import { BASE_PDF_URL } from '../../../helpers/api';
+import { useSysConfig } from '../../../hooks/admin/useSysConfig';
+import TextPreviewAlert from '../../../components/FormFields/TextPreviewAlert';
 
 export default function SolicitationDataFormContainer() {
+  const { config } = useSysConfig();
   const { errors, touched, values, setFieldValue } =
     useFormikContext<InitialSolicitationFormValues>();
 
@@ -208,9 +211,12 @@ export default function SolicitationDataFormContainer() {
           )}
         </Stack>
       </FormControl>
-      <Alert severity="warning" sx={{ maxWidth: '800px' }}>
-        É obrigatória a carta de aceite para apoio a publicação científica.
-      </Alert>
+      <TextPreviewAlert
+        value={config.textoAvisoEnvioArquivoCarta}
+        links={config.resourceLinks?.filter(
+          (link) => link.fieldName == 'textoAvisoEnvioArquivoCarta',
+        )}
+      />
     </Box>
   );
 }

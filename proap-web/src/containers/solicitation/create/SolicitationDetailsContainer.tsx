@@ -316,6 +316,16 @@ export default function SolicitationDetailsContainer({
               )}
             </>
           )}
+          {solicitation.quantidadeDiariasSolicitadas > 1 && (
+            <StyledData>
+              <Typography>
+                Deseja que a última diária seja no valor integral?
+              </Typography>
+              <Typography style={{ color: 'gray' }} variant="subtitle2">
+                {booleanToYesOrNo(solicitation.ultimaDiariaIntegral ?? false)}
+              </Typography>
+            </StyledData>
+          )}
           {solicitation.solicitanteDocente && (
             <StyledData>
               <Typography>

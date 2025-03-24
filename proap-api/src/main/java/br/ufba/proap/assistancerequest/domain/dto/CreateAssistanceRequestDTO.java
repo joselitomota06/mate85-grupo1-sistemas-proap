@@ -31,6 +31,7 @@ public record CreateAssistanceRequestDTO(
         String linkPaginaInscricao,
         Integer quantidadeDiariasSolicitadas,
         Float valorDiaria,
+        Boolean ultimaDiariaIntegral,
         Boolean isDolar,
         Float cotacaoMoeda,
         Float valorPassagem,
@@ -62,6 +63,7 @@ public record CreateAssistanceRequestDTO(
                 entity.getLinkPaginaInscricao(),
                 entity.getQuantidadeDiariasSolicitadas(),
                 entity.getValorDiaria(),
+                entity.getUltimaDiariaIntegral(),
                 entity.getIsDolar(),
                 entity.getCotacaoMoeda(),
                 entity.getValorPassagem(),
@@ -94,6 +96,7 @@ public record CreateAssistanceRequestDTO(
         entity.setLinkPaginaInscricao(this.linkPaginaInscricao());
         entity.setQuantidadeDiariasSolicitadas(this.quantidadeDiariasSolicitadas());
         entity.setValorDiaria(this.valorDiaria());
+        entity.setUltimaDiariaIntegral(this.ultimaDiariaIntegral());
         entity.setIsDolar(this.isDolar());
         entity.setCotacaoMoeda(this.cotacaoMoeda());
         entity.setValorPassagem(this.valorPassagem());

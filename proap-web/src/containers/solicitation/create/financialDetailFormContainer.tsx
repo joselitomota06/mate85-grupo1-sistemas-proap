@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import { InitialSolicitationFormValues } from '../SolicitationFormSchema';
 import { Field, useFormikContext } from 'formik';
@@ -11,6 +11,21 @@ import {
   Stack,
   Alert,
   Link,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  Typography,
+  Button,
+  TableBody,
+  TableCell,
+  Table,
+  TableContainer,
+  DialogContent,
+  DialogTitle,
+  Dialog,
+  TableHead,
+  TableRow,
+  DialogActions,
 } from '@mui/material';
 import Select from '@mui/material/Select';
 import {
@@ -20,16 +35,20 @@ import {
 } from '../SolicitationFormContainer.style';
 import { Info } from '@mui/icons-material';
 import useCalculeTotal from '../../../hooks/solicitation/useCalculeTotal';
+import { useSysConfig } from '../../../hooks/admin/useSysConfig';
+import TextPreviewAlert from '../../../components/FormFields/TextPreviewAlert';
 
 export default function FinancialDetailFormContainer() {
+  const { config } = useSysConfig();
   const { values, errors, touched, setFieldValue } =
     useFormikContext<InitialSolicitationFormValues>();
+  const [showCountryGroupsDialog, setShowCountryGroupsDialog] = useState(false);
 
   useCalculeTotal();
 
   useEffect(() => {
     if (!values.isDolar) {
-      setFieldValue('valorDiaria', 320);
+      setFieldValue('valorDiaria', config.valorDiariaBRL);
     }
 
     if (values.quantidadeDiariasSolicitadas === 0) {
@@ -70,10 +89,13 @@ export default function FinancialDetailFormContainer() {
           </StyledIconButton>
         </Tooltip>
       </Stack>
-      <Alert severity="warning" sx={{ maxWidth: '800px' }}>
-        {`O PROAP não reembolsa taxa de filiação, a não ser que 
-        seja uma opção obrigatória associada à taxa de inscrição.`}
-      </Alert>
+      <TextPreviewAlert
+        value={config.textoAvisoValorInscricao}
+        links={config.resourceLinks?.filter(
+          (link) => link.fieldName == 'textoAvisoValorInscricao',
+        )}
+        alertSeverity="warning"
+      />
       <Stack direction={'row'}>
         <Field
           required
@@ -114,12 +136,15 @@ export default function FinancialDetailFormContainer() {
               name="quantidadeDiariasSolicitadas"
               defaultValue={0}
             >
-              <MenuItem value={0}>0</MenuItem>
-              <MenuItem value={1}>1</MenuItem>
-              <MenuItem value={2}>2</MenuItem>
-              <MenuItem value={3}>3</MenuItem>
-              <MenuItem value={4}>4</MenuItem>
-              {!values.solicitanteDocente && <MenuItem value={5}>5</MenuItem>}
+              <MenuItem key={0} value={0}>
+                0
+              </MenuItem>
+              {config.numMaxDiarias &&
+                Array.from({ length: config.numMaxDiarias }, (_, i) => (
+                  <MenuItem key={i + 1} value={i + 1}>
+                    {i + 1}
+                  </MenuItem>
+                ))}
             </Field>
             {touched.quantidadeDiariasSolicitadas &&
               errors.quantidadeDiariasSolicitadas && (
@@ -138,19 +163,13 @@ export default function FinancialDetailFormContainer() {
           </Tooltip>
         </Stack>
       </FormControl>
-      <Alert severity="info" sx={{ maxWidth: '800px' }}>
-        Conforme a resolução do PROAP, a quantidade de diárias é limitada ao
-        número de dias do evento, e a última diária é de 50% do valor. Leia a{' '}
-        <Link
-          href="https://pgcomp.ufba.br/sites/pgcomp.ufba.br/files/2024_resolucao_01_-_pgcomp_-_proap.pdf"
-          target="_blank"
-          rel="noopener"
-          style={{ color: 'inherit', fontWeight: 'bold' }}
-        >
-          Resolução 01/2024
-        </Link>{' '}
-        antes de inserir esta informação.
-      </Alert>
+      <TextPreviewAlert
+        value={config.textoInformacaoQtdDiarias}
+        links={config.resourceLinks?.filter(
+          (link) => link.fieldName == 'textoInformacaoQtdDiarias',
+        )}
+        alertSeverity="info"
+      />
       {values.quantidadeDiariasSolicitadas > 0 && (
         <Stack gap={2}>
           <FormControl
@@ -177,7 +196,7 @@ export default function FinancialDetailFormContainer() {
                 as={StyledTextField}
                 sx={{ margin: 0 }}
                 name="valorDiaria"
-                disabled={!values.isDolar}
+                disabled
                 type="number"
                 InputProps={{
                   inputProps: { min: 0, step: 0.01 },
@@ -187,7 +206,7 @@ export default function FinancialDetailFormContainer() {
               />
               <Tooltip
                 sx={{ position: 'relative' }}
-                title="Informe o valor referente a uma diária"
+                title="O valor é referente a uma diária"
               >
                 <StyledIconButton sx={{ padding: 0 }}>
                   <Info />
@@ -203,22 +222,73 @@ export default function FinancialDetailFormContainer() {
               <FormHelperText>{errors.isDolar}</FormHelperText>
             )}
           </FormControl>
-          <Alert severity="info" sx={{ maxWidth: '800px' }}>
-            O valor atual da diária no Brasil é R$320. No exterior, indique o
-            valor em USD, conforme a tabela de auxílio diário no exterior mais
-            recente, disponível na{' '}
-            <Link
-              href="https://acrobat.adobe.com/id/urn:aaid:sc:US:2f1cb5ef-adf6-4c35-8258-63444225af4e"
-              target="_blank"
-              rel="noopener"
-              style={{ color: 'inherit', fontWeight: 'bold' }}
-            >
-              neste link
-            </Link>{' '}
-            .
-          </Alert>
+          <TextPreviewAlert
+            value={config.textoInformacaoValorDiaria}
+            links={config.resourceLinks?.filter(
+              (link) => link.fieldName == 'textoInformacaoValorDiaria',
+            )}
+            alertSeverity="info"
+          />
         </Stack>
       )}
+
+      {values.isDolar && (
+        <FormControl
+          error={Boolean(touched.countryGroup && errors.countryGroup)}
+        >
+          <StyledFormLabel>
+            Selecione o grupo de país de destino
+          </StyledFormLabel>
+          <Box sx={{ mb: 2 }}>
+            <Alert
+              severity={values.countryGroup ? 'success' : 'error'}
+              sx={{ maxWidth: '800px', mb: 1 }}
+            >
+              <Typography variant="body2">
+                Consulte a tabela de auxílio diário no exterior para identificar
+                o grupo do país de destino
+              </Typography>
+              <Button
+                variant="text"
+                size="small"
+                onClick={() => {
+                  setShowCountryGroupsDialog(true);
+                }}
+              >
+                Ver tabela de países
+              </Button>
+            </Alert>
+          </Box>
+          <Field
+            as={Select}
+            sx={{ width: 200 }}
+            displayEmpty
+            name="countryGroup"
+            onChange={(e: any) => {
+              const selectedGroup = config.countryGroups?.find(
+                (group) => group.groupName === e.target.value,
+              );
+              if (selectedGroup) {
+                setFieldValue('valorDiaria', selectedGroup.valueUSD);
+              }
+              setFieldValue('countryGroup', e.target.value);
+            }}
+          >
+            <MenuItem value="" disabled>
+              Selecione o grupo
+            </MenuItem>
+            {config.countryGroups?.map((group) => (
+              <MenuItem key={group.groupName} value={group.groupName}>
+                Grupo {group.groupName} - ${group.valueUSD}
+              </MenuItem>
+            ))}
+          </Field>
+          {touched.countryGroup && errors.countryGroup && (
+            <FormHelperText>{errors.countryGroup}</FormHelperText>
+          )}
+        </FormControl>
+      )}
+
       {values.isDolar && (
         <Stack direction={'row'}>
           <Field
@@ -243,6 +313,44 @@ export default function FinancialDetailFormContainer() {
             </StyledIconButton>
           </Tooltip>
         </Stack>
+      )}
+      {values.quantidadeDiariasSolicitadas > 1 && (
+        <FormControl
+          error={Boolean(
+            touched.ultimaDiariaIntegral && errors.ultimaDiariaIntegral,
+          )}
+        >
+          <StyledFormLabel required>
+            Deseja que a última diária seja no valor integral?
+          </StyledFormLabel>
+          <Field name="ultimaDiariaIntegral">
+            {({ field }: { field: any }) => (
+              <RadioGroup
+                {...field}
+                row
+                value={field.value}
+                onChange={(event) => {
+                  setFieldValue(field.name, event.target.value === 'true');
+                }}
+                aria-labelledby="demo-row-radio-buttons-group-label"
+              >
+                <FormControlLabel
+                  value={true}
+                  control={<Radio />}
+                  label="Sim"
+                />
+                <FormControlLabel
+                  value={false}
+                  control={<Radio />}
+                  label="Não"
+                />
+              </RadioGroup>
+            )}
+          </Field>
+          {touched.ultimaDiariaIntegral && errors.ultimaDiariaIntegral && (
+            <FormHelperText>{errors.ultimaDiariaIntegral}</FormHelperText>
+          )}
+        </FormControl>
       )}
       {values.solicitanteDocente && (
         <Stack>
@@ -269,11 +377,16 @@ export default function FinancialDetailFormContainer() {
               </StyledIconButton>
             </Tooltip>
           </Stack>
-          <Alert severity="info" sx={{ maxWidth: '800px' }}>
-            As passagens serão adquiridas pelo SCDP.
-          </Alert>
+          <TextPreviewAlert
+            value={config.textoInformacaoValorPassagem}
+            links={config.resourceLinks?.filter(
+              (link) => link.fieldName == 'textoInformacaoValorPassagem',
+            )}
+            alertSeverity="info"
+          />
         </Stack>
       )}
+
       <Field
         as={StyledTextField}
         label="Valor total da solicitação (R$)"
@@ -286,6 +399,48 @@ export default function FinancialDetailFormContainer() {
         }}
         required
       />
+
+      <Dialog
+        open={showCountryGroupsDialog}
+        onClose={() => setShowCountryGroupsDialog(false)}
+        maxWidth="lg"
+        fullWidth
+      >
+        <DialogTitle>Tabela de Auxílio Diário no Exterior</DialogTitle>
+        <DialogContent>
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Grupo</TableCell>
+                  <TableCell>Países</TableCell>
+                  <TableCell sx={{ minWidth: 150, textAlign: 'center' }}>
+                    Valor Diário (USD)
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {config.countryGroups?.map((group) => (
+                  <TableRow key={group.groupName}>
+                    <TableCell sx={{ textAlign: 'center' }}>
+                      {group.groupName}
+                    </TableCell>
+                    <TableCell>{group.countries.join(', ')}</TableCell>
+                    <TableCell sx={{ textAlign: 'center' }}>
+                      {group.valueUSD}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setShowCountryGroupsDialog(false)}>
+            Fechar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

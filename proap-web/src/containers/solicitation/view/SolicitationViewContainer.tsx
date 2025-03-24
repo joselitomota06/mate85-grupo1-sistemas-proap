@@ -301,6 +301,15 @@ export default function SolicitationViewContainer({ id }: { id: string }) {
                   />
                 )}
 
+              {solicitation.quantidadeDiariasSolicitadas > 1 && (
+                <InfoItem
+                  label="Última diária no valor integral?"
+                  value={booleanToYesOrNo(
+                    solicitation.ultimaDiariaIntegral ?? false,
+                  )}
+                />
+              )}
+
               {solicitation.solicitanteDocente && (
                 <InfoItem
                   label="Valor da Passagem Aérea"

@@ -22,8 +22,11 @@ import {
 } from '../SolicitationFormContainer.style';
 import { Info } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
+import { useSysConfig } from '../../../hooks/admin/useSysConfig';
+import TextPreviewAlert from '../../../components/FormFields/TextPreviewAlert';
 
 export default function EventDetailFormContainer() {
+  const { config } = useSysConfig();
   const { values, errors, touched, setFieldValue } =
     useFormikContext<InitialSolicitationFormValues>();
 
@@ -290,16 +293,16 @@ export default function EventDetailFormContainer() {
                 name="qualis"
                 defaultValue=""
               >
-                <MenuItem value=""></MenuItem>
-                <MenuItem value="A1">A1</MenuItem>
-                <MenuItem value="A2">A2</MenuItem>
-                <MenuItem value="A3">A3</MenuItem>
-                <MenuItem value="A4">A4</MenuItem>
-                <MenuItem value="B1">B1</MenuItem>
-                <MenuItem value="B2">B2</MenuItem>
-                <MenuItem value="B3">B3</MenuItem>
-                <MenuItem value="B4">B4</MenuItem>
-                <MenuItem value={outroQualis}>Outro</MenuItem>
+                <MenuItem key={0} value=""></MenuItem>
+                {config.qualis &&
+                  config.qualis.map((qualis, i) => (
+                    <MenuItem key={i + 1} value={qualis}>
+                      {qualis}
+                    </MenuItem>
+                  ))}
+                <MenuItem key="outro" value={outroQualis}>
+                  Outro
+                </MenuItem>
               </Field>
               {touched.qualis && errors.qualis && (
                 <FormHelperText>{errors.qualis}</FormHelperText>
@@ -341,23 +344,20 @@ export default function EventDetailFormContainer() {
           )}
         </Stack>
       </FormControl>
-      <Alert severity="info" sx={{ maxWidth: '800px' }}>
-        Para calcular o Qualis do seu evento, siga as instruções disponíveis no{' '}
-        <Link
-          href="https://pgcomp.ufba.br/qual-o-qualis-de-uma-conferencia-ou-um-periodico"
-          target="_blank"
-          rel="noopener"
-          style={{ color: 'inherit', fontWeight: 'bold' }}
-        >
-          site da PGCOMP
-        </Link>
-        .
-      </Alert>
-      <Alert severity="warning" sx={{ maxWidth: '800px' }}>
-        {`Nos casos de artigos aceitos em conferências, 
-              o Qualis deve ser atribubído quando o artigo é aceito no evento principal, 
-              e não em eventos satélites como workshops, minicursos ou CTDs.`}
-      </Alert>
+      <TextPreviewAlert
+        value={config.textoInformacaoCalcularQualis}
+        links={config.resourceLinks?.filter(
+          (link) => link.fieldName == 'textoInformacaoCalcularQualis',
+        )}
+        alertSeverity="info"
+      />
+      <TextPreviewAlert
+        value={config.textoAvisoQualis}
+        links={config.resourceLinks?.filter(
+          (link) => link.fieldName == 'textoAvisoQualis',
+        )}
+        alertSeverity="warning"
+      />
     </Box>
   );
 }

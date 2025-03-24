@@ -1,13 +1,19 @@
 import { combineReducers, configureStore, Reducer } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 import { getInitialAuthSliceState } from '../helpers/auth';
-import { authSlice, assistanceRequestSlice, userProfileSlice } from './slices';
+import {
+  authSlice,
+  assistanceRequestSlice,
+  userProfileSlice,
+  systemConfigSlice,
+} from './slices';
 import { SLICES_INITIAL_STATE } from './slices/initialSliceState';
 
 const appReducer = combineReducers({
   auth: authSlice.reducer,
   assistanceRequestSlice: assistanceRequestSlice.reducer,
   userProfileSlice: userProfileSlice.reducer,
+  systemConfigSlice: systemConfigSlice.reducer,
 });
 
 const rootReducer: Reducer<ReturnType<typeof appReducer>> = (state, action) => {

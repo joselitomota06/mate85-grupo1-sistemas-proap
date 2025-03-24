@@ -105,6 +105,9 @@ public class AssistanceRequest {
 
 	private Float valorDiaria;
 
+	@Column(nullable = false, columnDefinition = "boolean default false")
+	private Boolean ultimaDiariaIntegral;
+
 	private Boolean isDolar;
 
 	private Float cotacaoMoeda;

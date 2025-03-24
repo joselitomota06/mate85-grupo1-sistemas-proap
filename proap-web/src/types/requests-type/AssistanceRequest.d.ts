@@ -27,6 +27,7 @@ export interface AssistanceRequest {
   linkPaginaInscricao: string;
   quantidadeDiariasSolicitadas: number;
   valorDiaria: number;
+  ultimaDiariaIntegral: boolean;
   isDolar: boolean;
   cotacaoMoeda: number;
   valorPassagem: number;
