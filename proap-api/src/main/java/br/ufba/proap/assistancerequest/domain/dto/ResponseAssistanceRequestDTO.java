@@ -12,6 +12,8 @@ import br.ufba.proap.authentication.domain.dto.UserResponseDTO;
 public record ResponseAssistanceRequestDTO(
         Long id,
         UserResponseDTO user,
+        UserResponseDTO avaliadorProap,
+        UserResponseDTO avaliadorCeapg,
         String tituloPublicacao,
         List<String> coautores,
         Boolean algumCoautorPGCOMP,
@@ -51,6 +53,9 @@ public record ResponseAssistanceRequestDTO(
         Float valorAprovado,
         String observacao,
         String automaticDecText,
+        Float custoFinalCeapg,
+        String observacoesCeapg,
+        Float percentualOrcamentoAnual,
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy") LocalDateTime createdAt,
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy") LocalDateTime updatedAt) {
 
@@ -94,6 +99,9 @@ public record ResponseAssistanceRequestDTO(
         entity.setNumeroDiariasAprovadas(this.numeroDiariasAprovadas());
         entity.setValorAprovado(this.valorAprovado());
         entity.setObservacao(this.observacao());
+        entity.setCustoFinalCeapg(this.custoFinalCeapg());
+        entity.setObservacoesCeapg(this.observacoesCeapg());
+        entity.setPercentualOrcamentoAnual(this.percentualOrcamentoAnual());
         return entity;
     }
 
@@ -101,6 +109,8 @@ public record ResponseAssistanceRequestDTO(
         return new ResponseAssistanceRequestDTO(
                 entity.getId(),
                 UserResponseDTO.fromUser(entity.getUser()),
+                entity.getAvaliadorProap() != null ? UserResponseDTO.fromUser(entity.getAvaliadorProap()) : null,
+                entity.getAvaliadorCeapg() != null ? UserResponseDTO.fromUser(entity.getAvaliadorCeapg()) : null,
                 entity.getTituloPublicacao(),
                 entity.getCoautores(),
                 entity.getAlgumCoautorPGCOMP(),
@@ -140,6 +150,9 @@ public record ResponseAssistanceRequestDTO(
                 entity.getValorAprovado(),
                 entity.getObservacao(),
                 entity.getAutomaticDecText(),
+                entity.getCustoFinalCeapg(),
+                entity.getObservacoesCeapg(),
+                entity.getPercentualOrcamentoAnual(),
                 entity.getCreatedAt(),
                 entity.getUpdatedAt());
     }

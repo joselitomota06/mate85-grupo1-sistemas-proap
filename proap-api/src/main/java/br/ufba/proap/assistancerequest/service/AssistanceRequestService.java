@@ -5,12 +5,17 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.ufba.proap.assistancerequest.domain.AssistanceRequest;
+import br.ufba.proap.assistancerequest.domain.dto.AssistanceRequestCeapgDTO;
 import br.ufba.proap.assistancerequest.domain.dto.ResponseAssistanceRequestDTO;
 import br.ufba.proap.assistancerequest.repository.AssistanceRequestQueryRepository;
 import br.ufba.proap.assistancerequest.repository.AssistanteRequestRepository;
 import br.ufba.proap.authentication.domain.User;
+import br.ufba.proap.authentication.service.UserService;
+import br.ufba.proap.exception.UnauthorizedException;
+import jakarta.ws.rs.NotFoundException;
 
 @Service
 public class AssistanceRequestService {
@@ -20,6 +25,9 @@ public class AssistanceRequestService {
 
 	@Autowired
 	private AssistanceRequestQueryRepository assistanceRequestQueryRepository;
+
+	@Autowired
+	private UserService userService;
 
 	public List<ResponseAssistanceRequestDTO> findAll() {
 		List<AssistanceRequest> assistanceRequest = assistanteRequestRepository.findAll();
@@ -100,5 +108,27 @@ public class AssistanceRequestService {
 
 	public void delete(AssistanceRequest assistanceRequestDTO) {
 		assistanteRequestRepository.delete(assistanceRequestDTO);
+	}
+
+	@Transactional
+	public AssistanceRequest updateCeapgFields(Long id, AssistanceRequestCeapgDTO ceapgDTO)
+			throws UnauthorizedException, NotFoundException {
+		User currentUser = userService.getLoggedUser();
+
+		if (!currentUser.getPerfil().hasPermission("CEAPG_ROLE")) {
+			throw new UnauthorizedException("Usuário não possui permissão para atualizar campos CEAPG");
+		}
+
+		AssistanceRequest request = assistanteRequestRepository.findById(id)
+				.orElseThrow(() -> new NotFoundException("Solicitação não encontrada"));
+
+		if (!request.getSituacao().equals(1)) {
+			throw new UnauthorizedException("Solicitação não foi aprovada pela comissão do PROAP");
+		}
+
+		request.setCustoFinalCeapg(ceapgDTO.getCustoFinalCeapg());
+		request.setObservacoesCeapg(ceapgDTO.getObservacoesCeapg());
+		request.setAvaliadorCeapg(currentUser);
+		return assistanteRequestRepository.save(request);
 	}
 }

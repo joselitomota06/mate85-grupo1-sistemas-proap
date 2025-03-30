@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import br.ufba.proap.assistancerequest.domain.AssistanceRequest;
 import br.ufba.proap.assistancerequest.domain.Review;
+import br.ufba.proap.assistancerequest.domain.dto.AssistanceRequestCeapgDTO;
 import br.ufba.proap.assistancerequest.domain.dto.CreateAssistanceRequestDTO;
 import br.ufba.proap.assistancerequest.domain.dto.ResponseAssistanceRequestDTO;
 import br.ufba.proap.assistancerequest.domain.dto.ReviewDTO;
@@ -32,8 +33,11 @@ import br.ufba.proap.assistancerequest.service.AssistanceRequestService;
 import br.ufba.proap.assistancerequest.service.ReviewService;
 import br.ufba.proap.assistancerequest.service.AssistanceRequestService.AssistanceRequestListFiltered;
 import br.ufba.proap.authentication.domain.User;
+import br.ufba.proap.authentication.domain.dto.StatusResponseDTO;
 import br.ufba.proap.authentication.service.UserService;
+import br.ufba.proap.exception.UnauthorizedException;
 import br.ufba.proap.filestorage.FileService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("assistancerequest")
@@ -238,6 +242,7 @@ public class AssistanceRequestController {
 			assistancePersisted.get().setValorAprovado(assistanceRequest.getValorAprovado());
 			assistancePersisted.get().setObservacao(assistanceRequest.getObservacao());
 			assistancePersisted.get().setAutomaticDecText();
+			assistancePersisted.get().setAvaliadorProap(currentUser);
 			return ResponseEntity.ok().body(service.save(assistancePersisted.get()));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -300,6 +305,18 @@ public class AssistanceRequestController {
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return ResponseEntity.badRequest().build();
+		}
+	}
+
+	@PutMapping("/{id}/ceapg")
+	public ResponseEntity<?> updateCeapgFields(
+			@PathVariable Long id,
+			@Valid @RequestBody AssistanceRequestCeapgDTO ceapgDTO) {
+		try {
+			AssistanceRequest updatedRequest = service.updateCeapgFields(id, ceapgDTO);
+			return ResponseEntity.ok(ResponseAssistanceRequestDTO.fromEntity(updatedRequest));
+		} catch (UnauthorizedException e) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new StatusResponseDTO("error", e.getMessage()));
 		}
 	}
 }

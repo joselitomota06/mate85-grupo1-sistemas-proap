@@ -64,7 +64,8 @@ export default function SolicitationTableRequests() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const userCanViewAllRequests = useHasPermission('VIEW_ALL_REQUESTS');
-  const userCanApproveRequests = useHasPermission('APPROVE_REQUEST');
+  const isCeapg = useHasPermission('CEAPG_ROLE');
+  const userCanReviewRequests = useHasPermission('APPROVE_REQUEST');
   const currentUser = useAuth();
 
   //#region table data
@@ -450,7 +451,7 @@ export default function SolicitationTableRequests() {
                               <Description />
                             </IconButton>
                           </Tooltip>
-                          {userCanApproveRequests && (
+                          {(userCanReviewRequests || isCeapg) && (
                             <Tooltip title="Revisar Solicitação">
                               <IconButton
                                 onClick={() => handleClickReviewRequest(id!)}
@@ -461,7 +462,8 @@ export default function SolicitationTableRequests() {
                           )}
                         </>
 
-                        {(situacao == 0 || userCanApproveRequests) && (
+                        {((situacao == 0 && currentUser.email == user.email) ||
+                          userCanReviewRequests) && (
                           <Tooltip title="Editar Solicitação">
                             <IconButton
                               onClick={() => handleClickEditRequest(id!)}

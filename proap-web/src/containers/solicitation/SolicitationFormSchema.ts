@@ -129,6 +129,11 @@ export const reviewDataFormSchema = Yup.object({
   valorAprovado: Yup.number().required('Campo obrigatório'),
 });
 
+export const ceapgDataFormSchema = Yup.object({
+  custoFinalCeapg: Yup.number().required('Campo obrigatório'),
+  observacoesCeapg: Yup.string().notRequired(),
+});
+
 export interface SolicitationFormValues
   extends Omit<AssistanceRequest, 'automaticDecText'> {
   aceiteFinal: boolean | undefined;
@@ -250,7 +255,28 @@ export const INITIAL_REVIEW_FORM_VALUES: SolicitationFormValues = {
   comprovantePagamento: null,
   createdAt: undefined,
   updatedAt: undefined,
+  percentualOrcamentoAnual: 0,
+  custoFinalCeapg: 0,
+  observacoesCeapg: '',
   user: {
+    name: '',
+    cpf: '',
+    email: '',
+    phone: '',
+    alternativePhone: '',
+    registrationNumber: '',
+    profileName: '',
+  },
+  avaliadorProap: {
+    name: '',
+    cpf: '',
+    email: '',
+    phone: '',
+    alternativePhone: '',
+    registrationNumber: '',
+    profileName: '',
+  },
+  avaliadorCeapg: {
     name: '',
     cpf: '',
     email: '',

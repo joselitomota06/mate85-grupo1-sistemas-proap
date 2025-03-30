@@ -35,6 +35,14 @@ public class AssistanceRequest {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	// Avaliadores
+
+	@ManyToOne
+	private User avaliadorProap;
+
+	@ManyToOne
+	private User avaliadorCeapg;
+
 	// Dados da Solicitação
 	@ManyToOne
 	private User user;
@@ -149,6 +157,17 @@ public class AssistanceRequest {
 
 	@Column(nullable = true)
 	private String observacao;
+
+	@Column(nullable = true)
+	private Float percentualOrcamentoAnual;
+
+	// Campos CEAPG
+
+	@Column(nullable = true)
+	private Float custoFinalCeapg;
+
+	@Column(nullable = true)
+	private String observacoesCeapg;
 
 	// Apos aceite
 	@Column(nullable = true, columnDefinition = "text", length = 100000)

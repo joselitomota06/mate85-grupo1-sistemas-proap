@@ -6,11 +6,10 @@ import {
   Box,
   FormControl,
   FormHelperText,
-  Grid,
+  InputAdornment,
   MenuItem,
   Select,
   Stack,
-  TextField,
   Typography,
 } from '@mui/material';
 import {
@@ -19,30 +18,28 @@ import {
   StyledTextField,
 } from '../SolicitationFormContainer.style';
 import { FormControlLabel, Radio, RadioGroup } from '@mui/material';
-import { useSysConfig } from '../../../hooks/admin/useSysConfig';
 
 export default function ReviewDataFormContainer() {
   const { values, errors, touched } =
     useFormikContext<SolicitationFormValues>();
-  const { config } = useSysConfig();
 
   const maxDiarias = values.quantidadeDiariasSolicitadas || 0;
   const diariasOptions = Array.from({ length: maxDiarias + 1 }, (_, i) => i);
 
   return (
-    <Box display="flex" flexDirection="column" pt={2} pb={2}>
-      <Typography variant="h5" sx={{ mt: 2, fontWeight: 'bold' }}>
+    <Box sx={{ p: 2 }}>
+      <Typography variant="h5" sx={{ mb: 3, fontWeight: 'bold' }}>
         Avaliação da solicitação
       </Typography>
-      <Stack sx={{ mt: 2 }}>
-        <FormControl error={Boolean(touched.situacao && errors.situacao)}>
+
+      {/* Situação */}
+      <Box sx={{ mb: 3, p: 2, border: '1px solid #e0e0e0', borderRadius: 1 }}>
+        <FormControl
+          error={Boolean(touched.situacao && errors.situacao)}
+          fullWidth
+        >
           <StyledFormLabel>Situação</StyledFormLabel>
-          <Field
-            as={RadioGroup}
-            aria-labelledby="demo-row-radio-buttons-group-label"
-            name="situacao"
-            row
-          >
+          <Field as={RadioGroup} name="situacao" row sx={{ mb: 1 }}>
             <FormControlLabel value="1" control={<Radio />} label="Aprovado" />
             <FormControlLabel value="2" control={<Radio />} label="Reprovado" />
           </Field>
@@ -50,89 +47,117 @@ export default function ReviewDataFormContainer() {
             <FormHelperText>{errors.situacao}</FormHelperText>
           )}
         </FormControl>
+      </Box>
 
-        <Field
-          as={StyledTextField}
-          style={{ maxWidth: '170px' }}
-          required
-          label="Data da avaliação da solicitação"
-          name="dataAprovacao"
-          type="date"
-          error={Boolean(touched.dataAprovacao && errors.dataAprovacao)}
-          helperText={touched.dataAprovacao && errors.dataAprovacao}
-        />
+      {/* Data e Número ATA */}
+      <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
+        <Box sx={{ flex: 1 }}>
+          <Field
+            as={StyledTextField}
+            fullWidth
+            required
+            label="Data da avaliação da solicitação"
+            name="dataAprovacao"
+            type="date"
+            InputLabelProps={{ shrink: true }}
+            error={Boolean(touched.dataAprovacao && errors.dataAprovacao)}
+            helperText={touched.dataAprovacao && errors.dataAprovacao}
+          />
+        </Box>
+        <Box sx={{ flex: 1 }}>
+          <Field
+            as={StyledTextField}
+            fullWidth
+            label="Número da ATA"
+            required
+            name="numeroAta"
+            type="number"
+            error={Boolean(touched.numeroAta && errors.numeroAta)}
+            helperText={touched.numeroAta && errors.numeroAta}
+          />
+        </Box>
+      </Box>
 
-        <Field
-          as={StyledTextField}
-          style={{ maxWidth: '170px' }}
-          label="Número da ATA"
-          required
-          name="numeroAta"
-          type="number"
-          error={Boolean(touched.numeroAta && errors.numeroAta)}
-          helperText={touched.numeroAta && errors.numeroAta}
-        />
-
-        <StyledData>
-          <StyledFormLabel>Valor total da solicitação (R$) </StyledFormLabel>
-          <Typography style={{ color: 'black' }} variant="subtitle1">
-            R${values.valorTotal}
-          </Typography>
-        </StyledData>
-
-        <Field
-          as={StyledTextField}
-          required
-          style={{ maxWidth: '250px' }}
-          label="Valor total aprovado (R$)"
-          name="valorAprovado"
-          type="number"
-          InputProps={{
-            inputProps: { min: 0, step: 0.01, max: values.valorTotal },
-          }}
-          error={Boolean(touched.valorAprovado && errors.valorAprovado)}
-          helperText={touched.valorAprovado && errors.valorAprovado}
-        />
-
-        <FormControl
-          error={Boolean(
-            touched.numeroDiariasAprovadas && errors.numeroDiariasAprovadas,
-          )}
-        >
-          <StyledData>
-            <StyledFormLabel>Número de diárias solicitadas</StyledFormLabel>
-            <Typography style={{ color: 'black' }} variant="subtitle1">
-              {values.quantidadeDiariasSolicitadas}
-            </Typography>
-          </StyledData>
-          <StyledFormLabel required>
-            Número de diárias aprovadas
-          </StyledFormLabel>
-
-          <Stack>
+      {/* Valores */}
+      <Box sx={{ mb: 3, p: 2, border: '1px solid #e0e0e0', borderRadius: 1 }}>
+        <Box sx={{ display: 'flex', gap: 4, mb: 2 }}>
+          <Box sx={{ flex: 1 }}>
+            <StyledData>
+              <StyledFormLabel>Valor total da solicitação</StyledFormLabel>
+              <Typography variant="h6" color="primary">
+                R$ {values.valorTotal}
+              </Typography>
+            </StyledData>
+          </Box>
+          <Box sx={{ flex: 1 }}>
             <Field
-              as={Select}
-              sx={{ maxWidth: 60 }}
-              displayEmpty
-              inputProps={{ 'aria-label': 'Without label' }}
-              name="numeroDiariasAprovadas"
-              defaultValue={0}
-            >
-              {diariasOptions.map((num) => (
-                <MenuItem key={num} value={num}>
-                  {num}
-                </MenuItem>
-              ))}
-            </Field>
-            {touched.numeroDiariasAprovadas &&
-              errors.numeroDiariasAprovadas && (
-                <FormHelperText>{errors.numeroDiariasAprovadas}</FormHelperText>
-              )}
-          </Stack>
-        </FormControl>
+              as={StyledTextField}
+              required
+              fullWidth
+              label="Valor total aprovado (R$)"
+              name="valorAprovado"
+              type="number"
+              InputProps={{
+                inputProps: { min: 0, step: 0.01, max: values.valorTotal },
+                startAdornment: (
+                  <InputAdornment position="start">R$</InputAdornment>
+                ),
+              }}
+              error={Boolean(touched.valorAprovado && errors.valorAprovado)}
+              helperText={touched.valorAprovado && errors.valorAprovado}
+            />
+          </Box>
+        </Box>
+      </Box>
 
+      {/* Diárias */}
+      <Box sx={{ mb: 3, p: 2, border: '1px solid #e0e0e0', borderRadius: 1 }}>
+        <Box sx={{ display: 'flex', gap: 4 }}>
+          <Box sx={{ flex: 1 }}>
+            <StyledData>
+              <StyledFormLabel>Diárias solicitadas</StyledFormLabel>
+              <Typography variant="h6" color="primary">
+                {values.quantidadeDiariasSolicitadas}
+              </Typography>
+            </StyledData>
+          </Box>
+          <Box sx={{ flex: 1 }}>
+            <FormControl
+              fullWidth
+              error={Boolean(
+                touched.numeroDiariasAprovadas && errors.numeroDiariasAprovadas,
+              )}
+            >
+              <StyledFormLabel required>Diárias aprovadas</StyledFormLabel>
+              <Field
+                as={Select}
+                displayEmpty
+                name="numeroDiariasAprovadas"
+                defaultValue={0}
+                sx={{ maxWidth: '100px' }}
+              >
+                {diariasOptions.map((num) => (
+                  <MenuItem key={num} value={num}>
+                    {num}
+                  </MenuItem>
+                ))}
+              </Field>
+              {touched.numeroDiariasAprovadas &&
+                errors.numeroDiariasAprovadas && (
+                  <FormHelperText>
+                    {errors.numeroDiariasAprovadas}
+                  </FormHelperText>
+                )}
+            </FormControl>
+          </Box>
+        </Box>
+      </Box>
+
+      {/* Observação */}
+      <Box>
         <Field
           as={StyledTextField}
+          fullWidth
           label="Observação"
           name="observacao"
           error={Boolean(touched.observacao && errors.observacao)}
@@ -140,7 +165,7 @@ export default function ReviewDataFormContainer() {
           multiline
           rows={4}
         />
-      </Stack>
+      </Box>
     </Box>
   );
 }

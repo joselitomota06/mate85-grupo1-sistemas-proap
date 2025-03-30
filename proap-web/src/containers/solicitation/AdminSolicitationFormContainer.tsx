@@ -16,15 +16,19 @@ import {
   reviewDataFormSchema,
   SolicitationFormValues,
   INITIAL_REVIEW_FORM_VALUES,
+  ceapgDataFormSchema,
 } from './SolicitationFormSchema';
 import StepperForm, {
   FormStep,
 } from '../../components/stepper-form/StepperForm';
 import SolicitationReviewContainer from './review/SolicitationReviewContainer';
+import ProapReviewContainer from './review/ceapg/ProapReviewContainer';
+import CeapgDataFormContainer from './review/ceapg/CeapgDataFormContainer';
 
 interface SolicitationFormContainerProps {
   onSubmit: (values: FormikValues) => void;
   initialValues?: SolicitationFormValues;
+  isCeapg?: boolean;
   title?: string;
   labels?: {
     previous?: string;
@@ -36,6 +40,7 @@ interface SolicitationFormContainerProps {
 const defaultProps: SolicitationFormContainerProps = {
   title: 'Editar solicitação de auxílio',
   initialValues: INITIAL_REVIEW_FORM_VALUES,
+  isCeapg: false,
   labels: {
     submit: 'Editar solicitação',
   },
@@ -47,8 +52,27 @@ export default function AdminSolicitationFormContainer({
   initialValues = defaultProps.initialValues,
   labels = defaultProps.labels,
   onSubmit = defaultProps.onSubmit,
+  isCeapg = defaultProps.isCeapg,
 }: SolicitationFormContainerProps) {
-  const evaluateFormSteps: FormStep[] = useMemo(
+  const ceapgFormSteps: FormStep[] = useMemo(
+    () => [
+      {
+        label: 'Resumo da Solicitação',
+        component: SolicitationReviewContainer,
+      },
+      {
+        label: 'Resumo da Avaliação da Comissão',
+        component: ProapReviewContainer,
+      },
+      {
+        label: 'Avaliação do CEAPG',
+        component: CeapgDataFormContainer,
+        schema: ceapgDataFormSchema,
+      },
+    ],
+    [],
+  );
+  const proapComissionFormSteps: FormStep[] = useMemo(
     () => [
       {
         label: 'Resumo da Solicitação',
@@ -76,7 +100,7 @@ export default function AdminSolicitationFormContainer({
       <StepperForm
         initialValues={initialValues as FormikValues}
         onSubmit={onSubmit}
-        steps={evaluateFormSteps}
+        steps={isCeapg ? ceapgFormSteps : proapComissionFormSteps}
         validateOnChange={false}
         labels={
           labels || {

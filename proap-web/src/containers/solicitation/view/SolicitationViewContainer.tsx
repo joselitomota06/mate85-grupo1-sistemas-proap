@@ -12,6 +12,15 @@ import {
 import { BASE_PDF_URL } from '../../../helpers/api';
 import useSolicitation from '../../../hooks/solicitation/useSolicitation';
 import { booleanToYesOrNo, dateToLocalDate } from '../../../helpers/conversion';
+import {
+  Person,
+  Event,
+  AttachMoney,
+  School,
+  CheckCircle,
+  Cancel,
+  PendingOutlined,
+} from '@mui/icons-material';
 
 interface InfoItemProps {
   label: string;
@@ -29,9 +38,11 @@ const InfoItem = ({ label, value }: InfoItemProps) => (
 
 const SectionPaper = ({
   title,
+  icon,
   children,
 }: {
   title: string;
+  icon: React.ReactNode;
   children: React.ReactNode;
 }) => (
   <Paper
@@ -46,17 +57,20 @@ const SectionPaper = ({
       height: '100%',
     }}
   >
-    <Typography
-      variant="h6"
+    <Box
       sx={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 1,
         mb: 3,
         pb: 2,
         borderBottom: '1px solid',
         borderColor: 'divider',
       }}
     >
-      {title}
-    </Typography>
+      {icon}
+      <Typography variant="h6">{title}</Typography>
+    </Box>
     {children}
   </Paper>
 );
@@ -83,17 +97,31 @@ export default function SolicitationViewContainer({ id }: { id: string }) {
         <Box sx={{ mb: 3 }}>
           {' '}
           {/* Added margin top */}
-          <SectionPaper title="Status da Avaliação">
+          <SectionPaper
+            title="Status da Avaliação"
+            icon={<Event color="primary" />}
+          >
             <Stack direction={{ xs: 'column', md: 'row' }} spacing={3}>
               <Box sx={{ width: { xs: '100%', md: '50%' } }}>
                 <InfoItem
                   label="Situação"
                   value={
-                    solicitation.situacao === 1
-                      ? 'Aprovado'
-                      : solicitation.situacao === 2
-                        ? 'Reprovado'
-                        : 'Pendente'
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      {solicitation.situacao === 1 ? (
+                        <CheckCircle sx={{ color: 'success.main' }} />
+                      ) : solicitation.situacao === 2 ? (
+                        <Cancel sx={{ color: 'error.main' }} />
+                      ) : (
+                        <PendingOutlined sx={{ color: 'warning.main' }} />
+                      )}
+                      <Typography variant="body1">
+                        {solicitation.situacao === 1
+                          ? 'Aprovado'
+                          : solicitation.situacao === 2
+                            ? 'Reprovado'
+                            : 'Pendente'}
+                      </Typography>
+                    </Box>
                   }
                 />
                 {solicitation.situacao === 1 && (
@@ -137,7 +165,10 @@ export default function SolicitationViewContainer({ id }: { id: string }) {
       <Stack direction={{ xs: 'column', lg: 'row' }} spacing={3} sx={{ mb: 3 }}>
         <Fade in timeout={500}>
           <Box sx={{ width: { xs: '100%', lg: '25%' } }}>
-            <SectionPaper title="Detalhes do Solicitante">
+            <SectionPaper
+              title="Detalhes do Solicitante"
+              icon={<Person color="primary" />}
+            >
               <InfoItem
                 label="Quem abriu a solicitação"
                 value={solicitation.user.name}
@@ -181,7 +212,10 @@ export default function SolicitationViewContainer({ id }: { id: string }) {
 
         <Fade in timeout={600}>
           <Box sx={{ width: { xs: '100%', lg: '25%' } }}>
-            <SectionPaper title="Dados da Solicitação">
+            <SectionPaper
+              title="Dados da Solicitação"
+              icon={<School color="primary" />}
+            >
               <InfoItem
                 label="Título da Publicação"
                 value={solicitation.tituloPublicacao}
@@ -208,6 +242,14 @@ export default function SolicitationViewContainer({ id }: { id: string }) {
                       href={`${BASE_PDF_URL}${solicitation.cartaAceite}`}
                       target="_blank"
                       rel="noopener"
+                      sx={{
+                        color: 'primary.main',
+                        textDecoration: 'none',
+                        fontWeight: 'bold',
+                        '&:hover': {
+                          opacity: 0.8,
+                        },
+                      }}
                     >
                       Visualizar
                     </Link>
@@ -222,7 +264,10 @@ export default function SolicitationViewContainer({ id }: { id: string }) {
 
         <Fade in timeout={700}>
           <Box sx={{ width: { xs: '100%', lg: '25%' } }}>
-            <SectionPaper title="Detalhamento do Evento">
+            <SectionPaper
+              title="Detalhamento do Evento"
+              icon={<Event color="primary" />}
+            >
               <InfoItem
                 label="Nome do Evento"
                 value={solicitation.nomeEvento}
@@ -261,7 +306,23 @@ export default function SolicitationViewContainer({ id }: { id: string }) {
               )}
               <InfoItem
                 label="Link da Homepage do Evento"
-                value={solicitation.linkHomePageEvento}
+                value={
+                  <Link
+                    href={solicitation.linkHomePageEvento}
+                    target="_blank"
+                    rel="noopener"
+                    sx={{
+                      color: 'primary.main',
+                      textDecoration: 'none',
+                      fontWeight: 'bold',
+                      '&:hover': {
+                        opacity: 0.8,
+                      },
+                    }}
+                  >
+                    {solicitation.linkHomePageEvento}
+                  </Link>
+                }
               />
               <InfoItem label="País" value={solicitation.pais} />
               <InfoItem label="Cidade" value={solicitation.cidade} />
@@ -272,14 +333,33 @@ export default function SolicitationViewContainer({ id }: { id: string }) {
 
         <Fade in timeout={800}>
           <Box sx={{ width: { xs: '100%', lg: '25%' } }}>
-            <SectionPaper title="Detalhamento Financeiro">
+            <SectionPaper
+              title="Detalhamento Financeiro"
+              icon={<AttachMoney color="primary" />}
+            >
               <InfoItem
                 label="Valor da Inscrição"
                 value={`R$${solicitation.valorInscricao}`}
               />
               <InfoItem
                 label="Link da Página de Inscrição"
-                value={solicitation.linkPaginaInscricao}
+                value={
+                  <Link
+                    href={solicitation.linkPaginaInscricao}
+                    target="_blank"
+                    rel="noopener"
+                    sx={{
+                      color: 'primary.main',
+                      textDecoration: 'none',
+                      fontWeight: 'bold',
+                      '&:hover': {
+                        opacity: 0.8,
+                      },
+                    }}
+                  >
+                    {solicitation.linkPaginaInscricao}
+                  </Link>
+                }
               />
               {solicitation.quantidadeDiariasSolicitadas > 0 && (
                 <InfoItem

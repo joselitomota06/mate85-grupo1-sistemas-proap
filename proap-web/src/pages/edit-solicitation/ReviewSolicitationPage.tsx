@@ -1,17 +1,14 @@
-import React, { useEffect, useCallback } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FormikValues } from 'formik';
 import {
-  updateSolicitation,
   reviewSolicitation,
+  reviewSolicitationCeapg,
 } from '../../services/solicitationService';
 import useSolicitation from '../../hooks/solicitation/useSolicitation';
 import LinearProgress from '@mui/material/LinearProgress';
-import { useAuth } from '../../hooks';
-import {
-  INITIAL_REVIEW_FORM_VALUES,
-  SolicitationFormValues,
-} from '../../containers/solicitation/SolicitationFormSchema';
+
+import { SolicitationFormValues } from '../../containers/solicitation/SolicitationFormSchema';
 import Toast from '../../helpers/notification';
 import { dateToLocalDate } from '../../helpers/conversion';
 import AdminSolicitationFormContainer from '../../containers/solicitation/AdminSolicitationFormContainer';
@@ -23,7 +20,8 @@ export default function ReviewSolicitationPage() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const { solicitation, isLoading, hasError } = useSolicitation(id);
-  const userHasPermission = useHasPermission('APPROVE_REQUEST');
+  const isCeapg = useHasPermission('CEAPG_ROLE');
+  const userCanViewPage = useHasPermission('APPROVE_REQUEST') || isCeapg;
 
   const navigate = useNavigate();
 
@@ -50,7 +48,24 @@ export default function ReviewSolicitationPage() {
     [dispatch],
   );
 
-  if (!userHasPermission) {
+  const handleReviewSolicitationCeapgSubmit = useCallback(
+    (values: FormikValues) => {
+      return reviewSolicitationCeapg(Number(id), {
+        custoFinalCeapg: values.custoFinalCeapg,
+        observacoesCeapg: values.observacoesCeapg,
+      })
+        .then(() => {
+          Toast.success('Solicitação avaliada com sucesso!');
+          navigate('/');
+        })
+        .catch((error) => {
+          Toast.error(error.response.data.message);
+        });
+    },
+    [dispatch, id],
+  );
+
+  if (!userCanViewPage) {
     return <UnauthorizedPage />;
   }
 
@@ -61,10 +76,15 @@ export default function ReviewSolicitationPage() {
         <>
           {
             <AdminSolicitationFormContainer
-              onSubmit={handleReviewSolicitationSubmit}
+              onSubmit={
+                isCeapg
+                  ? handleReviewSolicitationCeapgSubmit
+                  : handleReviewSolicitationSubmit
+              }
               initialValues={{
                 ...solicitation,
               }}
+              isCeapg={isCeapg}
               title="Avaliar solicitação de auxílio"
               labels={{
                 submit: 'Finalizar análise',

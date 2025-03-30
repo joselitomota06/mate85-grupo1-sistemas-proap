@@ -7,6 +7,7 @@ import { authenticate } from '../store/slices/auth-slice/authSlice';
 import { AppDispatch } from '../store';
 import api from '.';
 import { AssistanceRequest } from '../types';
+import { AssistanceCeapgReview } from '../types/requests-type/AssistanceCeapgReview';
 
 export const submitSolicitation = (values: InitialSolicitationFormValues) => {
   const formData = new FormData();
@@ -50,3 +51,15 @@ export const updateSolicitation = (
 
 export const reviewSolicitation = (values: SolicitationFormValues) =>
   api.put('assistancerequest/reviewsolicitation', values);
+
+export const reviewSolicitationCeapg = async (
+  id: number,
+  values: AssistanceCeapgReview,
+) => {
+  const response = await api.put(`assistancerequest/${id}/ceapg`, values);
+  if (response.status !== 200) {
+    throw new Error('Erro ao avaliar a solicitação');
+  }
+
+  return response.data;
+};
