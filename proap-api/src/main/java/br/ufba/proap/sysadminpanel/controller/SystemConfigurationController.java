@@ -1,4 +1,4 @@
-package br.ufba.proap.adminpanel.controller;
+package br.ufba.proap.sysadminpanel.controller;
 
 import java.util.List;
 
@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.ufba.proap.adminpanel.domain.dto.SystemConfigurationDTO;
-import br.ufba.proap.adminpanel.domain.dto.UrlMapperDTO;
-import br.ufba.proap.adminpanel.service.SystemConfigurationService;
 import br.ufba.proap.authentication.domain.User;
 import br.ufba.proap.authentication.service.UserService;
+import br.ufba.proap.sysadminpanel.domain.dto.SystemConfigurationDTO;
+import br.ufba.proap.sysadminpanel.domain.dto.UrlMapperDTO;
+import br.ufba.proap.sysadminpanel.service.SystemConfigurationService;
 
 @RestController
 @RequestMapping("admin/system-config")

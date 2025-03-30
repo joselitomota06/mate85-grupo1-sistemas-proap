@@ -1,4 +1,4 @@
-package br.ufba.proap.adminpanel.domain;
+package br.ufba.proap.sysadminpanel.domain;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

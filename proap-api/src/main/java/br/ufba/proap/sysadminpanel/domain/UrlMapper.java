@@ -1,4 +1,4 @@
-package br.ufba.proap.adminpanel.domain;
+package br.ufba.proap.sysadminpanel.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

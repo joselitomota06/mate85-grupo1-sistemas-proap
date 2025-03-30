@@ -1,8 +1,8 @@
-package br.ufba.proap.adminpanel.repository;
+package br.ufba.proap.sysadminpanel.repository;
 
 import org.springframework.stereotype.Repository;
 
-import br.ufba.proap.adminpanel.domain.UrlMapper;
+import br.ufba.proap.sysadminpanel.domain.UrlMapper;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

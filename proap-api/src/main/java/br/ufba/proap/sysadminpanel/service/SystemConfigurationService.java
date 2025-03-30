@@ -1,4 +1,4 @@
-package br.ufba.proap.adminpanel.service;
+package br.ufba.proap.sysadminpanel.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,13 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.ufba.proap.adminpanel.domain.SystemConfiguration;
-import br.ufba.proap.adminpanel.domain.UrlMapper;
-import br.ufba.proap.adminpanel.domain.dto.SystemConfigurationDTO;
-import br.ufba.proap.adminpanel.domain.dto.UrlMapperDTO;
-import br.ufba.proap.adminpanel.repository.SystemConfigurationRepository;
-import br.ufba.proap.adminpanel.domain.CountryGroup;
-import br.ufba.proap.adminpanel.domain.dto.CountryGroupDTO;
+import br.ufba.proap.sysadminpanel.domain.CountryGroup;
+import br.ufba.proap.sysadminpanel.domain.SystemConfiguration;
+import br.ufba.proap.sysadminpanel.domain.UrlMapper;
+import br.ufba.proap.sysadminpanel.domain.dto.CountryGroupDTO;
+import br.ufba.proap.sysadminpanel.domain.dto.SystemConfigurationDTO;
+import br.ufba.proap.sysadminpanel.domain.dto.UrlMapperDTO;
+import br.ufba.proap.sysadminpanel.repository.SystemConfigurationRepository;
 
 @Service
 public class SystemConfigurationService {

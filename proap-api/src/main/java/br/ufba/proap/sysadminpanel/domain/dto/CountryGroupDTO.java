@@ -1,12 +1,13 @@
-package br.ufba.proap.adminpanel.domain.dto;
+package br.ufba.proap.sysadminpanel.domain.dto;
 
-import br.ufba.proap.adminpanel.domain.CountryGroup;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+
+import br.ufba.proap.sysadminpanel.domain.CountryGroup;
 
 @Getter
 @Setter

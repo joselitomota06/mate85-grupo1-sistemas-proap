@@ -1,4 +1,4 @@
-package br.ufba.proap.adminpanel.domain.dto;
+package br.ufba.proap.sysadminpanel.domain.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

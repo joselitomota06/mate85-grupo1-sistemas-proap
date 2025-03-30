@@ -1,11 +1,11 @@
-package br.ufba.proap.adminpanel.domain.dto;
+package br.ufba.proap.sysadminpanel.domain.dto;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import br.ufba.proap.adminpanel.domain.CountryGroup;
-import br.ufba.proap.adminpanel.domain.SystemConfiguration;
-import br.ufba.proap.adminpanel.domain.UrlMapper;
+import br.ufba.proap.sysadminpanel.domain.CountryGroup;
+import br.ufba.proap.sysadminpanel.domain.SystemConfiguration;
+import br.ufba.proap.sysadminpanel.domain.UrlMapper;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
