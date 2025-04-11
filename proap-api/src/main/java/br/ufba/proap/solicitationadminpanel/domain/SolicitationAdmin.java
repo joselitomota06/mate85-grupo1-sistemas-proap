@@ -1,5 +1,7 @@
 package br.ufba.proap.solicitationadminpanel.domain;
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,7 +25,13 @@ public class SolicitationAdmin {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, precision = 19, scale = 4)
+    private BigDecimal orcamentoAnual;
+
     @Column(nullable = false)
-    private Float orcamentoAnual;
+    private Integer year;
+
+    @Column(nullable = false)
+    private Boolean acceptRequests = false;
 
 }
