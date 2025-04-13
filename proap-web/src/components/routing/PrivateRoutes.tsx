@@ -14,10 +14,12 @@ import {
 import NavigationWrapper from '../navigation/NavigationWrapper';
 import UserProfilePage from '../../pages/user-profile/UserProfilePage';
 import ViewSolicitationPage from '../../pages/view-solicitation/ViewSolicitationPage';
+import BudgetDashboardPage from '../../pages/admin-panel/BudgetDashboardPage';
 import useHasPermission from '../../hooks/auth/useHasPermission';
 
 export default function PrivateRoutes() {
   const isAdmin = useHasPermission('ADMIN_ROLE');
+  const isCeapg = useHasPermission('CEAPG_ROLE');
 
   return (
     <NavigationWrapper>
@@ -47,6 +49,9 @@ export default function PrivateRoutes() {
         <Route path="/users" element={<UsersPage />} />
         <Route path="/user-profile" element={<UserProfilePage />} />
         {isAdmin && <Route path="/admin-panel" element={<AdminPanelPage />} />}
+        {(isAdmin || isCeapg) && (
+          <Route path="/budget-dashboard" element={<BudgetDashboardPage />} />
+        )}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </NavigationWrapper>

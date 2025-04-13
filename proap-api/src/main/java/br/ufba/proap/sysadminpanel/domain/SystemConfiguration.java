@@ -34,6 +34,9 @@ public class SystemConfiguration {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    private Boolean enableSolicitation = false;
+
     @Column(columnDefinition = "text")
     private String qualis;
 

@@ -18,6 +18,7 @@ import lombok.Setter;
 public class SystemConfigurationDTO {
 
     private Long id;
+    private Boolean enableSolicitation;
     private List<String> qualis;
     private String sitePgcompURL;
     private String resolucaoProapURL;
@@ -62,6 +63,7 @@ public class SystemConfigurationDTO {
 
         SystemConfigurationDTO dto = new SystemConfigurationDTO(
                 config.getId(),
+                config.getEnableSolicitation(),
                 config.getQualisList(),
                 config.getSitePgcompURL(),
                 config.getResolucaoProapURL(),
@@ -83,6 +85,7 @@ public class SystemConfigurationDTO {
     public SystemConfiguration toEntity() {
         SystemConfiguration config = new SystemConfiguration();
         config.setId(this.id);
+        config.setEnableSolicitation(this.enableSolicitation);
         config.setQualisList(this.qualis);
         config.setSitePgcompURL(this.sitePgcompURL);
         config.setResolucaoProapURL(this.resolucaoProapURL);

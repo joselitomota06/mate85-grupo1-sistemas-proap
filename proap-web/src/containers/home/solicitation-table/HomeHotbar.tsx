@@ -9,10 +9,12 @@ import AddIcon from '@mui/icons-material/Add';
 import { HomeHotbarLink } from './HomeHotbar.style';
 import { useAuth } from '../../../hooks';
 import useHasPermission from '../../../hooks/auth/useHasPermission';
+import { useSysConfig } from '../../../hooks/admin/useSysConfig';
 
 export default function HomeHotbar() {
   const userCanViewAllRequests = useHasPermission('VIEW_ALL_REQUESTS');
   const userCanCreateRequest = useHasPermission('CREATE_REQUEST');
+  const { config } = useSysConfig();
 
   return (
     <Box sx={{ marginTop: '1rem', marginBottom: '1rem' }}>
@@ -29,7 +31,7 @@ export default function HomeHotbar() {
               : 'Minhas solicitações PROAP'}
           </Typography>
         </Grid>
-        {userCanCreateRequest && (
+        {userCanCreateRequest && config.enableSolicitation && (
           <Grid container spacing={1} item xs={8} justifyContent="end">
             <Grid item lg={6} xl={4} paddingTop={2} paddingBottom={3}>
               <HomeHotbarLink to="solicitation/create">

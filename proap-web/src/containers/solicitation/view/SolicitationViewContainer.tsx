@@ -21,6 +21,7 @@ import {
   Cancel,
   PendingOutlined,
 } from '@mui/icons-material';
+import { formatNumberToBRL } from '../../../helpers/formatter';
 
 interface InfoItemProps {
   label: string;
@@ -132,7 +133,7 @@ export default function SolicitationViewContainer({ id }: { id: string }) {
                     />
                     <InfoItem
                       label="Valor Total Aprovado"
-                      value={`R$${solicitation.valorAprovado}`}
+                      value={formatNumberToBRL(solicitation.valorAprovado)}
                     />
                   </>
                 )}
@@ -339,7 +340,7 @@ export default function SolicitationViewContainer({ id }: { id: string }) {
             >
               <InfoItem
                 label="Valor da Inscrição"
-                value={`R$${solicitation.valorInscricao}`}
+                value={formatNumberToBRL(solicitation.valorInscricao)}
               />
               <InfoItem
                 label="Link da Página de Inscrição"
@@ -370,7 +371,11 @@ export default function SolicitationViewContainer({ id }: { id: string }) {
               {solicitation.quantidadeDiariasSolicitadas > 0 && (
                 <InfoItem
                   label="Valor da Diária"
-                  value={`${solicitation.isDolar ? '$' : 'R$'}${solicitation.valorDiaria}`}
+                  value={
+                    solicitation.isDolar
+                      ? `$ ${solicitation.valorDiaria?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+                      : formatNumberToBRL(solicitation.valorDiaria)
+                  }
                 />
               )}
               {solicitation.quantidadeDiariasSolicitadas > 0 &&
@@ -393,12 +398,12 @@ export default function SolicitationViewContainer({ id }: { id: string }) {
               {solicitation.solicitanteDocente && (
                 <InfoItem
                   label="Valor da Passagem Aérea"
-                  value={`R$${solicitation.valorPassagem}`}
+                  value={formatNumberToBRL(solicitation.valorPassagem)}
                 />
               )}
               <InfoItem
                 label="Valor Total"
-                value={`R$${solicitation.valorTotal}`}
+                value={formatNumberToBRL(solicitation.valorTotal)}
               />
               {/* TODO: Adding remaining fields */}
             </SectionPaper>

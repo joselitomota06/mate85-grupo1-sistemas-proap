@@ -7,13 +7,18 @@ import {
   Button,
   Chip,
   Divider,
+  FormControl,
+  FormControlLabel,
   IconButton,
   InputAdornment,
+  Paper,
   Stack,
+  Switch,
   TextField,
   Typography,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import { Block } from '@mui/icons-material';
 import { useState } from 'react';
 import TextFieldWithPreview from '../../components/FormFields/TextFieldWithPreview';
 import CountryGroupField from '../../components/FormFields/CountryGroupField';
@@ -52,6 +57,125 @@ export default function SystemConfigFormContainer(
         return (
           <Box component={Form} sx={{ width: '100%' }}>
             <Stack spacing={3}>
+              <Stack direction="row" justifyContent="space-between">
+                <Typography variant="h6" fontWeight="bold" color="primary">
+                  Status do Sistema
+                </Typography>
+                <Box>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    size="large"
+                  >
+                    Salvar Alterações
+                  </Button>
+                </Box>
+              </Stack>
+
+              <FormControl
+                error={Boolean(
+                  touched.enableSolicitation && errors.enableSolicitation,
+                )}
+              >
+                <Paper
+                  elevation={0}
+                  sx={{
+                    p: 3,
+                    borderRadius: 2,
+                    border: '1px solid',
+                    borderColor: 'divider',
+                    mb: 2,
+                  }}
+                >
+                  <Box
+                    sx={{
+                      p: 2,
+                      border: '1px solid',
+                      borderColor: 'divider',
+                      borderRadius: 1,
+                      bgcolor: values.enableSolicitation
+                        ? 'success.lighter'
+                        : 'error.lighter',
+                      transition: 'background-color 0.3s',
+                    }}
+                  >
+                    <Field name="enableSolicitation">
+                      {({ field }: any) => (
+                        <FormControlLabel
+                          control={
+                            <Switch
+                              {...field}
+                              checked={field.value}
+                              onChange={(event) => {
+                                setFieldValue(field.name, event.target.checked);
+                              }}
+                              color={field.value ? 'success' : 'error'}
+                            />
+                          }
+                          label={
+                            <Box
+                              sx={{ display: 'flex', flexDirection: 'column' }}
+                            >
+                              <Box
+                                sx={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: 1,
+                                }}
+                              >
+                                {values.enableSolicitation ? (
+                                  <Typography
+                                    variant="subtitle1"
+                                    fontWeight="bold"
+                                    color="success.dark"
+                                  >
+                                    Criação de novas solicitações ativada
+                                  </Typography>
+                                ) : (
+                                  <Box
+                                    sx={{
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      gap: 1,
+                                    }}
+                                  >
+                                    <Block color="error" fontSize="small" />
+                                    <Typography
+                                      variant="subtitle1"
+                                      fontWeight="bold"
+                                      color="error.dark"
+                                    >
+                                      Criação de novas solicitações desativada
+                                    </Typography>
+                                  </Box>
+                                )}
+                              </Box>
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                                sx={{ mt: 0.5 }}
+                              >
+                                {values.enableSolicitation
+                                  ? 'Os usuários podem criar novas solicitações de auxílio.'
+                                  : 'Os usuários não podem criar novas solicitações até que esta opção seja reativada.'}
+                              </Typography>
+                            </Box>
+                          }
+                          sx={{
+                            m: 0,
+                            alignItems: 'flex-start',
+                            '& .MuiFormControlLabel-label': { flex: 1 },
+                          }}
+                        />
+                      )}
+                    </Field>
+                  </Box>
+                </Paper>
+              </FormControl>
+
+              <Divider />
+
               <Typography variant="h6" fontWeight="bold" color="primary">
                 Categorias Qualis
               </Typography>
@@ -259,7 +383,7 @@ export default function SystemConfigFormContainer(
                 onChange={(groups) => setFieldValue('countryGroups', groups)}
               />
 
-              <Box>
+              <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <Button
                   type="submit"
                   variant="contained"

@@ -7,6 +7,7 @@ import {
   StyledFormLabel,
   StyledTextField,
 } from '../../SolicitationFormContainer.style';
+import { formatNumberToBRL } from '../../../../helpers/formatter';
 
 export default function CeapgDataFormContainer() {
   const { values, errors, touched } =
@@ -25,7 +26,7 @@ export default function CeapgDataFormContainer() {
             <StyledData>
               <StyledFormLabel>Valor total da solicitação</StyledFormLabel>
               <Typography variant="h6" color="primary">
-                R$ {values.valorTotal}
+                {formatNumberToBRL(Number(values.valorTotal || 0))}
               </Typography>
             </StyledData>
           </Box>

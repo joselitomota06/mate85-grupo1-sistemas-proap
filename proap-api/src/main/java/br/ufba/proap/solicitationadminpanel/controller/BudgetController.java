@@ -1,11 +1,20 @@
 package br.ufba.proap.solicitationadminpanel.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import br.ufba.proap.authentication.domain.User;
+import br.ufba.proap.authentication.domain.dto.StatusResponseDTO;
+import br.ufba.proap.authentication.service.UserService;
 import br.ufba.proap.solicitationadminpanel.domain.SolicitationAdmin;
 import br.ufba.proap.solicitationadminpanel.service.BudgetService;
 import br.ufba.proap.solicitationadminpanel.domain.dto.AssistanceIdValueDTO;
+import br.ufba.proap.solicitationadminpanel.domain.dto.BudgetSummaryDTO;
+import jakarta.ws.rs.NotFoundException;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -19,15 +28,43 @@ public class BudgetController {
     @Autowired
     private BudgetService budgetService;
 
-    @PostMapping("/set")
-    public ResponseEntity<SolicitationAdmin> setBudget(@RequestParam BigDecimal budget, @RequestParam Integer year) {
+    @Autowired
+    private UserService userService;
+
+    private static final Logger logger = LoggerFactory.getLogger(BudgetController.class);
+
+    private boolean hasAdminPermission() {
+        try {
+            User currentUser = userService.getLoggedUser();
+            return currentUser.getPerfil() != null &&
+                    currentUser.getPerfil().hasPermission("ADMIN_ROLE");
+        } catch (Exception e) {
+            logger.error("Erro ao verificar permissão: " + e.getMessage(), e);
+            return false;
+        }
+    }
+
+    private ResponseEntity<StatusResponseDTO> checkAdminPermission(String message) {
+        if (!hasAdminPermission()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new StatusResponseDTO("error", message));
+        }
+        return null;
+    }
+
+    @PutMapping("/set")
+    public ResponseEntity<?> setBudget(@RequestParam BigDecimal budget, @RequestParam Integer year) {
+        ResponseEntity<StatusResponseDTO> permissionCheck = checkAdminPermission(
+                "Você não tem permissão para alterar o orçamento.");
+        if (permissionCheck != null) {
+            return permissionCheck;
+        }
         SolicitationAdmin solicitationAdmin = budgetService.setBudget(budget, year);
         return ResponseEntity.ok(solicitationAdmin);
     }
 
     @GetMapping("/view/{year}")
-    public ResponseEntity<List<SolicitationAdmin>> viewBudgets(@PathVariable Integer year) {
-        List<SolicitationAdmin> budgets = budgetService.getBudgetsByYear(year);
+    public ResponseEntity<SolicitationAdmin> viewBudgets(@PathVariable Integer year) {
+        SolicitationAdmin budgets = budgetService.getBudgetsByYear(year);
         return ResponseEntity.ok(budgets);
     }
 
@@ -55,5 +92,38 @@ public class BudgetController {
     public ResponseEntity<BigDecimal> getRemainingBudget(@PathVariable Integer year) {
         BigDecimal remainingBudget = budgetService.getRemainingBudget(year);
         return ResponseEntity.ok(remainingBudget);
+    }
+
+    @GetMapping("/summary/{year}")
+    public ResponseEntity<BudgetSummaryDTO> getBudgetSummary(@PathVariable Integer year) {
+        try {
+            BigDecimal totalBudget = budgetService.getBudgetsByYear(year).getOrcamentoAnual();
+
+            BigDecimal usedBudget = budgetService.getUsedBudget(year);
+
+            BigDecimal remainingBudget = budgetService.getRemainingBudget(year);
+
+            BudgetSummaryDTO summary = new BudgetSummaryDTO(
+                    year,
+                    totalBudget,
+                    usedBudget,
+                    remainingBudget);
+
+            return ResponseEntity.ok(summary);
+        } catch (NotFoundException e) {
+            BudgetSummaryDTO emptyBudget = new BudgetSummaryDTO(
+                    year,
+                    BigDecimal.ZERO,
+                    BigDecimal.ZERO,
+                    BigDecimal.ZERO);
+
+            return ResponseEntity.ok(emptyBudget);
+        }
+    }
+
+    @GetMapping("/available-years")
+    public ResponseEntity<List<Integer>> getAvailableYears() {
+        List<Integer> years = budgetService.getAvailableYears();
+        return ResponseEntity.ok(years);
     }
 }

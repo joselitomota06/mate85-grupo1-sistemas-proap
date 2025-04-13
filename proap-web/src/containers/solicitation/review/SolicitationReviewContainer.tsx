@@ -6,6 +6,7 @@ import { booleanToYesOrNo, dateToLocalDate } from '../../../helpers/conversion';
 import { BASE_PDF_URL } from '../../../helpers/api';
 import { StyledData } from '../SolicitationFormContainer.style';
 import { Person, Event, AttachMoney, School } from '@mui/icons-material';
+import { formatNumberToBRL } from '../../../helpers/formatter';
 
 export default function SolicitationReviewContainer() {
   const { values } = useFormikContext<SolicitationFormValues>();
@@ -202,7 +203,9 @@ export default function SolicitationReviewContainer() {
               <Typography variant="subtitle2" color="text.secondary">
                 Valor da inscrição
               </Typography>
-              <Typography>R$ {values.valorInscricao}</Typography>
+              <Typography>
+                {formatNumberToBRL(values.valorInscricao)}
+              </Typography>
             </StyledData>
 
             <StyledData>
@@ -237,7 +240,9 @@ export default function SolicitationReviewContainer() {
                     Valor da diária
                   </Typography>
                   <Typography>
-                    {values.isDolar ? '$' : 'R$'} {values.valorDiaria}
+                    {values.isDolar
+                      ? `$ ${values.valorDiaria?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+                      : formatNumberToBRL(values.valorDiaria)}
                   </Typography>
                 </StyledData>
 
@@ -246,7 +251,9 @@ export default function SolicitationReviewContainer() {
                     <Typography variant="subtitle2" color="text.secondary">
                       Cotação do dólar (USD)
                     </Typography>
-                    <Typography>R$ {values.cotacaoMoeda}</Typography>
+                    <Typography>
+                      {formatNumberToBRL(values.cotacaoMoeda)}
+                    </Typography>
                   </StyledData>
                 )}
 
@@ -268,7 +275,9 @@ export default function SolicitationReviewContainer() {
                 <Typography variant="subtitle2" color="text.secondary">
                   Valor da passagem aérea
                 </Typography>
-                <Typography>R$ {values.valorPassagem}</Typography>
+                <Typography>
+                  {formatNumberToBRL(values.valorPassagem)}
+                </Typography>
               </StyledData>
             )}
 
@@ -283,7 +292,7 @@ export default function SolicitationReviewContainer() {
                 color="primary"
                 sx={{ fontWeight: 'bold' }}
               >
-                R$ {values.valorTotal}
+                {formatNumberToBRL(values.valorTotal)}
               </Typography>
             </StyledData>
           </Section>

@@ -28,4 +28,5 @@ export interface SystemConfiguration {
   textoInformacaoValorPassagem: string;
   resourceLinks?: UrlMapper[];
   countryGroups?: CountryGroup[];
+  enableSolicitation: boolean;
 }

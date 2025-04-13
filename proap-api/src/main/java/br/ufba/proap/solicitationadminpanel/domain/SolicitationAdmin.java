@@ -31,7 +31,4 @@ public class SolicitationAdmin {
     @Column(nullable = false)
     private Integer year;
 
-    @Column(nullable = false)
-    private Boolean acceptRequests = false;
-
 }

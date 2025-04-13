@@ -7,6 +7,7 @@ import {
   Typography,
   Box,
 } from '@mui/material';
+import { formatNumberToBRL } from '../../../helpers/formatter';
 
 export interface SolicitationDetailsDialogProps {
   nomeSolicitante: string;
@@ -42,16 +43,17 @@ export default function SolicitationDetailsDialog({
         <Typography variant="body1" gutterBottom>
           O {solicitationData.solicitanteDocente ? 'docente' : 'discente'}{' '}
           <b>{solicitationData.nomeSolicitante}</b> solicita apoio no valor
-          total de <b>R${solicitationData.valorTotal}</b> e diárias de{' '}
+          total de <b>{formatNumberToBRL(solicitationData.valorTotal)}</b> e
+          diárias de{' '}
           <b>
             {solicitationData.isDolar
-              ? '$' + solicitationData.valorDiarias
-              : 'R$' + solicitationData.valorDiarias}
+              ? `$ ${solicitationData.valorDiarias?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+              : formatNumberToBRL(solicitationData.valorDiarias)}
           </b>{' '}
           {solicitationData.isDolar && (
             <>
               com variação cambial atual informada de{' '}
-              <b>R${solicitationData.variacaoCambial}</b>{' '}
+              <b>{formatNumberToBRL(solicitationData.variacaoCambial)}</b>{' '}
             </>
           )}{' '}
           para apresentação do trabalho{' '}

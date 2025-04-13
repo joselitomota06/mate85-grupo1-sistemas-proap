@@ -43,6 +43,7 @@ import {
 } from '../../../services/extraAssistanceRequestService';
 import { ExtraRequest } from '../../../types/requests-type/ExtraRequest';
 import usePrevious from '../../../helpers/usePrevious';
+import { formatNumberToBRL } from '../../../helpers/formatter';
 
 export default function SolicitationTableExtraRequests() {
   const dispatch = useAppDispatch();
@@ -331,14 +332,20 @@ export default function SolicitationTableExtraRequests() {
                       </TableCell>
                     )}
 
-                    <TableCell align="center">R$ {valorSolicitado}</TableCell>
+                    <TableCell align="center">
+                      {valorSolicitado != null
+                        ? formatNumberToBRL(valorSolicitado)
+                        : '-'}
+                    </TableCell>
 
                     {valorAprovado === null && (
                       <TableCell align="center">-</TableCell>
                     )}
 
                     {valorAprovado !== null && (
-                      <TableCell align="center">R$ {valorAprovado}</TableCell>
+                      <TableCell align="center">
+                        {formatNumberToBRL(valorAprovado || 0)}
+                      </TableCell>
                     )}
 
                     {dataAprovacao === null && (

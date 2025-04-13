@@ -11,6 +11,8 @@ import {
   Select,
   Stack,
   Typography,
+  Tooltip,
+  CircularProgress,
 } from '@mui/material';
 import {
   StyledData,
@@ -18,6 +20,8 @@ import {
   StyledTextField,
 } from '../SolicitationFormContainer.style';
 import { FormControlLabel, Radio, RadioGroup } from '@mui/material';
+import { InfoOutlined } from '@mui/icons-material';
+import { useBudgetPercentage } from '../../../hooks/budget/useBudgetPercentage';
 
 export default function ReviewDataFormContainer() {
   const { values, errors, touched } =
@@ -25,6 +29,11 @@ export default function ReviewDataFormContainer() {
 
   const maxDiarias = values.quantidadeDiariasSolicitadas || 0;
   const diariasOptions = Array.from({ length: maxDiarias + 1 }, (_, i) => i);
+
+  const { totalBudget, percentageOfBudget, isLoading } = useBudgetPercentage({
+    year: values.createdAt,
+    value: values.valorTotal,
+  });
 
   return (
     <Box sx={{ p: 2 }}>
@@ -84,9 +93,42 @@ export default function ReviewDataFormContainer() {
           <Box sx={{ flex: 1 }}>
             <StyledData>
               <StyledFormLabel>Valor total da solicitação</StyledFormLabel>
-              <Typography variant="h6" color="primary">
-                R$ {values.valorTotal}
-              </Typography>
+              <Box
+                sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 1 }}
+              >
+                <Typography variant="h6" color="primary">
+                  R${' '}
+                  {values.valorTotal?.toLocaleString('pt-BR', {
+                    minimumFractionDigits: 2,
+                  })}
+                </Typography>
+                {isLoading ? (
+                  <CircularProgress size={16} />
+                ) : percentageOfBudget !== null ? (
+                  <Tooltip
+                    title={`Esta solicitação representa ${percentageOfBudget}% do orçamento anual total (R$ ${totalBudget?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })})`}
+                    arrow
+                  >
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        color: 'primary.main',
+                      }}
+                    >
+                      <Typography
+                        variant="body2"
+                        color="primary"
+                        fontWeight="medium"
+                        sx={{ mr: 0.5 }}
+                      >
+                        ({percentageOfBudget}% do orçamento)
+                      </Typography>
+                      <InfoOutlined fontSize="small" color="primary" />
+                    </Box>
+                  </Tooltip>
+                ) : null}
+              </Box>
             </StyledData>
           </Box>
           <Box sx={{ flex: 1 }}>

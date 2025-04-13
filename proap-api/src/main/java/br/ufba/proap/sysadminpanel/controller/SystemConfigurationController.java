@@ -33,11 +33,6 @@ public class SystemConfigurationController {
     @Autowired
     private UserService userService;
 
-    /**
-     * Verifica se o usuário atual tem permissão de administrador
-     * 
-     * @return true se tem permissão, false caso contrário
-     */
     private boolean hasAdminPermission() {
         try {
             User currentUser = userService.getLoggedUser();
@@ -49,9 +44,6 @@ public class SystemConfigurationController {
         }
     }
 
-    /**
-     * Verifica se o usuário tem permissão de admin e retorna 403 caso não tenha
-     */
     private <T> ResponseEntity<T> checkAdminPermission() {
         if (!hasAdminPermission()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -59,17 +51,11 @@ public class SystemConfigurationController {
         return null;
     }
 
-    /**
-     * Obtém a configuração atual do sistema
-     */
     @GetMapping
     public ResponseEntity<SystemConfigurationDTO> getCurrentConfiguration() {
         return ResponseEntity.ok(service.getCurrentConfiguration());
     }
 
-    /**
-     * Atualiza a configuração do sistema (apenas para administradores)
-     */
     @PutMapping
     public ResponseEntity<SystemConfigurationDTO> updateConfiguration(@RequestBody SystemConfigurationDTO config) {
         ResponseEntity<SystemConfigurationDTO> permissionCheck = checkAdminPermission();
@@ -80,9 +66,6 @@ public class SystemConfigurationController {
         return ResponseEntity.ok(service.updateConfiguration(config));
     }
 
-    /**
-     * Atualiza parcialmente a configuração do sistema (apenas para administradores)
-     */
     @PatchMapping
     public ResponseEntity<SystemConfigurationDTO> partialUpdateConfiguration(
             @RequestBody SystemConfigurationDTO config) {
@@ -94,17 +77,11 @@ public class SystemConfigurationController {
         return ResponseEntity.ok(service.updateConfiguration(config));
     }
 
-    /**
-     * Obtém a lista de Qualis
-     */
     @GetMapping("/qualis")
     public ResponseEntity<List<String>> getQualisList() {
         return ResponseEntity.ok(service.getCurrentConfiguration().getQualis());
     }
 
-    /**
-     * Atualiza a lista de Qualis (apenas para administradores)
-     */
     @PostMapping("/qualis")
     public ResponseEntity<List<String>> updateQualisList(@RequestBody List<String> qualisList) {
         ResponseEntity<List<String>> permissionCheck = checkAdminPermission();
@@ -115,17 +92,11 @@ public class SystemConfigurationController {
         return ResponseEntity.ok(service.updateQualisList(qualisList));
     }
 
-    /**
-     * Obtém a lista de links de recursos
-     */
     @GetMapping("/resource-links")
     public ResponseEntity<List<UrlMapperDTO>> getResourceLinks() {
         return ResponseEntity.ok(service.getCurrentConfiguration().getResourceLinks());
     }
 
-    /**
-     * Atualiza a lista de links de recursos (apenas para administradores)
-     */
     @PostMapping("/resource-links")
     public ResponseEntity<List<UrlMapperDTO>> updateResourceLinks(@RequestBody List<UrlMapperDTO> resourceLinks) {
         ResponseEntity<List<UrlMapperDTO>> permissionCheck = checkAdminPermission();

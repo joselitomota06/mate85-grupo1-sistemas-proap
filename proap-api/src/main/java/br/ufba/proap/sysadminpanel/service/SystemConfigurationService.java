@@ -60,6 +60,10 @@ public class SystemConfigurationService {
             config.setQualisList(dto.getQualis());
         }
 
+        if (dto.getEnableSolicitation() != null) {
+            config.setEnableSolicitation(dto.getEnableSolicitation());
+        }
+
         if (dto.getSitePgcompURL() != null) {
             config.setSitePgcompURL(dto.getSitePgcompURL());
         }
@@ -165,6 +169,7 @@ public class SystemConfigurationService {
      */
     private SystemConfiguration createDefaultConfiguration() {
         SystemConfiguration config = new SystemConfiguration();
+        config.setEnableSolicitation(false);
         config.setQualisList(List.of("A1", "A2", "A3", "A4", "B1", "B2", "B3", "B4"));
         config.setNumMaxDiarias(5);
         config.setValorDiariaBRL(320.0f);

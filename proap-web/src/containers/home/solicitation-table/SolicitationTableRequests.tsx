@@ -59,6 +59,7 @@ import SolicitationDetailsDialog, {
 import useSolicitation from '../../../hooks/solicitation/useSolicitation';
 import SolicitationViewContainer from '../../solicitation/view/SolicitationViewContainer';
 import SolicitationViewDialog from '../request-dialog/SolicitationViewDialog';
+import { formatNumberToBRL } from '../../../helpers/formatter';
 
 export default function SolicitationTableRequests() {
   const dispatch = useAppDispatch();
@@ -397,13 +398,17 @@ export default function SolicitationTableRequests() {
                         Pendente de avaliação
                       </TableCell>
                     )}
-                    <TableCell align="center">R$ {valorTotal}</TableCell>
+                    <TableCell align="center">
+                      {formatNumberToBRL(valorTotal)}
+                    </TableCell>
                     {valorAprovado === null && (
                       <TableCell align="center">-</TableCell>
                     )}
 
                     {valorAprovado !== null && (
-                      <TableCell align="center">R$ {valorAprovado}</TableCell>
+                      <TableCell align="center">
+                        {formatNumberToBRL(valorAprovado)}
+                      </TableCell>
                     )}
 
                     {dataAprovacao === null && (

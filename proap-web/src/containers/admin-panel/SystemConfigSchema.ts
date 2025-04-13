@@ -40,4 +40,5 @@ export const systemConfigSchema = Yup.object().shape({
       fieldName: Yup.string().required('Nome do campo é obrigatório'),
     }),
   ),
+  enableSolicitation: Yup.boolean().notRequired(),
 });

@@ -1,5 +1,13 @@
 import React from 'react';
-import { Box, Stack, Typography, Divider, Chip } from '@mui/material';
+import {
+  Box,
+  Stack,
+  Typography,
+  Divider,
+  Chip,
+  Tooltip,
+  CircularProgress,
+} from '@mui/material';
 import { useFormikContext } from 'formik';
 import { SolicitationFormValues } from '../../SolicitationFormSchema';
 import { StyledData } from '../../SolicitationFormContainer.style';
@@ -11,10 +19,18 @@ import {
   Event,
   AttachMoney,
   School,
+  InfoOutlined,
 } from '@mui/icons-material';
+import { formatNumberToBRL } from '../../../../helpers/formatter';
+import { useBudgetPercentage } from '../../../../hooks/budget/useBudgetPercentage';
 
 export default function ProapReviewContainer() {
   const { values } = useFormikContext<SolicitationFormValues>();
+
+  const { totalBudget, percentageOfBudget, isLoading } = useBudgetPercentage({
+    year: values.createdAt,
+    value: values.valorTotal,
+  });
 
   const getSituacaoText = (situacao: number | string | undefined) => {
     if (situacao === undefined) return 'Não avaliado';
@@ -123,13 +139,41 @@ export default function ProapReviewContainer() {
               <Typography variant="subtitle2" color="text.secondary">
                 Valor total da solicitação
               </Typography>
-              <Typography
-                variant="h6"
-                color="primary"
-                sx={{ fontWeight: 'bold' }}
-              >
-                R$ {values.valorTotal || '0.00'}
-              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Typography
+                  variant="h5"
+                  color="primary"
+                  sx={{ fontWeight: 'bold' }}
+                >
+                  {formatNumberToBRL(Number(values.valorTotal || 0))}
+                </Typography>
+                {isLoading ? (
+                  <CircularProgress size={16} />
+                ) : percentageOfBudget !== null ? (
+                  <Tooltip
+                    title={`Esta solicitação representa ${percentageOfBudget}% do orçamento anual total (R$ ${totalBudget?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })})`}
+                    arrow
+                  >
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        color: 'primary.main',
+                      }}
+                    >
+                      <Typography
+                        variant="body2"
+                        color="primary"
+                        fontWeight="medium"
+                        sx={{ mr: 0.5 }}
+                      >
+                        ({percentageOfBudget}% do orçamento)
+                      </Typography>
+                      <InfoOutlined fontSize="small" color="primary" />
+                    </Box>
+                  </Tooltip>
+                ) : null}
+              </Box>
             </StyledData>
 
             <StyledData>
@@ -137,11 +181,11 @@ export default function ProapReviewContainer() {
                 Valor total aprovado
               </Typography>
               <Typography
-                variant="h6"
+                variant="h5"
                 color="primary"
                 sx={{ fontWeight: 'bold' }}
               >
-                R$ {values.valorAprovado || '0.00'}
+                {formatNumberToBRL(Number(values.valorAprovado || 0))}
               </Typography>
             </StyledData>
           </Section>

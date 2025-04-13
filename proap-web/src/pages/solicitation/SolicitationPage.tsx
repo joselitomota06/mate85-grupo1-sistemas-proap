@@ -11,11 +11,13 @@ import { dateToLocalDate } from '../../helpers/conversion';
 import Toast from '../../helpers/notification';
 import useHasPermission from '../../hooks/auth/useHasPermission';
 import { UnauthorizedPage } from '../unauthorized/UnauthorizedPage';
+import { useSysConfig } from '../../hooks/admin/useSysConfig';
 
 export default function SolicitationPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const userCanCreateRequest = useHasPermission('CREATE_REQUEST');
+  const { config } = useSysConfig();
 
   const handleSubmitSolicitation = useCallback(
     (values: FormikValues) => {
@@ -32,7 +34,7 @@ export default function SolicitationPage() {
     [dispatch],
   );
 
-  if (!userCanCreateRequest) {
+  if (!userCanCreateRequest || !config.enableSolicitation) {
     return <UnauthorizedPage />;
   }
 
