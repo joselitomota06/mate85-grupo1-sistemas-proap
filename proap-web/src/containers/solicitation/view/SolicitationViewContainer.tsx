@@ -405,7 +405,6 @@ export default function SolicitationViewContainer({ id }: { id: string }) {
                 label="Valor Total"
                 value={formatNumberToBRL(solicitation.valorTotal)}
               />
-              {/* TODO: Adding remaining fields */}
             </SectionPaper>
           </Box>
         </Fade>

@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Box,
   Typography,
@@ -11,7 +10,6 @@ import {
 import {
   AccessTimeOutlined,
   InfoOutlined,
-  ArrowBackIos,
   HomeOutlined,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
@@ -110,13 +108,6 @@ const SolicitationsDisabled = () => {
           </Paper>
 
           <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
-            <Button
-              variant="outlined"
-              startIcon={<ArrowBackIos />}
-              onClick={() => navigate(-1)}
-            >
-              Voltar
-            </Button>
             <Button
               variant="contained"
               color="primary"

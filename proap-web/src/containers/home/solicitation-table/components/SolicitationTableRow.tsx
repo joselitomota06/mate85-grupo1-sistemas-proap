@@ -1,10 +1,21 @@
-import React from 'react';
-import { TableRow, TableCell, Tooltip, Box, IconButton } from '@mui/material';
-import { CheckCircle, Description, Visibility } from '@mui/icons-material';
+import React, { useState } from 'react';
+import {
+  TableRow,
+  TableCell,
+  Tooltip,
+  Box,
+  IconButton,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
+} from '@mui/material';
+import { CheckCircle, Visibility, MoreVert } from '@mui/icons-material';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { formatNumberToBRL } from '../../../../helpers/formatter';
 import { SolicitationDetailsDialogProps } from '../../request-dialog/SolicitationDetailsDialog';
+import { StatusChip } from './index';
 
 interface SolicitationRowData {
   id?: number;
@@ -76,103 +87,174 @@ const SolicitationTableRow: React.FC<SolicitationTableRowProps> = ({
   onDelete,
   onShowDetails,
 }) => {
-  const getStatusStyle = () => {
-    if (situacao === 2) return { backgroundColor: 'lightcoral' };
-    if (situacao === 1) return { backgroundColor: 'lightgreen' };
-    return { backgroundColor: 'yellow' };
+  // Menu state
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+
+  const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation(); // Prevent row click when menu button is clicked
+    setAnchorEl(event.currentTarget);
   };
 
-  const getStatusText = () => {
-    if (situacao === 2) return 'Não aprovada';
-    if (situacao === 1) return 'Aprovada';
-    return 'Pendente de avaliação';
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
   };
 
-  // Ensure id is defined before using it
-  const handleView = () => {
+  // Handle row click to navigate to view page
+  const handleRowClick = () => {
     if (id !== undefined) onView(id);
   };
 
-  const handleEdit = () => {
-    if (id !== undefined) onEdit(id);
+  const handleEdit = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent row click
+    if (id !== undefined) {
+      onEdit(id);
+      handleCloseMenu();
+    }
   };
 
-  const handleReview = () => {
+  const handleReview = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent row click
     if (id !== undefined) onReview(id);
   };
 
-  const handleDelete = () => {
-    if (id !== undefined) onDelete(id);
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent row click
+    if (id !== undefined) {
+      onDelete(id);
+      handleCloseMenu();
+    }
+  };
+
+  const handleShowDetailsClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent row click
+    onShowDetails({
+      nomeSolicitante: user.name,
+      solicitanteDocente,
+      valorTotal,
+      valorDiarias: valorDiaria,
+      variacaoCambial: cotacaoMoeda,
+      nomeEvento,
+      tituloPublicacao,
+      isDolar,
+      qualisEvento: qualis,
+      cidade,
+      pais,
+      dataInicio,
+      dataFim,
+      situacao,
+      observacoes: observacao,
+    });
   };
 
   return (
-    <TableRow>
-      <TableCell align="center">{createdAt}</TableCell>
-      <TableCell align="center">{user.name}</TableCell>
-      <TableCell align="center" style={getStatusStyle()}>
-        {getStatusText()}
-      </TableCell>
-      <TableCell align="center">{formatNumberToBRL(valorTotal)}</TableCell>
+    <TableRow
+      onClick={handleRowClick}
+      sx={{
+        cursor: 'pointer',
+        '&:hover': {
+          backgroundColor: 'rgba(0, 0, 0, 0.04)',
+        },
+      }}
+    >
+      <TableCell align="left">{createdAt}</TableCell>
+      <TableCell align="left">{user.name}</TableCell>
       <TableCell align="center">
+        <StatusChip status={situacao} />
+      </TableCell>
+      <TableCell align="right">{formatNumberToBRL(valorTotal)}</TableCell>
+      <TableCell align="right">
         {valorAprovado === null ? '-' : formatNumberToBRL(valorAprovado)}
       </TableCell>
       <TableCell align="center">
         {dataAprovacao === null ? '-' : dataAprovacao}
       </TableCell>
-      <TableCell align="center">
-        <Box>
+      <TableCell align="center" onClick={(e) => e.stopPropagation()}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 0.5 }}>
+          {/* Primary Actions - Always visible */}
           {userCanViewAllRequests && (
             <Tooltip title="Ver resumo da Solicitação">
-              <IconButton
-                onClick={() =>
-                  onShowDetails({
-                    nomeSolicitante: user.name,
-                    solicitanteDocente,
-                    valorTotal,
-                    valorDiarias: valorDiaria,
-                    variacaoCambial: cotacaoMoeda,
-                    nomeEvento,
-                    tituloPublicacao,
-                    isDolar,
-                    qualisEvento: qualis,
-                    cidade,
-                    pais,
-                    dataInicio,
-                    dataFim,
-                    situacao,
-                    observacoes: observacao,
-                  })
-                }
-              >
-                <Visibility />
+              <IconButton size="small" onClick={handleShowDetailsClick}>
+                <Visibility fontSize="small" />
               </IconButton>
             </Tooltip>
           )}
-          <Tooltip title="Ver Detalhes da Solicitação">
-            <IconButton onClick={handleView}>
-              <Description />
-            </IconButton>
-          </Tooltip>
+
           {(userCanReviewRequests || isCeapg) && (
             <Tooltip title="Revisar Solicitação">
-              <IconButton onClick={handleReview}>
-                <CheckCircle />
+              <IconButton size="small" onClick={handleReview}>
+                <CheckCircle fontSize="small" />
               </IconButton>
             </Tooltip>
           )}
-          {((situacao === 0 && currentUserEmail === user.email) ||
-            userCanReviewRequests) && (
-            <Tooltip title="Editar Solicitação">
-              <IconButton onClick={handleEdit}>
-                <ModeEditIcon />
-              </IconButton>
-            </Tooltip>
-          )}
-          <Tooltip title="Excluir Solicitação">
-            <IconButton onClick={handleDelete}>
-              <DeleteIcon />
+
+          {/* More Actions Menu Button */}
+          <Tooltip title="Mais ações">
+            <IconButton
+              size="small"
+              onClick={handleOpenMenu}
+              aria-label="mais ações"
+              aria-controls={open ? 'row-actions-menu' : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? 'true' : undefined}
+            >
+              <MoreVert fontSize="small" />
             </IconButton>
           </Tooltip>
+
+          {/* Dropdown Menu */}
+          <Menu
+            id="row-actions-menu"
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleCloseMenu}
+            MenuListProps={{
+              'aria-labelledby': 'more-button',
+            }}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Secondary Actions - In Dropdown */}
+
+            <MenuItem
+              onClick={handleEdit}
+              disabled={
+                !(
+                  (situacao == 0 && currentUserEmail === user.email) ||
+                  userCanReviewRequests
+                )
+              }
+            >
+              <ListItemIcon>
+                <ModeEditIcon fontSize="small" color="warning" />
+              </ListItemIcon>
+              <ListItemText>Editar</ListItemText>
+            </MenuItem>
+
+            {
+              <MenuItem
+                onClick={handleDelete}
+                disabled={
+                  !(
+                    (situacao == 0 && currentUserEmail === user.email) ||
+                    userCanReviewRequests
+                  )
+                }
+              >
+                <ListItemIcon>
+                  <DeleteIcon fontSize="small" color="error" />
+                </ListItemIcon>
+                <ListItemText>Excluir</ListItemText>
+              </MenuItem>
+            }
+          </Menu>
         </Box>
       </TableCell>
     </TableRow>
