@@ -312,7 +312,10 @@ export default function SolicitationDetailsContainer({
                     Informe o valor da cotação do dólar americano (USD)
                   </Typography>
                   <Typography style={{ color: 'gray' }} variant="subtitle2">
-                    ${solicitation.cotacaoMoeda}
+                    {`$ ${solicitation.cotacaoMoeda?.toLocaleString('en-US', {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}`}
                   </Typography>
                 </StyledData>
               )}

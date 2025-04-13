@@ -373,7 +373,7 @@ export default function SolicitationViewContainer({ id }: { id: string }) {
                   label="Valor da Diária"
                   value={
                     solicitation.isDolar
-                      ? `$ ${solicitation.valorDiaria?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+                      ? `$ ${solicitation.valorDiaria?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (USD)`
                       : formatNumberToBRL(solicitation.valorDiaria)
                   }
                 />
@@ -382,7 +382,7 @@ export default function SolicitationViewContainer({ id }: { id: string }) {
                 solicitation.isDolar && (
                   <InfoItem
                     label="Cotação do Dólar"
-                    value={`$${solicitation.cotacaoMoeda}`}
+                    value={`R$ ${solicitation.cotacaoMoeda?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
                   />
                 )}
 
