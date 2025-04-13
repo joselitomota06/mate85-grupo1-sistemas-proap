@@ -22,7 +22,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate } from 'react-router-dom';
 import { Box } from '@mui/system';
 import { IconButton } from '@mui/material';
-import { useAuth } from '../../../hooks';
 import { toast } from 'react-toastify';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
@@ -44,11 +43,12 @@ import {
 import { ExtraRequest } from '../../../types/requests-type/ExtraRequest';
 import usePrevious from '../../../helpers/usePrevious';
 import { formatNumberToBRL } from '../../../helpers/formatter';
+import useHasPermission from '../../../hooks/auth/useHasPermission';
 
 export default function SolicitationTableExtraRequests() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { isAdmin } = useAuth();
+  const isAdmin = useHasPermission('ADMIN_ROLE');
 
   //#region table data
   const { requests, extraRequests } = useSelector(
