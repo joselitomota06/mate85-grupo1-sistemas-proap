@@ -16,7 +16,7 @@ public interface AssistanteRequestRepository extends JpaRepository<AssistanceReq
 
 	long countByUser(User user);
 
-	@Query("SELECT ar.id ,ar.valorAprovado, ar.dataAprovacao FROM AssistanceRequest ar WHERE DATE(ar.createdAt) BETWEEN :startDate AND :endDate AND ar.situacao = 1 ")
+	@Query("SELECT ar.id, ar.valorAprovado, ar.createdAt, ar.dataAprovacao FROM AssistanceRequest ar WHERE DATE(ar.createdAt) BETWEEN :startDate AND :endDate AND ar.situacao = 1 ")
 	List<Object[]> findTotalApprovedValueByDateRange(LocalDate startDate, LocalDate endDate);
 
 	@Query("SELECT SUM(ar.valorAprovado) FROM AssistanceRequest ar WHERE YEAR(ar.createdAt) = :year AND ar.situacao = 1")

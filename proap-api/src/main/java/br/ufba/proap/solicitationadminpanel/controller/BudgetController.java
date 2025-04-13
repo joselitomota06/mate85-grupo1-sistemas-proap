@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.*;
 import br.ufba.proap.solicitationadminpanel.domain.SolicitationAdmin;
 import br.ufba.proap.solicitationadminpanel.service.BudgetService;
 import br.ufba.proap.solicitationadminpanel.domain.dto.AssistanceIdValueDTO;
-import br.ufba.proap.solicitationadminpanel.domain.dto.DateRangeDTO;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -33,11 +33,21 @@ public class BudgetController {
 
     @GetMapping("/total-assistance-requests")
     public ResponseEntity<List<AssistanceIdValueDTO>> getTotalAssistanceRequestsValue(
-            @RequestBody DateRangeDTO dateRangeDTO) {
-        LocalDate startDate = dateRangeDTO.getStartDate();
-        LocalDate endDate = dateRangeDTO.getEndDate();
-        List<AssistanceIdValueDTO> totalValue = budgetService.getTotalApprovedAssistanceRequestsValue(startDate,
-                endDate);
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate) {
+
+        LocalDate start = LocalDate.of(2000, 1, 1);
+        LocalDate end = LocalDate.now();
+
+        if (startDate != null) {
+            start = LocalDate.parse(startDate, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        }
+
+        if (endDate != null) {
+            end = LocalDate.parse(endDate, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        }
+
+        List<AssistanceIdValueDTO> totalValue = budgetService.getTotalApprovedAssistanceRequestsValue(start, end);
         return ResponseEntity.ok(totalValue);
     }
 
