@@ -12,6 +12,7 @@ import Toast from '../../helpers/notification';
 import useHasPermission from '../../hooks/auth/useHasPermission';
 import { UnauthorizedPage } from '../unauthorized/UnauthorizedPage';
 import { useSysConfig } from '../../hooks/admin/useSysConfig';
+import SolicitationsDisabled from '../../components/disabled-features/SolicitationsDisabled';
 
 export default function SolicitationPage() {
   const dispatch = useDispatch();
@@ -34,8 +35,12 @@ export default function SolicitationPage() {
     [dispatch],
   );
 
-  if (!userCanCreateRequest || !config.enableSolicitation) {
+  if (!userCanCreateRequest) {
     return <UnauthorizedPage />;
+  }
+
+  if (!config.enableSolicitation) {
+    return <SolicitationsDisabled />;
   }
 
   return <SolicitationFormContainer onSubmit={handleSubmitSolicitation} />;
