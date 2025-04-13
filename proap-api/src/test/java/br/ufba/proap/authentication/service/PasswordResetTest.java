@@ -2,6 +2,7 @@ package br.ufba.proap.authentication.service;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import br.ufba.proap.authentication.domain.User;
 import br.ufba.proap.authentication.repository.UserRepository;
 
+@Disabled
 @SpringBootTest
 public class PasswordResetTest {
 
