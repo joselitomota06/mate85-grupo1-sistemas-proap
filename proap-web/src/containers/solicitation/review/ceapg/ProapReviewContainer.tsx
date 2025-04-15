@@ -117,8 +117,8 @@ export default function ProapReviewContainer() {
                 Data da avaliação
               </Typography>
               <Typography variant="subtitle2" color="primary">
-                {values.dataAprovacao
-                  ? dateToLocalDate(values.dataAprovacao)
+                {values.dataAvaliacaoProap
+                  ? dateToLocalDate(values.dataAvaliacaoProap)
                   : 'Não definida'}
               </Typography>
             </StyledData>

@@ -141,7 +141,7 @@ const ExtraRequestTableView: React.FC<ExtraRequestTableViewProps> = ({
             <TableCell align="center">
               <TableCellHeader
                 text="Data da avaliação"
-                sortBy="dataAprovacao"
+                sortBy="dataAvaliacaoProap"
                 selectedPropToSortTable={selectedPropToSortTable}
                 handleClickSortTable={handleClickSortTable}
               />
@@ -192,7 +192,9 @@ const ExtraRequestTableView: React.FC<ExtraRequestTableViewProps> = ({
                     : formatNumberToBRL(request.valorAprovado)}
                 </TableCell>
                 <TableCell align="center">
-                  {request.dataAprovacao === null ? '-' : request.dataAprovacao}
+                  {request.dataAvaliacaoProap === null
+                    ? '-'
+                    : request.dataAvaliacaoProap}
                 </TableCell>
                 <TableCell align="center" onClick={(e) => e.stopPropagation()}>
                   <Box

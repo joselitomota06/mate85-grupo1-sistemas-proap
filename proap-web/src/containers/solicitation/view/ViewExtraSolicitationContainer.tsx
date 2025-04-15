@@ -29,7 +29,7 @@ const ViewExtraSolicitationContainer: React.FC<
     situacao,
     valorAprovado,
     automaticDecText,
-    dataAprovacao,
+    dataAvaliacaoProap,
     observacao,
     descricao,
     justificativa,
@@ -106,7 +106,7 @@ const ViewExtraSolicitationContainer: React.FC<
               value={valorAprovado}
               valueFormatter={formatNumberToBRL}
             />
-            <InfoField label="Data de Aprovação" value={dataAprovacao} />
+            <InfoField label="Data de Aprovação" value={dataAvaliacaoProap} />
           </Paper>
         </Grid>
 

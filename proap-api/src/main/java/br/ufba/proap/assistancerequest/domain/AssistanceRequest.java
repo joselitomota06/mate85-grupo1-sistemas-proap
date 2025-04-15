@@ -147,7 +147,7 @@ public class AssistanceRequest {
 
 	@Column(nullable = true)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-	private LocalDate dataAprovacao;
+	private LocalDate dataAvaliacaoProap;
 
 	@Column(nullable = true)
 	private Integer numeroDiariasAprovadas;

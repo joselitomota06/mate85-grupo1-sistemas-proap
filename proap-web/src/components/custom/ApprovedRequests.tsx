@@ -226,7 +226,8 @@ const ApprovedRequests: React.FC<ApprovedRequestsProps> = ({
                         <CheckCircle fontSize="small" color="success" />
                         <Tooltip title="Data de aprovação" arrow>
                           <Typography variant="body2" color="text.secondary">
-                            Aprovada em: {formatDate(request.dataAprovacao)}
+                            Aprovada em:{' '}
+                            {formatDate(request.dataAvaliacaoProap)}
                           </Typography>
                         </Tooltip>
                       </Box>

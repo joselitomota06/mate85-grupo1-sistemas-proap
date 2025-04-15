@@ -129,10 +129,10 @@ public class AssistanceRequestService {
 		persisted.setSituacao(assistanceRequest.getSituacao());
 		persisted.setNumeroAta(assistanceRequest.getNumeroAta());
 
-		if (assistanceRequest.getDataAprovacao() != null) {
-			persisted.setDataAprovacao(assistanceRequest.getDataAprovacao());
+		if (assistanceRequest.getDataAvaliacaoProap() != null) {
+			persisted.setDataAvaliacaoProap(assistanceRequest.getDataAvaliacaoProap());
 		} else {
-			persisted.setDataAprovacao(LocalDate.now());
+			persisted.setDataAvaliacaoProap(LocalDate.now());
 		}
 
 		persisted.setNumeroDiariasAprovadas(assistanceRequest.getNumeroDiariasAprovadas());

@@ -48,17 +48,17 @@ export default function ReviewDataFormContainer() {
 
   useEffect(() => {
     // Set current date as default when component mounts if no date is set
-    if (!values.dataAprovacao) {
+    if (!values.dataAvaliacaoProap) {
       const today = new Date();
       const formattedDate = today.toISOString().split('T')[0];
-      setFieldValue('dataAprovacao', formattedDate);
+      setFieldValue('dataAvaliacaoProap', formattedDate);
     }
   }, []);
 
   const handleSetCurrentDate = () => {
     const today = new Date();
     const formattedDate = today.toISOString().split('T')[0];
-    setFieldValue('dataAprovacao', formattedDate);
+    setFieldValue('dataAvaliacaoProap', formattedDate);
     setIsEditingDate(false);
   };
 
@@ -142,11 +142,15 @@ export default function ReviewDataFormContainer() {
                 fullWidth
                 required
                 label="Data da avaliação da solicitação"
-                name="dataAprovacao"
+                name="dataAvaliacaoProap"
                 type="date"
                 InputLabelProps={{ shrink: true }}
-                error={Boolean(touched.dataAprovacao && errors.dataAprovacao)}
-                helperText={touched.dataAprovacao && errors.dataAprovacao}
+                error={Boolean(
+                  touched.dataAvaliacaoProap && errors.dataAvaliacaoProap,
+                )}
+                helperText={
+                  touched.dataAvaliacaoProap && errors.dataAvaliacaoProap
+                }
               />
               <Box sx={{ mt: 1, display: 'flex', gap: 1 }}>
                 <Button
@@ -175,7 +179,7 @@ export default function ReviewDataFormContainer() {
               </StyledFormLabel>
               <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
                 <Typography variant="body1">
-                  {formatDisplayDate(values.dataAprovacao)}
+                  {formatDisplayDate(values.dataAvaliacaoProap)}
                 </Typography>
                 <Button
                   variant="text"

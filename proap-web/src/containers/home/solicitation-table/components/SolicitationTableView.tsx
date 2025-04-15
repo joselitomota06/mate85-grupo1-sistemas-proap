@@ -109,7 +109,7 @@ const SolicitationTableView: React.FC<SolicitationTableViewProps> = ({
             <TableCell align="center">
               <TableCellHeader
                 text="Data da avaliação"
-                sortBy="dataAprovacao"
+                sortBy="dataAvaliacaoProap"
                 selectedPropToSortTable={selectedPropToSortTable}
                 handleClickSortTable={handleClickSortTable}
               />

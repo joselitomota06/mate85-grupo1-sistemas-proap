@@ -124,7 +124,7 @@ export const reviewDataFormSchema = Yup.object({
   situacao: Yup.number()
     .required('Campo obrigatório')
     .oneOf([1, 2], 'Situação deve ser Aprovado ou Reprovado'),
-  dataAprovacao: Yup.string().required('Campo obrigatório'),
+  dataAvaliacaoProap: Yup.string().required('Campo obrigatório'),
   numeroAta: Yup.number().required('Campo obrigatório'),
   numeroDiariasAprovadas: Yup.number().required('Campo obrigatório'),
   observacao: Yup.string().notRequired(),
@@ -249,7 +249,7 @@ export const INITIAL_REVIEW_FORM_VALUES: SolicitationFormValues = {
   aceiteFinal: false,
   justificativa: '',
   situacao: 0,
-  dataAprovacao: '',
+  dataAvaliacaoProap: '',
   numeroAta: 0,
   numeroDiariasAprovadas: 0,
   observacao: '',

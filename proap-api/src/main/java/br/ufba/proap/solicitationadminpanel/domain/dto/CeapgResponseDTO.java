@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public record CeapgResponseDTO(Long id, Float valorAprovado, LocalDate dataAprovacao, String avaliadorProap,
+public record CeapgResponseDTO(Long id, Float valorAprovado, LocalDate dataAvaliacaoProap, String avaliadorProap,
         Float custoFinalCeapg, String observacoesCeapg, String avaliadorCeapg) {
 
     public static List<CeapgResponseDTO> convertPairsToDTOs(List<Object[]> data) {
@@ -12,12 +12,12 @@ public record CeapgResponseDTO(Long id, Float valorAprovado, LocalDate dataAprov
                 .map(objArray -> {
                     Long id = (Long) objArray[0];
                     Float valorAprovado = (Float) objArray[1];
-                    LocalDate dataAprovacao = (LocalDate) objArray[2];
+                    LocalDate dataAvaliacaoProap = (LocalDate) objArray[2];
                     String avaliadorProap = (String) objArray[3];
                     Float custoFinalCeapg = (Float) objArray[4];
                     String observacoesCeapg = (String) objArray[5];
                     String avaliadorCeapg = (String) objArray[6];
-                    return new CeapgResponseDTO(id, valorAprovado, dataAprovacao,
+                    return new CeapgResponseDTO(id, valorAprovado, dataAvaliacaoProap,
                             avaliadorProap, custoFinalCeapg, observacoesCeapg, avaliadorCeapg);
                 })
                 .collect(Collectors.toList());

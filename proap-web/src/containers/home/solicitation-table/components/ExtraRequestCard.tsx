@@ -54,7 +54,7 @@ const ExtraRequestCard: React.FC<ExtraRequestCardProps> = ({
     situacao,
     valorAprovado,
     automaticDecText,
-    dataAprovacao,
+    dataAvaliacaoProap,
   } = extraRequest;
 
   // Menu state
@@ -167,7 +167,7 @@ const ExtraRequestCard: React.FC<ExtraRequestCardProps> = ({
               Data de avaliação
             </Typography>
             <Typography variant="body1" align="right">
-              {dataAprovacao === null ? '-' : dataAprovacao}
+              {dataAvaliacaoProap === null ? '-' : dataAvaliacaoProap}
             </Typography>
           </Box>
         </Box>

@@ -37,7 +37,7 @@ export interface AssistanceRequest {
   justificativa: string;
   comprovantePagamento: string | null;
   situacao: number;
-  dataAprovacao: string;
+  dataAvaliacaoProap: string;
   numeroAta: number;
   numeroDiariasAprovadas: number;
   observacao: string;

@@ -281,7 +281,8 @@ const CeapgReviewRequests: React.FC<CeapgReviewRequestsProps> = ({
                           >
                             <CheckCircle fontSize="small" color="success" />
                             <Typography variant="body2" color="text.secondary">
-                              Aprovada em: {formatDate(request.dataAprovacao)}
+                              Aprovada em:{' '}
+                              {formatDate(request.dataAvaliacaoProap)}
                             </Typography>
                           </Box>
                         </Box>
@@ -454,7 +455,8 @@ const CeapgReviewRequests: React.FC<CeapgReviewRequestsProps> = ({
                           <CalendarToday fontSize="small" color="action" />
                           <Tooltip title="Data de criação" arrow>
                             <Typography variant="body2" color="text.secondary">
-                              Aprovada em: {formatDate(request.dataAprovacao)}
+                              Aprovada em:{' '}
+                              {formatDate(request.dataAvaliacaoProap)}
                             </Typography>
                           </Tooltip>
                         </Box>

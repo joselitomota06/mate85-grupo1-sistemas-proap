@@ -1,7 +1,7 @@
 export interface CeapgResponse {
   id: number;
   valorAprovado: number;
-  dataAprovacao: string;
+  dataAvaliacaoProap: string;
   avaliadorProap: string;
   custoFinalCeapg: number;
   observacoesCeapg: string;

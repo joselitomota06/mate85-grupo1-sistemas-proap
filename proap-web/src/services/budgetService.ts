@@ -10,7 +10,7 @@ export interface AssistanceIdValueDTO {
   id: number;
   value: number;
   createdAt: string;
-  dataAprovacao: string;
+  dataAvaliacaoProap: string;
   avaliadorProap: string;
 }
 

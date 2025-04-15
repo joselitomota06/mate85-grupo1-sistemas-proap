@@ -129,7 +129,7 @@ export default function SolicitationViewContainer({ id }: { id: string }) {
                   <>
                     <InfoItem
                       label="Data de Aprovação"
-                      value={dateToLocalDate(solicitation.dataAprovacao)}
+                      value={dateToLocalDate(solicitation.dataAvaliacaoProap)}
                     />
                     <InfoItem
                       label="Valor Total Aprovado"

@@ -48,7 +48,7 @@ public record ResponseAssistanceRequestDTO(
         Integer situacao,
         String comprovantePagamento,
         String numeroAta,
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy") LocalDate dataAprovacao,
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy") LocalDate dataAvaliacaoProap,
         Integer numeroDiariasAprovadas,
         Float valorAprovado,
         String observacao,
@@ -95,7 +95,7 @@ public record ResponseAssistanceRequestDTO(
         entity.setSituacao(this.situacao());
         entity.setComprovantePagamento(this.comprovantePagamento());
         entity.setNumeroAta(this.numeroAta());
-        entity.setDataAprovacao(this.dataAprovacao());
+        entity.setDataAvaliacaoProap(this.dataAvaliacaoProap());
         entity.setNumeroDiariasAprovadas(this.numeroDiariasAprovadas());
         entity.setValorAprovado(this.valorAprovado());
         entity.setObservacao(this.observacao());
@@ -145,7 +145,7 @@ public record ResponseAssistanceRequestDTO(
                 entity.getSituacao(),
                 entity.getComprovantePagamento(),
                 entity.getNumeroAta(),
-                entity.getDataAprovacao(),
+                entity.getDataAvaliacaoProap(),
                 entity.getNumeroDiariasAprovadas(),
                 entity.getValorAprovado(),
                 entity.getObservacao(),

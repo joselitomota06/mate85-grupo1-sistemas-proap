@@ -27,7 +27,7 @@ interface SolicitationRowData {
   createdAt?: string;
   situacao?: number;
   valorAprovado?: number | null;
-  dataAprovacao?: string | null;
+  dataAvaliacaoProap?: string | null;
   solicitanteDocente?: boolean;
   tituloPublicacao?: string;
   valorDiaria?: number;
@@ -64,7 +64,7 @@ const SolicitationTableRow: React.FC<SolicitationTableRowProps> = ({
   createdAt = '',
   situacao = 0,
   valorAprovado = null,
-  dataAprovacao = null,
+  dataAvaliacaoProap = null,
   solicitanteDocente = false,
   tituloPublicacao = '',
   valorDiaria = 0,
@@ -167,7 +167,7 @@ const SolicitationTableRow: React.FC<SolicitationTableRowProps> = ({
         {valorAprovado === null ? '-' : formatNumberToBRL(valorAprovado)}
       </TableCell>
       <TableCell align="center">
-        {dataAprovacao === null ? '-' : dataAprovacao}
+        {dataAvaliacaoProap === null ? '-' : dataAvaliacaoProap}
       </TableCell>
       <TableCell align="center" onClick={(e) => e.stopPropagation()}>
         <Box sx={{ display: 'flex', justifyContent: 'center', gap: 0.5 }}>

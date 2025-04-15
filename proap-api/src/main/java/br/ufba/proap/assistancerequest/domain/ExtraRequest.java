@@ -67,7 +67,7 @@ public class ExtraRequest {
 
 	@Column(nullable = true)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-	private LocalDate dataAprovacao;
+	private LocalDate dataAvaliacaoProap;
 
 	@Column(nullable = true)
 	private Float valorAprovado;
@@ -127,12 +127,12 @@ public class ExtraRequest {
 		this.numeroAta = numeroAta;
 	}
 
-	public LocalDate getDataAprovacao() {
-		return dataAprovacao;
+	public LocalDate getDataAvaliacaoProap() {
+		return dataAvaliacaoProap;
 	}
 
-	public void setDataAprovacao(LocalDate dataAprovacao) {
-		this.dataAprovacao = dataAprovacao;
+	public void setDataAvaliacaoProap(LocalDate dataAvaliacaoProap) {
+		this.dataAvaliacaoProap = dataAvaliacaoProap;
 	}
 
 	public Float getValorAprovado() {

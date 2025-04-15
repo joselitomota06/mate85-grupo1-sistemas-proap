@@ -35,7 +35,7 @@ export default function ReviewSolicitationPage() {
         ...(values as SolicitationFormValues),
         dataInicio: dateToLocalDate(values.dataInicio),
         dataFim: dateToLocalDate(values.dataFim),
-        dataAprovacao: dateToLocalDate(values.dataAprovacao),
+        dataAvaliacaoProap: dateToLocalDate(values.dataAvaliacaoProap),
         createdAt: undefined,
         updatedAt: undefined,
       };

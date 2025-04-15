@@ -168,12 +168,6 @@ const BudgetDashboardContainer = () => {
 
         const startDateFormatted = formatDateToAPI(filterDates.startDate);
         const endDateFormatted = formatDateToAPI(filterDates.endDate);
-        console.log('Fetching with dates:', {
-          startDate: filterDates.startDate,
-          endDate: filterDates.endDate,
-          startDateFormatted,
-          endDateFormatted,
-        });
 
         const requests = await getTotalAssistanceRequestsValue(
           startDateFormatted,
@@ -219,8 +213,6 @@ const BudgetDashboardContainer = () => {
   };
 
   const handleFilterApply = (startDate: string, endDate: string) => {
-    console.log('Filter applied with dates:', { startDate, endDate });
-
     setFilterDates({
       startDate,
       endDate,

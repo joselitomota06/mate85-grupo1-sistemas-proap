@@ -54,7 +54,7 @@ const SolicitationCard: React.FC<SolicitationCardProps> = ({
     createdAt,
     situacao,
     valorAprovado,
-    dataAprovacao,
+    dataAvaliacaoProap,
     solicitanteDocente,
     tituloPublicacao,
     valorDiaria,
@@ -195,7 +195,7 @@ const SolicitationCard: React.FC<SolicitationCardProps> = ({
               Data de avaliação
             </Typography>
             <Typography variant="body1" align="right">
-              {dataAprovacao === null ? '-' : dataAprovacao}
+              {dataAvaliacaoProap === null ? '-' : dataAvaliacaoProap}
             </Typography>
           </Box>
         </Box>

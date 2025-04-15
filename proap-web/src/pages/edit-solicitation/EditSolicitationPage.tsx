@@ -35,8 +35,9 @@ export default function EditSolicitationPage() {
         ...(values as SolicitationFormValues),
         dataInicio: dateToLocalDate(values.dataInicio),
         dataFim: dateToLocalDate(values.dataFim),
-        dataAprovacao:
-          values.dataAprovacao && dateToLocalDate(values.dataAprovacao),
+        dataAvaliacaoProap:
+          values.dataAvaliacaoProap &&
+          dateToLocalDate(values.dataAvaliacaoProap),
         createdAt: undefined,
         updatedAt: undefined,
       };
