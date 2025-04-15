@@ -169,6 +169,9 @@ public class AssistanceRequest {
 	@Column(nullable = true)
 	private String observacoesCeapg;
 
+	@Column(nullable = true)
+	private LocalDate dataAvaliacaoCeapg;
+
 	// Apos aceite
 	@Column(nullable = true, columnDefinition = "text", length = 100000)
 	private String automaticDecText;

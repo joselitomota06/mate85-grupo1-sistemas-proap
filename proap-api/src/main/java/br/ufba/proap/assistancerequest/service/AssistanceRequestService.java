@@ -162,6 +162,7 @@ public class AssistanceRequestService {
 
 		request.setCustoFinalCeapg(ceapgDTO.getCustoFinalCeapg());
 		request.setObservacoesCeapg(ceapgDTO.getObservacoesCeapg());
+		request.setDataAvaliacaoCeapg(LocalDate.now());
 		request.setAvaliadorCeapg(currentUser);
 		return assistanteRequestRepository.save(request);
 	}

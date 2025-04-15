@@ -6,4 +6,5 @@ export interface CeapgResponse {
   custoFinalCeapg: number;
   observacoesCeapg: string;
   avaliadorCeapg: string;
+  dataAvaliacaoCeapg: string;
 }

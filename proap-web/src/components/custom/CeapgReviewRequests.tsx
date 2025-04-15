@@ -406,6 +406,43 @@ const CeapgReviewRequests: React.FC<CeapgReviewRequestsProps> = ({
                             </Tooltip>
                           </Box>
 
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 1,
+                              flexBasis: { sm: '50%' },
+                            }}
+                          >
+                            <CheckCircle fontSize="small" color="success" />
+                            <Typography variant="body2" color="text.secondary">
+                              Avaliada em:{' '}
+                              {formatDate(request.dataAvaliacaoCeapg)}
+                            </Typography>
+                          </Box>
+
+                          {/* Approved by CEAPG */}
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 1,
+                              flexBasis: { sm: '50%' },
+                            }}
+                          >
+                            <Person fontSize="small" color="action" />
+                            <Tooltip title="Avaliador CEAPG" arrow>
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                              >
+                                Avaliada por: {request.avaliadorCeapg}
+                              </Typography>
+                            </Tooltip>
+                          </Box>
+                        </Box>
+
+                        <Box sx={{ display: 'flex', gap: 2 }}>
                           {/* CEAPG final cost */}
                           <Box
                             sx={{
@@ -427,38 +464,6 @@ const CeapgReviewRequests: React.FC<CeapgReviewRequestsProps> = ({
                               </Typography>
                             </Tooltip>
                           </Box>
-
-                          {/* Approved by CEAPG */}
-                          <Box
-                            sx={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: 1,
-                              flexBasis: { sm: '50%' },
-                            }}
-                          >
-                            <Person fontSize="small" color="action" />
-                            <Typography variant="body2" color="text.secondary">
-                              Avaliada por: {request.avaliadorCeapg}
-                            </Typography>
-                          </Box>
-                        </Box>
-                        {/* Approval date */}
-                        <Box
-                          sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: 1,
-                            flexBasis: { sm: '50%' },
-                          }}
-                        >
-                          <CalendarToday fontSize="small" color="action" />
-                          <Tooltip title="Data de criação" arrow>
-                            <Typography variant="body2" color="text.secondary">
-                              Aprovada em:{' '}
-                              {formatDate(request.dataAvaliacaoProap)}
-                            </Typography>
-                          </Tooltip>
                         </Box>
 
                         {/* Observation summary if available */}
