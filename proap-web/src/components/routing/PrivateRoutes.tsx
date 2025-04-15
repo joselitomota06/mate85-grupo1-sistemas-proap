@@ -16,6 +16,7 @@ import UserProfilePage from '../../pages/user-profile/UserProfilePage';
 import ViewSolicitationPage from '../../pages/view-solicitation/ViewSolicitationPage';
 import ViewExtraSolicitationPage from '../../pages/view-extra-solicitation/ViewExtraSolicitationPage';
 import BudgetDashboardPage from '../../pages/admin-panel/BudgetDashboardPage';
+import CeapgReviewsPage from '../../pages/ceapg-reviews/CeapgReviewsPage';
 import useHasPermission from '../../hooks/auth/useHasPermission';
 
 export default function PrivateRoutes() {
@@ -56,6 +57,9 @@ export default function PrivateRoutes() {
         {isAdmin && <Route path="/admin-panel" element={<AdminPanelPage />} />}
         {(isAdmin || isCeapg) && (
           <Route path="/budget-dashboard" element={<BudgetDashboardPage />} />
+        )}
+        {isCeapg && (
+          <Route path="/ceapg-reviews" element={<CeapgReviewsPage />} />
         )}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
