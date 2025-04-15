@@ -228,27 +228,19 @@ public class AssistanceRequestController {
 	public ResponseEntity<AssistanceRequest> reviewsolicitation(
 			@RequestBody AssistanceRequest assistanceRequest) {
 		User currentUser = serviceUser.getLoggedUser();
-		Optional<AssistanceRequest> assistancePersisted = service.findById(assistanceRequest.getId());
 
-		if (currentUser == null || !assistancePersisted.isPresent()) {
+		if (currentUser == null) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
 
-		try {
-			assistancePersisted.get().setSituacao(assistanceRequest.getSituacao());
-			assistancePersisted.get().setNumeroAta(assistanceRequest.getNumeroAta());
-			assistancePersisted.get().setDataAprovacao(assistanceRequest.getDataAprovacao());
-			assistancePersisted.get().setNumeroDiariasAprovadas(assistanceRequest.getNumeroDiariasAprovadas());
-			assistancePersisted.get().setValorAprovado(assistanceRequest.getValorAprovado());
-			assistancePersisted.get().setObservacao(assistanceRequest.getObservacao());
-			assistancePersisted.get().setAutomaticDecText();
-			assistancePersisted.get().setAvaliadorProap(currentUser);
-			return ResponseEntity.ok().body(service.save(assistancePersisted.get()));
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.error(e.getMessage());
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		AssistanceRequest reviewedRequest = service.reviewSolicitation(assistanceRequest, currentUser);
+
+		if (reviewedRequest == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
+
+		return ResponseEntity.ok().body(reviewedRequest);
+
 	}
 
 	@DeleteMapping("/remove/{id}")

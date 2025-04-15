@@ -2,6 +2,7 @@ package br.ufba.proap.assistancerequest.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -108,6 +109,39 @@ public class AssistanceRequestService {
 
 	public void delete(AssistanceRequest assistanceRequestDTO) {
 		assistanteRequestRepository.delete(assistanceRequestDTO);
+	}
+
+	@Transactional
+	public AssistanceRequest reviewSolicitation(AssistanceRequest assistanceRequest, User currentUser) {
+		Optional<AssistanceRequest> assistancePersisted = findById(assistanceRequest.getId());
+
+		if (!assistancePersisted.isPresent()) {
+			return null;
+		}
+
+		// Validate situation value
+		Integer situacao = assistanceRequest.getSituacao();
+		if (situacao == null || (situacao != 1 && situacao != 2)) {
+			throw new IllegalArgumentException("Situação deve ser Aprovado ou Reprovado");
+		}
+
+		AssistanceRequest persisted = assistancePersisted.get();
+		persisted.setSituacao(assistanceRequest.getSituacao());
+		persisted.setNumeroAta(assistanceRequest.getNumeroAta());
+
+		if (assistanceRequest.getDataAprovacao() != null) {
+			persisted.setDataAprovacao(assistanceRequest.getDataAprovacao());
+		} else {
+			persisted.setDataAprovacao(LocalDate.now());
+		}
+
+		persisted.setNumeroDiariasAprovadas(assistanceRequest.getNumeroDiariasAprovadas());
+		persisted.setValorAprovado(assistanceRequest.getValorAprovado());
+		persisted.setObservacao(assistanceRequest.getObservacao());
+		persisted.setAutomaticDecText();
+		persisted.setAvaliadorProap(currentUser);
+
+		return save(persisted);
 	}
 
 	@Transactional

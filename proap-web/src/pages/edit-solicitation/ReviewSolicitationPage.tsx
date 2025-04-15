@@ -40,10 +40,14 @@ export default function ReviewSolicitationPage() {
         updatedAt: undefined,
       };
 
-      return reviewSolicitation(valuesWithCorrectDates).then(() => {
-        Toast.success('Solicitação avaliada com sucesso!');
-        navigate('/');
-      });
+      return reviewSolicitation(valuesWithCorrectDates)
+        .then(() => {
+          Toast.success('Solicitação avaliada com sucesso!');
+          navigate('/');
+        })
+        .catch((error) => {
+          Toast.error(error.response.data.message);
+        });
     },
     [dispatch],
   );

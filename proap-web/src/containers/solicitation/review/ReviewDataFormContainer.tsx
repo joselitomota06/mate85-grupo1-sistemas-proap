@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { SolicitationFormValues } from '../SolicitationFormSchema';
 import { Field, useFormikContext } from 'formik';
@@ -13,6 +13,9 @@ import {
   Typography,
   Tooltip,
   CircularProgress,
+  Button,
+  IconButton,
+  Paper,
 } from '@mui/material';
 import {
   StyledData,
@@ -20,12 +23,20 @@ import {
   StyledTextField,
 } from '../SolicitationFormContainer.style';
 import { FormControlLabel, Radio, RadioGroup } from '@mui/material';
-import { InfoOutlined } from '@mui/icons-material';
+import {
+  InfoOutlined,
+  Edit,
+  Delete,
+  Restore,
+  CheckCircle,
+  Cancel,
+} from '@mui/icons-material';
 import { useBudgetPercentage } from '../../../hooks/budget/useBudgetPercentage';
 
 export default function ReviewDataFormContainer() {
-  const { values, errors, touched } =
+  const { values, errors, touched, setFieldValue } =
     useFormikContext<SolicitationFormValues>();
+  const [isEditingDate, setIsEditingDate] = useState(false);
 
   const maxDiarias = values.quantidadeDiariasSolicitadas || 0;
   const diariasOptions = Array.from({ length: maxDiarias + 1 }, (_, i) => i);
@@ -35,6 +46,32 @@ export default function ReviewDataFormContainer() {
     value: values.valorTotal,
   });
 
+  useEffect(() => {
+    // Set current date as default when component mounts if no date is set
+    if (!values.dataAprovacao) {
+      const today = new Date();
+      const formattedDate = today.toISOString().split('T')[0];
+      setFieldValue('dataAprovacao', formattedDate);
+    }
+  }, []);
+
+  const handleSetCurrentDate = () => {
+    const today = new Date();
+    const formattedDate = today.toISOString().split('T')[0];
+    setFieldValue('dataAprovacao', formattedDate);
+    setIsEditingDate(false);
+  };
+
+  const formatDisplayDate = (dateString?: string) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('pt-BR');
+  };
+
+  const handleDecisionSelect = (value: number) => {
+    setFieldValue('situacao', value);
+  };
+
   return (
     <Box sx={{ p: 2 }}>
       <Typography variant="h5" sx={{ mb: 3, fontWeight: 'bold' }}>
@@ -42,36 +79,117 @@ export default function ReviewDataFormContainer() {
       </Typography>
 
       {/* Situação */}
-      <Box sx={{ mb: 3, p: 2, border: '1px solid #e0e0e0', borderRadius: 1 }}>
-        <FormControl
-          error={Boolean(touched.situacao && errors.situacao)}
-          fullWidth
-        >
-          <StyledFormLabel>Situação</StyledFormLabel>
-          <Field as={RadioGroup} name="situacao" row sx={{ mb: 1 }}>
-            <FormControlLabel value="1" control={<Radio />} label="Aprovado" />
-            <FormControlLabel value="2" control={<Radio />} label="Reprovado" />
-          </Field>
-          {touched.situacao && errors.situacao && (
-            <FormHelperText>{errors.situacao}</FormHelperText>
-          )}
-        </FormControl>
+      <Box sx={{ mb: 3 }}>
+        <StyledFormLabel required sx={{ mb: 1.5 }}>
+          Decisão
+        </StyledFormLabel>
+        <Box sx={{ display: 'flex', gap: 2 }}>
+          <Button
+            variant={values.situacao === 1 ? 'contained' : 'outlined'}
+            color="success"
+            onClick={() => handleDecisionSelect(1)}
+            startIcon={
+              <CheckCircle
+                sx={{ color: values.situacao === 1 ? 'white' : undefined }}
+              />
+            }
+            sx={{
+              flex: 1,
+              py: 1,
+              borderRadius: '12px',
+              fontWeight: values.situacao === 1 ? 'bold' : 'normal',
+              color: values.situacao === 1 ? 'white' : undefined,
+            }}
+          >
+            Aprovar
+          </Button>
+
+          <Button
+            variant={values.situacao === 2 ? 'contained' : 'outlined'}
+            color="error"
+            onClick={() => handleDecisionSelect(2)}
+            startIcon={
+              <Cancel
+                sx={{ color: values.situacao === 2 ? 'white' : undefined }}
+              />
+            }
+            sx={{
+              flex: 1,
+              py: 1,
+              borderRadius: '12px',
+              fontWeight: values.situacao === 2 ? 'bold' : 'normal',
+              color: values.situacao === 2 ? 'white' : undefined,
+            }}
+          >
+            Reprovar
+          </Button>
+        </Box>
+
+        {/* Hidden field to maintain formik validation */}
+        <Field type="hidden" name="situacao" />
+        {touched.situacao && errors.situacao && (
+          <FormHelperText error>{errors.situacao}</FormHelperText>
+        )}
       </Box>
 
       {/* Data e Número ATA */}
       <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
         <Box sx={{ flex: 1 }}>
-          <Field
-            as={StyledTextField}
-            fullWidth
-            required
-            label="Data da avaliação da solicitação"
-            name="dataAprovacao"
-            type="date"
-            InputLabelProps={{ shrink: true }}
-            error={Boolean(touched.dataAprovacao && errors.dataAprovacao)}
-            helperText={touched.dataAprovacao && errors.dataAprovacao}
-          />
+          {isEditingDate ? (
+            <Box sx={{ position: 'relative' }}>
+              <Field
+                as={StyledTextField}
+                fullWidth
+                required
+                label="Data da avaliação da solicitação"
+                name="dataAprovacao"
+                type="date"
+                InputLabelProps={{ shrink: true }}
+                error={Boolean(touched.dataAprovacao && errors.dataAprovacao)}
+                helperText={touched.dataAprovacao && errors.dataAprovacao}
+              />
+              <Box sx={{ mt: 1, display: 'flex', gap: 1 }}>
+                <Button
+                  size="small"
+                  variant="outlined"
+                  onClick={() => setIsEditingDate(false)}
+                  startIcon={<Restore />}
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  size="small"
+                  variant="outlined"
+                  color="error"
+                  onClick={handleSetCurrentDate}
+                  startIcon={<Delete />}
+                >
+                  Resetar
+                </Button>
+              </Box>
+            </Box>
+          ) : (
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <StyledFormLabel required>
+                Data da avaliação da solicitação
+              </StyledFormLabel>
+              <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
+                <Typography variant="body1">
+                  {formatDisplayDate(values.dataAprovacao)}
+                </Typography>
+                <Button
+                  variant="text"
+                  color="primary"
+                  size="small"
+                  onClick={() => setIsEditingDate(true)}
+                  startIcon={<Edit />}
+                  sx={{ ml: 2 }}
+                >
+                  Alterar
+                </Button>
+              </Box>
+            </Box>
+          )}
         </Box>
         <Box sx={{ flex: 1 }}>
           <Field
