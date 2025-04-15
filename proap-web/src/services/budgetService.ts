@@ -11,6 +11,7 @@ export interface AssistanceIdValueDTO {
   value: number;
   createdAt: string;
   dataAprovacao: string;
+  avaliadorProap: string;
 }
 
 export interface BudgetSummaryDTO {

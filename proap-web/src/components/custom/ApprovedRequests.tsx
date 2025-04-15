@@ -16,7 +16,12 @@ import { formatNumberToBRL } from '../../helpers/formatter';
 import DateRangeFilter from './DateRangeFilter';
 import { format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { CalendarToday, AttachMoney, CheckCircle } from '@mui/icons-material';
+import {
+  CalendarToday,
+  AttachMoney,
+  CheckCircle,
+  Person,
+} from '@mui/icons-material';
 
 interface ApprovedRequestsProps {
   loading: boolean;
@@ -225,6 +230,20 @@ const ApprovedRequests: React.FC<ApprovedRequestsProps> = ({
                           </Typography>
                         </Tooltip>
                       </Box>
+                    </Box>
+                    {/* Approved  by */}
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 1,
+                        flexBasis: { sm: '50%' },
+                      }}
+                    >
+                      <Person fontSize="small" color="action" />
+                      <Typography variant="body2" color="text.secondary">
+                        Aprovada por: {request.avaliadorProap}
+                      </Typography>
                     </Box>
 
                     {/* Value */}

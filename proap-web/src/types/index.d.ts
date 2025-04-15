@@ -8,3 +8,4 @@ export * from './requests-type/AssistanceRequestListResponse';
 export * from './requests-type/ExtraRequestListResponse';
 export * from './requests-type/StatusResponse';
 export * from './admin-type/SystemConfiguration';
+export * from './requests-type/CeapgResponse';

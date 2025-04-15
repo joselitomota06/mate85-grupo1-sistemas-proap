@@ -18,7 +18,9 @@ import {
   Settings,
   Dashboard,
   InfoOutlined,
-  CalendarToday,
+  FactCheck,
+  Assessment,
+  Groups,
 } from '@mui/icons-material';
 import {
   budgetFormSchema,
@@ -42,7 +44,12 @@ import { ptBR } from 'date-fns/locale';
 import BudgetForm from '../../components/custom/BudgetForm';
 import BudgetOverview from '../../components/custom/BudgetOverview';
 import ApprovedRequests from '../../components/custom/ApprovedRequests';
+import CeapgReviewRequests from '../../components/custom/CeapgReviewRequests';
 import SectionHeader from '../../components/custom/SectionHeader';
+
+// Add import for CEAPG service
+import { getAllCeapgReviews } from '../../services/ceapgService';
+import { CeapgResponse } from '../../types';
 
 // Interface for tab panel props
 interface TabPanelProps {
@@ -101,8 +108,17 @@ const BudgetDashboardContainer = () => {
   const [usedPercentage, setUsedPercentage] = useState<number>(0);
   const [totalRequestsValue, setTotalRequestsValue] = useState<number>(0);
 
+  // Add state for CEAPG requests
+  const [ceapgRequests, setCeapgRequests] = useState<CeapgResponse[]>([]);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
+
   const handleTabChange = (event: SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
+
+    // Load CEAPG data when switching to CEAPG tab
+    if (newValue === 3) {
+      loadCeapgRequestsData();
+    }
   };
 
   const formatDateToAPI = (dateStr: string): string | undefined => {
@@ -120,6 +136,25 @@ const BudgetDashboardContainer = () => {
       return undefined;
     }
   };
+
+  const loadCeapgRequestsData = useCallback(async () => {
+    try {
+      setLoading(true);
+      const formatStartDate = formatDateToAPI(filterDates.startDate);
+      const formatEndDate = formatDateToAPI(filterDates.endDate);
+
+      const ceapgData = await getAllCeapgReviews(
+        formatStartDate,
+        formatEndDate,
+      );
+      setCeapgRequests(ceapgData);
+    } catch (error) {
+      console.error('Erro ao carregar solicitações CEAPG:', error);
+      Toast.error('Erro ao carregar solicitações CEAPG');
+    } finally {
+      setLoading(false);
+    }
+  }, [filterDates]);
 
   const loadBudgetData = useCallback(
     async (year: number) => {
@@ -157,6 +192,14 @@ const BudgetDashboardContainer = () => {
         } else {
           setUsedPercentage(0);
         }
+
+        // Load CEAPG data if tab is active or first load
+        if (tabValue === 3 || isFirstLoad) {
+          loadCeapgRequestsData();
+        }
+
+        // Once data is loaded for the first time, update flag
+        setIsFirstLoad(false);
       } catch (error) {
         console.error('Erro ao carregar dados do orçamento:', error);
         Toast.error('Erro ao carregar dados do orçamento');
@@ -164,7 +207,7 @@ const BudgetDashboardContainer = () => {
         setLoading(false);
       }
     },
-    [filterDates.startDate, filterDates.endDate],
+    [tabValue, loadCeapgRequestsData, isFirstLoad],
   );
 
   useEffect(() => {
@@ -185,6 +228,18 @@ const BudgetDashboardContainer = () => {
 
     loadBudgetData(selectedYear);
   };
+
+  // Add handler for CEAPG filter
+  const handleCeapgFilterApply = useCallback(
+    (startDate: string, endDate: string) => {
+      setFilterDates({
+        startDate,
+        endDate,
+      });
+      loadCeapgRequestsData();
+    },
+    [loadCeapgRequestsData],
+  );
 
   const handleBudgetSubmit = async (values: BudgetFormValues) => {
     setLoading(true);
@@ -253,10 +308,16 @@ const BudgetDashboardContainer = () => {
               {...a11yProps(1)}
             />
             <Tab
-              icon={<ListAlt />}
+              icon={<FactCheck />}
               label={isMobile ? '' : 'Solicitações Aprovadas'}
               iconPosition={isMobile ? 'top' : 'start'}
               {...a11yProps(2)}
+            />
+            <Tab
+              icon={<Groups />}
+              label={isMobile ? '' : 'Avaliações CEAPG'}
+              iconPosition={isMobile ? 'top' : 'start'}
+              {...a11yProps(3)}
             />
           </Tabs>
         </Box>
@@ -375,6 +436,23 @@ const BudgetDashboardContainer = () => {
               onStartDateChange={() => {}}
               onEndDateChange={() => {}}
               onFilter={handleFilterApply}
+            />
+          </TabPanel>
+
+          {/* Tab 4: CEAPG Reviews */}
+          <TabPanel value={tabValue} index={3}>
+            <SectionHeader
+              icon={<Groups color="primary" />}
+              title="Avaliações CEAPG"
+            />
+            <CeapgReviewRequests
+              loading={loading}
+              requests={ceapgRequests}
+              startDate={filterDates.startDate}
+              endDate={filterDates.endDate}
+              onStartDateChange={() => {}}
+              onEndDateChange={() => {}}
+              onFilter={handleCeapgFilterApply}
             />
           </TabPanel>
         </Box>

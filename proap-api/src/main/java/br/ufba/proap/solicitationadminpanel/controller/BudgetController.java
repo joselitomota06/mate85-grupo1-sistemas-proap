@@ -73,7 +73,7 @@ public class BudgetController {
             @RequestParam(required = false) String startDate,
             @RequestParam(required = false) String endDate) {
 
-        LocalDate start = LocalDate.of(2000, 1, 1);
+        LocalDate start = LocalDate.of(LocalDate.now().getYear(), 1, 1);
         LocalDate end = LocalDate.now();
 
         if (startDate != null) {

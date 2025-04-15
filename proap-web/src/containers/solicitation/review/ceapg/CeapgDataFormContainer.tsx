@@ -24,9 +24,13 @@ export default function CeapgDataFormContainer() {
         <Box sx={{ display: 'flex', gap: 4, mb: 2 }}>
           <Box sx={{ flex: 1 }}>
             <StyledData>
-              <StyledFormLabel>Valor total da solicitação</StyledFormLabel>
-              <Typography variant="h6" color="primary">
-                {formatNumberToBRL(Number(values.valorTotal || 0))}
+              <StyledFormLabel>Valor aprovado</StyledFormLabel>
+              <Typography
+                variant="h5"
+                color="primary"
+                sx={{ fontWeight: 'bold' }}
+              >
+                {formatNumberToBRL(Number(values.valorAprovado || 0))}
               </Typography>
             </StyledData>
           </Box>

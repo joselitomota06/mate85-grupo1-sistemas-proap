@@ -11,7 +11,7 @@ import br.ufba.proap.assistancerequest.domain.AssistanceRequest;
 import br.ufba.proap.assistancerequest.domain.dto.AssistanceRequestCeapgDTO;
 import br.ufba.proap.assistancerequest.domain.dto.ResponseAssistanceRequestDTO;
 import br.ufba.proap.assistancerequest.repository.AssistanceRequestQueryRepository;
-import br.ufba.proap.assistancerequest.repository.AssistanteRequestRepository;
+import br.ufba.proap.assistancerequest.repository.AssistanceRequestRepository;
 import br.ufba.proap.authentication.domain.User;
 import br.ufba.proap.authentication.service.UserService;
 import br.ufba.proap.exception.UnauthorizedException;
@@ -21,7 +21,7 @@ import jakarta.ws.rs.NotFoundException;
 public class AssistanceRequestService {
 
 	@Autowired
-	private AssistanteRequestRepository assistanteRequestRepository;
+	private AssistanceRequestRepository assistanteRequestRepository;
 
 	@Autowired
 	private AssistanceRequestQueryRepository assistanceRequestQueryRepository;

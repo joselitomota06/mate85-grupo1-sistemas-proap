@@ -14,6 +14,7 @@ import {
 import NavigationWrapper from '../navigation/NavigationWrapper';
 import UserProfilePage from '../../pages/user-profile/UserProfilePage';
 import ViewSolicitationPage from '../../pages/view-solicitation/ViewSolicitationPage';
+import ViewExtraSolicitationPage from '../../pages/view-extra-solicitation/ViewExtraSolicitationPage';
 import BudgetDashboardPage from '../../pages/admin-panel/BudgetDashboardPage';
 import useHasPermission from '../../hooks/auth/useHasPermission';
 
@@ -33,6 +34,10 @@ export default function PrivateRoutes() {
         <Route
           path="/extra-solicitation/edit/:id"
           element={<EditExtraSolicitationPage />}
+        />
+        <Route
+          path="/extra-solicitation/view/:id"
+          element={<ViewExtraSolicitationPage />}
         />
         <Route
           path="/solicitation/edit/:id"

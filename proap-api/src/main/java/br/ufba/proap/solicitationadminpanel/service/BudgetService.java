@@ -3,7 +3,7 @@ package br.ufba.proap.solicitationadminpanel.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.ufba.proap.assistancerequest.repository.AssistanteRequestRepository;
+import br.ufba.proap.assistancerequest.repository.AssistanceRequestRepository;
 import br.ufba.proap.solicitationadminpanel.domain.SolicitationAdmin;
 import br.ufba.proap.solicitationadminpanel.domain.dto.AssistanceIdValueDTO;
 import br.ufba.proap.solicitationadminpanel.repository.SolicitationAdminRepository;
@@ -20,7 +20,7 @@ public class BudgetService {
     private SolicitationAdminRepository repository;
 
     @Autowired
-    private AssistanteRequestRepository assistanteRequestRepository;
+    private AssistanceRequestRepository assistanteRequestRepository;
 
     public SolicitationAdmin setBudget(BigDecimal budget, Integer year) {
 

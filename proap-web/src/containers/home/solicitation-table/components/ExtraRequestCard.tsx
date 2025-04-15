@@ -19,11 +19,10 @@ import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { formatNumberToBRL } from '../../../../helpers/formatter';
-import { SolicitationDetailsDialogProps } from '../../request-dialog/SolicitationDetailsDialog';
 import { StatusChip } from './index';
 
-interface SolicitationCardProps {
-  solicitation: any;
+interface ExtraRequestCardProps {
+  extraRequest: any;
   currentUserEmail: string;
   userCanViewAllRequests: boolean;
   userCanReviewRequests: boolean;
@@ -32,11 +31,11 @@ interface SolicitationCardProps {
   onReview: (id: number) => void;
   onView: (id: number) => void;
   onDelete: (id: number) => void;
-  onShowDetails: (props: SolicitationDetailsDialogProps) => void;
+  onShowText: (text: string) => void;
 }
 
-const SolicitationCard: React.FC<SolicitationCardProps> = ({
-  solicitation,
+const ExtraRequestCard: React.FC<ExtraRequestCardProps> = ({
+  extraRequest,
   currentUserEmail,
   userCanViewAllRequests,
   userCanReviewRequests,
@@ -45,29 +44,18 @@ const SolicitationCard: React.FC<SolicitationCardProps> = ({
   onReview,
   onView,
   onDelete,
-  onShowDetails,
+  onShowText,
 }) => {
   const {
     id,
     user,
-    valorTotal,
+    valorSolicitado,
     createdAt,
     situacao,
     valorAprovado,
+    automaticDecText,
     dataAprovacao,
-    solicitanteDocente,
-    tituloPublicacao,
-    valorDiaria,
-    cotacaoMoeda,
-    nomeEvento,
-    isDolar,
-    qualis,
-    cidade,
-    pais,
-    dataInicio,
-    dataFim,
-    observacao,
-  } = solicitation;
+  } = extraRequest;
 
   // Menu state
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -106,25 +94,9 @@ const SolicitationCard: React.FC<SolicitationCardProps> = ({
     }
   };
 
-  const handleShowDetails = (e: React.MouseEvent) => {
+  const handleShowText = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent card click
-    onShowDetails({
-      nomeSolicitante: user.name,
-      solicitanteDocente,
-      valorTotal,
-      valorDiarias: valorDiaria,
-      variacaoCambial: cotacaoMoeda,
-      nomeEvento,
-      tituloPublicacao,
-      isDolar,
-      qualisEvento: qualis,
-      cidade,
-      pais,
-      dataInicio,
-      dataFim,
-      situacao,
-      observacoes: observacao,
-    });
+    onShowText(automaticDecText);
   };
 
   return (
@@ -177,7 +149,7 @@ const SolicitationCard: React.FC<SolicitationCardProps> = ({
             Valor solicitado
           </Typography>
           <Typography variant="h6" component="div" fontWeight="medium">
-            {formatNumberToBRL(valorTotal)}
+            {valorSolicitado != null ? formatNumberToBRL(valorSolicitado) : '-'}
           </Typography>
         </Box>
 
@@ -213,12 +185,12 @@ const SolicitationCard: React.FC<SolicitationCardProps> = ({
         <Box sx={{ display: 'flex', gap: 1 }}>
           {/* Primary Actions - Always visible */}
           {userCanViewAllRequests && (
-            <Tooltip title="Ver resumo da Solicitação">
+            <Tooltip title="Ver texto da solicitação">
               <IconButton
                 size="small"
                 color="primary"
-                onClick={handleShowDetails}
-                title="Ver resumo"
+                onClick={handleShowText}
+                title="Ver texto"
               >
                 <VisibilityIcon fontSize="small" />
               </IconButton>
@@ -308,4 +280,4 @@ const SolicitationCard: React.FC<SolicitationCardProps> = ({
   );
 };
 
-export default SolicitationCard;
+export default ExtraRequestCard;

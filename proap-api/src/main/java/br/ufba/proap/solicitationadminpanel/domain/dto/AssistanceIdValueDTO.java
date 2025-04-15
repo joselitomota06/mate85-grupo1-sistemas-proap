@@ -5,7 +5,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public record AssistanceIdValueDTO(Long id, Float value, LocalDate createdAt, LocalDate dataAprovacao) {
+public record AssistanceIdValueDTO(Long id, Float value, LocalDate createdAt, LocalDate dataAprovacao,
+        String avaliadorProap) {
 
     public static List<AssistanceIdValueDTO> convertPairsToDTOs(List<Object[]> data) {
         return data.stream()
@@ -14,7 +15,9 @@ public record AssistanceIdValueDTO(Long id, Float value, LocalDate createdAt, Lo
                     Float value = (Float) objArray[1];
                     LocalDate createdAt = ((LocalDateTime) objArray[2]).toLocalDate();
                     LocalDate dataAprovacao = (LocalDate) objArray[3];
-                    AssistanceIdValueDTO dto = new AssistanceIdValueDTO(id, value, createdAt, dataAprovacao);
+                    String avaliadorProap = (String) objArray[4];
+                    AssistanceIdValueDTO dto = new AssistanceIdValueDTO(id, value, createdAt, dataAprovacao,
+                            avaliadorProap);
                     return dto;
                 })
                 .collect(Collectors.toList());

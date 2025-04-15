@@ -1,163 +1,74 @@
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   Typography,
+  Box,
+  Paper,
+  InputAdornment,
+  TextField,
+  IconButton,
+  useMediaQuery,
+  useTheme,
+  ToggleButton,
+  ToggleButtonGroup,
+  Tooltip,
+  MenuItem,
+  Select,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Button,
 } from '@mui/material';
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-
-import { removeAssistanceRequestById } from '../../../services/assistanceRequestService';
-import { IRootState, useAppDispatch } from '../../../store';
-
-import ModeEditIcon from '@mui/icons-material/ModeEdit';
-import Visibility from '@mui/icons-material/Visibility';
-import { CheckCircle } from '@mui/icons-material';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate } from 'react-router-dom';
-import { Box } from '@mui/system';
-import { IconButton } from '@mui/material';
 import { toast } from 'react-toastify';
 import Pagination from '@mui/material/Pagination';
-import Stack from '@mui/material/Stack';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
 
-// Modal inports
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+// Icons
+import ViewListIcon from '@mui/icons-material/ViewList';
+import ViewModuleIcon from '@mui/icons-material/ViewModule';
+import SearchIcon from '@mui/icons-material/Search';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import SortIcon from '@mui/icons-material/Sort';
+
+import { removeAssistanceRequestById } from '../../../services/assistanceRequestService';
 import {
   ExtraRequestPropToSort,
   deleteExtraAssistanceRequest,
   getExtraAssistanceRequests,
 } from '../../../services/extraAssistanceRequestService';
-import { ExtraRequest } from '../../../types/requests-type/ExtraRequest';
+import { IRootState, useAppDispatch } from '../../../store';
+import { useAuth } from '../../../hooks';
 import usePrevious from '../../../helpers/usePrevious';
-import { formatNumberToBRL } from '../../../helpers/formatter';
 import useHasPermission from '../../../hooks/auth/useHasPermission';
+import { useViewModePreference } from '../../../hooks';
+import { ExtraRequestTableView, ExtraRequestGridView } from './components';
 
+/**
+ * Component that displays a table of extra assistance requests
+ * Allows sorting, pagination, and actions like edit, review, delete
+ */
 export default function SolicitationTableExtraRequests() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const isAdmin = useHasPermission('ADMIN_ROLE');
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const currentUser = useAuth();
 
-  //#region table data
-  const { requests, extraRequests } = useSelector(
-    (state: IRootState) => state.assistanceRequestSlice,
-  );
+  // Permissions
+  const userCanViewAllRequests = useHasPermission('VIEW_ALL_REQUESTS');
+  const isCeapg = useHasPermission('CEAPG_ROLE');
+  const userCanReviewRequests = useHasPermission('APPROVE_REQUEST');
 
-  const updateRequestList = useCallback(
-    (
-      sortBy: ExtraRequestPropToSort,
-      ascending: boolean,
-      size: number,
-      page: number,
-    ) => {
-      dispatch(getExtraAssistanceRequests(sortBy, ascending, page, size)).then(
-        (extraRequests) =>
-          setNumberPages(Math.trunc(extraRequests.payload.total / size) + 1),
-      );
-    },
-    [dispatch],
-  );
-  // HACK : Não entendi a tempo como usar useCallback com os valores atualizados. Estava sempre pegando os iniciais
-  const updateRequestListWithCurrentParameters = () => {
-    updateRequestList(
-      getSelectedProp(),
-      selectedPropToSortTable[getSelectedProp()] as boolean,
-      size,
-      currentPage,
-    );
-  };
+  // View mode (table or grid) com preferência salva
+  const [viewMode, setViewMode] = useViewModePreference(currentUser.email);
 
-  useEffect(() => {
-    updateRequestListWithCurrentParameters();
-  }, []);
-  //#endregion
+  // Search filter
+  const [searchQuery, setSearchQuery] = useState('');
 
-  //#region actions column
-  const handleClickEdit = (id: number) => {
-    navigate(`/extra-solicitation/edit/${id}`);
-  };
-
-  const handleClickReview = (id: number) => {
-    navigate(`/extra-solicitation/review/${id}`);
-  };
-
-  const handleClickRemoveRequest = (id: number) => {
-    removeAssistanceRequestById(id).then(() => {
-      updateRequestListWithCurrentParameters();
-      toast.success('Solicitação removida com sucesso');
-    });
-  };
-
-  const handleClickRemoveExtraRequest = (id: number) => {
-    deleteExtraAssistanceRequest(id).then(() => {
-      updateRequestListWithCurrentParameters();
-      toast.success('Solicitação extra removida com sucesso');
-    });
-  };
-
-  const [open, setOpen] = React.useState(false);
-  const [solicitationId, setSolicitationId] = React.useState(0);
-  const [isExtraSolicitation, setIsExtraSolicitation] = React.useState(false);
-
-  const handleClickOpenModal = (id: number, isExtra: boolean = false) => {
-    setIsExtraSolicitation(isExtra);
-    setSolicitationId(id);
-    setOpen(true);
-  };
-
-  const handleClickTextOpenModal = (texto: string) => {
-    if (texto == null) {
-      var texto =
-        'Texto de solicitação ' +
-        '\n' +
-        '\n' +
-        'Texto não disponível, solicitação ainda não foi avaliada. Avalie a solicitação e volte para conferir.' +
-        '\n';
-      alert(texto);
-    } else {
-      alert('Texto de solicitação ' + '\n' + '\n' + texto + '\n');
-    }
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleRemoveSolicitation = () => {
-    isExtraSolicitation
-      ? handleClickRemoveExtraRequest(solicitationId)
-      : handleClickRemoveRequest(solicitationId);
-
-    setIsExtraSolicitation(false);
-    setSolicitationId(0);
-    handleClose();
-  };
-
-  const handleTextModal = () => {
-    handleClickRemoveRequest(solicitationId);
-    setSolicitationId(0);
-    handleClose();
-  };
-  //#endregion
-
-  //#region table sort
+  // Table sorting
   const [selectedPropToSortTable, setSelectedPropToSortTable] = useState<{
-    /**
-     * "true" se estiver ascendente, "false" descendente e undefined caso a
-     * sortBy não esteja selecionada
-     */
     [Property in ExtraRequestPropToSort]?: boolean;
   }>({
     createdAt: false,
@@ -181,39 +92,101 @@ export default function SolicitationTableExtraRequests() {
     }
   };
 
-  function TableCellHeader({
-    text,
-    sortBy,
-  }: {
-    text: string;
-    sortBy: ExtraRequestPropToSort;
-  }) {
-    return (
-      <div
-        onClick={() => handleClickSortTable(sortBy)}
-        style={{ userSelect: 'none', cursor: 'pointer' }}
-      >
-        {text}
-        {selectedPropToSortTable[sortBy] != undefined ? (
-          selectedPropToSortTable[sortBy] ? (
-            <ArrowDropUpIcon />
-          ) : (
-            <ArrowDropDownIcon />
-          )
-        ) : null}
-      </div>
-    );
-  }
-  //#endregion
-
-  //#region pagination
-  const [numberPages, setNumberPages] = React.useState(1);
+  // Pagination
+  const [numberPages, setNumberPages] = useState(1);
   const prevNumberPages = usePrevious(numberPages);
+  const [size, setSize] = useState(5);
+  const [currentPage, setCurrentPage] = useState(0);
 
-  const [size, setSize] = React.useState(5);
+  // Deletion confirmation
+  const [openDeleteConfirmation, setOpenDeleteConfirmation] = useState(false);
+  const [solicitationToDelete, setSolicitationToDelete] = useState<
+    number | null
+  >(null);
 
-  const [currentPage, setCurrentPage] = React.useState(0);
+  // Data fetching
+  const { extraRequests } = useSelector(
+    (state: IRootState) => state.assistanceRequestSlice,
+  );
 
+  const updateRequestList = useCallback(
+    (
+      sortBy: ExtraRequestPropToSort,
+      ascending: boolean,
+      size: number,
+      page: number,
+    ) => {
+      dispatch(getExtraAssistanceRequests(sortBy, ascending, page, size)).then(
+        (extraRequests) =>
+          setNumberPages(Math.trunc(extraRequests.payload.total / size) + 1),
+      );
+    },
+    [dispatch],
+  );
+
+  const updateRequestListWithCurrentParameters = () => {
+    updateRequestList(
+      getSelectedProp(),
+      selectedPropToSortTable[getSelectedProp()] as boolean,
+      size,
+      currentPage,
+    );
+  };
+
+  // Action handlers
+  const handleClickEdit = (id: number) => {
+    navigate(`/extra-solicitation/edit/${id}`);
+  };
+
+  const handleClickReview = (id: number) => {
+    navigate(`/extra-solicitation/review/${id}`);
+  };
+
+  const handleClickView = (id: number) => {
+    // Navigate to view page
+    navigate(`/extra-solicitation/view/${id}`);
+  };
+
+  const openDeleteDialog = (id: number) => {
+    setSolicitationToDelete(id);
+    setOpenDeleteConfirmation(true);
+  };
+
+  const closeDeleteDialog = () => {
+    setOpenDeleteConfirmation(false);
+    setSolicitationToDelete(null);
+  };
+
+  const handleClickRemoveRequest = () => {
+    if (solicitationToDelete) {
+      deleteExtraAssistanceRequest(solicitationToDelete).then(() => {
+        updateRequestListWithCurrentParameters();
+        toast.success('Solicitação extra removida com sucesso');
+        closeDeleteDialog();
+      });
+    }
+  };
+
+  const handleShowText = (text: string) => {
+    if (text == null) {
+      let message =
+        'Texto de solicitação\n\nTexto não disponível, solicitação ainda não foi avaliada. Avalie a solicitação e volte para conferir.';
+      alert(message);
+    } else {
+      alert('Texto de solicitação\n\n' + text);
+    }
+  };
+
+  const handleViewModeChange = (
+    _: React.MouseEvent<HTMLElement>,
+    newMode: 'table' | 'grid',
+  ) => {
+    if (newMode !== null) {
+      setViewMode(newMode);
+    }
+  };
+
+  // Effects
   useEffect(() => {
     if (
       prevNumberPages &&
@@ -221,8 +194,7 @@ export default function SolicitationTableExtraRequests() {
       currentPage >= numberPages
     )
       setCurrentPage(numberPages - 1);
-  }, [numberPages]);
-  //#endregion
+  }, [numberPages, prevNumberPages, currentPage]);
 
   useEffect(() => {
     updateRequestList(
@@ -231,191 +203,166 @@ export default function SolicitationTableExtraRequests() {
       size,
       currentPage,
     );
-  }, [currentPage, size, selectedPropToSortTable]);
+  }, [currentPage, size, selectedPropToSortTable, updateRequestList]);
+
+  // Initial load
+  useEffect(() => {
+    updateRequestListWithCurrentParameters();
+  }, []);
+
+  // Filter requests based on search query
+  const filteredRequests = extraRequests.list.filter(
+    (request) =>
+      !searchQuery ||
+      request.user.name.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
 
   return (
-    <>
-      <TableContainer sx={{ maxHeight: '500px' }}>
-        <Table stickyHeader>
-          <TableHead>
-            <TableRow>
-              <TableCell align="center">
-                <TableCellHeader
-                  text="Data de solicitação"
-                  sortBy="createdAt"
-                ></TableCellHeader>
-              </TableCell>
-              <TableCell align="center">
-                <TableCellHeader
-                  text="Solicitante"
-                  sortBy="user.name"
-                ></TableCellHeader>
-              </TableCell>
-              <TableCell align="center">
-                <TableCellHeader
-                  text="Status"
-                  sortBy="situacao"
-                ></TableCellHeader>
-              </TableCell>
-              <TableCell align="center">
-                <TableCellHeader
-                  text="Valor solicitado"
-                  sortBy="valorSolicitado"
-                ></TableCellHeader>
-              </TableCell>
-              <TableCell align="center">
-                <TableCellHeader
-                  text="Valor aprovado"
-                  sortBy="valorAprovado"
-                ></TableCellHeader>
-              </TableCell>
-              <TableCell align="center">
-                <TableCellHeader
-                  text="Data da avaliação"
-                  sortBy="dataAprovacao"
-                ></TableCellHeader>
-              </TableCell>
-              <TableCell align="center">Ações</TableCell>
-            </TableRow>
-          </TableHead>
-
-          <TableBody>
-            {!extraRequests.list.length && (
-              <TableRow>
-                <TableCell colSpan={7}>
-                  <Typography align="center" color="gray">
-                    Nenhuma solicitação de demanda extra encontrada.
-                  </Typography>
-                </TableCell>
-              </TableRow>
-            )}
-            {extraRequests.list.length > 0 &&
-              extraRequests.list.map(
-                ({
-                  id,
-                  user,
-                  valorSolicitado,
-                  createdAt,
-                  situacao,
-                  valorAprovado,
-                  automaticDecText,
-                  dataAprovacao,
-                }) => (
-                  <TableRow key={user.name}>
-                    <TableCell align="center">{createdAt}</TableCell>
-
-                    <TableCell align="center">{user.name}</TableCell>
-                    {situacao === 2 && (
-                      <TableCell
-                        align="center"
-                        style={{ backgroundColor: 'lightcoral' }}
-                      >
-                        Não aprovada
-                      </TableCell>
-                    )}
-
-                    {situacao === 1 && (
-                      <TableCell
-                        align="center"
-                        style={{ backgroundColor: 'lightgreen' }}
-                      >
-                        Aprovada
-                      </TableCell>
-                    )}
-
-                    {situacao === 0 && (
-                      <TableCell
-                        align="center"
-                        style={{ backgroundColor: 'gray' }}
-                      >
-                        Pendente de avaliação
-                      </TableCell>
-                    )}
-
-                    <TableCell align="center">
-                      {valorSolicitado != null
-                        ? formatNumberToBRL(valorSolicitado)
-                        : '-'}
-                    </TableCell>
-
-                    {valorAprovado === null && (
-                      <TableCell align="center">-</TableCell>
-                    )}
-
-                    {valorAprovado !== null && (
-                      <TableCell align="center">
-                        {formatNumberToBRL(valorAprovado || 0)}
-                      </TableCell>
-                    )}
-
-                    {dataAprovacao === null && (
-                      <TableCell align="center">-</TableCell>
-                    )}
-
-                    {dataAprovacao !== null && (
-                      <TableCell align="center">{dataAprovacao}</TableCell>
-                    )}
-
-                    <TableCell align="center">
-                      <Box>
-                        {isAdmin && (
-                          <>
-                            <IconButton
-                              onClick={() =>
-                                handleClickTextOpenModal(automaticDecText)
-                              }
-                            >
-                              <Visibility />
-                            </IconButton>
-                            <IconButton onClick={() => handleClickReview(id)}>
-                              <CheckCircle />
-                            </IconButton>
-                          </>
-                        )}
-
-                        <IconButton onClick={() => handleClickEdit(id)}>
-                          <ModeEditIcon />
-                        </IconButton>
-
-                        <IconButton onClick={() => handleClickOpenModal(id)}>
-                          <DeleteIcon />
-                        </IconButton>
-                      </Box>
-                    </TableCell>
-                  </TableRow>
-                ),
-              )}
-          </TableBody>
-        </Table>
-      </TableContainer>
-
-      <div style={{ display: 'flex' }}>
-        <Stack spacing={2} style={{ marginTop: '1rem' }}>
-          <Pagination
-            count={numberPages}
-            onChange={(e, v) => setCurrentPage(v - 1)}
-          ></Pagination>
-        </Stack>
-        <Select
-          value={size}
-          onChange={(e) => setSize(e.target.value as number)}
-          type="number"
+    <Paper sx={{ p: 3, borderRadius: 2, boxShadow: 2 }}>
+      <Box sx={{ mb: 3 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            mb: 2,
+          }}
         >
-          <MenuItem value={5}>5</MenuItem>
-          <MenuItem value={10}>10</MenuItem>
-          <MenuItem value={20}>20</MenuItem>
-          <MenuItem value={30}>30</MenuItem>
-        </Select>
-      </div>
+          <Typography variant="h6" component="h2">
+            Solicitações de Demanda Extra
+          </Typography>
+
+          <ToggleButtonGroup
+            value={viewMode}
+            exclusive
+            onChange={handleViewModeChange}
+            aria-label="view mode"
+            size="small"
+          >
+            <ToggleButton value="table" aria-label="table view">
+              <Tooltip title="Visualização em tabela">
+                <ViewListIcon />
+              </Tooltip>
+            </ToggleButton>
+            <ToggleButton value="grid" aria-label="grid view">
+              <Tooltip title="Visualização em cards">
+                <ViewModuleIcon />
+              </Tooltip>
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </Box>
+
+        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+          <TextField
+            variant="outlined"
+            size="small"
+            placeholder="Buscar solicitações"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            sx={{ flexGrow: 1 }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon fontSize="small" />
+                </InputAdornment>
+              ),
+            }}
+          />
+
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Tooltip title="Ordenação">
+              <IconButton size="small">
+                <SortIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Filtros">
+              <IconButton size="small">
+                <FilterListIcon />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        </Box>
+      </Box>
+
+      {viewMode === 'table' ? (
+        <ExtraRequestTableView
+          extraRequests={filteredRequests}
+          currentUserEmail={currentUser.email}
+          userCanViewAllRequests={userCanViewAllRequests}
+          userCanReviewRequests={userCanReviewRequests}
+          isCeapg={isCeapg}
+          selectedPropToSortTable={selectedPropToSortTable}
+          handleClickSortTable={handleClickSortTable}
+          onEdit={handleClickEdit}
+          onReview={handleClickReview}
+          onView={handleClickView}
+          onDelete={openDeleteDialog}
+          onShowText={handleShowText}
+        />
+      ) : (
+        <ExtraRequestGridView
+          extraRequests={filteredRequests}
+          currentUserEmail={currentUser.email}
+          userCanViewAllRequests={userCanViewAllRequests}
+          userCanReviewRequests={userCanReviewRequests}
+          isCeapg={isCeapg}
+          onEdit={handleClickEdit}
+          onReview={handleClickReview}
+          onView={handleClickView}
+          onDelete={openDeleteDialog}
+          onShowText={handleShowText}
+        />
+      )}
+
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: 2,
+        }}
+      >
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Typography variant="body2" color="text.secondary">
+            Itens por página:
+          </Typography>
+          <Select
+            value={size}
+            onChange={(e) => setSize(e.target.value as number)}
+            size="small"
+            sx={{ minWidth: 70 }}
+          >
+            <MenuItem value={5}>5</MenuItem>
+            <MenuItem value={10}>10</MenuItem>
+            <MenuItem value={20}>20</MenuItem>
+            <MenuItem value={30}>30</MenuItem>
+          </Select>
+        </Box>
+
+        <Pagination
+          count={numberPages}
+          page={currentPage + 1}
+          onChange={(e, v) => setCurrentPage(v - 1)}
+          color="primary"
+          showFirstButton
+          showLastButton
+          size={isMobile ? 'small' : 'medium'}
+        />
+
+        <Typography variant="body2" color="text.secondary">
+          Total: {extraRequests.total} solicitações
+        </Typography>
+      </Box>
 
       <Dialog
-        open={open}
-        onClose={handleClose}
+        open={openDeleteConfirmation}
+        onClose={closeDeleteDialog}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {'Remoção de solicitação'}
+          Remoção de solicitação
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
@@ -423,12 +370,12 @@ export default function SolicitationTableExtraRequests() {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Não</Button>
-          <Button onClick={handleRemoveSolicitation} autoFocus>
+          <Button onClick={closeDeleteDialog}>Não</Button>
+          <Button onClick={handleClickRemoveRequest} autoFocus>
             Sim
           </Button>
         </DialogActions>
       </Dialog>
-    </>
+    </Paper>
   );
 }
