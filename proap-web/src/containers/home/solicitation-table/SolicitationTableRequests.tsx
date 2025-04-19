@@ -12,6 +12,10 @@ import {
   Tooltip,
   MenuItem,
   Select,
+  FormControl,
+  InputLabel,
+  Menu,
+  Chip,
 } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -25,6 +29,8 @@ import ViewModuleIcon from '@mui/icons-material/ViewModule';
 import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import SortIcon from '@mui/icons-material/Sort';
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import ClearIcon from '@mui/icons-material/Clear';
 
 import {
   AssistanceRequestPropToSort,
@@ -39,7 +45,11 @@ import SolicitationDetailsDialog, {
   SolicitationDetailsDialogProps,
 } from '../request-dialog/SolicitationDetailsDialog';
 import { useTableSort, useViewModePreference } from '../../../hooks';
-import { SolicitationTableView, SolicitationGridView } from './components';
+import {
+  SolicitationTableView,
+  SolicitationGridView,
+  StatusChip,
+} from './components';
 import { ConfirmationDialog } from '../../../components/dialogs';
 
 /**
@@ -62,6 +72,38 @@ export default function SolicitationTableRequests() {
 
   // Search filter
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Status filter
+  const [statusFilter, setStatusFilter] = useState<number | null>(null);
+  const [anchorElFilter, setAnchorElFilter] = useState<null | HTMLElement>(
+    null,
+  );
+  const openFilter = Boolean(anchorElFilter);
+
+  // Status options
+  const statusOptions = [
+    {
+      value: 0,
+      label: {
+        text: 'Pendente',
+        component: <StatusChip status={0} />,
+      },
+    },
+    {
+      value: 1,
+      label: {
+        text: 'Aprovada',
+        component: <StatusChip status={1} />,
+      },
+    },
+    {
+      value: 2,
+      label: {
+        text: 'Não aprovada',
+        component: <StatusChip status={2} />,
+      },
+    },
+  ];
 
   // Table sorting
   const { selectedPropToSortTable, getSelectedProp, handleClickSortTable } =
@@ -179,6 +221,20 @@ export default function SolicitationTableRequests() {
     }
   };
 
+  // Handle filter menu
+  const handleOpenFilterMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElFilter(event.currentTarget);
+  };
+
+  const handleCloseFilterMenu = () => {
+    setAnchorElFilter(null);
+  };
+
+  const handleStatusFilterChange = (status: number | null) => {
+    setStatusFilter(status);
+    handleCloseFilterMenu();
+  };
+
   // Effects
   useEffect(() => {
     if (
@@ -203,15 +259,20 @@ export default function SolicitationTableRequests() {
     updateAssistanceRequestList,
   ]);
 
-  // Filter requests based on search query
+  // Filter requests based on search query and status filter
   const filteredRequests = requests.list.filter(
     (request) =>
-      !searchQuery ||
-      request.user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      request.tituloPublicacao
-        ?.toLowerCase()
-        .includes(searchQuery.toLowerCase()) ||
-      request.nomeEvento?.toLowerCase().includes(searchQuery.toLowerCase()),
+      // Apply text search filter
+      (!searchQuery ||
+        request.user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        request.tituloPublicacao
+          ?.toLowerCase()
+          .includes(searchQuery.toLowerCase()) ||
+        request.nomeEvento
+          ?.toLowerCase()
+          .includes(searchQuery.toLowerCase())) &&
+      // Apply status filter if selected
+      (statusFilter === null || request.situacao === statusFilter),
   );
 
   return (
@@ -267,18 +328,54 @@ export default function SolicitationTableRequests() {
           />
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Tooltip title="Ordenação">
-              <IconButton size="small">
-                <SortIcon />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Filtros">
-              <IconButton size="small">
+            <Tooltip title="Filtrar por status">
+              <IconButton size="small" onClick={handleOpenFilterMenu}>
                 <FilterListIcon />
               </IconButton>
             </Tooltip>
+            <Menu
+              anchorEl={anchorElFilter}
+              open={openFilter}
+              onClose={handleCloseFilterMenu}
+            >
+              <MenuItem onClick={() => handleStatusFilterChange(null)}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1,
+                  }}
+                >
+                  <FilterAltIcon fontSize="small" />
+                  <Typography variant="body2">Limpar filtro</Typography>
+                </Box>
+              </MenuItem>
+              {statusOptions.map((option) => (
+                <MenuItem
+                  key={option.value}
+                  onClick={() => handleStatusFilterChange(option.value)}
+                >
+                  {option.label.component}
+                </MenuItem>
+              ))}
+            </Menu>
           </Box>
         </Box>
+
+        {statusFilter !== null && (
+          <Box sx={{ mt: 2 }}>
+            <Chip
+              icon={<FilterAltIcon />}
+              label={`Filtro ativo: ${
+                statusOptions.find((option) => option.value === statusFilter)
+                  ?.label.text
+              }`}
+              onDelete={() => setStatusFilter(null)}
+              deleteIcon={<ClearIcon />}
+              color="primary"
+            />
+          </Box>
+        )}
       </Box>
 
       {viewMode === 'table' ? (

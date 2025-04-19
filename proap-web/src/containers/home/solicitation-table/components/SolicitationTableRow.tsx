@@ -174,7 +174,11 @@ const SolicitationTableRow: React.FC<SolicitationTableRowProps> = ({
           {/* Primary Actions - Always visible */}
           {userCanViewAllRequests && (
             <Tooltip title="Ver resumo da Solicitação">
-              <IconButton size="small" onClick={handleShowDetailsClick}>
+              <IconButton
+                size="small"
+                color="primary"
+                onClick={handleShowDetailsClick}
+              >
                 <Visibility fontSize="small" />
               </IconButton>
             </Tooltip>
@@ -182,7 +186,7 @@ const SolicitationTableRow: React.FC<SolicitationTableRowProps> = ({
 
           {(userCanReviewRequests || isCeapg) && (
             <Tooltip title="Revisar Solicitação">
-              <IconButton size="small" onClick={handleReview}>
+              <IconButton size="small" color="success" onClick={handleReview}>
                 <CheckCircle fontSize="small" />
               </IconButton>
             </Tooltip>

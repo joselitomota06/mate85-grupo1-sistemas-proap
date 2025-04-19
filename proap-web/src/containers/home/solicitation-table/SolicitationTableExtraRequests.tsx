@@ -270,11 +270,6 @@ export default function SolicitationTableExtraRequests() {
           />
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Tooltip title="Ordenação">
-              <IconButton size="small">
-                <SortIcon />
-              </IconButton>
-            </Tooltip>
             <Tooltip title="Filtros">
               <IconButton size="small">
                 <FilterListIcon />
