@@ -13,7 +13,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { AssistanceIdValueDTO } from '../../services/budgetService';
 import { formatNumberToBRL } from '../../helpers/formatter';
-import DateRangeFilter from './DateRangeFilter';
+import DateRangeFilter from '../../components/custom/DateRangeFilter';
 import { format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import {

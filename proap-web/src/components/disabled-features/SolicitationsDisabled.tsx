@@ -112,7 +112,7 @@ const SolicitationsDisabled = () => {
               variant="contained"
               color="primary"
               startIcon={<HomeOutlined />}
-              onClick={() => navigate('/')}
+              onClick={() => navigate('/home')}
             >
               Ir para Home
             </Button>

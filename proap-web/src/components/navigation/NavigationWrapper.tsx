@@ -31,7 +31,7 @@ export const NavigationWrapper = ({ children }: PropsWithChildren) => {
     {
       label: 'Página Inicial',
       icon: <HomeIcon />,
-      link: '/',
+      link: '/home',
       visible: true,
     },
     {
@@ -44,12 +44,6 @@ export const NavigationWrapper = ({ children }: PropsWithChildren) => {
       label: 'Painel Administrativo',
       icon: <AdminPanelSettings />,
       link: '/admin-panel',
-      visible: isAdmin,
-    },
-    {
-      label: 'Dashboard de Orçamento',
-      icon: <AttachMoneyIcon />,
-      link: '/budget-dashboard',
       visible: isAdmin || isCeapg,
     },
     {

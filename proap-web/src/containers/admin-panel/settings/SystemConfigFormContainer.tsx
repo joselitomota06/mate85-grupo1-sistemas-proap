@@ -1,6 +1,6 @@
 import { Field, FieldArray, Form, Formik } from 'formik';
-import { SystemConfiguration, UrlMapper } from '../../types';
-import { systemConfigSchema } from './SystemConfigSchema';
+import { SystemConfiguration, UrlMapper } from '../../../types';
+import { systemConfigSchema } from '../SystemConfigSchema';
 import {
   Alert,
   Box,
@@ -20,8 +20,8 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import { Block } from '@mui/icons-material';
 import { useState } from 'react';
-import TextFieldWithPreview from '../../components/FormFields/TextFieldWithPreview';
-import CountryGroupField from '../../components/FormFields/CountryGroupField';
+import TextFieldWithPreview from '../../../components/FormFields/TextFieldWithPreview';
+import CountryGroupField from '../../../components/FormFields/CountryGroupField';
 
 interface SystemConfigFormProps {
   initialValues: SystemConfiguration;

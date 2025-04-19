@@ -62,7 +62,8 @@ export const MobileNavigationWrapper = ({
 
   const handleClickExit = useCallback(() => {
     dispatch(logout());
-  }, [dispatch]);
+    navigate('/');
+  }, [dispatch, navigate]);
 
   useEffect(() => {
     if (userProfileState.name !== '') {

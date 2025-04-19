@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Container } from '@mui/material';
 import { getAllCeapgReviews } from '../../services/ceapgService';
-import CeapgReviewRequests from '../../components/custom/CeapgReviewRequests';
+
 import PageHeader from '../../components/PageHeader';
+import CeapgReviewRequests from '../../containers/admin-panel/CeapgReviewRequests';
 
 const CeapgReviewsPage: React.FC = () => {
   const [requests, setRequests] = useState<any[]>([]);

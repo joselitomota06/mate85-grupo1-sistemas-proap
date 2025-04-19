@@ -27,7 +27,7 @@ import {
   Cell,
 } from 'recharts';
 import { formatNumberToBRL } from '../../helpers/formatter';
-import StatCard from './StatCard';
+import StatCard from '../../components/custom/StatCard';
 import {
   SolicitationAdmin,
   BudgetSummaryDTO,

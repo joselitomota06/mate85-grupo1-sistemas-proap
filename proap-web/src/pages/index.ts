@@ -9,6 +9,6 @@ export { default as EditSolicitationPage } from './edit-solicitation/EditSolicit
 export { default as RecoverPasswordPage } from './recover-password/RecoverPassword';
 export { default as UsersPage } from './users/UsersPage';
 export { default as ReviewSolicitationPage } from './edit-solicitation/ReviewSolicitationPage';
-export { default as AdminPanelPage } from './admin-panel/AdminPanelPage';
+export { default as AdminDashboardPage } from './admin-panel/AdminDashboardPage';
 export { default as ViewSolicitationPage } from './view-solicitation/ViewSolicitationPage';
 export { default as ViewExtraSolicitationPage } from './view-extra-solicitation/ViewExtraSolicitationPage';
