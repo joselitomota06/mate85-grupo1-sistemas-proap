@@ -23,10 +23,10 @@ export default function BudgetSettingsContainer({
         display: 'flex',
         flexDirection: { xs: 'column', md: 'row' },
         gap: 4,
+        justifyContent: 'center',
       }}
     >
-      {/* Left side - Form */}
-      <Box sx={{ flex: '1 1 0%' }}>
+      <Box sx={{ maxWidth: 600 }}>
         <Paper
           elevation={0}
           sx={{

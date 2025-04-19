@@ -91,6 +91,7 @@ const ApprovedRequests: React.FC<ApprovedRequestsProps> = ({
   return (
     <>
       <DateRangeFilter
+        filterByLabel="data de criação"
         startDate={localStartDate}
         endDate={localEndDate}
         onStartDateChange={handleLocalStartDateChange}

@@ -1,9 +1,10 @@
 import React from 'react';
-import { TextField, Button, Stack, Box } from '@mui/material';
+import { TextField, Button, Stack, Box, Typography } from '@mui/material';
 import { format, parse } from 'date-fns';
 import { CalendarToday } from '@mui/icons-material';
 
 interface DateRangeFilterProps {
+  filterByLabel?: string;
   startDate: string;
   endDate: string;
   onStartDateChange: (date: string) => void;
@@ -17,6 +18,7 @@ interface DateRangeFilterProps {
 }
 
 const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
+  filterByLabel,
   startDate,
   endDate,
   onStartDateChange,
@@ -58,10 +60,19 @@ const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
 
   return (
     <Box sx={{ mb: 3 }}>
+      {filterByLabel && (
+        <Box mb={2} sx={{ display: 'flex', alignItems: 'center' }}>
+          <CalendarToday sx={{ mr: 1 }} color="primary" />
+          <Typography variant="subtitle2" component="span">
+            {' '}
+            Filtrar por {filterByLabel}{' '}
+          </Typography>
+        </Box>
+      )}
       <Stack
         direction={{ xs: 'column', sm: 'row' }}
         spacing={2}
-        sx={{ display: 'flex', justifyContent: 'center' }}
+        sx={{ display: 'flex', justifyContent: 'start' }}
       >
         <TextField
           type="date"
@@ -69,6 +80,7 @@ const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
           value={formatToHtmlDate(startDate)}
           onChange={(e) => onStartDateChange(e.target.value)}
           InputLabelProps={{ shrink: true }}
+          fullWidth
         />
         <TextField
           type="date"
@@ -76,12 +88,14 @@ const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
           value={formatToHtmlDate(endDate)}
           onChange={(e) => onEndDateChange(e.target.value)}
           InputLabelProps={{ shrink: true }}
+          fullWidth
         />
         <Button
           variant="contained"
           color="primary"
           onClick={onFilter}
           startIcon={<CalendarToday />}
+          sx={{ minWidth: 150, maxHeight: 50, position: 'relative', top: 12 }}
         >
           {labels.filter}
         </Button>

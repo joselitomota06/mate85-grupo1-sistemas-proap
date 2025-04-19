@@ -480,6 +480,7 @@ const CeapgReviewRequests: React.FC<CeapgReviewRequestsProps> = ({
   return (
     <>
       <DateRangeFilter
+        filterByLabel="data de aprovação"
         startDate={localStartDate}
         endDate={localEndDate}
         onStartDateChange={handleLocalStartDateChange}
