@@ -9,8 +9,6 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import {
-  BarChart,
-  AttachMoney,
   ListAlt,
   Settings,
   Dashboard,
@@ -19,38 +17,26 @@ import {
   AdminPanelSettings,
 } from '@mui/icons-material';
 import { BudgetFormValues } from './BudgetFormSchema';
-import {
-  SolicitationAdmin,
-  AssistanceIdValueDTO,
-  getBudgetByYear,
-  getRemainingBudget,
-  getTotalAssistanceRequestsValue,
-  setBudget,
-} from '../../services/budgetService';
+import { setBudget } from '../../services/budgetService';
 import Toast from '../../helpers/notification';
-import { format, parse } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
-
 import ApprovedRequests from './ApprovedRequestsContainer';
-
 import SectionHeader from '../../components/custom/SectionHeader';
-
-// Add import for CEAPG service
-import { getAllCeapgReviews } from '../../services/ceapgService';
-import { CeapgResponse } from '../../types';
 import BudgetOverview from './BudgetOverviewContainer';
 import CeapgReviewRequests from './CeapgReviewRequests';
 import useHasPermission from '../../hooks/auth/useHasPermission';
 import SettingContainer from './settings/SettingsContainer';
 
-// Interface for tab panel props
+import useCeapgRequests from '../../hooks/admin/useLoadCeapgRequests';
+import useLoadApprovedRequests from '../../hooks/admin/useLoadApprovedRequests';
+import useLoadBudget from '../../hooks/admin/useLoadBudget';
+import useLoadHistoricalBudget from '../../hooks/admin/useLoadHistoricalBudget';
+
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
   value: number;
 }
 
-// Tab Panel component
 const TabPanel = (props: TabPanelProps) => {
   const { children, value, index, ...other } = props;
 
@@ -68,7 +54,6 @@ const TabPanel = (props: TabPanelProps) => {
   );
 };
 
-// Component for accessibility props
 const a11yProps = (index: number) => {
   return {
     id: `budget-tab-${index}`,
@@ -76,155 +61,95 @@ const a11yProps = (index: number) => {
   };
 };
 
-// Componente principal
 const AdminDashboardContainer = () => {
+  const DASHBOARD_INDEX = 0;
+  const APPROVED_REQUESTS_INDEX = 1;
+  const CEAPG_REQUESTS_INDEX = 2;
+  const SETTINGS_INDEX = 3;
   const isCeapg = useHasPermission('CEAPG_ROLE');
   const isAdmin = useHasPermission('ADMIN_ROLE');
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const [tabValue, setTabValue] = useState(0);
+  const [tabValue, setTabValue] = useState(DASHBOARD_INDEX);
   const [loading, setLoading] = useState(false);
-  const [currentBudget, setCurrentBudget] = useState<SolicitationAdmin | null>(
-    null,
-  );
-  const [remainingBudget, setRemainingBudget] = useState<number | null>(null);
-  const [totalRequests, setTotalRequests] = useState<AssistanceIdValueDTO[]>(
-    [],
-  );
   const [selectedYear, setSelectedYear] = useState<number>(
     new Date().getFullYear(),
   );
-  // These states will only be updated when the filter button is clicked
-  const [filterDates, setFilterDates] = useState({
-    startDate: '',
-    endDate: '',
-  });
-  const [usedPercentage, setUsedPercentage] = useState<number>(0);
+
   const [totalRequestsValue, setTotalRequestsValue] = useState<number>(0);
 
-  // Add state for CEAPG requests
-  const [ceapgRequests, setCeapgRequests] = useState<CeapgResponse[]>([]);
-  const [isFirstLoad, setIsFirstLoad] = useState(true);
+  const ceapg = useCeapgRequests();
+  const solicitationRequests = useLoadApprovedRequests();
+
+  const budgetByYear = useLoadBudget();
+
+  const historicalData = useLoadHistoricalBudget();
+
+  useEffect(() => {
+    budgetByYear.getBudget(selectedYear);
+  }, [selectedYear]);
+
+  useEffect(() => {
+    historicalData.fetchAvailableYears();
+    historicalData.fetchHistoricalBudget();
+  }, []);
+
+  useEffect(() => {
+    setTotalRequestsValue(
+      solicitationRequests.approvedRequests.reduce(
+        (sum, item) => sum + item.value,
+        0,
+      ),
+    );
+  }, [solicitationRequests.approvedRequests]);
 
   const handleTabChange = (event: SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
 
-    // Load CEAPG data when switching to CEAPG tab
-    if (newValue === 3) {
-      loadCeapgRequestsData();
+    if (newValue === CEAPG_REQUESTS_INDEX && ceapg.ceapgRequests.length === 0) {
+      ceapg.getCeapg();
+    }
+
+    if (
+      newValue === APPROVED_REQUESTS_INDEX &&
+      solicitationRequests.approvedRequests.length === 0
+    ) {
+      solicitationRequests.getApprovedRequests();
+    }
+
+    if (newValue === DASHBOARD_INDEX && budgetByYear.budget === undefined) {
+      budgetByYear.getBudget(selectedYear);
+    }
+    if (
+      newValue === DASHBOARD_INDEX &&
+      historicalData.availableYears.length === 0
+    ) {
+      historicalData.fetchAvailableYears();
+    }
+    if (
+      newValue === DASHBOARD_INDEX &&
+      historicalData.historicalBudget.length === 0
+    ) {
+      historicalData.fetchHistoricalBudget();
     }
   };
-
-  const formatDateToAPI = (dateStr: string): string | undefined => {
-    if (!dateStr) return undefined;
-    try {
-      if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
-        const date = parse(dateStr, 'yyyy-MM-dd', new Date());
-        return format(date, 'dd-MM-yyyy');
-      } else {
-        const date = parse(dateStr, 'dd/MM/yyyy', new Date());
-        return format(date, 'dd-MM-yyyy');
-      }
-    } catch (e) {
-      console.error('Error formatting date:', e);
-      return undefined;
-    }
-  };
-
-  const loadCeapgRequestsData = useCallback(async () => {
-    try {
-      setLoading(true);
-      const formatStartDate = formatDateToAPI(filterDates.startDate);
-      const formatEndDate = formatDateToAPI(filterDates.endDate);
-
-      const ceapgData = await getAllCeapgReviews(
-        formatStartDate,
-        formatEndDate,
-      );
-      setCeapgRequests(ceapgData);
-    } catch (error) {
-      console.error('Erro ao carregar solicitações CEAPG:', error);
-      Toast.error('Erro ao carregar solicitações CEAPG');
-    } finally {
-      setLoading(false);
-    }
-  }, [filterDates]);
-
-  const loadBudgetData = useCallback(
-    async (year: number) => {
-      setLoading(true);
-      try {
-        const budget = await getBudgetByYear(year);
-        setCurrentBudget(budget);
-
-        const remaining = await getRemainingBudget(year);
-        setRemainingBudget(remaining);
-
-        const startDateFormatted = formatDateToAPI(filterDates.startDate);
-        const endDateFormatted = formatDateToAPI(filterDates.endDate);
-
-        const requests = await getTotalAssistanceRequestsValue(
-          startDateFormatted,
-          endDateFormatted,
-        );
-        setTotalRequests(requests);
-
-        const totalValue = requests.reduce((sum, item) => sum + item.value, 0);
-        setTotalRequestsValue(totalValue);
-
-        if (budget && budget.budget > 0) {
-          const used = budget.budget - remaining;
-          setUsedPercentage(
-            Math.min(Math.floor((used / budget.budget) * 100), 100),
-          );
-        } else {
-          setUsedPercentage(0);
-        }
-
-        // Load CEAPG data if tab is active or first load
-        if (tabValue === 3 || isFirstLoad) {
-          loadCeapgRequestsData();
-        }
-
-        // Once data is loaded for the first time, update flag
-        setIsFirstLoad(false);
-      } catch (error) {
-        console.error('Erro ao carregar dados do orçamento:', error);
-        Toast.error('Erro ao carregar dados do orçamento');
-      } finally {
-        setLoading(false);
-      }
-    },
-    [tabValue, loadCeapgRequestsData, isFirstLoad],
-  );
-
-  useEffect(() => {
-    loadBudgetData(selectedYear);
-  }, [selectedYear, loadBudgetData]);
 
   const handleYearChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setSelectedYear(event.target.value as number);
   };
 
-  const handleFilterApply = (startDate: string, endDate: string) => {
-    setFilterDates({
-      startDate,
-      endDate,
-    });
-
-    loadBudgetData(selectedYear);
-  };
-
-  // Add handler for CEAPG filter
-  const handleCeapgFilterApply = useCallback(
-    (startDate: string, endDate: string) => {
-      setFilterDates({
-        startDate,
-        endDate,
-      });
-      loadCeapgRequestsData();
+  const handleApprovedRequestsFilterApply = useCallback(
+    (startDate?: string, endDate?: string) => {
+      solicitationRequests.getApprovedRequests(startDate, endDate);
     },
-    [loadCeapgRequestsData],
+    [solicitationRequests.getApprovedRequests],
+  );
+
+  const handleCeapgFilterApply = useCallback(
+    (startDate?: string, endDate?: string) => {
+      ceapg.getCeapg(startDate, endDate);
+    },
+    [ceapg.getCeapg],
   );
 
   const handleBudgetSubmit = async (values: BudgetFormValues) => {
@@ -233,14 +158,16 @@ const AdminDashboardContainer = () => {
       await setBudget(values.budget, values.year);
       Toast.success(`Orçamento de ${values.year} definido com sucesso!`);
       if (values.year === selectedYear) {
-        await loadBudgetData(selectedYear);
-        setTabValue(0);
+        budgetByYear.getBudget(selectedYear);
+        setTabValue(DASHBOARD_INDEX);
       }
     } catch (error) {
       console.error('Erro ao definir orçamento:', error);
       Toast.error('Erro ao definir o orçamento anual: ' + error);
     } finally {
       setLoading(false);
+      historicalData.fetchAvailableYears();
+      historicalData.fetchHistoricalBudget();
     }
   };
 
@@ -285,20 +212,20 @@ const AdminDashboardContainer = () => {
               icon={<Dashboard />}
               label={isMobile ? '' : 'Visão Geral'}
               iconPosition={isMobile ? 'top' : 'start'}
-              {...a11yProps(0)}
+              {...a11yProps(DASHBOARD_INDEX)}
             />
             <Tab
               icon={<FactCheck />}
               label={isMobile ? '' : 'Solicitações Aprovadas'}
               iconPosition={isMobile ? 'top' : 'start'}
-              {...a11yProps(1)}
+              {...a11yProps(APPROVED_REQUESTS_INDEX)}
             />
             {!isCeapg && (
               <Tab
                 icon={<Groups />}
                 label={isMobile ? '' : 'Avaliações CEAPG'}
                 iconPosition={isMobile ? 'top' : 'start'}
-                {...a11yProps(2)}
+                {...a11yProps(CEAPG_REQUESTS_INDEX)}
               />
             )}
             {isAdmin && (
@@ -306,62 +233,62 @@ const AdminDashboardContainer = () => {
                 icon={<Settings />}
                 label={isMobile ? '' : 'Configurações'}
                 iconPosition={isMobile ? 'top' : 'start'}
-                {...a11yProps(3)}
+                {...a11yProps(SETTINGS_INDEX)}
               />
             )}
           </Tabs>
         </Box>
 
         <Box sx={{ p: 3 }}>
-          <TabPanel value={tabValue} index={0}>
+          <TabPanel value={tabValue} index={DASHBOARD_INDEX}>
             <SectionHeader
               icon={<Dashboard color="primary" />}
               title="Visão Geral do Orçamento"
             />
             <BudgetOverview
-              loading={loading}
-              currentBudget={currentBudget}
-              remainingBudget={remainingBudget}
-              usedPercentage={usedPercentage}
+              budgetLoading={budgetByYear.loading}
+              totalBudget={budgetByYear.budget?.totalBudget ?? 0}
+              remainingBudget={budgetByYear.budget?.remainingBudget ?? 0}
+              usedPercentage={budgetByYear.budget?.usedPercentage ?? 0}
+              usedBudget={budgetByYear.budget?.usedBudget ?? 0}
               selectedYear={selectedYear}
+              historicalData={historicalData.historicalBudget}
+              availableYears={historicalData.availableYears}
+              yearsLoading={historicalData.yearsLoading}
               onYearChange={handleYearChange}
             />
           </TabPanel>
 
-          <TabPanel value={tabValue} index={1}>
+          <TabPanel value={tabValue} index={APPROVED_REQUESTS_INDEX}>
             <SectionHeader
               icon={<ListAlt color="primary" />}
               title="Solicitações Aprovadas"
             />
             <ApprovedRequests
-              loading={loading}
-              totalRequests={totalRequests}
+              loading={solicitationRequests.loading}
+              totalRequests={solicitationRequests.approvedRequests}
               totalRequestsValue={totalRequestsValue}
-              startDate={filterDates.startDate}
-              endDate={filterDates.endDate}
               onStartDateChange={() => {}}
               onEndDateChange={() => {}}
-              onFilter={handleFilterApply}
+              onFilter={handleApprovedRequestsFilterApply}
             />
           </TabPanel>
 
-          <TabPanel value={tabValue} index={2}>
+          <TabPanel value={tabValue} index={CEAPG_REQUESTS_INDEX}>
             <SectionHeader
               icon={<Groups color="primary" />}
               title="Avaliações CEAPG"
             />
             <CeapgReviewRequests
-              loading={loading}
-              requests={ceapgRequests}
-              startDate={filterDates.startDate}
-              endDate={filterDates.endDate}
+              loading={ceapg.loading}
+              requests={ceapg.ceapgRequests}
               onStartDateChange={() => {}}
               onEndDateChange={() => {}}
               onFilter={handleCeapgFilterApply}
             />
           </TabPanel>
 
-          <TabPanel value={tabValue} index={3}>
+          <TabPanel value={tabValue} index={SETTINGS_INDEX}>
             <SettingContainer
               handleBudgetSubmit={handleBudgetSubmit}
               loading={loading}

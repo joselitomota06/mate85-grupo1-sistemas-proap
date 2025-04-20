@@ -30,11 +30,11 @@ import DateRangeFilter from '../../components/custom/DateRangeFilter';
 interface CeapgReviewRequestsProps {
   loading: boolean;
   requests: CeapgResponse[];
-  startDate: string;
-  endDate: string;
+  startDate?: string;
+  endDate?: string;
   onStartDateChange: (date: string) => void;
   onEndDateChange: (date: string) => void;
-  onFilter: (startDate: string, endDate: string) => void;
+  onFilter: (startDate?: string, endDate?: string) => void;
 }
 
 // Tab component props
@@ -481,8 +481,8 @@ const CeapgReviewRequests: React.FC<CeapgReviewRequestsProps> = ({
     <>
       <DateRangeFilter
         filterByLabel="data de aprovação"
-        startDate={localStartDate}
-        endDate={localEndDate}
+        startDate={localStartDate || ''}
+        endDate={localEndDate || ''}
         onStartDateChange={handleLocalStartDateChange}
         onEndDateChange={handleLocalEndDateChange}
         onFilter={handleFilterClick}

@@ -14,8 +14,7 @@ export const budgetFormSchema = yup.object().shape({
   budget: yup
     .number()
     .required('Valor do orçamento é obrigatório')
-    .positive('Valor do orçamento deve ser positivo')
-    .min(1, 'Orçamento deve ser maior que zero'),
+    .min(0, 'Orçamento deve ser maior ou igual a zero'),
   year: yup
     .number()
     .required('Ano é obrigatório')

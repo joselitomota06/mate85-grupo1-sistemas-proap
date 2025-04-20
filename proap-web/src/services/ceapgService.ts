@@ -37,9 +37,16 @@ export const getAllCeapgReviews = async (
   if (startDate) params.startDate = startDate;
   if (endDate) params.endDate = endDate;
 
-  const response = await api.get('/admin/ceapg', {
-    params,
-  });
-
+  const response = await api
+    .get('/admin/ceapg', {
+      params,
+    })
+    .catch((error) => {
+      console.error(
+        'Error fetching CEAPG reviews:',
+        error.response.data.message,
+      );
+      return { status: 404, data: [] };
+    });
   return response.data as CeapgResponse[];
 };

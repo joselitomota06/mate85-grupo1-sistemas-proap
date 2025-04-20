@@ -1,39 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { Container } from '@mui/material';
-import { getAllCeapgReviews } from '../../services/ceapgService';
 
 import PageHeader from '../../components/PageHeader';
 import CeapgReviewRequests from '../../containers/admin-panel/CeapgReviewRequests';
+import useLoadCeapgRequests from '../../hooks/admin/useLoadCeapgRequests';
 
 const CeapgReviewsPage: React.FC = () => {
-  const [requests, setRequests] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [startDate, setStartDate] = useState<string>('');
-  const [endDate, setEndDate] = useState<string>('');
+  const [startDate, setStartDate] = useState<string | undefined>(undefined);
+  const [endDate, setEndDate] = useState<string | undefined>(undefined);
+
+  const fetchCeapg = useLoadCeapgRequests();
 
   useEffect(() => {
-    fetchRequests();
+    fetchCeapg.getCeapg();
   }, []);
 
-  const fetchRequests = async (
-    filterStartDate = startDate,
-    filterEndDate = endDate,
-  ) => {
-    try {
-      setLoading(true);
-      const data = await getAllCeapgReviews(filterStartDate, filterEndDate);
-      setRequests(data);
-    } catch (error) {
-      console.error('Error fetching CEAPG reviews:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleFilter = (newStartDate: string, newEndDate: string) => {
+  const handleFilter = (newStartDate?: string, newEndDate?: string) => {
     setStartDate(newStartDate);
     setEndDate(newEndDate);
-    fetchRequests(newStartDate, newEndDate);
+    fetchCeapg.getCeapg(newStartDate, newEndDate);
   };
 
   return (
@@ -43,8 +28,8 @@ const CeapgReviewsPage: React.FC = () => {
         subtitle="Solicitações pendentes de avaliação"
       />
       <CeapgReviewRequests
-        loading={loading}
-        requests={requests}
+        loading={fetchCeapg.loading}
+        requests={fetchCeapg.ceapgRequests}
         startDate={startDate}
         endDate={endDate}
         onStartDateChange={setStartDate}

@@ -27,11 +27,11 @@ interface ApprovedRequestsProps {
   loading: boolean;
   totalRequests: AssistanceIdValueDTO[];
   totalRequestsValue: number;
-  startDate: string;
-  endDate: string;
+  startDate?: string;
+  endDate?: string;
   onStartDateChange: (date: string) => void;
   onEndDateChange: (date: string) => void;
-  onFilter: (startDate: string, endDate: string) => void;
+  onFilter: (startDate?: string, endDate?: string) => void;
 }
 
 const ApprovedRequests: React.FC<ApprovedRequestsProps> = ({
@@ -92,8 +92,8 @@ const ApprovedRequests: React.FC<ApprovedRequestsProps> = ({
     <>
       <DateRangeFilter
         filterByLabel="data de criação"
-        startDate={localStartDate}
-        endDate={localEndDate}
+        startDate={localStartDate || ''}
+        endDate={localEndDate || ''}
         onStartDateChange={handleLocalStartDateChange}
         onEndDateChange={handleLocalEndDateChange}
         onFilter={handleFilterClick}

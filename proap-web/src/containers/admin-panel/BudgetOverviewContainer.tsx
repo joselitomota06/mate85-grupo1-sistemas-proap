@@ -36,11 +36,15 @@ import {
 } from '../../services/budgetService';
 
 interface BudgetOverviewProps {
-  loading: boolean;
-  currentBudget: SolicitationAdmin | null;
-  remainingBudget: number | null;
+  budgetLoading: boolean;
+  totalBudget: number;
+  remainingBudget: number;
   usedPercentage: number;
   selectedYear: number;
+  usedBudget: number;
+  historicalData: BudgetSummaryDTO[];
+  availableYears: number[];
+  yearsLoading: boolean;
   onYearChange: (event: React.ChangeEvent<{ value: unknown }>) => void;
 }
 
@@ -69,163 +73,57 @@ interface YearBudgetData {
 }
 
 const BudgetOverview: React.FC<BudgetOverviewProps> = ({
-  loading: externalLoading,
-  currentBudget,
+  budgetLoading,
+  totalBudget,
   selectedYear,
+  usedPercentage,
+  remainingBudget,
+  usedBudget,
+  historicalData,
+  availableYears,
+  yearsLoading,
   onYearChange,
 }) => {
   const theme = useTheme();
-  const [loading, setLoading] = useState(externalLoading);
-  const [budgetSummary, setBudgetSummary] = useState<BudgetSummaryDTO | null>(
-    null,
-  );
-  const [historicalData, setHistoricalData] = useState<YearBudgetData[]>([]);
+
   const [error, setError] = useState<string | null>(null);
-  const [availableYears, setAvailableYears] = useState<number[]>([]);
-  const [yearsLoading, setYearsLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchAvailableYears = async () => {
-      setYearsLoading(true);
-      try {
-        const years = await getAvailableYears();
-        setAvailableYears(years);
-      } catch (err) {
-        console.error('Erro ao carregar anos disponíveis:', err);
-        setAvailableYears(generateDefaultYearsArray());
-      } finally {
-        setYearsLoading(false);
-      }
-    };
-
-    fetchAvailableYears();
-  }, []);
-
-  const generateDefaultYearsArray = () => {
-    const currentYear = new Date().getFullYear();
-    const years = [];
-    for (let year = 2020; year <= currentYear + 2; year++) {
-      years.push(year);
-    }
-    return years;
-  };
-
-  const loadBudgetSummary = async (year: number) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const summary = await getBudgetSummary(year);
-      setBudgetSummary(summary);
-
-      setHistoricalData((prev) => {
-        const exists = prev.some((item) => item.year === year);
-        if (exists) {
-          return prev.map((item) =>
-            item.year === year
-              ? {
-                  year,
-                  total: Number(summary.totalBudget),
-                  used: Number(summary.usedBudget),
-                  remaining: Number(summary.remainingBudget),
-                }
-              : item,
-          );
-        } else {
-          return [
-            ...prev,
-            {
-              year,
-              total: Number(summary.totalBudget),
-              used: Number(summary.usedBudget),
-              remaining: Number(summary.remainingBudget),
-            },
-          ].sort((a, b) => a.year - b.year);
-        }
-      });
-    } catch (err) {
-      console.error('Erro ao carregar resumo do orçamento:', err);
-      setError('Não foi possível carregar o resumo do orçamento');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    loadBudgetSummary(selectedYear);
-  }, [selectedYear]);
-
-  useEffect(() => {
-    const currentYear = new Date().getFullYear();
-    const loadPreviousYears = async () => {
-      const yearsToLoad = [currentYear - 1, currentYear - 2, currentYear - 3];
-      for (const year of yearsToLoad) {
-        try {
-          const summary = await getBudgetSummary(year);
-          if (Number(summary.totalBudget) > 0) {
-            setHistoricalData((prev) => {
-              const exists = prev.some((item) => item.year === year);
-              if (!exists) {
-                return [
-                  ...prev,
-                  {
-                    year,
-                    total: Number(summary.totalBudget),
-                    used: Number(summary.usedBudget),
-                    remaining: Number(summary.remainingBudget),
-                  },
-                ].sort((a, b) => a.year - b.year);
-              }
-              return prev;
-            });
-          }
-        } catch (err) {
-          console.log(`Sem orçamento para o ano ${year}`);
-        }
-      }
-    };
-
-    if (
-      historicalData.length === 0 ||
-      (historicalData.length === 1 && historicalData[0].year === selectedYear)
-    ) {
-      loadPreviousYears();
-    }
-  }, []);
-
-  const usedPercentage =
-    budgetSummary && budgetSummary.totalBudget > 0
-      ? Math.min(
-          Math.floor(
-            (Number(budgetSummary.usedBudget) /
-              Number(budgetSummary.totalBudget)) *
-              100,
-          ),
-          100,
-        )
-      : 0;
+  useEffect(() => {}, [
+    budgetLoading,
+    totalBudget,
+    selectedYear,
+    usedPercentage,
+    remainingBudget,
+    usedBudget,
+    historicalData,
+    availableYears,
+    yearsLoading,
+    onYearChange,
+  ]);
 
   const chartData = historicalData.map((item) => ({
     year: item.year.toString(),
-    'Orçamento Total': item.total,
-    Utilizado: item.used,
-    Restante: item.remaining,
+    'Orçamento Total': item.totalBudget,
+    Utilizado: item.usedBudget,
+    Restante: item.remainingBudget,
   }));
 
   // Dados para o gráfico circular
-  const pieChartData = budgetSummary
-    ? [
-        {
-          name: 'Utilizado',
-          value: Number(budgetSummary.usedBudget),
-          color: theme.palette.warning.main,
-        },
-        {
-          name: 'Restante',
-          value: Number(budgetSummary.remainingBudget),
-          color: theme.palette.success.main,
-        },
-      ]
-    : [];
+  const pieChartData =
+    totalBudget > 0
+      ? [
+          {
+            name: 'Utilizado',
+            value: Number(usedBudget),
+            color: theme.palette.warning.main,
+          },
+          {
+            name: 'Restante',
+            value: Number(remainingBudget),
+            color: theme.palette.success.main,
+          },
+        ]
+      : [];
 
   // Formatador para o tooltip do gráfico de pizza
   const pieTooltipFormatter = (value: number) => {
@@ -263,7 +161,7 @@ const BudgetOverview: React.FC<BudgetOverviewProps> = ({
         )}
       </FormControl>
 
-      {loading ? (
+      {budgetLoading ? (
         <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
           <CircularProgress />
         </Box>
@@ -271,7 +169,7 @@ const BudgetOverview: React.FC<BudgetOverviewProps> = ({
         <Alert severity="error" sx={{ mb: 2 }}>
           {error}
         </Alert>
-      ) : !budgetSummary || Number(budgetSummary.totalBudget) === 0 ? (
+      ) : Number(totalBudget) === 0 ? (
         <Alert severity="info" sx={{ mb: 2 }}>
           Nenhum orçamento definido para o ano {selectedYear}.
         </Alert>
@@ -293,14 +191,14 @@ const BudgetOverview: React.FC<BudgetOverviewProps> = ({
               <Stack spacing={2}>
                 <StatCard
                   title="Orçamento Total"
-                  value={formatNumberToBRL(Number(budgetSummary.totalBudget))}
+                  value={formatNumberToBRL(Number(totalBudget))}
                   icon={<AttachMoney />}
                   color="primary.main"
                 />
 
                 <StatCard
                   title="Utilizado"
-                  value={formatNumberToBRL(Number(budgetSummary.usedBudget))}
+                  value={formatNumberToBRL(Number(usedBudget))}
                   secondaryText={`${usedPercentage}% do orçamento total`}
                   icon={<AttachMoney />}
                   color="warning.main"
@@ -308,9 +206,7 @@ const BudgetOverview: React.FC<BudgetOverviewProps> = ({
 
                 <StatCard
                   title="Restante"
-                  value={formatNumberToBRL(
-                    Number(budgetSummary.remainingBudget),
-                  )}
+                  value={formatNumberToBRL(Number(remainingBudget))}
                   secondaryText={`${
                     100 - usedPercentage
                   }% do orçamento total restante`}
@@ -392,7 +288,7 @@ const BudgetOverview: React.FC<BudgetOverviewProps> = ({
                       fontWeight="bold"
                       sx={{ wordBreak: 'break-word', textAlign: 'center' }}
                     >
-                      {formatNumberToBRL(Number(budgetSummary.totalBudget))}
+                      {formatNumberToBRL(Number(totalBudget))}
                     </Typography>
                   </Box>
                 </Box>
