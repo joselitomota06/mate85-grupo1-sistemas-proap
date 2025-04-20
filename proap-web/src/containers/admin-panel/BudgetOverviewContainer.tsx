@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import {
   Alert,
   Box,
@@ -12,7 +12,7 @@ import {
   useTheme,
   Paper,
 } from '@mui/material';
-import { AttachMoney, BarChart, InfoOutlined } from '@mui/icons-material';
+import { AttachMoney, InfoOutlined } from '@mui/icons-material';
 import {
   BarChart as RechartBarChart,
   Bar,
@@ -28,12 +28,7 @@ import {
 } from 'recharts';
 import { formatNumberToBRL } from '../../helpers/formatter';
 import StatCard from '../../components/custom/StatCard';
-import {
-  SolicitationAdmin,
-  BudgetSummaryDTO,
-  getBudgetSummary,
-  getAvailableYears,
-} from '../../services/budgetService';
+import { BudgetSummaryDTO } from '../../services/budgetService';
 
 interface BudgetOverviewProps {
   budgetLoading: boolean;
@@ -65,13 +60,6 @@ const StyledFormLabel = ({ children, ...props }: any) => (
   </Typography>
 );
 
-interface YearBudgetData {
-  year: number;
-  total: number;
-  used: number;
-  remaining: number;
-}
-
 const BudgetOverview: React.FC<BudgetOverviewProps> = ({
   budgetLoading,
   totalBudget,
@@ -85,8 +73,6 @@ const BudgetOverview: React.FC<BudgetOverviewProps> = ({
   onYearChange,
 }) => {
   const theme = useTheme();
-
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {}, [
     budgetLoading,
@@ -108,7 +94,6 @@ const BudgetOverview: React.FC<BudgetOverviewProps> = ({
     Restante: item.remainingBudget,
   }));
 
-  // Dados para o gráfico circular
   const pieChartData =
     totalBudget > 0
       ? [
@@ -125,7 +110,6 @@ const BudgetOverview: React.FC<BudgetOverviewProps> = ({
         ]
       : [];
 
-  // Formatador para o tooltip do gráfico de pizza
   const pieTooltipFormatter = (value: number) => {
     return formatNumberToBRL(value);
   };
@@ -165,10 +149,6 @@ const BudgetOverview: React.FC<BudgetOverviewProps> = ({
         <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
           <CircularProgress />
         </Box>
-      ) : error ? (
-        <Alert severity="error" sx={{ mb: 2 }}>
-          {error}
-        </Alert>
       ) : Number(totalBudget) === 0 ? (
         <Alert severity="info" sx={{ mb: 2 }}>
           Nenhum orçamento definido para o ano {selectedYear}.

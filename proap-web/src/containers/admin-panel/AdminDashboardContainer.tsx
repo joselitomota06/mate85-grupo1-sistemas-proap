@@ -22,7 +22,7 @@ import Toast from '../../helpers/notification';
 import ApprovedRequests from './ApprovedRequestsContainer';
 import SectionHeader from '../../components/custom/SectionHeader';
 import BudgetOverview from './BudgetOverviewContainer';
-import CeapgReviewRequests from './CeapgReviewRequests';
+import CeapgReviewRequests from './ceapg/CeapgReviewRequests';
 import useHasPermission from '../../hooks/auth/useHasPermission';
 import SettingContainer from './settings/SettingsContainer';
 

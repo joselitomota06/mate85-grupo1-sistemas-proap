@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Container } from '@mui/material';
 
 import PageHeader from '../../components/PageHeader';
-import CeapgReviewRequests from '../../containers/admin-panel/CeapgReviewRequests';
+import CeapgReviewRequests from '../../containers/admin-panel/ceapg/CeapgReviewRequests';
 import useLoadCeapgRequests from '../../hooks/admin/useLoadCeapgRequests';
 
 const CeapgReviewsPage: React.FC = () => {

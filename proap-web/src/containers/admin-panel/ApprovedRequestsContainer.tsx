@@ -6,7 +6,6 @@ import {
   CardContent,
   CircularProgress,
   Typography,
-  Link,
   Chip,
   Tooltip,
 } from '@mui/material';
@@ -46,17 +45,14 @@ const ApprovedRequests: React.FC<ApprovedRequestsProps> = ({
 }) => {
   const navigate = useNavigate();
 
-  // Local state for date values to prevent parent re-renders until filter button is clicked
   const [localStartDate, setLocalStartDate] = useState(startDate);
   const [localEndDate, setLocalEndDate] = useState(endDate);
 
-  // Update local state when props change (e.g., when component mounts)
   useEffect(() => {
     setLocalStartDate(startDate);
     setLocalEndDate(endDate);
   }, [startDate, endDate]);
 
-  // Local handlers for date changes
   const handleLocalStartDateChange = (date: string) => {
     setLocalStartDate(date);
   };
@@ -65,19 +61,14 @@ const ApprovedRequests: React.FC<ApprovedRequestsProps> = ({
     setLocalEndDate(date);
   };
 
-  // Handler for filter button click - only now we update parent state
   const handleFilterClick = () => {
-    // Instead of updating parent state individually and then calling filter
-    // We directly pass both dates to the filter function
     onFilter(localStartDate, localEndDate);
   };
 
-  // Handler to navigate to solicitation view page
   const handleViewSolicitation = (id: number) => {
     navigate(`/solicitation/view/${id}`);
   };
 
-  // Format date for display
   const formatDate = (dateString: string | null) => {
     if (!dateString) return 'Não disponível';
     try {
@@ -160,7 +151,6 @@ const ApprovedRequests: React.FC<ApprovedRequestsProps> = ({
                   <Box
                     sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
                   >
-                    {/* Header with title and status chip */}
                     <Box
                       sx={{
                         display: 'flex',
@@ -190,7 +180,6 @@ const ApprovedRequests: React.FC<ApprovedRequestsProps> = ({
                       />
                     </Box>
 
-                    {/* Date information container */}
                     <Box
                       sx={{
                         display: 'flex',
@@ -198,7 +187,6 @@ const ApprovedRequests: React.FC<ApprovedRequestsProps> = ({
                         gap: 2,
                       }}
                     >
-                      {/* Creation date */}
                       <Box
                         sx={{
                           display: 'flex',
@@ -215,7 +203,6 @@ const ApprovedRequests: React.FC<ApprovedRequestsProps> = ({
                         </Tooltip>
                       </Box>
 
-                      {/* Approval date */}
                       <Box
                         sx={{
                           display: 'flex',
@@ -233,7 +220,7 @@ const ApprovedRequests: React.FC<ApprovedRequestsProps> = ({
                         </Tooltip>
                       </Box>
                     </Box>
-                    {/* Approved  by */}
+
                     <Box
                       sx={{
                         display: 'flex',
@@ -248,7 +235,6 @@ const ApprovedRequests: React.FC<ApprovedRequestsProps> = ({
                       </Typography>
                     </Box>
 
-                    {/* Value */}
                     <Box
                       sx={{
                         display: 'flex',
