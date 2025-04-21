@@ -28,12 +28,11 @@ import Toast from '../../helpers/notification';
 import { StyledTextField } from './LoginFormContainer.style';
 
 import Visibility from '@mui/icons-material/Visibility';
-import { Label } from '@mui/icons-material';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 export default function LoginFormContainer() {
   const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = React.useState(false);
-  const [rightIcon, setRightIcon] = React.useState('eye');
 
   const handleSubmit = useCallback(
     async (
@@ -54,15 +53,9 @@ export default function LoginFormContainer() {
     [dispatch],
   );
 
-  function onMouseDown() {
-    setShowPassword(true);
-    setRightIcon('eye');
-  }
-
-  function onMouseUp() {
-    setShowPassword(false);
-    setRightIcon('eye-off');
-  }
+  const handleClickShowPassword = () => {
+    setShowPassword((prev) => !prev);
+  };
 
   return (
     <Formik
@@ -87,8 +80,6 @@ export default function LoginFormContainer() {
               label="Senha"
               name="password"
               type={showPassword ? 'text' : 'password'}
-              onMouseDown={onMouseDown}
-              onMouseUp={onMouseUp}
               error={Boolean(touched.password && errors.password)}
               helperText={touched.password && errors.password}
               required
@@ -98,11 +89,10 @@ export default function LoginFormContainer() {
                     <IconButton
                       size="small"
                       aria-label="toggle password visibility"
-                      onMouseDown={onMouseDown}
-                      onMouseUp={onMouseUp}
+                      onClick={handleClickShowPassword}
+                      onMouseDown={(e) => e.preventDefault()}
                     >
-                      {' '}
-                      <Visibility />{' '}
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
                   </InputAdornment>
                 ),

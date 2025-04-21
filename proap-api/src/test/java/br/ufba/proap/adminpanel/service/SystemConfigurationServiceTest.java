@@ -16,9 +16,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import br.ufba.proap.adminpanel.domain.SystemConfiguration;
-import br.ufba.proap.adminpanel.domain.dto.SystemConfigurationDTO;
-import br.ufba.proap.adminpanel.repository.SystemConfigurationRepository;
+import br.ufba.proap.sysadminpanel.domain.SystemConfiguration;
+import br.ufba.proap.sysadminpanel.domain.dto.SystemConfigurationDTO;
+import br.ufba.proap.sysadminpanel.repository.SystemConfigurationRepository;
+import br.ufba.proap.sysadminpanel.service.SystemConfigurationService;
 
 @ExtendWith(MockitoExtension.class)
 public class SystemConfigurationServiceTest {

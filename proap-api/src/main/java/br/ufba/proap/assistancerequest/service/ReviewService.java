@@ -32,7 +32,7 @@ public class ReviewService {
     public Review approve(ReviewDTO reviewDTO) {
         Review review = createReview(reviewDTO);
 
-        review.setDataAprovacao(LocalDateTime.now());
+        review.setDataAvaliacaoProap(LocalDateTime.now());
         review.setSituacao(ReviewSituacao.APROVADO);
 
         return reviewRepository.save(review);

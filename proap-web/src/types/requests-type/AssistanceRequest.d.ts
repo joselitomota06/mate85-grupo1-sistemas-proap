@@ -37,10 +37,16 @@ export interface AssistanceRequest {
   justificativa: string;
   comprovantePagamento: string | null;
   situacao: number;
-  dataAprovacao: string;
+  dataAvaliacaoProap: string;
   numeroAta: number;
   numeroDiariasAprovadas: number;
   observacao: string;
+  percentualOrcamentoAnual: number;
+  custoFinalCeapg: number;
+  observacoesCeapg: string;
+
+  avaliadorProap: User;
+  avaliadorCeapg: User;
 
   createdAt: string | undefined;
   updatedAt: string | undefined;

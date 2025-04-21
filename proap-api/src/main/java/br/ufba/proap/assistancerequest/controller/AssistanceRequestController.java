@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import br.ufba.proap.assistancerequest.domain.AssistanceRequest;
 import br.ufba.proap.assistancerequest.domain.Review;
+import br.ufba.proap.assistancerequest.domain.dto.AssistanceRequestCeapgDTO;
 import br.ufba.proap.assistancerequest.domain.dto.CreateAssistanceRequestDTO;
 import br.ufba.proap.assistancerequest.domain.dto.ResponseAssistanceRequestDTO;
 import br.ufba.proap.assistancerequest.domain.dto.ReviewDTO;
@@ -32,8 +33,11 @@ import br.ufba.proap.assistancerequest.service.AssistanceRequestService;
 import br.ufba.proap.assistancerequest.service.ReviewService;
 import br.ufba.proap.assistancerequest.service.AssistanceRequestService.AssistanceRequestListFiltered;
 import br.ufba.proap.authentication.domain.User;
+import br.ufba.proap.authentication.domain.dto.StatusResponseDTO;
 import br.ufba.proap.authentication.service.UserService;
+import br.ufba.proap.exception.UnauthorizedException;
 import br.ufba.proap.filestorage.FileService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("assistancerequest")
@@ -224,26 +228,19 @@ public class AssistanceRequestController {
 	public ResponseEntity<AssistanceRequest> reviewsolicitation(
 			@RequestBody AssistanceRequest assistanceRequest) {
 		User currentUser = serviceUser.getLoggedUser();
-		Optional<AssistanceRequest> assistancePersisted = service.findById(assistanceRequest.getId());
 
-		if (currentUser == null || !assistancePersisted.isPresent()) {
+		if (currentUser == null) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
 
-		try {
-			assistancePersisted.get().setSituacao(assistanceRequest.getSituacao());
-			assistancePersisted.get().setNumeroAta(assistanceRequest.getNumeroAta());
-			assistancePersisted.get().setDataAprovacao(assistanceRequest.getDataAprovacao());
-			assistancePersisted.get().setNumeroDiariasAprovadas(assistanceRequest.getNumeroDiariasAprovadas());
-			assistancePersisted.get().setValorAprovado(assistanceRequest.getValorAprovado());
-			assistancePersisted.get().setObservacao(assistanceRequest.getObservacao());
-			assistancePersisted.get().setAutomaticDecText();
-			return ResponseEntity.ok().body(service.save(assistancePersisted.get()));
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.error(e.getMessage());
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		AssistanceRequest reviewedRequest = service.reviewSolicitation(assistanceRequest, currentUser);
+
+		if (reviewedRequest == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
+
+		return ResponseEntity.ok().body(reviewedRequest);
+
 	}
 
 	@DeleteMapping("/remove/{id}")
@@ -300,6 +297,18 @@ public class AssistanceRequestController {
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return ResponseEntity.badRequest().build();
+		}
+	}
+
+	@PutMapping("/{id}/ceapg")
+	public ResponseEntity<?> updateCeapgFields(
+			@PathVariable Long id,
+			@Valid @RequestBody AssistanceRequestCeapgDTO ceapgDTO) {
+		try {
+			AssistanceRequest updatedRequest = service.updateCeapgFields(id, ceapgDTO);
+			return ResponseEntity.ok(ResponseAssistanceRequestDTO.fromEntity(updatedRequest));
+		} catch (UnauthorizedException e) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new StatusResponseDTO("error", e.getMessage()));
 		}
 	}
 }

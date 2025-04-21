@@ -5,6 +5,7 @@ import styled from '@emotion/styled';
 import { booleanToYesOrNo } from '../../helpers/conversion';
 import { ExtraRequest } from '../../types/requests-type/ExtraRequest';
 import { useAuth } from '../../hooks';
+import { formatNumberToBRL } from '../../helpers/formatter';
 
 interface ExtraSolicitationDetailsContainerProps {
   solicitation: ExtraRequest;
@@ -42,8 +43,10 @@ export default function ExtraSolicitationDetailsContainer(
             Valor solicitado (R$)
             <span style={{ color: 'red' }}> *</span>
           </Typography>
-          <Typography color="gray" variant="subtitle2">
-            R${solicitation.valorSolicitado}
+          <Typography variant="body1" color="text.secondary">
+            {solicitation.valorSolicitado != null
+              ? formatNumberToBRL(solicitation.valorSolicitado)
+              : 'R$ 0,00'}
           </Typography>
         </StyledData>
         <StyledData>

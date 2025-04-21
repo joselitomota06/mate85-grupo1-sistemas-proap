@@ -1,331 +1,398 @@
 import React from 'react';
-
-import { Grid, Link, Stack, Typography } from '@mui/material';
-import styled from '@emotion/styled';
-
-import {
-  InitialSolicitationFormValues,
-  SolicitationFormValues,
-} from '../SolicitationFormSchema';
-import { booleanToYesOrNo, dateToLocalDate } from '../../../helpers/conversion';
-import { useAuth } from '../../../hooks';
-import { BASE_PDF_URL } from '../../../helpers/api';
+import { Box, Link, Stack, Typography, Divider, Chip } from '@mui/material';
 import { useFormikContext } from 'formik';
-import { columnStyle, StyledData } from '../SolicitationFormContainer.style';
+import { SolicitationFormValues } from '../SolicitationFormSchema';
+import { booleanToYesOrNo, dateToLocalDate } from '../../../helpers/conversion';
+import { BASE_PDF_URL } from '../../../helpers/api';
+import { StyledData } from '../SolicitationFormContainer.style';
+import { Person, Event, AttachMoney, School } from '@mui/icons-material';
+import { formatNumberToBRL } from '../../../helpers/formatter';
 
 export default function SolicitationReviewContainer() {
   const { values } = useFormikContext<SolicitationFormValues>();
 
+  const Section = ({
+    title,
+    icon,
+    children,
+  }: {
+    title: string;
+    icon: React.ReactNode;
+    children: React.ReactNode;
+  }) => (
+    <Box
+      sx={{
+        flex: 1,
+        minWidth: 300,
+        p: 3,
+        backgroundColor: 'background.paper',
+        borderRadius: 2,
+        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+        height: 'fit-content',
+      }}
+    >
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 3, gap: 1 }}>
+        {icon}
+        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+          {title}
+        </Typography>
+      </Box>
+      <Stack spacing={2}>{children}</Stack>
+    </Box>
+  );
+
   return (
-    <>
-      <Typography variant="h5" sx={{ mt: 2, mb: 2, fontWeight: 'bold' }}>
-        Resumo da solicitação
-      </Typography>
-      <Stack direction={{ sm: 'column', md: 'row' }} spacing={2}>
-        <Stack sx={columnStyle}>
-          <Typography
-            variant="h6"
-            sx={{ mb: 2, fontWeight: 'bold', textAlign: 'center' }}
+    <Box sx={{ p: 3 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
+        <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+          Resumo da solicitação
+        </Typography>
+        <Chip
+          label={values.eventoInternacional ? 'Internacional' : 'Nacional'}
+          color={values.eventoInternacional ? 'primary' : 'default'}
+          size="small"
+          sx={{ ml: 2 }}
+        />
+      </Box>
+
+      <Stack spacing={3}>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
+          {/* Detalhes do Solicitante */}
+          <Section
+            title="Detalhes do Solicitante"
+            icon={<Person color="primary" />}
           >
-            Detalhes do Solicitante
-          </Typography>
-          <StyledData>
-            <Typography>Quem abriu a solicitação</Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
-              {values.user.name}
-            </Typography>
-          </StyledData>
-
-          <StyledData>
-            <Typography>Email do Solicitante</Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
-              {values.user.email}
-            </Typography>
-          </StyledData>
-
-          <StyledData>
-            <Typography>Telefone de Contato</Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
-              {values.user.phone}
-            </Typography>
-          </StyledData>
-
-          <StyledData>
-            <Typography>Solicitação em nome do</Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
-              {values.solicitanteDocente ? 'Docente' : 'Discente'}
-            </Typography>
-          </StyledData>
-
-          <StyledData>
-            <Typography>Nome do Discente PGCOMP</Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
-              {values.nomeDiscente}
-            </Typography>
-          </StyledData>
-          <StyledData>
-            <Typography>Nome do Docente PGCOMP</Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
-              {values.nomeDocente}
-            </Typography>
-          </StyledData>
-
-          {!values.solicitanteDocente && (
             <StyledData>
-              <Typography>
-                Está no prazo regular para finalização do seu curso (mestrado ou
-                doutorado)?
+              <Typography variant="subtitle2" color="text.secondary">
+                Solicitante
               </Typography>
-              <Typography style={{ color: 'gray' }} variant="subtitle2">
-                {booleanToYesOrNo(values.discenteNoPrazoDoCurso!)}
+              <Typography>{values.user.name}</Typography>
+            </StyledData>
+
+            <StyledData>
+              <Typography variant="subtitle2" color="text.secondary">
+                Email
+              </Typography>
+              <Typography>{values.user.email}</Typography>
+            </StyledData>
+
+            <StyledData>
+              <Typography variant="subtitle2" color="text.secondary">
+                Telefone
+              </Typography>
+              <Typography>{values.user.phone}</Typography>
+            </StyledData>
+
+            <Divider sx={{ my: 1 }} />
+
+            <StyledData>
+              <Typography variant="subtitle2" color="text.secondary">
+                Tipo de Solicitante
+              </Typography>
+              <Typography>
+                {values.solicitanteDocente ? 'Docente' : 'Discente'}
               </Typography>
             </StyledData>
-          )}
 
-          {!values.solicitanteDocente && !values.discenteNoPrazoDoCurso && (
-            <StyledData>
-              <Typography>
-                Quantos meses já se passaram do prazo regular?{' '}
-              </Typography>
-              <Typography style={{ color: 'gray' }} variant="subtitle2">
-                {values.mesesAtrasoCurso} meses
-              </Typography>
-            </StyledData>
-          )}
-        </Stack>
-        {/* Segunda Coluna - Detalhes do Solicitante ... */}
-        <Stack sx={columnStyle}>
-          <Typography
-            variant="h6"
-            sx={{ mb: 2, fontWeight: 'bold', textAlign: 'center' }}
-          >
-            Dados da Solicitação
-          </Typography>
-
-          <StyledData>
-            <Typography>Título completo da publicação a ser apoiada</Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
-              {values.tituloPublicacao}
-            </Typography>
-          </StyledData>
-
-          <StyledData>
-            <Typography>
-              Lista completa de co-autor(es) da publicação a ser apoiada
-            </Typography>
-            {values.coautores.length > 0 ? (
-              values.coautores.map((coautor) => {
-                return (
-                  <Typography
-                    key={coautor}
-                    style={{ color: 'gray' }}
-                    variant="subtitle2"
-                  >
-                    {coautor}
-                  </Typography>
-                );
-              })
-            ) : (
-              <Typography style={{ color: 'gray' }} variant="subtitle2">
-                Nenhum co-autor informado
-              </Typography>
+            {values.nomeDiscente && (
+              <StyledData>
+                <Typography variant="subtitle2" color="text.secondary">
+                  Nome do Discente PGCOMP
+                </Typography>
+                <Typography>{values.nomeDiscente}</Typography>
+              </StyledData>
             )}
-            <Typography
-              style={{ color: 'gray' }}
-              variant="subtitle2"
-            ></Typography>
-          </StyledData>
-          <StyledData>
-            <Typography>
-              Há alunos ativos do PGCOMP coautores/coparticipantes direto na
-              solicitação?
-            </Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
-              {booleanToYesOrNo(values.algumCoautorPGCOMP ?? false)}
-            </Typography>
-          </StyledData>
 
-          <StyledData>
-            <Typography>Arquivo da carta de aceite do artigo</Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
+            {values.nomeDocente && (
+              <StyledData>
+                <Typography variant="subtitle2" color="text.secondary">
+                  Nome do Docente PGCOMP
+                </Typography>
+                <Typography>{values.nomeDocente}</Typography>
+              </StyledData>
+            )}
+
+            {!values.solicitanteDocente && (
+              <>
+                <StyledData>
+                  <Typography variant="subtitle2" color="text.secondary">
+                    No prazo regular do curso?
+                  </Typography>
+                  <Typography>
+                    {booleanToYesOrNo(values.discenteNoPrazoDoCurso!)}
+                  </Typography>
+                </StyledData>
+
+                {!values.discenteNoPrazoDoCurso && (
+                  <StyledData>
+                    <Typography variant="subtitle2" color="text.secondary">
+                      Meses de atraso
+                    </Typography>
+                    <Typography>{values.mesesAtrasoCurso} meses</Typography>
+                  </StyledData>
+                )}
+              </>
+            )}
+          </Section>
+
+          {/* Dados da Solicitação */}
+          <Section
+            title="Dados da Solicitação"
+            icon={<School color="primary" />}
+          >
+            <StyledData>
+              <Typography variant="subtitle2" color="text.secondary">
+                Título da publicação
+              </Typography>
+              <Typography>{values.tituloPublicacao}</Typography>
+            </StyledData>
+
+            <StyledData>
+              <Typography variant="subtitle2" color="text.secondary">
+                Co-autores
+              </Typography>
+              {values.coautores.length > 0 ? (
+                <Stack spacing={0.5}>
+                  {values.coautores.map((coautor, index) => (
+                    <Typography key={index}>{coautor}</Typography>
+                  ))}
+                </Stack>
+              ) : (
+                <Typography color="text.secondary">
+                  Nenhum co-autor informado
+                </Typography>
+              )}
+            </StyledData>
+
+            <StyledData>
+              <Typography variant="subtitle2" color="text.secondary">
+                Coautores PGCOMP?
+              </Typography>
+              <Typography>
+                {booleanToYesOrNo(values.algumCoautorPGCOMP ?? false)}
+              </Typography>
+            </StyledData>
+
+            <StyledData>
+              <Typography variant="subtitle2" color="text.secondary">
+                Carta de aceite
+              </Typography>
               {values.cartaAceite ? (
+                <Typography variant="body1">
+                  <Link
+                    href={BASE_PDF_URL + values.cartaAceite}
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    Visualizar
+                  </Link>
+                </Typography>
+              ) : (
+                <Typography color="text.secondary">
+                  Nenhum arquivo enviado
+                </Typography>
+              )}
+            </StyledData>
+          </Section>
+          {/* Detalhamento Financeiro */}
+          <Section
+            title="Detalhamento Financeiro"
+            icon={<AttachMoney color="primary" />}
+          >
+            <StyledData>
+              <Typography variant="subtitle2" color="text.secondary">
+                Valor da inscrição
+              </Typography>
+              <Typography>
+                {formatNumberToBRL(values.valorInscricao)}
+              </Typography>
+            </StyledData>
+
+            <StyledData>
+              <Typography variant="subtitle2" color="text.secondary">
+                Link da inscrição
+              </Typography>
+              <Typography variant="body1">
                 <Link
-                  href={BASE_PDF_URL + values.cartaAceite}
+                  href={values.linkPaginaInscricao}
                   target="_blank"
                   rel="noopener"
-                  sx={{ alignSelf: 'center' }}
                 >
-                  <Typography sx={{ fontWeight: 'bold' }}>
-                    Visualizar
-                  </Typography>
+                  {values.linkPaginaInscricao}
                 </Link>
-              ) : (
-                'Nenhum arquivo enviado'
-              )}
-            </Typography>
-          </StyledData>
-        </Stack>
-
-        {/* Terceira Coluna Detalhamento do Evento ... */}
-        <Stack sx={columnStyle}>
-          <Typography
-            variant="h6"
-            sx={{ mb: 2, fontWeight: 'bold', textAlign: 'center' }}
-          >
-            Detalhamento do Evento
-          </Typography>
-          <StyledData>
-            <Typography>Nome do Evento (ou Solicitação)</Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
-              {values.nomeEvento}
-            </Typography>
-          </StyledData>
-          <StyledData>
-            <Typography>Natureza da Solicitação</Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
-              {values.eventoInternacional ? 'Internacional' : 'Nacional'}
-            </Typography>
-          </StyledData>
-          <StyledData>
-            <Typography>Data de início</Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
-              {dateToLocalDate(values.dataInicio)}
-            </Typography>
-          </StyledData>
-          <StyledData>
-            <Typography>Data de término</Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
-              {dateToLocalDate(values.dataFim)}
-            </Typography>
-          </StyledData>
-          <StyledData>
-            <Typography>
-              Será necessário afastamento para participação do Evento?{' '}
-            </Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
-              {booleanToYesOrNo(values.afastamentoParaParticipacao!)}
-            </Typography>
-          </StyledData>
-
-          {values.afastamentoParaParticipacao && (
-            <StyledData>
-              <Typography>Quantos dias de afastamento?</Typography>
-              <Typography style={{ color: 'gray' }} variant="subtitle2">
-                {values.diasAfastamento} dias
               </Typography>
             </StyledData>
-          )}
 
-          <StyledData>
-            <Typography>Homepage do Evento (ou Solicitação)</Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
-              {values.linkHomePageEvento}
-            </Typography>
-          </StyledData>
+            <StyledData>
+              <Typography variant="subtitle2" color="text.secondary">
+                Diárias solicitadas
+              </Typography>
+              <Typography>
+                {values.quantidadeDiariasSolicitadas} diária
+                {values.quantidadeDiariasSolicitadas !== 1 && 's'}
+              </Typography>
+            </StyledData>
 
-          <StyledData>
-            <Typography>País</Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
-              {values.pais}
-            </Typography>
-          </StyledData>
-          <StyledData>
-            <Typography>Cidade</Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
-              {values.cidade}
-            </Typography>
-          </StyledData>
+            {values.quantidadeDiariasSolicitadas > 0 && (
+              <>
+                <StyledData>
+                  <Typography variant="subtitle2" color="text.secondary">
+                    Valor da diária
+                  </Typography>
+                  <Typography>
+                    {values.isDolar
+                      ? `$ ${values.valorDiaria?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+                      : formatNumberToBRL(values.valorDiaria)}
+                  </Typography>
+                </StyledData>
 
-          <StyledData>
-            <Typography>Modalidade de participação </Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
-              {values.modalidadeParticipacao.substring(0, 1).toUpperCase() +
-                values.modalidadeParticipacao.substring(1)}
-            </Typography>
-          </StyledData>
-          <StyledData>
-            <Typography>Informe o Qualis do seu evento</Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
-              {values.qualis}
-            </Typography>
-          </StyledData>
-        </Stack>
-        {/* Quarta Coluna Detalhamento Financeiro ... */}
-        <Stack sx={columnStyle}>
-          <Typography
-            variant="h6"
-            sx={{ mb: 2, fontWeight: 'bold', textAlign: 'center' }}
-          >
-            Detalhamento Financeiro
-          </Typography>
-          <StyledData>
-            <Typography>Valor da inscrição/solicitação (R$)</Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
-              R${values.valorInscricao}
-            </Typography>
-          </StyledData>
-          <StyledData>
-            <Typography>
-              Link da página da inscrição do evento (ou solicitação)
-            </Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
-              {values.linkPaginaInscricao}
-            </Typography>
-          </StyledData>
-          <StyledData>
-            <Typography>Quantas diárias deseja solicitar?</Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
-              {values.quantidadeDiariasSolicitadas} diária
-              {values.quantidadeDiariasSolicitadas > 1 && 's'}
-            </Typography>
-          </StyledData>
-          {values.quantidadeDiariasSolicitadas > 0 && (
-            <>
+                {values.isDolar && (
+                  <StyledData>
+                    <Typography variant="subtitle2" color="text.secondary">
+                      Cotação do dólar (USD)
+                    </Typography>
+                    <Typography>
+                      {formatNumberToBRL(values.cotacaoMoeda)}
+                    </Typography>
+                  </StyledData>
+                )}
+
+                {values.quantidadeDiariasSolicitadas > 1 && (
+                  <StyledData>
+                    <Typography variant="subtitle2" color="text.secondary">
+                      Última diária integral?
+                    </Typography>
+                    <Typography>
+                      {booleanToYesOrNo(values.ultimaDiariaIntegral ?? false)}
+                    </Typography>
+                  </StyledData>
+                )}
+              </>
+            )}
+
+            {values.solicitanteDocente && (
               <StyledData>
-                <Typography>Informe o valor da sua diária</Typography>
-                <Typography style={{ color: 'gray' }} variant="subtitle2">
-                  {values.isDolar ? '$' : 'R$'}
-                  {values.valorDiaria}
+                <Typography variant="subtitle2" color="text.secondary">
+                  Valor da passagem aérea
+                </Typography>
+                <Typography>
+                  {formatNumberToBRL(values.valorPassagem)}
                 </Typography>
               </StyledData>
-              {values.isDolar && (
-                <StyledData>
-                  <Typography>
-                    Informe o valor da cotação do dólar americano (USD)
-                  </Typography>
-                  <Typography style={{ color: 'gray' }} variant="subtitle2">
-                    ${values.cotacaoMoeda}
-                  </Typography>
-                </StyledData>
-              )}
-              {values.quantidadeDiariasSolicitadas > 1 && (
-                <StyledData>
-                  <Typography>Última diária no valor integral?</Typography>
-                  <Typography style={{ color: 'gray' }} variant="subtitle2">
-                    {booleanToYesOrNo(values.ultimaDiariaIntegral ?? false)}
-                  </Typography>
-                </StyledData>
-              )}
-            </>
-          )}
-          {values.solicitanteDocente && (
+            )}
+
+            <Divider sx={{ my: 1 }} />
+
             <StyledData>
-              <Typography>
-                Informe o valor aproximado da passagem aérea
+              <Typography variant="subtitle2" color="text.secondary">
+                Valor total da solicitação
               </Typography>
-              <Typography style={{ color: 'gray' }} variant="subtitle2">
-                R${values.valorPassagem}
+              <Typography
+                variant="h6"
+                color="primary"
+                sx={{ fontWeight: 'bold' }}
+              >
+                {formatNumberToBRL(values.valorTotal)}
               </Typography>
             </StyledData>
-          )}
-          <StyledData>
-            <Typography>Valor total da solicitação (R$) </Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
-              R${values.valorTotal}
-            </Typography>
-          </StyledData>
-        </Stack>
+          </Section>
+
+          {/* Detalhamento do Evento */}
+          <Section
+            title="Detalhamento do Evento"
+            icon={<Event color="primary" />}
+          >
+            <StyledData>
+              <Typography variant="subtitle2" color="text.secondary">
+                Nome do Evento
+              </Typography>
+              <Typography>{values.nomeEvento}</Typography>
+            </StyledData>
+
+            <Box sx={{ display: 'flex', gap: 2 }}>
+              <StyledData>
+                <Typography variant="subtitle2" color="text.secondary">
+                  Data de início
+                </Typography>
+                <Typography>{dateToLocalDate(values.dataInicio)}</Typography>
+              </StyledData>
+
+              <StyledData>
+                <Typography variant="subtitle2" color="text.secondary">
+                  Data de término
+                </Typography>
+                <Typography>{dateToLocalDate(values.dataFim)}</Typography>
+              </StyledData>
+            </Box>
+
+            <StyledData>
+              <Typography variant="subtitle2" color="text.secondary">
+                Necessário afastamento?
+              </Typography>
+              <Typography>
+                {booleanToYesOrNo(values.afastamentoParaParticipacao!)}
+              </Typography>
+            </StyledData>
+
+            {values.afastamentoParaParticipacao && (
+              <StyledData>
+                <Typography variant="subtitle2" color="text.secondary">
+                  Dias de afastamento
+                </Typography>
+                <Typography>{values.diasAfastamento} dias</Typography>
+              </StyledData>
+            )}
+
+            <StyledData>
+              <Typography variant="subtitle2" color="text.secondary">
+                Homepage do Evento
+              </Typography>
+              <Typography variant="body1">
+                <Link
+                  href={values.linkHomePageEvento}
+                  target="_blank"
+                  rel="noopener"
+                >
+                  {values.linkHomePageEvento}
+                </Link>
+              </Typography>
+            </StyledData>
+
+            <Box sx={{ display: 'flex', gap: 2 }}>
+              <StyledData>
+                <Typography variant="subtitle2" color="text.secondary">
+                  País
+                </Typography>
+                <Typography>{values.pais}</Typography>
+              </StyledData>
+
+              <StyledData>
+                <Typography variant="subtitle2" color="text.secondary">
+                  Cidade
+                </Typography>
+                <Typography>{values.cidade}</Typography>
+              </StyledData>
+            </Box>
+
+            <StyledData>
+              <Typography variant="subtitle2" color="text.secondary">
+                Modalidade
+              </Typography>
+              <Typography>
+                {values.modalidadeParticipacao.charAt(0).toUpperCase() +
+                  values.modalidadeParticipacao.slice(1)}
+              </Typography>
+            </StyledData>
+
+            <StyledData>
+              <Typography variant="subtitle2" color="text.secondary">
+                Qualis
+              </Typography>
+              <Typography>{values.qualis}</Typography>
+            </StyledData>
+          </Section>
+        </Box>
       </Stack>
-    </>
+    </Box>
   );
 }

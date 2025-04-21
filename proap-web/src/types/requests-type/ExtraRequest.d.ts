@@ -10,7 +10,7 @@ export interface ExtraRequest {
   nomeAgenciaFomento: string;
   situacao: number;
   numeroAta: string;
-  dataAprovacao: string;
+  dataAvaliacaoProap: string;
   valorAprovado: number | null;
   observacao: string;
   automaticDecText: string;

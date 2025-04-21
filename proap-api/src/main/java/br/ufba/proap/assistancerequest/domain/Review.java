@@ -24,7 +24,7 @@ public class Review {
     @Column(nullable = false)
     private String numeroAta;
 
-    private LocalDateTime dataAprovacao;
+    private LocalDateTime dataAvaliacaoProap;
 
     @Column(nullable = false)
     private int numeroDiariasAprovadas;
@@ -56,12 +56,12 @@ public class Review {
         this.numeroAta = numeroAta;
     }
 
-    public LocalDateTime getDataAprovacao() {
-        return dataAprovacao;
+    public LocalDateTime getDataAvaliacaoProap() {
+        return dataAvaliacaoProap;
     }
 
-    public void setDataAprovacao(LocalDateTime dataAprovacao) {
-        this.dataAprovacao = dataAprovacao;
+    public void setDataAvaliacaoProap(LocalDateTime dataAvaliacaoProap) {
+        this.dataAvaliacaoProap = dataAvaliacaoProap;
     }
 
     public int getNumeroDiariasAprovadas() {

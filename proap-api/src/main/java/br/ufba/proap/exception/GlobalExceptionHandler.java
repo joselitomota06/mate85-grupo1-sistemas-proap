@@ -12,6 +12,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
+import jakarta.ws.rs.NotFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -51,6 +52,22 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<Map<String, String>> handleValidationExceptions(AuthenticationException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("status", "Error");
+        errors.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleValidationExceptions(NotFoundException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("status", "Error");
+        errors.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errors);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Map<String, String>> handleValidationExceptions(IllegalArgumentException ex) {
         Map<String, String> errors = new HashMap<>();
         errors.put("status", "Error");
         errors.put("message", ex.getMessage());

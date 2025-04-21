@@ -17,12 +17,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import br.ufba.proap.adminpanel.domain.dto.SystemConfigurationDTO;
-import br.ufba.proap.adminpanel.service.SystemConfigurationService;
 import br.ufba.proap.authentication.domain.Perfil;
 import br.ufba.proap.authentication.domain.Permission;
 import br.ufba.proap.authentication.domain.User;
 import br.ufba.proap.authentication.service.UserService;
+import br.ufba.proap.sysadminpanel.controller.SystemConfigurationController;
+import br.ufba.proap.sysadminpanel.domain.dto.SystemConfigurationDTO;
+import br.ufba.proap.sysadminpanel.service.SystemConfigurationService;
 
 @ExtendWith(MockitoExtension.class)
 public class SystemConfigurationControllerTest {

@@ -7,9 +7,12 @@ import { createExtraAssistanceRequest } from '../../services/extraAssistanceRequ
 import Toast from '../../helpers/notification';
 import { useNavigate } from 'react-router-dom';
 import { ExtraRequest } from '../../types/requests-type/ExtraRequest';
+import { useSysConfig } from '../../hooks/admin/useSysConfig';
+import SolicitationsDisabled from '../../components/disabled-features/SolicitationsDisabled';
 
 export default function ExtraSolicitationPage() {
   const navigate = useNavigate();
+  const { config } = useSysConfig();
 
   const handleSubmit = (values: FormikValues) => {
     return createExtraAssistanceRequest(values as ExtraRequest).then(() => {
@@ -17,6 +20,10 @@ export default function ExtraSolicitationPage() {
       navigate('/');
     });
   };
+
+  if (!config.enableSolicitation) {
+    return <SolicitationsDisabled />;
+  }
 
   return (
     <ExtraSolicitationFormContainer

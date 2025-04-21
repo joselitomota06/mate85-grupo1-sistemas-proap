@@ -121,12 +121,19 @@ export const confirmationDataFormSchema = Yup.object({
 });
 
 export const reviewDataFormSchema = Yup.object({
-  situacao: Yup.string().required('Campo obrigatório'),
-  dataAprovacao: Yup.string().required('Campo obrigatório'),
+  situacao: Yup.number()
+    .required('Campo obrigatório')
+    .oneOf([1, 2], 'Situação deve ser Aprovado ou Reprovado'),
+  dataAvaliacaoProap: Yup.string().required('Campo obrigatório'),
   numeroAta: Yup.number().required('Campo obrigatório'),
   numeroDiariasAprovadas: Yup.number().required('Campo obrigatório'),
   observacao: Yup.string().notRequired(),
   valorAprovado: Yup.number().required('Campo obrigatório'),
+});
+
+export const ceapgDataFormSchema = Yup.object({
+  custoFinalCeapg: Yup.number().required('Campo obrigatório'),
+  observacoesCeapg: Yup.string().notRequired(),
 });
 
 export interface SolicitationFormValues
@@ -242,7 +249,7 @@ export const INITIAL_REVIEW_FORM_VALUES: SolicitationFormValues = {
   aceiteFinal: false,
   justificativa: '',
   situacao: 0,
-  dataAprovacao: '',
+  dataAvaliacaoProap: '',
   numeroAta: 0,
   numeroDiariasAprovadas: 0,
   observacao: '',
@@ -250,7 +257,28 @@ export const INITIAL_REVIEW_FORM_VALUES: SolicitationFormValues = {
   comprovantePagamento: null,
   createdAt: undefined,
   updatedAt: undefined,
+  percentualOrcamentoAnual: 0,
+  custoFinalCeapg: 0,
+  observacoesCeapg: '',
   user: {
+    name: '',
+    cpf: '',
+    email: '',
+    phone: '',
+    alternativePhone: '',
+    registrationNumber: '',
+    profileName: '',
+  },
+  avaliadorProap: {
+    name: '',
+    cpf: '',
+    email: '',
+    phone: '',
+    alternativePhone: '',
+    registrationNumber: '',
+    profileName: '',
+  },
+  avaliadorCeapg: {
     name: '',
     cpf: '',
     email: '',

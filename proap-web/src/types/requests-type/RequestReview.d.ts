@@ -1,6 +1,6 @@
 export interface RequestReview {
   createdAt: string;
-  dataAprovacao: string;
+  dataAvaliacaoProap: string;
   id: number;
   numeroAta: string;
   numeroDiariasAprovadas: number;

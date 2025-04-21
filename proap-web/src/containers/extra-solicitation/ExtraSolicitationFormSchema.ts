@@ -21,7 +21,7 @@ export const extraSolicitantDataSchema = Yup.object({
 export const EXTRA_SOLICITATION_INITIAL_VALUES: ExtraSolicitationFormValues = {
   id: 0,
   nomeSolicitacao: '',
-  dataAprovacao: '',
+  dataAvaliacaoProap: '',
   itemSolicitado: '',
   justificativa: '',
   valorSolicitado: null,

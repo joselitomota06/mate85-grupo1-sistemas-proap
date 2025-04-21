@@ -8,6 +8,7 @@ import { booleanToYesOrNo, dateToLocalDate } from '../../../helpers/conversion';
 import { useAuth } from '../../../hooks';
 import { BASE_PDF_URL } from '../../../helpers/api';
 import { columnStyle, StyledData } from '../SolicitationFormContainer.style';
+import { formatNumberToBRL } from '../../../helpers/formatter';
 
 export default function SolicitationDetailsContainer({
   solicitation,
@@ -272,8 +273,8 @@ export default function SolicitationDetailsContainer({
               Valor da inscrição/solicitação (R$)
               <span style={{ color: 'red' }}> *</span>
             </Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
-              R${solicitation.valorInscricao}
+            <Typography variant="body1" color="text.secondary">
+              {formatNumberToBRL(solicitation.valorInscricao)}
             </Typography>
           </StyledData>
           <StyledData>
@@ -299,9 +300,10 @@ export default function SolicitationDetailsContainer({
             <>
               <StyledData>
                 <Typography>Informe o valor da sua diária</Typography>
-                <Typography style={{ color: 'gray' }} variant="subtitle2">
-                  {solicitation.isDolar ? '$' : 'R$'}
-                  {solicitation.valorDiaria}
+                <Typography variant="body1" color="text.secondary">
+                  {solicitation.isDolar
+                    ? `$ ${solicitation.valorDiaria?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+                    : formatNumberToBRL(solicitation.valorDiaria)}
                 </Typography>
               </StyledData>
               {solicitation.isDolar && (
@@ -310,7 +312,10 @@ export default function SolicitationDetailsContainer({
                     Informe o valor da cotação do dólar americano (USD)
                   </Typography>
                   <Typography style={{ color: 'gray' }} variant="subtitle2">
-                    ${solicitation.cotacaoMoeda}
+                    {`$ ${solicitation.cotacaoMoeda?.toLocaleString('en-US', {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}`}
                   </Typography>
                 </StyledData>
               )}
@@ -331,15 +336,15 @@ export default function SolicitationDetailsContainer({
               <Typography>
                 Informe o valor aproximado da passagem aérea
               </Typography>
-              <Typography style={{ color: 'gray' }} variant="subtitle2">
-                R${solicitation.valorPassagem}
+              <Typography variant="body1" color="text.secondary">
+                {formatNumberToBRL(solicitation.valorPassagem)}
               </Typography>
             </StyledData>
           )}
           <StyledData>
             <Typography>Valor total da solicitação (R$) </Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
-              R${solicitation.valorTotal}
+            <Typography variant="body1" color="text.secondary">
+              {formatNumberToBRL(solicitation.valorTotal)}
             </Typography>
           </StyledData>
         </Stack>

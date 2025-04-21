@@ -12,16 +12,16 @@ export default function useSolicitation(id: string | undefined) {
     if (id) {
       getAssistanceRequestById(id)
         .then(({ data }) => {
-          const { dataInicio, dataFim, dataAprovacao, coautores } = data;
+          const { dataInicio, dataFim, dataAvaliacaoProap, coautores } = data;
 
           if (coautores.length == 1 && coautores[0] == '') coautores.pop();
 
-          if (dataAprovacao !== null) {
+          if (dataAvaliacaoProap !== null) {
             setSolicitation({
               ...data,
               dataInicio: localDateToDate(dataInicio),
               dataFim: localDateToDate(dataFim),
-              dataAprovacao: localDateToDate(dataAprovacao),
+              dataAvaliacaoProap: localDateToDate(dataAvaliacaoProap),
               coautores: coautores,
             });
           } else {

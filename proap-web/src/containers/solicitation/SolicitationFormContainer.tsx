@@ -22,6 +22,7 @@ import SolicitantDetailFormContainer from './create/SolicitantDetailFormContaine
 import ConfirmationFormContainer from './create/ConfirmationFormContainer';
 import FinancialDetailFormContainer from './create/FinancialDetailFormContainer';
 import EventDetailFormContainer from './create/EventDetailFormContainer';
+import { UnauthorizedPage } from '../../pages/unauthorized/UnauthorizedPage';
 
 interface SolicitationFormContainerProps {
   onSubmit: (values: FormikValues) => void;

@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import {
   HomePage,
   NotFoundPage,
@@ -8,21 +8,26 @@ import {
   EditExtraSolicitationPage,
   ReviewSolicitationPage,
   UsersPage,
-  AdminPanelPage,
 } from '../../pages';
 
 import NavigationWrapper from '../navigation/NavigationWrapper';
 import UserProfilePage from '../../pages/user-profile/UserProfilePage';
 import ViewSolicitationPage from '../../pages/view-solicitation/ViewSolicitationPage';
+import ViewExtraSolicitationPage from '../../pages/view-extra-solicitation/ViewExtraSolicitationPage';
+import AdminDashboardPage from '../../pages/admin-panel/AdminDashboardPage';
+import CeapgReviewsPage from '../../pages/ceapg-reviews/CeapgReviewsPage';
 import useHasPermission from '../../hooks/auth/useHasPermission';
+import RedirectBasedOnRole from './RedirectBasedOnRole';
 
 export default function PrivateRoutes() {
   const isAdmin = useHasPermission('ADMIN_ROLE');
+  const isCeapg = useHasPermission('CEAPG_ROLE');
 
   return (
     <NavigationWrapper>
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<RedirectBasedOnRole />} />
+        <Route path="/home" element={<HomePage />} />
         <Route path="/solicitation/create" element={<SolicitationPage />} />
         <Route
           path="/extra-solicitation/create"
@@ -31,6 +36,10 @@ export default function PrivateRoutes() {
         <Route
           path="/extra-solicitation/edit/:id"
           element={<EditExtraSolicitationPage />}
+        />
+        <Route
+          path="/extra-solicitation/view/:id"
+          element={<ViewExtraSolicitationPage />}
         />
         <Route
           path="/solicitation/edit/:id"
@@ -46,7 +55,12 @@ export default function PrivateRoutes() {
         />
         <Route path="/users" element={<UsersPage />} />
         <Route path="/user-profile" element={<UserProfilePage />} />
-        {isAdmin && <Route path="/admin-panel" element={<AdminPanelPage />} />}
+        {(isAdmin || isCeapg) && (
+          <Route path="/admin-panel" element={<AdminDashboardPage />} />
+        )}
+        {isCeapg && (
+          <Route path="/ceapg-reviews" element={<CeapgReviewsPage />} />
+        )}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </NavigationWrapper>

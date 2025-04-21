@@ -2,24 +2,33 @@ package br.ufba.proap.assistancerequest.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.ufba.proap.assistancerequest.domain.AssistanceRequest;
+import br.ufba.proap.assistancerequest.domain.dto.AssistanceRequestCeapgDTO;
 import br.ufba.proap.assistancerequest.domain.dto.ResponseAssistanceRequestDTO;
 import br.ufba.proap.assistancerequest.repository.AssistanceRequestQueryRepository;
-import br.ufba.proap.assistancerequest.repository.AssistanteRequestRepository;
+import br.ufba.proap.assistancerequest.repository.AssistanceRequestRepository;
 import br.ufba.proap.authentication.domain.User;
+import br.ufba.proap.authentication.service.UserService;
+import br.ufba.proap.exception.UnauthorizedException;
+import jakarta.ws.rs.NotFoundException;
 
 @Service
 public class AssistanceRequestService {
 
 	@Autowired
-	private AssistanteRequestRepository assistanteRequestRepository;
+	private AssistanceRequestRepository assistanteRequestRepository;
 
 	@Autowired
 	private AssistanceRequestQueryRepository assistanceRequestQueryRepository;
+
+	@Autowired
+	private UserService userService;
 
 	public List<ResponseAssistanceRequestDTO> findAll() {
 		List<AssistanceRequest> assistanceRequest = assistanteRequestRepository.findAll();
@@ -100,5 +109,61 @@ public class AssistanceRequestService {
 
 	public void delete(AssistanceRequest assistanceRequestDTO) {
 		assistanteRequestRepository.delete(assistanceRequestDTO);
+	}
+
+	@Transactional
+	public AssistanceRequest reviewSolicitation(AssistanceRequest assistanceRequest, User currentUser) {
+		Optional<AssistanceRequest> assistancePersisted = findById(assistanceRequest.getId());
+
+		if (!assistancePersisted.isPresent()) {
+			return null;
+		}
+
+		// Validate situation value
+		Integer situacao = assistanceRequest.getSituacao();
+		if (situacao == null || (situacao != 1 && situacao != 2)) {
+			throw new IllegalArgumentException("Situação deve ser Aprovado ou Reprovado");
+		}
+
+		AssistanceRequest persisted = assistancePersisted.get();
+		persisted.setSituacao(assistanceRequest.getSituacao());
+		persisted.setNumeroAta(assistanceRequest.getNumeroAta());
+
+		if (assistanceRequest.getDataAvaliacaoProap() != null) {
+			persisted.setDataAvaliacaoProap(assistanceRequest.getDataAvaliacaoProap());
+		} else {
+			persisted.setDataAvaliacaoProap(LocalDate.now());
+		}
+
+		persisted.setNumeroDiariasAprovadas(assistanceRequest.getNumeroDiariasAprovadas());
+		persisted.setValorAprovado(assistanceRequest.getValorAprovado());
+		persisted.setObservacao(assistanceRequest.getObservacao());
+		persisted.setAutomaticDecText();
+		persisted.setAvaliadorProap(currentUser);
+
+		return save(persisted);
+	}
+
+	@Transactional
+	public AssistanceRequest updateCeapgFields(Long id, AssistanceRequestCeapgDTO ceapgDTO)
+			throws UnauthorizedException, NotFoundException {
+		User currentUser = userService.getLoggedUser();
+
+		if (!currentUser.getPerfil().hasPermission("CEAPG_ROLE")) {
+			throw new UnauthorizedException("Usuário não possui permissão para atualizar campos CEAPG");
+		}
+
+		AssistanceRequest request = assistanteRequestRepository.findById(id)
+				.orElseThrow(() -> new NotFoundException("Solicitação não encontrada"));
+
+		if (!request.getSituacao().equals(1)) {
+			throw new UnauthorizedException("Solicitação não foi aprovada pela comissão do PROAP");
+		}
+
+		request.setCustoFinalCeapg(ceapgDTO.getCustoFinalCeapg());
+		request.setObservacoesCeapg(ceapgDTO.getObservacoesCeapg());
+		request.setDataAvaliacaoCeapg(LocalDate.now());
+		request.setAvaliadorCeapg(currentUser);
+		return assistanteRequestRepository.save(request);
 	}
 }
