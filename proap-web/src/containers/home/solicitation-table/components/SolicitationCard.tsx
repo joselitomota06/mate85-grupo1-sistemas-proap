@@ -218,7 +218,6 @@ const SolicitationCard: React.FC<SolicitationCardProps> = ({
                 size="small"
                 color="primary"
                 onClick={handleShowDetails}
-                title="Ver resumo"
               >
                 <VisibilityIcon fontSize="small" />
               </IconButton>
@@ -227,12 +226,7 @@ const SolicitationCard: React.FC<SolicitationCardProps> = ({
 
           {(userCanReviewRequests || isCeapg) && (
             <Tooltip title="Revisar Solicitação">
-              <IconButton
-                size="small"
-                color="success"
-                onClick={handleReview}
-                title="Revisar"
-              >
+              <IconButton size="small" color="success" onClick={handleReview}>
                 <CheckCircleIcon fontSize="small" />
               </IconButton>
             </Tooltip>

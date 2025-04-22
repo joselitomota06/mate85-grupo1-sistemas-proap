@@ -186,12 +186,7 @@ const ExtraRequestCard: React.FC<ExtraRequestCardProps> = ({
           {/* Primary Actions - Always visible */}
           {userCanViewAllRequests && (
             <Tooltip title="Ver texto da solicitação">
-              <IconButton
-                size="small"
-                color="primary"
-                onClick={handleShowText}
-                title="Ver texto"
-              >
+              <IconButton size="small" color="primary" onClick={handleShowText}>
                 <VisibilityIcon fontSize="small" />
               </IconButton>
             </Tooltip>
@@ -199,12 +194,7 @@ const ExtraRequestCard: React.FC<ExtraRequestCardProps> = ({
 
           {(userCanReviewRequests || isCeapg) && (
             <Tooltip title="Revisar Solicitação">
-              <IconButton
-                size="small"
-                color="success"
-                onClick={handleReview}
-                title="Revisar"
-              >
+              <IconButton size="small" color="success" onClick={handleReview}>
                 <CheckCircleIcon fontSize="small" />
               </IconButton>
             </Tooltip>
