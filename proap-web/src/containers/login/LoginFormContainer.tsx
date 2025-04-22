@@ -43,12 +43,12 @@ export default function LoginFormContainer() {
         ...values,
         username: values.username.toLowerCase(),
       };
-      return dispatch(signIn(transformedValues)).catch(
-        ({ response: { status } }) => {
-          if (status == 401)
-            actions.setFieldError('password', 'Senha incorreta');
-        },
-      );
+      return dispatch(signIn(transformedValues)).catch((error) => {
+        if (error.response.status == 401) {
+          actions.setFieldError('password', 'Senha incorreta');
+        }
+        Toast.error('Erro ao fazer login: ' + error.response.data.message);
+      });
     },
     [dispatch],
   );

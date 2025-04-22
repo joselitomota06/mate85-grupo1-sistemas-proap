@@ -30,12 +30,16 @@ export default function RegisterFormContainer() {
   const handleSubmit = useCallback(
     (values: FormikValues) => {
       values.login = values.email;
-      return dispatch(registerUser(values as RegisterFormValues)).then(() => {
-        Toast.success('Conta criada com sucesso!');
-        navigate('/');
-      });
+      return dispatch(registerUser(values as RegisterFormValues))
+        .then(() => {
+          Toast.success('Conta criada com sucesso!');
+          navigate('/');
+        })
+        .catch((error) => {
+          Toast.error('Erro ao criar conta: ' + error.message);
+        });
     },
-    [dispatch]
+    [dispatch],
   );
 
   const registerFormSteps: FormStep[] = useMemo(
@@ -56,7 +60,7 @@ export default function RegisterFormContainer() {
         schema: passwordFormSchema,
       },
     ],
-    []
+    [],
   );
 
   return (
