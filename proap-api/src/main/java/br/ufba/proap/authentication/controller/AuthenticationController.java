@@ -6,10 +6,12 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.ws.rs.NotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,15 +41,19 @@ public class AuthenticationController {
 	private PasswordResetTokenService passwordResetTokenService;
 
 	@PostMapping("/signin")
-	public ResponseEntity<JwtAuthenticationResponse> authenticateUser(@Valid @RequestBody LoginDTO loginInfo) {
-		Authentication authentication = authenticationManager
-				.authenticate(
-						new UsernamePasswordAuthenticationToken(loginInfo.getUsername(), loginInfo.getPassword()));
+	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginDTO loginInfo) {
+		try {
+			Authentication authentication = authenticationManager
+					.authenticate(
+							new UsernamePasswordAuthenticationToken(loginInfo.getUsername(), loginInfo.getPassword()));
 
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-		String jwt = tokenProvider.generateToken(authentication);
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+			String jwt = tokenProvider.generateToken(authentication);
 
-		return ResponseEntity.ok().body(new JwtAuthenticationResponse(jwt));
+			return ResponseEntity.ok().body(new JwtAuthenticationResponse(jwt));
+		} catch (AuthenticationException e) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new StatusResponseDTO("Erro", e.getMessage()));
+		}
 	}
 
 	@PostMapping("/reset-password")

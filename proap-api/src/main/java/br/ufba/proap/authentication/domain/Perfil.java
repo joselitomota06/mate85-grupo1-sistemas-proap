@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 public class Perfil implements Serializable {
 
 	private static final long serialVersionUID = 6718249363254821367L;
-	private static final String DEFAULT_PERFIL_NAME = "Aluno";
+	private static final String DEFAULT_PERFIL_NAME = "Discente";
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
