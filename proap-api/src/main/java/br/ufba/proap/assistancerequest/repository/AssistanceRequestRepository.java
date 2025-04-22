@@ -30,4 +30,7 @@ public interface AssistanceRequestRepository extends JpaRepository<AssistanceReq
 
 	@Query("SELECT ar.id, ar.valorAprovado, ar.dataAvaliacaoProap, ap.name, ar.custoFinalCeapg, ar.observacoesCeapg, ac.name, ar.dataAvaliacaoCeapg FROM AssistanceRequest ar LEFT JOIN ar.avaliadorProap ap LEFT JOIN ar.avaliadorCeapg ac WHERE DATE (ar.dataAvaliacaoProap) BETWEEN :startDate AND :endDate AND ar.situacao = 1 AND ar.avaliadorCeapg IS NOT NULL")
 	List<Object[]> findAllCompletedCeapgRequests(LocalDate startDate, LocalDate endDate);
+
+	@Query(value = "SELECT COUNT(s) > 0 FROM proap_assistancerequest s WHERE s.user_id = :userId", nativeQuery = true)
+	Boolean userHasAnySolicitationRequests(Long userId);
 }
