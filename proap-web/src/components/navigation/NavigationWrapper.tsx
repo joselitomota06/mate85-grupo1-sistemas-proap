@@ -26,7 +26,7 @@ export const NavigationWrapper = ({ children }: PropsWithChildren) => {
   const userCanViewPage = useHasPermission('VIEW_USER');
   const isAdmin = useHasPermission('ADMIN_ROLE');
   const isCeapg = useHasPermission('CEAPG_ROLE');
-
+  const isCollaborator = useHasPermission('FUNCIONARIO_ROLE');
   const navigationItems: NavigationItem[] = [
     {
       label: 'Página Inicial',
@@ -44,7 +44,7 @@ export const NavigationWrapper = ({ children }: PropsWithChildren) => {
       label: 'Painel Administrativo',
       icon: <AdminPanelSettings />,
       link: '/admin-panel',
-      visible: isAdmin || isCeapg,
+      visible: isAdmin || isCeapg || isCollaborator,
     },
     {
       label: 'Avaliações CEAPG',

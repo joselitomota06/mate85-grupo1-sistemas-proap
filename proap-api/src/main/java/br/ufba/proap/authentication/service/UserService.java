@@ -15,6 +15,7 @@ import br.ufba.proap.authentication.domain.Perfil;
 import br.ufba.proap.authentication.domain.User;
 import br.ufba.proap.authentication.domain.dto.UserUpdateDTO;
 import br.ufba.proap.authentication.repository.UserRepository;
+import br.ufba.proap.exception.DefaultProfileNotFoundException;
 import jakarta.validation.ValidationException;
 
 @Service
@@ -28,6 +29,9 @@ public class UserService implements UserDetailsService {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private UserRequestValidationService userRequestValidationService;
 
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -53,7 +57,9 @@ public class UserService implements UserDetailsService {
 	}
 
 	public User create(User user) {
-		Perfil defaultPerfil = perfilService.findByName(Perfil.getDefaultPerfilName()).orElse(null);
+		Perfil defaultPerfil = perfilService.findByName(Perfil.getDefaultPerfilName()).orElseThrow(
+				() -> new DefaultProfileNotFoundException(
+						"Perfil padrão não encontrado. Contate o administrador do sistema."));
 		user.setPerfil(defaultPerfil);
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		return userRepository.saveAndFlush(user);
@@ -93,7 +99,26 @@ public class UserService implements UserDetailsService {
 		return userRepository.findByEmail(email);
 	}
 
-	public void remove(User user) {
+	public void delete(String email) {
+		User loggedUser = getLoggedUser();
+		if (!loggedUser.getPerfil().hasPermission("ADMIN_ROLE")) {
+			throw new ValidationException("Você não tem permissão para deletar um usuário");
+		}
+		User user = this.findByEmail(email).orElseThrow(() -> new ValidationException("Usuário não encontrado"));
+		if (loggedUser.equals(user)) {
+			throw new ValidationException("Você não pode deletar seu próprio usuário");
+		}
+		if (user.getPerfil().hasPermission("ADMIN_ROLE")) {
+			throw new ValidationException("Você não pode deletar um usuário administrador");
+		}
+
+		if (userRequestValidationService.userHasAnySolicitationRequests(user.getId())) {
+			throw new ValidationException("Você não pode deletar um usuário que possui solicitações de assistência");
+		}
+		if (userRequestValidationService.userHasAnyExtraRequests(user.getId())) {
+			throw new ValidationException("Você não pode deletar um usuário que possui solicitações de demanda extra");
+		}
+
 		userRepository.delete(user);
 	}
 
@@ -114,4 +139,20 @@ public class UserService implements UserDetailsService {
 		userRepository.saveAndFlush(user);
 	}
 
+	public void updateProfile(String email, Long profileId) {
+		User loggedUser = getLoggedUser();
+		if (!loggedUser.getPerfil().hasPermission("ADMIN_ROLE")) {
+			throw new ValidationException("Você não tem permissão para atualizar o perfil de outro usuário");
+		}
+		User targetUser = this.findByEmail(email)
+				.orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
+		Perfil targetProfile = perfilService.findById(profileId)
+				.orElseThrow(() -> new ValidationException("Perfil não encontrado"));
+
+		if (loggedUser.equals(targetUser) && !targetProfile.hasPermission("ADMIN_ROLE")) {
+			throw new ValidationException("Você não pode remover seu próprio papel de administrador");
+		}
+		targetUser.setPerfil(targetProfile);
+		userRepository.saveAndFlush(targetUser);
+	}
 }

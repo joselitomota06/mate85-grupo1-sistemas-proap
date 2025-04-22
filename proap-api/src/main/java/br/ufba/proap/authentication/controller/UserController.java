@@ -1,7 +1,6 @@
 package br.ufba.proap.authentication.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,18 +14,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.ufba.proap.authentication.domain.Perfil;
 import br.ufba.proap.authentication.domain.User;
 import br.ufba.proap.authentication.domain.dto.ChangePasswordDTO;
 import br.ufba.proap.authentication.domain.dto.StatusResponseDTO;
 import br.ufba.proap.authentication.domain.dto.UserResponseDTO;
 import br.ufba.proap.authentication.domain.dto.UserUpdateDTO;
-import br.ufba.proap.authentication.service.PerfilService;
 import br.ufba.proap.authentication.service.UserService;
+import br.ufba.proap.exception.DefaultProfileNotFoundException;
 import jakarta.validation.Valid;
 import jakarta.validation.ValidationException;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping("/user")
@@ -37,16 +38,14 @@ public class UserController {
 	@Autowired
 	private UserService service;
 
-	@Autowired
-	private PerfilService perfilService;
-
 	@PostMapping("/create")
-	public ResponseEntity<User> create(@RequestBody User user) {
+	public ResponseEntity<?> create(@RequestBody User user) {
 		try {
 			return ResponseEntity.ok().body(service.create(user));
-		} catch (Exception e) {
+		} catch (DefaultProfileNotFoundException e) {
 			logger.error(e.getMessage());
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new StatusResponseDTO("Conta não criada", e.getMessage()));
 		}
 	}
 
@@ -84,32 +83,6 @@ public class UserController {
 		}
 	}
 
-	@PutMapping("/set-admin/{email}")
-	public ResponseEntity<String> setAdminUser(@PathVariable String email) {
-		try {
-			User currentUser = service.getLoggedUser();
-
-			if (currentUser == null)
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-
-			if (currentUser.getPerfil() == null || !currentUser.getPerfil().hasPermission("EDIT_USER_ROLE"))
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-
-			Optional<User> user = service.findByEmail(email);
-			Optional<Perfil> adminPerfil = perfilService.findByName("Admin");
-
-			if (user.isPresent() && adminPerfil.isPresent()) {
-				user.get().setPerfil(adminPerfil.get());
-				// service.update(user.get());
-			}
-
-			return ResponseEntity.ok().body("Atulização realizada com sucesso!");
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-		}
-	}
-
 	@PutMapping("/update")
 	public ResponseEntity<UserResponseDTO> update(@RequestBody @Valid UserUpdateDTO user) {
 		try {
@@ -121,21 +94,14 @@ public class UserController {
 		}
 	}
 
-	@DeleteMapping("/remove/{id}")
-	public ResponseEntity<String> remove(@PathVariable Long id) {
+	@DeleteMapping("/delete/{email}")
+	public ResponseEntity<StatusResponseDTO> delete(@PathVariable @Email String email) {
 		try {
-			Optional<User> user = service.findById(id);
-
-			if (user.isPresent()) {
-				service.remove(user.get());
-				return ResponseEntity.ok().body("Successfully removed");
-			}
-
-			return ResponseEntity.notFound().build();
-
-		} catch (Exception e) {
+			service.delete(email);
+			return ResponseEntity.ok().body(new StatusResponseDTO("Sucesso", "Usuário deletado com sucesso!"));
+		} catch (ValidationException e) {
 			logger.error(e.getMessage());
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new StatusResponseDTO("Erro", e.getMessage()));
 		}
 	}
 
@@ -153,6 +119,19 @@ public class UserController {
 			logger.error(e.getMessage());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body(new StatusResponseDTO("Erro", "Erro interno no servidor"));
+		}
+	}
+
+	@PutMapping("/update-profile/{email}")
+	public ResponseEntity<StatusResponseDTO> updateProfile(@PathVariable @Email String email,
+			@NotNull @RequestParam Long profileId) {
+		try {
+			service.updateProfile(email, profileId);
+			return ResponseEntity.ok().body(new StatusResponseDTO("Sucesso", "Perfil atualizado com sucesso!"));
+		} catch (ValidationException e) {
+			logger.error(e.getMessage());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(new StatusResponseDTO("Inválido", e.getMessage()));
 		}
 	}
 

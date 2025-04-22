@@ -166,4 +166,8 @@ public class AssistanceRequestService {
 		request.setAvaliadorCeapg(currentUser);
 		return assistanteRequestRepository.save(request);
 	}
+
+	public Boolean userHasAnySolicitationRequests(Long userId) {
+		return assistanteRequestRepository.userHasAnySolicitationRequests(userId);
+	}
 }

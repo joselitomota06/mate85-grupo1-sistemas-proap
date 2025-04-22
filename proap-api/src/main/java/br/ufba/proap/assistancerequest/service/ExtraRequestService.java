@@ -88,4 +88,8 @@ public class ExtraRequestService {
 						userHasPermission ? null : user),
 				count);
 	}
+
+	public Boolean userHasAnyExtraRequests(Long userId) {
+		return extraRequestRepostirory.userHasAnyExtraRequests(userId);
+	}
 }

@@ -22,6 +22,7 @@ import RedirectBasedOnRole from './RedirectBasedOnRole';
 export default function PrivateRoutes() {
   const isAdmin = useHasPermission('ADMIN_ROLE');
   const isCeapg = useHasPermission('CEAPG_ROLE');
+  const isCollaborator = useHasPermission('FUNCIONARIO_ROLE');
 
   return (
     <NavigationWrapper>
@@ -55,7 +56,7 @@ export default function PrivateRoutes() {
         />
         <Route path="/users" element={<UsersPage />} />
         <Route path="/user-profile" element={<UserProfilePage />} />
-        {(isAdmin || isCeapg) && (
+        {(isAdmin || isCeapg || isCollaborator) && (
           <Route path="/admin-panel" element={<AdminDashboardPage />} />
         )}
         {isCeapg && (

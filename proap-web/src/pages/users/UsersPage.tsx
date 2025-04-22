@@ -1,11 +1,5 @@
 import React, { useState } from 'react';
 import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   IconButton,
   LinearProgress,
   Paper,
@@ -21,13 +15,14 @@ import {
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 import { maskCpf, maskPhone } from '../../helpers/masks';
 import useUsers from '../../hooks/auth/useUsers';
-import Toast from '../../helpers/notification';
-import { updateUserCredentials } from '../../services/authService';
 import { UnauthorizedPage } from '../unauthorized/UnauthorizedPage';
 import useHasPermission from '../../hooks/auth/useHasPermission';
+import UserActionsDialogContainer from '../../containers/user-profile/user-actions/UserActionsDialogContainer';
 
 export default function UsersPage() {
   const [currentUserEmail, setCurrentUserEmail] = useState<string>('');
+  const [currentUserName, setCurrentUserName] = useState<string>('');
+  const [currentProfile, setCurrentProfile] = useState<string>('');
   const [open, setOpen] = useState(false);
 
   const {
@@ -44,21 +39,23 @@ export default function UsersPage() {
   const userCanViewPage = useHasPermission('VIEW_USER');
 
   const handleClose = () => setOpen(false);
-  const handleConfirmSetAdmin = () => {
+
+  const handleSuccess = () => {
     setOpen(false);
-    updateUserCredentials(currentUserEmail)
-      .then(() => {
-        Toast.success('Credencias do usuário atualizadas com sucesso.');
-        setCurrentUserEmail('');
-        updateUsers();
-      })
-      .catch(() => {
-        Toast.error('Falha ao atualizar as credenciais do usuário');
-      });
+    setCurrentUserEmail('');
+    setCurrentUserName('');
+    setCurrentProfile('');
+    updateUsers();
   };
 
-  const handleClickPermissionAction = (email: string) => {
+  const handleClickPermissionAction = (
+    email: string,
+    name: string,
+    profileName: string,
+  ) => {
     setCurrentUserEmail(email);
+    setCurrentUserName(name);
+    setCurrentProfile(profileName);
     setOpen(true);
   };
 
@@ -66,27 +63,14 @@ export default function UsersPage() {
     <UnauthorizedPage />
   ) : (
     <>
-      <Dialog
+      <UserActionsDialogContainer
         open={open}
+        userEmail={currentUserEmail}
+        userName={currentUserName}
+        currentProfile={currentProfile}
         onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          {'Remoção de solicitação'}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            <b>Deseja atribuir permissões administrativas a este usuário?</b>
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Não</Button>
-          <Button onClick={handleConfirmSetAdmin} variant="contained">
-            Sim
-          </Button>
-        </DialogActions>
-      </Dialog>
+        onSuccess={handleSuccess}
+      />
       {isLoading && <LinearProgress />}
       {!isLoading && (
         <>
@@ -134,7 +118,9 @@ export default function UsersPage() {
                     </TableCell>
                     <TableCell align="right">
                       <IconButton
-                        onClick={() => handleClickPermissionAction(email)}
+                        onClick={() =>
+                          handleClickPermissionAction(email, name, profileName)
+                        }
                       >
                         <PermIdentityIcon />
                       </IconButton>

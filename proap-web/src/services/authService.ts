@@ -3,12 +3,14 @@ import { LoginFormValues } from '../containers/login/LoginFormSchema';
 import { authenticate } from '../store/slices/auth-slice/authSlice';
 import { AppDispatch } from '../store';
 import api from '.';
-import { SignInResponse, User } from '../types';
+import { SignInResponse, StatusResponse, User } from '../types';
 import { setUser } from '../store/slices/user-profile-slice/userProfileSlice';
 
 export const registerUser =
   (values: RegisterFormValues) => (dispatch: AppDispatch) => {
-    return api.post('user/create', values);
+    return api.post('user/create', values).catch((error) => {
+      throw new Error(error.response.data.message);
+    });
   };
 
 export const signIn =
@@ -41,8 +43,28 @@ export const updateUserProfile = async (
   return await api.put('user/update', values).then((response) => response.data);
 };
 
-export const updateUserCredentials = (email: string) => {
-  return api.put(`user/set-admin/${email}`);
+export const updateUserProfileRole = async (
+  email: string,
+  profileId: number,
+): Promise<StatusResponse> => {
+  const response = await api
+    .put(`user/update-profile/${email}`, null, {
+      params: { profileId },
+    })
+    .then((response) => response.data)
+    .catch((error) => {
+      throw new Error(error.response.data.message);
+    });
+  return response;
+};
+
+export const deleteUser = async (email: string): Promise<StatusResponse> => {
+  return await api
+    .delete(`user/delete/${email}`)
+    .then((response) => response.data)
+    .catch((error) => {
+      throw new Error(error.response.data.message);
+    });
 };
 
 export const changeUserPassword = async (
