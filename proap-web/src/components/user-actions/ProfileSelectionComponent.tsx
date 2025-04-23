@@ -10,6 +10,8 @@ import {
   SelectChangeEvent,
   FormHelperText,
   CircularProgress,
+  Alert,
+  AlertTitle,
 } from '@mui/material';
 import { ProfileRole } from '../../types';
 
@@ -24,6 +26,7 @@ export default function ProfileSelectionComponent({
   currentProfile,
   onSubmit,
 }: ProfileSelectionComponentProps) {
+  const noProfile = profiles.find((p) => p.permissions.length === 0);
   const [selectedProfile, setSelectedProfile] = useState<string>('');
   const [error, setError] = useState<string>('');
 
@@ -83,7 +86,30 @@ export default function ProfileSelectionComponent({
         </Select>
         {error && <FormHelperText>{error}</FormHelperText>}
       </FormControl>
-
+      {selectedProfile === noProfile?.name && (
+        <Box sx={{ mt: 2 }}>
+          <Alert
+            severity="warning"
+            variant="outlined"
+            sx={{
+              '& .MuiAlert-message': {
+                width: '100%',
+              },
+            }}
+          >
+            <AlertTitle sx={{ fontWeight: 'bold' }}>Atenção!</AlertTitle>
+            <Typography variant="body2" sx={{ mb: 1 }}>
+              Este perfil revoga todas as permissões do usuário, incluindo a
+              abertura de novas solicitações. É ideal para revogar atribuições
+              administrativas ou aplicar sanções a um usuário específico.
+            </Typography>
+            <Typography variant="body2">
+              O usuário poderá acessar o sistema e acompanhar o status de suas
+              solicitações já existentes.
+            </Typography>
+          </Alert>
+        </Box>
+      )}
       <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
         <Button
           variant="contained"
