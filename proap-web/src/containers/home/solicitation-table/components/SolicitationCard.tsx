@@ -154,7 +154,7 @@ const SolicitationCard: React.FC<SolicitationCardProps> = ({
               variant="subtitle1"
               fontWeight="medium"
               component="div"
-              noWrap
+              sx={{ maxWidth: '18ch' }}
               gutterBottom
             >
               {user.name}

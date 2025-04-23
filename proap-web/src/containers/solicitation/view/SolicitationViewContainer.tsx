@@ -8,7 +8,9 @@ import {
   Container,
   Fade,
   Stack,
+  Tooltip,
 } from '@mui/material';
+import styled from '@emotion/styled';
 import { BASE_PDF_URL } from '../../../helpers/api';
 import useSolicitation from '../../../hooks/solicitation/useSolicitation';
 import { booleanToYesOrNo, dateToLocalDate } from '../../../helpers/conversion';
@@ -22,20 +24,46 @@ import {
   PendingOutlined,
 } from '@mui/icons-material';
 import { formatNumberToBRL } from '../../../helpers/formatter';
+import { TruncatedText } from '../SolicitationFormContainer.style';
 
 interface InfoItemProps {
   label: string;
   value: React.ReactNode;
+  showTooltip?: boolean;
+  tooltipText?: string;
 }
 
-const InfoItem = ({ label, value }: InfoItemProps) => (
-  <Box sx={{ mb: 2 }}>
-    <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-      {label}
-    </Typography>
-    <Typography variant="body1">{value || '-'}</Typography>
-  </Box>
-);
+const InfoItem = ({
+  label,
+  value,
+  showTooltip = false,
+  tooltipText,
+}: InfoItemProps) => {
+  const renderValue = () => {
+    if (typeof value === 'string' && value.length > 50) {
+      const content = <TruncatedText variant="body1">{value}</TruncatedText>;
+
+      return showTooltip ? (
+        <Tooltip title={tooltipText || value} arrow placement="top">
+          {content}
+        </Tooltip>
+      ) : (
+        content
+      );
+    }
+
+    return <Typography variant="body1">{value || '-'}</Typography>;
+  };
+
+  return (
+    <Box sx={{ mb: 2 }}>
+      <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+        {label}
+      </Typography>
+      {renderValue()}
+    </Box>
+  );
+};
 
 const SectionPaper = ({
   title,
@@ -67,13 +95,53 @@ const SectionPaper = ({
         pb: 2,
         borderBottom: '1px solid',
         borderColor: 'divider',
+        overflow: 'hidden',
       }}
     >
       {icon}
-      <Typography variant="h6">{title}</Typography>
+      <Typography
+        variant="h6"
+        sx={{
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          flexShrink: 0,
+        }}
+      >
+        {title}
+      </Typography>
     </Box>
     {children}
   </Paper>
+);
+
+// Custom Link component with text truncation for URLs
+const TruncatedLink = ({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) => (
+  <Tooltip title={href} arrow placement="top">
+    <Link
+      href={href}
+      target="_blank"
+      rel="noopener"
+      sx={{
+        color: 'primary.main',
+        textDecoration: 'none',
+        fontWeight: 'bold',
+        '&:hover': {
+          opacity: 0.8,
+        },
+        maxWidth: '100%',
+        display: 'block',
+      }}
+    >
+      <TruncatedText variant="body1">{children}</TruncatedText>
+    </Link>
+  </Tooltip>
 );
 
 export default function SolicitationViewContainer({ id }: { id: string }) {
@@ -155,6 +223,7 @@ export default function SolicitationViewContainer({ id }: { id: string }) {
                   <InfoItem
                     label="Observação"
                     value={solicitation.observacao}
+                    showTooltip={solicitation.observacao.length > 100}
                   />
                 )}
               </Box>
@@ -173,10 +242,12 @@ export default function SolicitationViewContainer({ id }: { id: string }) {
               <InfoItem
                 label="Quem abriu a solicitação"
                 value={solicitation.user.name}
+                showTooltip={solicitation.user.name.length > 50}
               />
               <InfoItem
                 label="Email do Solicitante"
                 value={solicitation.user.email}
+                showTooltip={solicitation.user.email.length > 50}
               />
               <InfoItem
                 label="Telefone de Contato"
@@ -189,10 +260,12 @@ export default function SolicitationViewContainer({ id }: { id: string }) {
               <InfoItem
                 label="Nome do Discente PGCOMP"
                 value={solicitation.nomeDiscente}
+                showTooltip={solicitation.nomeDiscente.length > 50}
               />
               <InfoItem
                 label="Nome do Docente PGCOMP"
                 value={solicitation.nomeDocente}
+                showTooltip={solicitation.nomeDocente.length > 50}
               />
               {!solicitation.solicitanteDocente && (
                 <InfoItem
@@ -220,13 +293,27 @@ export default function SolicitationViewContainer({ id }: { id: string }) {
               <InfoItem
                 label="Título da Publicação"
                 value={solicitation.tituloPublicacao}
+                showTooltip={solicitation.tituloPublicacao.length > 50}
               />
               <InfoItem
                 label="Coautores"
                 value={
-                  solicitation.coautores.length > 0
-                    ? solicitation.coautores.join(', ')
-                    : 'Nenhum coautor informado'
+                  solicitation.coautores.length > 0 ? (
+                    <Tooltip
+                      title={solicitation.coautores.join(', ')}
+                      arrow
+                      placement="top"
+                      disableHoverListener={
+                        solicitation.coautores.join(', ').length <= 50
+                      }
+                    >
+                      <TruncatedText variant="body1">
+                        {solicitation.coautores.join(', ')}
+                      </TruncatedText>
+                    </Tooltip>
+                  ) : (
+                    'Nenhum coautor informado'
+                  )
                 }
               />
               <InfoItem
@@ -272,6 +359,7 @@ export default function SolicitationViewContainer({ id }: { id: string }) {
               <InfoItem
                 label="Nome do Evento"
                 value={solicitation.nomeEvento}
+                showTooltip={solicitation.nomeEvento.length > 50}
               />
               <InfoItem
                 label="Natureza"
@@ -308,21 +396,9 @@ export default function SolicitationViewContainer({ id }: { id: string }) {
               <InfoItem
                 label="Link da Homepage do Evento"
                 value={
-                  <Link
-                    href={solicitation.linkHomePageEvento}
-                    target="_blank"
-                    rel="noopener"
-                    sx={{
-                      color: 'primary.main',
-                      textDecoration: 'none',
-                      fontWeight: 'bold',
-                      '&:hover': {
-                        opacity: 0.8,
-                      },
-                    }}
-                  >
+                  <TruncatedLink href={solicitation.linkHomePageEvento}>
                     {solicitation.linkHomePageEvento}
-                  </Link>
+                  </TruncatedLink>
                 }
               />
               <InfoItem label="País" value={solicitation.pais} />
@@ -345,21 +421,9 @@ export default function SolicitationViewContainer({ id }: { id: string }) {
               <InfoItem
                 label="Link da Página de Inscrição"
                 value={
-                  <Link
-                    href={solicitation.linkPaginaInscricao}
-                    target="_blank"
-                    rel="noopener"
-                    sx={{
-                      color: 'primary.main',
-                      textDecoration: 'none',
-                      fontWeight: 'bold',
-                      '&:hover': {
-                        opacity: 0.8,
-                      },
-                    }}
-                  >
+                  <TruncatedLink href={solicitation.linkPaginaInscricao}>
                     {solicitation.linkPaginaInscricao}
-                  </Link>
+                  </TruncatedLink>
                 }
               />
               {solicitation.quantidadeDiariasSolicitadas > 0 && (

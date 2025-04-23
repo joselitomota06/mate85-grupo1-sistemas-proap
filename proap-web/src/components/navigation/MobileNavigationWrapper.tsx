@@ -18,6 +18,7 @@ import {
   Box,
   Container,
   Tooltip,
+  useMediaQuery,
 } from '@mui/material';
 
 import MenuIcon from '@mui/icons-material/Menu';
@@ -46,6 +47,8 @@ export const MobileNavigationWrapper = ({
   children,
 }: MobileNavigationWrapperProps) => {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { name } = useAuth();
@@ -114,9 +117,17 @@ export const MobileNavigationWrapper = ({
                   aria-label="perfil"
                   edge="end"
                   onClick={handleClickUserProfile}
+                  size="small"
                 >
                   <PersonIcon />
-                  <Typography variant="h6" noWrap component="div">
+                  <Typography
+                    variant="subtitle2"
+                    noWrap
+                    component="div"
+                    sx={{
+                      maxWidth: isMobile ? '20ch' : isTablet ? '30ch' : 'auto',
+                    }}
+                  >
                     {viewName}
                   </Typography>
                 </IconButton>

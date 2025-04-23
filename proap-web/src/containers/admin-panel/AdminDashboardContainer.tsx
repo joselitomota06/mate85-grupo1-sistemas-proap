@@ -201,8 +201,9 @@ const AdminDashboardContainer = () => {
           <Tabs
             value={tabValue}
             onChange={handleTabChange}
-            variant={isMobile ? 'fullWidth' : 'standard'}
-            scrollButtons={isMobile ? 'auto' : false}
+            variant={isMobile ? 'scrollable' : 'standard'}
+            scrollButtons="auto"
+            allowScrollButtonsMobile
             aria-label="budget dashboard tabs"
             indicatorColor="primary"
             textColor="primary"

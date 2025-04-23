@@ -5,6 +5,7 @@ import {
   FormLabel,
   IconButton,
   TextField,
+  Typography,
 } from '@mui/material';
 import { Field } from 'formik';
 
@@ -61,3 +62,13 @@ export const columnStyle = {
   maxWidth: { md: '25%', sm: '100%' },
   minWidth: '200px',
 };
+
+export const TruncatedText = styled(Typography)`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  word-break: break-word;
+  max-width: 100%;
+`;

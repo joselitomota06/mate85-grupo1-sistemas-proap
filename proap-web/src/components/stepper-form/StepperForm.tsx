@@ -1,4 +1,14 @@
-import { Box, Button, Step, StepLabel, Stepper } from '@mui/material';
+import {
+  Box,
+  Button,
+  Step,
+  StepLabel,
+  Stepper,
+  useTheme,
+  useMediaQuery,
+  Typography,
+  styled,
+} from '@mui/material';
 import {
   Form,
   Formik,
@@ -26,6 +36,14 @@ export interface StepperFormProps<T> extends FormikConfig<T> {
   };
 }
 
+const MobileStepLabel = styled(Typography)(({ theme }) => ({
+  fontSize: '0.75rem',
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  maxWidth: '100%',
+}));
+
 export default function StepperForm({
   activeStep: initialActiveStep = 0,
   onSubmit,
@@ -38,6 +56,8 @@ export default function StepperForm({
   ...formikProps
 }: StepperFormProps<FormikValues>) {
   const [activeStep, setActiveStep] = useState(initialActiveStep);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const currentValidationSchema = useMemo(() => {
     const { schema } = steps.at(activeStep) ?? {};
@@ -77,13 +97,36 @@ export default function StepperForm({
 
   return (
     <>
-      <Stepper activeStep={activeStep}>
-        {steps.map((step, index) => (
-          <Step key={`step-${index}`}>
-            <StepLabel>{step.label}</StepLabel>
-          </Step>
-        ))}
-      </Stepper>
+      <Box sx={{ width: '100%', overflowX: 'auto', mb: 2 }}>
+        <Stepper
+          activeStep={activeStep}
+          orientation={isMobile ? 'horizontal' : 'horizontal'}
+          alternativeLabel={true}
+          sx={{
+            minWidth: isMobile ? steps.length * 80 : 'auto',
+            '& .MuiStepLabel-root': {
+              flexDirection: 'column',
+            },
+            '& .MuiStepLabel-labelContainer': {
+              width: isMobile ? 70 : 'auto',
+              overflow: 'hidden',
+              textAlign: 'center',
+            },
+          }}
+        >
+          {steps.map((step, index) => (
+            <Step key={`step-${index}`}>
+              <StepLabel>
+                {isMobile ? (
+                  <MobileStepLabel>{step.label}</MobileStepLabel>
+                ) : (
+                  step.label
+                )}
+              </StepLabel>
+            </Step>
+          ))}
+        </Stepper>
+      </Box>
       <Formik
         validationSchema={currentValidationSchema}
         onSubmit={handleClickSubmit}
@@ -101,6 +144,8 @@ export default function StepperForm({
               sx={{
                 display: 'flex',
                 marginTop: 2,
+                flexDirection: isMobile && activeStep !== 0 ? 'column' : 'row',
+                gap: isMobile ? 2 : 0,
                 justifyContent: activeStep === 0 ? 'end' : 'space-between',
               }}
             >
@@ -110,6 +155,7 @@ export default function StepperForm({
                   disabled={isSubmitting || activeStep === 0}
                   variant="outlined"
                   type="button"
+                  fullWidth={isMobile}
                 >
                   {componentLabels.previous}
                 </Button>
@@ -119,6 +165,7 @@ export default function StepperForm({
                 type="submit"
                 form="stepper-form"
                 disabled={isSubmitting}
+                fullWidth={isMobile}
               >
                 {isSubmitting && (
                   <StepperCircularProgress color="info" size={25} />

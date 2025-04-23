@@ -1,13 +1,17 @@
 import React from 'react';
 
-import { Grid, Link, Stack, Typography } from '@mui/material';
+import { Grid, Link, Stack, Tooltip, Typography } from '@mui/material';
 import styled from '@emotion/styled';
 
 import { InitialSolicitationFormValues } from '../SolicitationFormSchema';
 import { booleanToYesOrNo, dateToLocalDate } from '../../../helpers/conversion';
 import { useAuth } from '../../../hooks';
 import { BASE_PDF_URL } from '../../../helpers/api';
-import { columnStyle, StyledData } from '../SolicitationFormContainer.style';
+import {
+  columnStyle,
+  StyledData,
+  TruncatedText,
+} from '../SolicitationFormContainer.style';
 import { formatNumberToBRL } from '../../../helpers/formatter';
 
 export default function SolicitationDetailsContainer({
@@ -26,16 +30,16 @@ export default function SolicitationDetailsContainer({
         <Stack sx={columnStyle}>
           <StyledData>
             <Typography>Nome do Solicitante</Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
+            <TruncatedText variant="subtitle2">
               {currentUser.name}
-            </Typography>
+            </TruncatedText>
           </StyledData>
 
           <StyledData>
             <Typography>Email do Solicitante</Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
+            <TruncatedText variant="subtitle2">
               {currentUser.email}
-            </Typography>
+            </TruncatedText>
           </StyledData>
 
           <StyledData>
@@ -43,26 +47,26 @@ export default function SolicitationDetailsContainer({
               Solicitação em nome do
               <span style={{ color: 'red' }}> *</span>
             </Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
+            <TruncatedText variant="subtitle2">
               {solicitation.solicitanteDocente ? 'Docente' : 'Discente'}
-            </Typography>
+            </TruncatedText>
           </StyledData>
 
           <StyledData>
             <Typography>
               Nome do Discente PGCOMP <span style={{ color: 'red' }}>*</span>
             </Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
+            <TruncatedText variant="subtitle2">
               {solicitation.nomeDiscente}
-            </Typography>
+            </TruncatedText>
           </StyledData>
           <StyledData>
             <Typography>
               Nome do Docente PGCOMP <span style={{ color: 'red' }}>*</span>
             </Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
+            <TruncatedText variant="subtitle2">
               {solicitation.nomeDocente}
-            </Typography>
+            </TruncatedText>
           </StyledData>
 
           {!solicitation.solicitanteDocente && (
@@ -71,9 +75,9 @@ export default function SolicitationDetailsContainer({
                 Está no prazo regular para finalização do seu curso (mestrado ou
                 doutorado)? <span style={{ color: 'red' }}>*</span>
               </Typography>
-              <Typography style={{ color: 'gray' }} variant="subtitle2">
+              <TruncatedText variant="subtitle2">
                 {booleanToYesOrNo(solicitation.discenteNoPrazoDoCurso!)}
-              </Typography>
+              </TruncatedText>
             </StyledData>
           )}
 
@@ -84,9 +88,9 @@ export default function SolicitationDetailsContainer({
                   Quantos meses já se passaram do prazo regular?{' '}
                   <span style={{ color: 'red' }}>*</span>
                 </Typography>
-                <Typography style={{ color: 'gray' }} variant="subtitle2">
+                <TruncatedText variant="subtitle2">
                   {solicitation.mesesAtrasoCurso} meses
-                </Typography>
+                </TruncatedText>
               </StyledData>
             )}
         </Stack>
@@ -97,9 +101,9 @@ export default function SolicitationDetailsContainer({
               Título completo da publicação a ser apoiada
               <span style={{ color: 'red' }}> *</span>
             </Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
+            <TruncatedText variant="subtitle2">
               {solicitation.tituloPublicacao}
-            </Typography>
+            </TruncatedText>
           </StyledData>
 
           <StyledData>
@@ -109,38 +113,30 @@ export default function SolicitationDetailsContainer({
             {solicitation.coautores.length > 0 ? (
               solicitation.coautores.map((coautor) => {
                 return (
-                  <Typography
-                    key={coautor}
-                    style={{ color: 'gray' }}
-                    variant="subtitle2"
-                  >
+                  <TruncatedText key={coautor} variant="subtitle2">
                     {coautor}
-                  </Typography>
+                  </TruncatedText>
                 );
               })
             ) : (
-              <Typography style={{ color: 'gray' }} variant="subtitle2">
+              <TruncatedText variant="subtitle2">
                 Nenhum co-autor informado
-              </Typography>
+              </TruncatedText>
             )}
-            <Typography
-              style={{ color: 'gray' }}
-              variant="subtitle2"
-            ></Typography>
           </StyledData>
           <StyledData>
             <Typography>
               Há alunos ativos do PGCOMP coautores/coparticipantes direto na
               solicitação?
             </Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
+            <TruncatedText variant="subtitle2">
               {booleanToYesOrNo(solicitation.algumCoautorPGCOMP ?? false)}
-            </Typography>
+            </TruncatedText>
           </StyledData>
 
           <StyledData>
             <Typography>Arquivo da carta de aceite do artigo</Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
+            <TruncatedText variant="subtitle2">
               {solicitation.cartaAceite
                 ? (solicitation.file?.name ?? (
                     <Link
@@ -155,7 +151,7 @@ export default function SolicitationDetailsContainer({
                     </Link>
                   ))
                 : (solicitation.file?.name ?? 'Nenhum arquivo enviado')}
-            </Typography>
+            </TruncatedText>
           </StyledData>
         </Stack>
 
@@ -166,43 +162,43 @@ export default function SolicitationDetailsContainer({
               Nome do Evento (ou Solicitação)
               <span style={{ color: 'red' }}> *</span>
             </Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
+            <TruncatedText variant="subtitle2">
               {solicitation.nomeEvento}
-            </Typography>
+            </TruncatedText>
           </StyledData>
           <StyledData>
             <Typography>
               Natureza da Solicitação
               <span style={{ color: 'red' }}>*</span>
             </Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
+            <TruncatedText variant="subtitle2">
               {solicitation.eventoInternacional ? 'Internacional' : 'Nacional'}
-            </Typography>
+            </TruncatedText>
           </StyledData>
           <StyledData>
             <Typography>
               Data de início<span style={{ color: 'red' }}>*</span>
             </Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
+            <TruncatedText variant="subtitle2">
               {dateToLocalDate(solicitation.dataInicio)}
-            </Typography>
+            </TruncatedText>
           </StyledData>
           <StyledData>
             <Typography>
               Data de término<span style={{ color: 'red' }}>*</span>
             </Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
+            <TruncatedText variant="subtitle2">
               {dateToLocalDate(solicitation.dataFim)}
-            </Typography>
+            </TruncatedText>
           </StyledData>
           <StyledData>
             <Typography>
               Será necessário afastamento para participação do Evento?{' '}
               <span style={{ color: 'red' }}>*</span>
             </Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
+            <TruncatedText variant="subtitle2">
               {booleanToYesOrNo(solicitation.afastamentoParaParticipacao!)}
-            </Typography>
+            </TruncatedText>
           </StyledData>
 
           {solicitation.afastamentoParaParticipacao && (
@@ -211,9 +207,9 @@ export default function SolicitationDetailsContainer({
                 Quantos dias de afastamento?
                 <span style={{ color: 'red' }}> *</span>
               </Typography>
-              <Typography style={{ color: 'gray' }} variant="subtitle2">
+              <TruncatedText variant="subtitle2">
                 {solicitation.diasAfastamento} dias
-              </Typography>
+              </TruncatedText>
             </StyledData>
           )}
 
@@ -222,26 +218,32 @@ export default function SolicitationDetailsContainer({
               Homepage do Evento (ou Solicitação)
               <span style={{ color: 'red' }}> *</span>
             </Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
-              {solicitation.linkHomePageEvento}
-            </Typography>
+            <Tooltip
+              title={solicitation.linkHomePageEvento}
+              arrow
+              placement="top"
+            >
+              <TruncatedText variant="subtitle2">
+                {solicitation.linkHomePageEvento}
+              </TruncatedText>
+            </Tooltip>
           </StyledData>
 
           <StyledData>
             <Typography>
               País<span style={{ color: 'red' }}> *</span>
             </Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
+            <TruncatedText variant="subtitle2">
               {solicitation.pais}
-            </Typography>
+            </TruncatedText>
           </StyledData>
           <StyledData>
             <Typography>
               Cidade<span style={{ color: 'red' }}> *</span>
             </Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
+            <TruncatedText variant="subtitle2">
               {solicitation.cidade}
-            </Typography>
+            </TruncatedText>
           </StyledData>
 
           <StyledData>
@@ -249,21 +251,21 @@ export default function SolicitationDetailsContainer({
               Modalidade de participação{' '}
               <span style={{ color: 'red' }}> *</span>
             </Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
+            <TruncatedText variant="subtitle2">
               {solicitation.modalidadeParticipacao
                 .substring(0, 1)
                 .toUpperCase() +
                 solicitation.modalidadeParticipacao.substring(1)}
-            </Typography>
+            </TruncatedText>
           </StyledData>
           <StyledData>
             <Typography>
               Informe o Qualis do seu evento
               <span style={{ color: 'red' }}> *</span>
             </Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
+            <TruncatedText variant="subtitle2">
               {solicitation.qualis}
-            </Typography>
+            </TruncatedText>
           </StyledData>
         </Stack>
         {/* Quarta Coluna Detalhamento Financeiro ... */}
@@ -273,50 +275,56 @@ export default function SolicitationDetailsContainer({
               Valor da inscrição/solicitação (R$)
               <span style={{ color: 'red' }}> *</span>
             </Typography>
-            <Typography variant="body1" color="text.secondary">
+            <TruncatedText variant="body1" color="text.secondary">
               {formatNumberToBRL(solicitation.valorInscricao)}
-            </Typography>
+            </TruncatedText>
           </StyledData>
           <StyledData>
             <Typography>
               Link da página da inscrição do evento (ou solicitação)
               <span style={{ color: 'red' }}> *</span>
             </Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
-              {solicitation.linkPaginaInscricao}
-            </Typography>
+            <Tooltip
+              title={solicitation.linkPaginaInscricao}
+              arrow
+              placement="top"
+            >
+              <TruncatedText variant="subtitle2">
+                {solicitation.linkPaginaInscricao}
+              </TruncatedText>
+            </Tooltip>
           </StyledData>
           <StyledData>
             <Typography>
               Quantas diárias deseja solicitar?
               <span style={{ color: 'red' }}> *</span>
             </Typography>
-            <Typography style={{ color: 'gray' }} variant="subtitle2">
+            <TruncatedText variant="subtitle2">
               {solicitation.quantidadeDiariasSolicitadas} diária
               {solicitation.quantidadeDiariasSolicitadas > 1 && 's'}
-            </Typography>
+            </TruncatedText>
           </StyledData>
           {solicitation.quantidadeDiariasSolicitadas > 0 && (
             <>
               <StyledData>
                 <Typography>Informe o valor da sua diária</Typography>
-                <Typography variant="body1" color="text.secondary">
+                <TruncatedText variant="body1" color="text.secondary">
                   {solicitation.isDolar
                     ? `$ ${solicitation.valorDiaria?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
                     : formatNumberToBRL(solicitation.valorDiaria)}
-                </Typography>
+                </TruncatedText>
               </StyledData>
               {solicitation.isDolar && (
                 <StyledData>
                   <Typography>
                     Informe o valor da cotação do dólar americano (USD)
                   </Typography>
-                  <Typography style={{ color: 'gray' }} variant="subtitle2">
+                  <TruncatedText variant="subtitle2">
                     {`$ ${solicitation.cotacaoMoeda?.toLocaleString('en-US', {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
                     })}`}
-                  </Typography>
+                  </TruncatedText>
                 </StyledData>
               )}
             </>
@@ -326,9 +334,9 @@ export default function SolicitationDetailsContainer({
               <Typography>
                 Deseja que a última diária seja no valor integral?
               </Typography>
-              <Typography style={{ color: 'gray' }} variant="subtitle2">
+              <TruncatedText variant="subtitle2">
                 {booleanToYesOrNo(solicitation.ultimaDiariaIntegral ?? false)}
-              </Typography>
+              </TruncatedText>
             </StyledData>
           )}
           {solicitation.solicitanteDocente && (
@@ -336,16 +344,16 @@ export default function SolicitationDetailsContainer({
               <Typography>
                 Informe o valor aproximado da passagem aérea
               </Typography>
-              <Typography variant="body1" color="text.secondary">
+              <TruncatedText variant="body1" color="text.secondary">
                 {formatNumberToBRL(solicitation.valorPassagem)}
-              </Typography>
+              </TruncatedText>
             </StyledData>
           )}
           <StyledData>
             <Typography>Valor total da solicitação (R$) </Typography>
-            <Typography variant="body1" color="text.secondary">
+            <TruncatedText variant="body1" color="text.secondary">
               {formatNumberToBRL(solicitation.valorTotal)}
-            </Typography>
+            </TruncatedText>
           </StyledData>
         </Stack>
       </Stack>

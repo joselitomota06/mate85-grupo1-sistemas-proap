@@ -12,6 +12,7 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 
 import MobileNavigationWrapper from './MobileNavigationWrapper';
 import useHasPermission from '../../hooks/auth/useHasPermission';
+import DesktopNavigationWrapper from './DesktopNavigationWrapper';
 
 export interface NavigationItem {
   label: string;
@@ -22,7 +23,7 @@ export interface NavigationItem {
 
 export const NavigationWrapper = ({ children }: PropsWithChildren) => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const userCanViewPage = useHasPermission('VIEW_USER');
   const isAdmin = useHasPermission('ADMIN_ROLE');
   const isCeapg = useHasPermission('CEAPG_ROLE');
@@ -54,10 +55,18 @@ export const NavigationWrapper = ({ children }: PropsWithChildren) => {
     },
   ];
 
+  if (isMobile) {
+    return (
+      <MobileNavigationWrapper items={navigationItems}>
+        {children}
+      </MobileNavigationWrapper>
+    );
+  }
+
   return (
-    <MobileNavigationWrapper items={navigationItems}>
+    <DesktopNavigationWrapper items={navigationItems}>
       {children}
-    </MobileNavigationWrapper>
+    </DesktopNavigationWrapper>
   );
 };
 

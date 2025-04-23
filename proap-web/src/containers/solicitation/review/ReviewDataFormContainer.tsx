@@ -16,13 +16,14 @@ import {
   Button,
   IconButton,
   Paper,
+  useTheme,
+  useMediaQuery,
 } from '@mui/material';
 import {
   StyledData,
   StyledFormLabel,
   StyledTextField,
 } from '../SolicitationFormContainer.style';
-import { FormControlLabel, Radio, RadioGroup } from '@mui/material';
 import {
   InfoOutlined,
   Edit,
@@ -37,6 +38,8 @@ export default function ReviewDataFormContainer() {
   const { values, errors, touched, setFieldValue } =
     useFormikContext<SolicitationFormValues>();
   const [isEditingDate, setIsEditingDate] = useState(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const maxDiarias = values.quantidadeDiariasSolicitadas || 0;
   const diariasOptions = Array.from({ length: maxDiarias + 1 }, (_, i) => i);
@@ -47,7 +50,6 @@ export default function ReviewDataFormContainer() {
   });
 
   useEffect(() => {
-    // Set current date as default when component mounts if no date is set
     if (!values.dataAvaliacaoProap) {
       const today = new Date();
       const formattedDate = today.toISOString().split('T')[0];
@@ -83,7 +85,13 @@ export default function ReviewDataFormContainer() {
         <StyledFormLabel required sx={{ mb: 1.5 }}>
           Decisão
         </StyledFormLabel>
-        <Box sx={{ display: 'flex', gap: 2 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            gap: 2,
+            flexDirection: isMobile ? 'column' : 'row',
+          }}
+        >
           <Button
             variant={values.situacao === 1 ? 'contained' : 'outlined'}
             color="success"
@@ -133,8 +141,15 @@ export default function ReviewDataFormContainer() {
       </Box>
 
       {/* Data e Número ATA */}
-      <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
-        <Box sx={{ flex: 1 }}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: isMobile ? 'column' : 'row',
+          gap: 2,
+          mb: 3,
+        }}
+      >
+        <Box sx={{ flex: 1, mb: isMobile ? 2 : 0 }}>
           {isEditingDate ? (
             <Box sx={{ position: 'relative' }}>
               <Field
@@ -211,12 +226,25 @@ export default function ReviewDataFormContainer() {
 
       {/* Valores */}
       <Box sx={{ mb: 3, p: 2, border: '1px solid #e0e0e0', borderRadius: 1 }}>
-        <Box sx={{ display: 'flex', gap: 4, mb: 2 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: isMobile ? 'column' : 'row',
+            gap: isMobile ? 2 : 4,
+            mb: 2,
+          }}
+        >
           <Box sx={{ flex: 1 }}>
             <StyledData>
               <StyledFormLabel>Valor total da solicitação</StyledFormLabel>
               <Box
-                sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 1 }}
+                sx={{
+                  display: 'flex',
+                  flexDirection: isMobile ? 'column' : 'row',
+                  alignItems: isMobile ? 'flex-start' : 'center',
+                  gap: 1,
+                  mt: 1,
+                }}
               >
                 <Typography variant="h6" color="primary">
                   R${' '}
@@ -276,7 +304,13 @@ export default function ReviewDataFormContainer() {
 
       {/* Diárias */}
       <Box sx={{ mb: 3, p: 2, border: '1px solid #e0e0e0', borderRadius: 1 }}>
-        <Box sx={{ display: 'flex', gap: 4 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: isMobile ? 'column' : 'row',
+            gap: isMobile ? 2 : 4,
+          }}
+        >
           <Box sx={{ flex: 1 }}>
             <StyledData>
               <StyledFormLabel>Diárias solicitadas</StyledFormLabel>
@@ -298,7 +332,7 @@ export default function ReviewDataFormContainer() {
                 displayEmpty
                 name="numeroDiariasAprovadas"
                 defaultValue={0}
-                sx={{ maxWidth: '100px' }}
+                sx={{ maxWidth: isMobile ? '100%' : '100px' }}
               >
                 {diariasOptions.map((num) => (
                   <MenuItem key={num} value={num}>

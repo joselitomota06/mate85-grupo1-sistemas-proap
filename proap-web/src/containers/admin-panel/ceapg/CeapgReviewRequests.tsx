@@ -10,6 +10,8 @@ import {
   Tooltip,
   Tab,
   Tabs,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { CeapgResponse } from '../../../types';
@@ -82,6 +84,8 @@ const CeapgReviewRequests: React.FC<CeapgReviewRequestsProps> = ({
 
   const [localStartDate, setLocalStartDate] = useState(startDate);
   const [localEndDate, setLocalEndDate] = useState(endDate);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
     setLocalStartDate(startDate);
@@ -162,6 +166,9 @@ const CeapgReviewRequests: React.FC<CeapgReviewRequestsProps> = ({
               aria-label="ceapg review tabs"
               indicatorColor="primary"
               textColor="primary"
+              variant={isMobile ? 'scrollable' : 'standard'}
+              scrollButtons="auto"
+              allowScrollButtonsMobile
             >
               <Tab
                 label={`Pendentes (${pendingReviews.length})`}
