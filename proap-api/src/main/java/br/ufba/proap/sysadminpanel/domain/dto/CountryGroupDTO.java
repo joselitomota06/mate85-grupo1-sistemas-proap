@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import br.ufba.proap.sysadminpanel.domain.CountryGroup;
@@ -16,7 +17,7 @@ import br.ufba.proap.sysadminpanel.domain.CountryGroup;
 public class CountryGroupDTO {
     private Long id;
     private String groupName;
-    private Float valueUSD;
+    private BigDecimal valueUSD;
     private List<String> countries;
 
     public static CountryGroupDTO fromEntity(CountryGroup entity) {

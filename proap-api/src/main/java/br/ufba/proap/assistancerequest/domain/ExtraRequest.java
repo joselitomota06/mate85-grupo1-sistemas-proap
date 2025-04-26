@@ -1,5 +1,6 @@
 package br.ufba.proap.assistancerequest.domain;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -37,9 +38,8 @@ public class ExtraRequest {
 	@Column(columnDefinition = "text")
 	private String justificativa;
 
-	// 06/11 - Apenas seguindo o que vem sendo utilizado no projeto, mas o recomenda
-	// seria utilizar BigDecimal.
-	private Float valorSolicitado;
+	@Column(nullable = true, precision = 19, scale = 4)
+	private BigDecimal valorSolicitado;
 
 	private Boolean solicitacaoApoio;
 	private Boolean solicitacaoAuxilioOutrasFontes;
@@ -69,8 +69,8 @@ public class ExtraRequest {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	private LocalDate dataAvaliacaoProap;
 
-	@Column(nullable = true)
-	private Float valorAprovado;
+	@Column(nullable = true, precision = 19, scale = 4)
+	private BigDecimal valorAprovado;
 
 	@Column(nullable = true)
 	private String observacao;
@@ -135,11 +135,11 @@ public class ExtraRequest {
 		this.dataAvaliacaoProap = dataAvaliacaoProap;
 	}
 
-	public Float getValorAprovado() {
+	public BigDecimal getValorAprovado() {
 		return valorAprovado;
 	}
 
-	public void setValorAprovado(Float valorAprovado) {
+	public void setValorAprovado(BigDecimal valorAprovado) {
 		this.valorAprovado = valorAprovado;
 	}
 
@@ -199,11 +199,11 @@ public class ExtraRequest {
 		this.solicitacaoApoio = solicitacaoApoio;
 	}
 
-	public Float getValorSolicitado() {
+	public BigDecimal getValorSolicitado() {
 		return valorSolicitado;
 	}
 
-	public void setValorSolicitado(Float valorSolicitado) {
+	public void setValorSolicitado(BigDecimal valorSolicitado) {
 		this.valorSolicitado = valorSolicitado;
 	}
 

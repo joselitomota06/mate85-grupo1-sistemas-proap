@@ -54,10 +54,9 @@ public class BudgetService {
                 .map(SolicitationAdmin::getOrcamentoAnual)
                 .orElse(BigDecimal.ZERO);
 
-        Float totalSpentFloat = assistanteRequestRepository.findTotalApprovedValueByYear(year) != null
+        BigDecimal totalSpent = assistanteRequestRepository.findTotalApprovedValueByYear(year) != null
                 ? assistanteRequestRepository.findTotalApprovedValueByYear(year)
-                : 0;
-        BigDecimal totalSpent = BigDecimal.valueOf(totalSpentFloat);
+                : BigDecimal.ZERO;
         return totalBudget.subtract(totalSpent);
     }
 

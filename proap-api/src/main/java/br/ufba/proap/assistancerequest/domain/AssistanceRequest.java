@@ -1,5 +1,6 @@
 package br.ufba.proap.assistancerequest.domain;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -105,25 +106,29 @@ public class AssistanceRequest {
 
 	// Detalhamento Financeiro
 
-	private Float valorInscricao;
+	@Column(nullable = true, precision = 19, scale = 4)
+	private BigDecimal valorInscricao;
 
 	private String linkPaginaInscricao;
 
 	private Integer quantidadeDiariasSolicitadas;
 
-	private Float valorDiaria;
+	@Column(nullable = true, precision = 19, scale = 4)
+	private BigDecimal valorDiaria;
 
 	@Column(nullable = false, columnDefinition = "boolean default false")
 	private Boolean ultimaDiariaIntegral;
 
 	private Boolean isDolar;
 
-	private Float cotacaoMoeda;
+	@Column(nullable = true, precision = 19, scale = 4)
+	private BigDecimal cotacaoMoeda;
 
-	private Float valorPassagem;
+	@Column(nullable = true, precision = 19, scale = 4)
+	private BigDecimal valorPassagem;
 
-	@Column(nullable = true)
-	private Float valorTotal;
+	@Column(nullable = true, precision = 19, scale = 4)
+	private BigDecimal valorTotal;
 	// Aceite e Justificativa
 
 	@Column(nullable = true)
@@ -152,19 +157,19 @@ public class AssistanceRequest {
 	@Column(nullable = true)
 	private Integer numeroDiariasAprovadas;
 
-	@Column(nullable = true)
-	private Float valorAprovado;
+	@Column(nullable = true, precision = 19, scale = 4)
+	private BigDecimal valorAprovado;
 
 	@Column(nullable = true)
 	private String observacao;
 
-	@Column(nullable = true)
-	private Float percentualOrcamentoAnual;
+	@Column(nullable = true, precision = 5, scale = 2)
+	private BigDecimal percentualOrcamentoAnual;
 
 	// Campos CEAPG
 
-	@Column(nullable = true)
-	private Float custoFinalCeapg;
+	@Column(nullable = true, precision = 19, scale = 4)
+	private BigDecimal custoFinalCeapg;
 
 	@Column(nullable = true)
 	private String observacoesCeapg;

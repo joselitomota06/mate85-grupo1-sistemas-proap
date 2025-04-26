@@ -1,5 +1,6 @@
 package br.ufba.proap.assistancerequest.repository;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public interface AssistanceRequestRepository extends JpaRepository<AssistanceReq
 	List<Object[]> findTotalApprovedValueByDateRange(LocalDate startDate, LocalDate endDate);
 
 	@Query("SELECT SUM(ar.valorAprovado) FROM AssistanceRequest ar WHERE YEAR(ar.createdAt) = :year AND ar.situacao = 1")
-	Float findTotalApprovedValueByYear(Integer year);
+	BigDecimal findTotalApprovedValueByYear(Integer year);
 
 	@Query("SELECT ar.id, ar.valorAprovado, ar.dataAvaliacaoProap, ap.name, ar.custoFinalCeapg, ar.observacoesCeapg, ac.name, ar.dataAvaliacaoCeapg FROM AssistanceRequest ar LEFT JOIN ar.avaliadorProap ap LEFT JOIN ar.avaliadorCeapg ac WHERE DATE(ar.dataAvaliacaoProap) BETWEEN :startDate AND :endDate AND ar.situacao = 1")
 	List<Object[]> findAllCeapgRequests(LocalDate startDate, LocalDate endDate);

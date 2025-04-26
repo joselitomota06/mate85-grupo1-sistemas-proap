@@ -1,5 +1,6 @@
 package br.ufba.proap.sysadminpanel.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -172,7 +173,7 @@ public class SystemConfigurationService {
         config.setEnableSolicitation(false);
         config.setQualisList(List.of("A1", "A2", "A3", "A4", "B1", "B2", "B3", "B4"));
         config.setNumMaxDiarias(5);
-        config.setValorDiariaBRL(320.0f);
+        config.setValorDiariaBRL(BigDecimal.valueOf(320.0));
         config.setTextoAvisoQualis(
                 "Nos casos de artigos aceitos em conferências, o Qualis deve ser atribubído quando o artigo é aceito no evento principal, e não em eventos satélites como workshops, minicursos ou CTDs.");
         config.setTextoAvisoValorInscricao(
@@ -192,7 +193,7 @@ public class SystemConfigurationService {
 
         CountryGroup groupA = new CountryGroup();
         groupA.setGroupName("A");
-        groupA.setValueUSD(180.0f);
+        groupA.setValueUSD(BigDecimal.valueOf(180.0));
         groupA.setCountriesList(List.of("Afeganistão", "Armênia", "Bangladesh", "Belarus", "Benin", "Bolívia",
                 "Burkina Faso", "Butão", "Chile", "Comores", "República Popular Democrática da Coréia", "Costa Rica",
                 "El Salvador", "Equador", "Eslovênia", "Filipinas", "Gâmbia", "Guiana", "Guiné Bissau", "Guiné",
@@ -205,7 +206,7 @@ public class SystemConfigurationService {
 
         CountryGroup groupB = new CountryGroup();
         groupB.setGroupName("B");
-        groupB.setValueUSD(260.0f);
+        groupB.setValueUSD(BigDecimal.valueOf(260.0));
         groupB.setCountriesList(List.of("África do Sul", "Albânia", "Andorra", "Argélia", "Argentina", "Austrália",
                 "Belize", "Bósnia-Herzegovina", "Burundi", "Cabo Verde", "Camarões", "Camboja", "Catar", "Chade",
                 "China", "Chipre", "Colômbia", "Dominica", "Egito", "Eritréia", "Estônia", "Etiópia", "Gana", "Geórgia",
@@ -218,7 +219,7 @@ public class SystemConfigurationService {
 
         CountryGroup groupC = new CountryGroup();
         groupC.setGroupName("C");
-        groupC.setValueUSD(310.0f);
+        groupC.setValueUSD(BigDecimal.valueOf(310.0));
         groupC.setCountriesList(List.of("Antígua e Barbuda", "Arábia Saudita", "Azerbaijão", "Bahamas", "Bahrein",
                 "Barbados", "Brunei Darussalam", "Bulgária", "Canadá", "Cingapura", "Congo", "Costa do Marfim", "Cuba",
                 "Djibuti", "Emirados Árabes", "Fiji", "Gabão", "Guatemala", "Jamaica", "Jordânia", "Letônia", "Libéria",
@@ -229,7 +230,7 @@ public class SystemConfigurationService {
 
         CountryGroup groupD = new CountryGroup();
         groupD.setGroupName("D");
-        groupD.setValueUSD(370.0f);
+        groupD.setValueUSD(BigDecimal.valueOf(370.0));
         groupD.setCountriesList(List.of("Alemanha", "Áustria", "Barbados", "Bélgica", "Canadá", "Coréia do Sul",
                 "Croácia", "Dinamarca", "Espanha", "Estados Unidos da América", "Finlândia", "França", "Granada",
                 "Grécia", "Hong Kong", "Irlanda", "Islândia", "Israel", "Itália", "Japão", "Kuaite", "Liechtenstein",
