@@ -38,8 +38,7 @@ public class ExtraRequest {
 	@Column(columnDefinition = "text")
 	private String justificativa;
 
-	// 06/11 - Apenas seguindo o que vem sendo utilizado no projeto, mas o recomenda
-	// seria utilizar BigDecimal.
+	@Column(nullable = true, precision = 19, scale = 4)
 	private BigDecimal valorSolicitado;
 
 	private Boolean solicitacaoApoio;
