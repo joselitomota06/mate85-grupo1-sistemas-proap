@@ -1,5 +1,12 @@
 import React from 'react';
-import { Box, Typography, Stack, InputAdornment } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Stack,
+  InputAdornment,
+  useTheme,
+  useMediaQuery,
+} from '@mui/material';
 import { Field, useFormikContext } from 'formik';
 import { SolicitationFormValues } from '../../SolicitationFormSchema';
 import {
@@ -12,6 +19,8 @@ import { formatNumberToBRL } from '../../../../helpers/formatter';
 export default function CeapgDataFormContainer() {
   const { values, errors, touched } =
     useFormikContext<SolicitationFormValues>();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
     <Box sx={{ p: 2 }}>
@@ -21,7 +30,14 @@ export default function CeapgDataFormContainer() {
 
       {/* Valores */}
       <Box sx={{ mb: 3, p: 2, border: '1px solid #e0e0e0', borderRadius: 1 }}>
-        <Box sx={{ display: 'flex', gap: 4, mb: 2 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: isMobile ? 'column' : 'row',
+            gap: isMobile ? 2 : 4,
+            mb: 2,
+          }}
+        >
           <Box sx={{ flex: 1 }}>
             <StyledData>
               <StyledFormLabel>Valor aprovado</StyledFormLabel>

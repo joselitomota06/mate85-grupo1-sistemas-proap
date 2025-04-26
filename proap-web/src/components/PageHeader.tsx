@@ -44,7 +44,12 @@ const PageHeader: React.FC<PageHeaderProps> = ({
               <ArrowBackIcon />
             </IconButton>
           )}
-          <Typography variant="h4" component="h1" fontWeight="bold">
+          <Typography
+            variant="h4"
+            component="h1"
+            fontWeight="bold"
+            color="primary"
+          >
             {title}
           </Typography>
         </Box>

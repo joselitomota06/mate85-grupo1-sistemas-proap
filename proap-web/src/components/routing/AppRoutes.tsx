@@ -1,6 +1,6 @@
 import { BrowserRouter } from 'react-router-dom';
 import { useAuth } from '../../hooks';
-import PrivateRoutes from './PrivateRoutes';
+import PrivateRoutesHandler from './PrivateRoutesHandler';
 import PublicRoutes from './PublicRoutes';
 
 export default function ApplicationRoutes() {
@@ -8,7 +8,7 @@ export default function ApplicationRoutes() {
 
   return (
     <BrowserRouter>
-      {isAuthenticated ? <PrivateRoutes /> : <PublicRoutes />}
+      {isAuthenticated ? <PrivateRoutesHandler /> : <PublicRoutes />}
     </BrowserRouter>
   );
 }

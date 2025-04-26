@@ -126,7 +126,7 @@ const ExtraRequestCard: React.FC<ExtraRequestCardProps> = ({
               variant="subtitle1"
               fontWeight="medium"
               component="div"
-              noWrap
+              sx={{ maxWidth: '18ch' }}
               gutterBottom
             >
               {user.name}

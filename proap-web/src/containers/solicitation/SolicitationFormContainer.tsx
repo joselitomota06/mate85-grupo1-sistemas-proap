@@ -22,7 +22,6 @@ import SolicitantDetailFormContainer from './create/SolicitantDetailFormContaine
 import ConfirmationFormContainer from './create/ConfirmationFormContainer';
 import FinancialDetailFormContainer from './create/FinancialDetailFormContainer';
 import EventDetailFormContainer from './create/EventDetailFormContainer';
-import { UnauthorizedPage } from '../../pages/unauthorized/UnauthorizedPage';
 
 interface SolicitationFormContainerProps {
   onSubmit: (values: FormikValues) => void;
@@ -72,11 +71,6 @@ export default function SolicitationFormContainer({
         component: FinancialDetailFormContainer,
         schema: financialDetailFormSchema,
       },
-      // {
-      //   label: 'Aceite e Justificativa',
-      //   component: AcceptanceDataFormContainer,
-      //   schema: acceptanceDataFormSchema,
-      // },
       {
         label: 'Confirmação e Revisão',
         component: ConfirmationFormContainer,

@@ -1,12 +1,42 @@
 import React from 'react';
-import { Box, Link, Stack, Typography, Divider, Chip } from '@mui/material';
+import {
+  Box,
+  Link,
+  Stack,
+  Typography,
+  Divider,
+  Chip,
+  Tooltip,
+} from '@mui/material';
 import { useFormikContext } from 'formik';
 import { SolicitationFormValues } from '../SolicitationFormSchema';
 import { booleanToYesOrNo, dateToLocalDate } from '../../../helpers/conversion';
 import { BASE_PDF_URL } from '../../../helpers/api';
-import { StyledData } from '../SolicitationFormContainer.style';
+import { StyledData, TruncatedText } from '../SolicitationFormContainer.style';
 import { Person, Event, AttachMoney, School } from '@mui/icons-material';
 import { formatNumberToBRL } from '../../../helpers/formatter';
+
+const TruncatedLink = ({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) => (
+  <Tooltip title={href} arrow placement="top">
+    <Link
+      href={href}
+      target="_blank"
+      rel="noopener"
+      sx={{
+        maxWidth: '100%',
+        display: 'block',
+      }}
+    >
+      <TruncatedText variant="body1">{children}</TruncatedText>
+    </Link>
+  </Tooltip>
+);
 
 export default function SolicitationReviewContainer() {
   const { values } = useFormikContext<SolicitationFormValues>();
@@ -33,7 +63,10 @@ export default function SolicitationReviewContainer() {
     >
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 3, gap: 1 }}>
         {icon}
-        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+        <Typography
+          variant="h6"
+          sx={{ fontWeight: 'bold', whiteSpace: 'nowrap' }}
+        >
           {title}
         </Typography>
       </Box>
@@ -66,14 +99,26 @@ export default function SolicitationReviewContainer() {
               <Typography variant="subtitle2" color="text.secondary">
                 Solicitante
               </Typography>
-              <Typography>{values.user.name}</Typography>
+              {values.user.name.length > 50 ? (
+                <Tooltip title={values.user.name} arrow placement="top">
+                  <TruncatedText>{values.user.name}</TruncatedText>
+                </Tooltip>
+              ) : (
+                <Typography>{values.user.name}</Typography>
+              )}
             </StyledData>
 
             <StyledData>
               <Typography variant="subtitle2" color="text.secondary">
                 Email
               </Typography>
-              <Typography>{values.user.email}</Typography>
+              {values.user.email.length > 50 ? (
+                <Tooltip title={values.user.email} arrow placement="top">
+                  <TruncatedText>{values.user.email}</TruncatedText>
+                </Tooltip>
+              ) : (
+                <Typography>{values.user.email}</Typography>
+              )}
             </StyledData>
 
             <StyledData>
@@ -99,7 +144,13 @@ export default function SolicitationReviewContainer() {
                 <Typography variant="subtitle2" color="text.secondary">
                   Nome do Discente PGCOMP
                 </Typography>
-                <Typography>{values.nomeDiscente}</Typography>
+                {values.nomeDiscente.length > 50 ? (
+                  <Tooltip title={values.nomeDiscente} arrow placement="top">
+                    <TruncatedText>{values.nomeDiscente}</TruncatedText>
+                  </Tooltip>
+                ) : (
+                  <Typography>{values.nomeDiscente}</Typography>
+                )}
               </StyledData>
             )}
 
@@ -108,7 +159,13 @@ export default function SolicitationReviewContainer() {
                 <Typography variant="subtitle2" color="text.secondary">
                   Nome do Docente PGCOMP
                 </Typography>
-                <Typography>{values.nomeDocente}</Typography>
+                {values.nomeDocente.length > 50 ? (
+                  <Tooltip title={values.nomeDocente} arrow placement="top">
+                    <TruncatedText>{values.nomeDocente}</TruncatedText>
+                  </Tooltip>
+                ) : (
+                  <Typography>{values.nomeDocente}</Typography>
+                )}
               </StyledData>
             )}
 
@@ -144,7 +201,13 @@ export default function SolicitationReviewContainer() {
               <Typography variant="subtitle2" color="text.secondary">
                 Título da publicação
               </Typography>
-              <Typography>{values.tituloPublicacao}</Typography>
+              {values.tituloPublicacao.length > 50 ? (
+                <Tooltip title={values.tituloPublicacao} arrow placement="top">
+                  <TruncatedText>{values.tituloPublicacao}</TruncatedText>
+                </Tooltip>
+              ) : (
+                <Typography>{values.tituloPublicacao}</Typography>
+              )}
             </StyledData>
 
             <StyledData>
@@ -153,9 +216,20 @@ export default function SolicitationReviewContainer() {
               </Typography>
               {values.coautores.length > 0 ? (
                 <Stack spacing={0.5}>
-                  {values.coautores.map((coautor, index) => (
-                    <Typography key={index}>{coautor}</Typography>
-                  ))}
+                  {values.coautores.map((coautor, index) =>
+                    coautor.length > 50 ? (
+                      <Tooltip
+                        key={index}
+                        title={coautor}
+                        arrow
+                        placement="top"
+                      >
+                        <TruncatedText>{coautor}</TruncatedText>
+                      </Tooltip>
+                    ) : (
+                      <Typography key={index}>{coautor}</Typography>
+                    ),
+                  )}
                 </Stack>
               ) : (
                 <Typography color="text.secondary">
@@ -212,15 +286,9 @@ export default function SolicitationReviewContainer() {
               <Typography variant="subtitle2" color="text.secondary">
                 Link da inscrição
               </Typography>
-              <Typography variant="body1">
-                <Link
-                  href={values.linkPaginaInscricao}
-                  target="_blank"
-                  rel="noopener"
-                >
-                  {values.linkPaginaInscricao}
-                </Link>
-              </Typography>
+              <TruncatedLink href={values.linkPaginaInscricao}>
+                {values.linkPaginaInscricao}
+              </TruncatedLink>
             </StyledData>
 
             <StyledData>
@@ -306,7 +374,13 @@ export default function SolicitationReviewContainer() {
               <Typography variant="subtitle2" color="text.secondary">
                 Nome do Evento
               </Typography>
-              <Typography>{values.nomeEvento}</Typography>
+              {values.nomeEvento.length > 50 ? (
+                <Tooltip title={values.nomeEvento} arrow placement="top">
+                  <TruncatedText>{values.nomeEvento}</TruncatedText>
+                </Tooltip>
+              ) : (
+                <Typography>{values.nomeEvento}</Typography>
+              )}
             </StyledData>
 
             <Box sx={{ display: 'flex', gap: 2 }}>
@@ -347,15 +421,9 @@ export default function SolicitationReviewContainer() {
               <Typography variant="subtitle2" color="text.secondary">
                 Homepage do Evento
               </Typography>
-              <Typography variant="body1">
-                <Link
-                  href={values.linkHomePageEvento}
-                  target="_blank"
-                  rel="noopener"
-                >
-                  {values.linkHomePageEvento}
-                </Link>
-              </Typography>
+              <TruncatedLink href={values.linkHomePageEvento}>
+                {values.linkHomePageEvento}
+              </TruncatedLink>
             </StyledData>
 
             <Box sx={{ display: 'flex', gap: 2 }}>

@@ -60,6 +60,9 @@ public class UserService implements UserDetailsService {
 		Perfil defaultPerfil = perfilService.findByName(Perfil.getDefaultPerfilName()).orElseThrow(
 				() -> new DefaultProfileNotFoundException(
 						"Perfil padrão não encontrado. Contate o administrador do sistema."));
+		if (user.getPassword().length() < 8) {
+			throw new ValidationException("A senha deve ter no mínimo 8 caracteres");
+		}
 		user.setPerfil(defaultPerfil);
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		return userRepository.saveAndFlush(user);

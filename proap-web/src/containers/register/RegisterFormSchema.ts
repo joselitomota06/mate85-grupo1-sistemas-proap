@@ -25,12 +25,15 @@ export const contactDataFormSchema = Yup.object({
 });
 
 export const passwordFormSchema = Yup.object({
-  password: Yup.string().required('Campo obrigatório'),
+  password: Yup.string()
+    .required('Campo obrigatório')
+    .min(8, 'A senha deve ter no mínimo 8 caracteres'),
   confirmPassword: Yup.string()
     .required('Campo obrigatório')
     .test('same-password', 'As senhas não coincidem', function (value) {
       return this.parent.password == value;
-    }),
+    })
+    .min(8, 'A senha deve ter no mínimo 8 caracteres'),
 });
 
 export interface RegisterFormValues {

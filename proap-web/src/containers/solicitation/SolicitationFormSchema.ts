@@ -2,7 +2,9 @@ import * as Yup from 'yup';
 import { AssistanceRequest } from '../../types';
 
 export const solicitantionDataFormSchema = Yup.object({
-  tituloPublicacao: Yup.string().required('Campo obrigatório'),
+  tituloPublicacao: Yup.string()
+    .required('Campo obrigatório')
+    .max(255, 'O título deve ter no máximo 255 caracteres'),
   coautores: Yup.array().of(Yup.string()),
   algumCoautorPGCOMP: Yup.boolean().when('coautores', {
     is: (coautores: string[]) => coautores && coautores.length > 0,
@@ -60,7 +62,9 @@ export const eventDetailFormSchema = Yup.object({
     then: () => Yup.number().required('Campo obrigatório'),
     otherwise: () => Yup.number().notRequired(),
   }),
-  linkHomePageEvento: Yup.string().url('Insira uma URL válida'),
+  linkHomePageEvento: Yup.string()
+    .url('Insira uma URL válida')
+    .max(255, 'O link deve ter no máximo 255 caracteres'),
   cidade: Yup.string().required('Campo obrigatório'),
   pais: Yup.string().required('Campo obrigatório'),
   qualis: Yup.string().required('Campo obrigatório'),
@@ -74,6 +78,7 @@ export const financialDetailFormSchema = Yup.object({
     .required('Campo obrigatório'),
   linkPaginaInscricao: Yup.string()
     .url('Insira uma URL válida')
+    .max(255, 'O link deve ter no máximo 255 caracteres')
     .required('Campo obrigatório'),
   quantidadeDiariasSolicitadas: Yup.number()
     .min(0, 'Insira um valor válido')

@@ -10,7 +10,6 @@ import {
   Box,
   Stack,
   Alert,
-  Link,
   RadioGroup,
   FormControlLabel,
   Radio,
@@ -29,6 +28,13 @@ import {
   InputAdornment,
   CircularProgress,
   IconButton,
+  Paper,
+  Divider,
+  alpha,
+  useTheme,
+  useMediaQuery,
+  Grid,
+  TextField,
 } from '@mui/material';
 import Select from '@mui/material/Select';
 import {
@@ -36,12 +42,25 @@ import {
   StyledIconButton,
   StyledTextField,
 } from '../SolicitationFormContainer.style';
-import { Info, Refresh } from '@mui/icons-material';
+import {
+  Info,
+  Refresh,
+  AttachMoney,
+  Language,
+  HotelOutlined,
+  CurrencyExchange,
+  Help,
+  Flight,
+  Receipt,
+  Calculate,
+  Public,
+} from '@mui/icons-material';
 import useCalculeTotal from '../../../hooks/solicitation/useCalculeTotal';
 import { useSysConfig } from '../../../hooks/admin/useSysConfig';
 import TextPreviewAlert from '../../../components/FormFields/TextPreviewAlert';
 import useDollarRate from '../../../hooks/useDollarRate';
 import Toast from '../../../helpers/notification';
+
 export default function FinancialDetailFormContainer() {
   const { config } = useSysConfig();
   const { dollarRate, errorDollarRate, loadingDollarRate, reloadDollarRate } =
@@ -49,6 +68,8 @@ export default function FinancialDetailFormContainer() {
   const { values, errors, touched, setFieldValue } =
     useFormikContext<InitialSolicitationFormValues>();
   const [showCountryGroupsDialog, setShowCountryGroupsDialog] = useState(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   useCalculeTotal();
 
@@ -82,402 +103,768 @@ export default function FinancialDetailFormContainer() {
   };
 
   return (
-    <Box
+    <Paper
+      elevation={0}
       sx={{
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        marginTop: 2,
-        gap: 2,
+        p: 3,
+        mt: 2,
+        borderRadius: 2,
+        border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+        background: alpha(theme.palette.background.paper, 0.8),
       }}
     >
-      <Stack direction={'row'}>
-        <Field
-          as={StyledTextField}
-          label="Valor da inscrição/solicitação (R$)"
-          sx={{ width: '200px' }}
-          name="valorInscricao"
-          type="number"
-          InputProps={{
-            inputProps: { min: 0, step: 0.01 },
-          }}
-          error={Boolean(touched.valorInscricao && errors.valorInscricao)}
-          helperText={touched.valorInscricao && errors.valorInscricao}
-          required
-        />
-        <Tooltip
-          sx={{ position: 'relative', top: '10px' }}
-          title="Informe o valor conforme seu extrato bancário"
-        >
-          <StyledIconButton>
-            <Info />
-          </StyledIconButton>
-        </Tooltip>
-      </Stack>
-      <TextPreviewAlert
-        value={config.textoAvisoValorInscricao}
-        links={config.resourceLinks?.filter(
-          (link) => link.fieldName == 'textoAvisoValorInscricao',
-        )}
-        alertSeverity="warning"
-      />
-      <Stack direction={'row'}>
-        <Field
-          required
-          as={StyledTextField}
-          sx={{ width: '100%' }}
-          label="Link da página da inscrição do evento (ou solicitação)"
-          name="linkPaginaInscricao"
-          error={Boolean(
-            touched.linkPaginaInscricao && errors.linkPaginaInscricao,
-          )}
-          helperText={touched.linkPaginaInscricao && errors.linkPaginaInscricao}
-        />
-        <Tooltip
-          sx={{ position: 'relative', top: '10px' }}
-          title="Deve conter o valor da inscrição solicitado"
-        >
-          <StyledIconButton>
-            <Info />
-          </StyledIconButton>
-        </Tooltip>
-      </Stack>
-      <FormControl
-        error={Boolean(
-          touched.quantidadeDiariasSolicitadas &&
-            errors.quantidadeDiariasSolicitadas,
-        )}
+      <Typography
+        variant="h6"
+        color="primary"
+        fontWeight="medium"
+        gutterBottom
+        sx={{ mb: 2, display: 'flex', alignItems: 'center' }}
       >
-        <StyledFormLabel required>
-          Quantas diárias deseja solicitar?
-        </StyledFormLabel>
-        <Stack direction="row">
-          <Stack>
-            <Field
-              as={Select}
-              sx={{ maxWidth: 100 }}
-              displayEmpty
-              inputProps={{ 'aria-label': 'Without label' }}
-              name="quantidadeDiariasSolicitadas"
-              defaultValue={0}
+        <AttachMoney sx={{ mr: 1 }} /> Detalhes Financeiros
+      </Typography>
+      <Divider sx={{ mb: 3 }} />
+
+      <Box
+        sx={{
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 3,
+        }}
+      >
+        {/* Valor da inscrição */}
+        <Paper
+          elevation={0}
+          sx={{
+            p: 2,
+            borderRadius: 1,
+            border: `1px solid ${alpha(theme.palette.grey[300], 0.8)}`,
+          }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+            <Receipt color="action" fontSize="small" sx={{ mr: 1 }} />
+            <StyledFormLabel
+              sx={{
+                fontSize: '0.95rem',
+                fontWeight: 'medium',
+                color: 'text.primary',
+                m: 0,
+              }}
             >
-              <MenuItem key={0} value={0}>
-                0
-              </MenuItem>
-              {config.numMaxDiarias &&
-                Array.from({ length: config.numMaxDiarias }, (_, i) => (
-                  <MenuItem key={i + 1} value={i + 1}>
-                    {i + 1}
-                  </MenuItem>
-                ))}
-            </Field>
+              Informações de Inscrição
+            </StyledFormLabel>
+          </Box>
+
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={6} md={4}>
+              <Field name="valorInscricao">
+                {({ field }: any) => (
+                  <StyledTextField
+                    {...field}
+                    label="Valor da inscrição/solicitação (R$)"
+                    type="number"
+                    InputProps={{
+                      inputProps: { min: 0, step: 0.01 },
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <AttachMoney color="action" />
+                        </InputAdornment>
+                      ),
+                    }}
+                    error={Boolean(
+                      touched.valorInscricao && errors.valorInscricao,
+                    )}
+                    helperText={touched.valorInscricao && errors.valorInscricao}
+                    required
+                    fullWidth
+                    sx={{ background: 'white' }}
+                  />
+                )}
+              </Field>
+
+              {config.textoAvisoValorInscricao && (
+                <TextPreviewAlert
+                  value={config.textoAvisoValorInscricao}
+                  links={config.resourceLinks?.filter(
+                    (link) => link.fieldName == 'textoAvisoValorInscricao',
+                  )}
+                  alertSeverity="warning"
+                />
+              )}
+            </Grid>
+
+            <Grid item xs={12} sm={6} md={8}>
+              <Field name="linkPaginaInscricao">
+                {({ field }: any) => (
+                  <Box sx={{ position: 'relative' }}>
+                    <StyledTextField
+                      {...field}
+                      label="Link da página da inscrição do evento"
+                      error={Boolean(
+                        touched.linkPaginaInscricao &&
+                          errors.linkPaginaInscricao,
+                      )}
+                      helperText={
+                        touched.linkPaginaInscricao &&
+                        errors.linkPaginaInscricao
+                      }
+                      fullWidth
+                      required
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <Language color="action" />
+                          </InputAdornment>
+                        ),
+                      }}
+                      sx={{ background: 'white' }}
+                      placeholder="https://exemplo.com.br/inscricao"
+                    />
+
+                    <Tooltip
+                      title="Deve conter o valor da inscrição solicitado"
+                      placement="top"
+                    >
+                      <IconButton
+                        size="small"
+                        sx={{ position: 'absolute', right: -10, top: 14 }}
+                        color="primary"
+                      >
+                        <Info fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                  </Box>
+                )}
+              </Field>
+            </Grid>
+          </Grid>
+        </Paper>
+
+        {/* Diárias */}
+        <Paper
+          elevation={0}
+          sx={{
+            p: 2,
+            borderRadius: 1,
+            bgcolor: alpha(theme.palette.primary.main, 0.04),
+          }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+            <HotelOutlined color="action" fontSize="small" sx={{ mr: 1 }} />
+            <StyledFormLabel
+              required
+              sx={{
+                fontSize: '0.95rem',
+                fontWeight: 'medium',
+                color: 'text.primary',
+                m: 0,
+              }}
+            >
+              Diárias
+            </StyledFormLabel>
+            <Tooltip title="Informe a quantidade de diárias que você necessita para participar do evento">
+              <IconButton size="small" sx={{ ml: 1 }}>
+                <Help fontSize="small" color="action" />
+              </IconButton>
+            </Tooltip>
+          </Box>
+
+          <Box sx={{ mb: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
+              <Typography
+                variant="body2"
+                fontWeight="medium"
+                color="text.secondary"
+              >
+                Quantas diárias deseja solicitar?
+              </Typography>
+
+              <Field name="quantidadeDiariasSolicitadas">
+                {({ field }: any) => (
+                  <Select
+                    {...field}
+                    displayEmpty
+                    sx={{ minWidth: 80, bgcolor: 'white', ml: 1 }}
+                    size="small"
+                    error={Boolean(
+                      touched.quantidadeDiariasSolicitadas &&
+                        errors.quantidadeDiariasSolicitadas,
+                    )}
+                    defaultValue={0}
+                  >
+                    <MenuItem key={0} value={0}>
+                      0
+                    </MenuItem>
+                    {config.numMaxDiarias &&
+                      Array.from({ length: config.numMaxDiarias }, (_, i) => (
+                        <MenuItem key={i + 1} value={i + 1}>
+                          {i + 1}
+                        </MenuItem>
+                      ))}
+                  </Select>
+                )}
+              </Field>
+            </Box>
+
             {touched.quantidadeDiariasSolicitadas &&
               errors.quantidadeDiariasSolicitadas && (
-                <FormHelperText>
+                <FormHelperText error sx={{ ml: 2 }}>
                   {errors.quantidadeDiariasSolicitadas}
                 </FormHelperText>
               )}
-          </Stack>
-          <Tooltip
-            sx={{ position: 'relative' }}
-            title="Caso não se aplique, informe 0 (zero)"
-          >
-            <StyledIconButton>
-              <Info />
-            </StyledIconButton>
-          </Tooltip>
-        </Stack>
-      </FormControl>
-      <TextPreviewAlert
-        value={config.textoInformacaoQtdDiarias}
-        links={config.resourceLinks?.filter(
-          (link) => link.fieldName == 'textoInformacaoQtdDiarias',
-        )}
-        alertSeverity="info"
-      />
-      {values.quantidadeDiariasSolicitadas > 0 && (
-        <Stack gap={2}>
-          <FormControl
-            error={Boolean(touched.valorDiaria && errors.valorDiaria)}
-          >
-            <StyledFormLabel>Informe o valor da sua diária</StyledFormLabel>
-            <Stack direction={'row'} gap={1}>
-              <Field
-                as={Select}
-                sx={{ width: '80px' }}
-                displayEmpty
-                inputProps={{ 'aria-label': 'Without label' }}
-                name="isDolar"
-                defaultValue={false}
-                onChange={(e: any) => {
-                  setFieldValue('isDolar', e.target.value === 'true');
-                }}
-              >
-                <MenuItem value={'false'}>BRL</MenuItem>
-                <MenuItem value={'true'}>USD</MenuItem>
-              </Field>
 
-              <Field
-                as={StyledTextField}
-                sx={{ margin: 0 }}
-                name="valorDiaria"
-                disabled
-                type="number"
-                InputProps={{
-                  inputProps: { min: 0, step: 0.01 },
-                }}
-                error={Boolean(touched.valorDiaria && errors.valorDiaria)}
-                required
+            {config.textoInformacaoQtdDiarias && (
+              <TextPreviewAlert
+                value={config.textoInformacaoQtdDiarias}
+                links={config.resourceLinks?.filter(
+                  (link) => link.fieldName == 'textoInformacaoQtdDiarias',
+                )}
+                alertSeverity="info"
               />
-              <Tooltip
-                sx={{ position: 'relative' }}
-                title="O valor é referente a uma diária"
-              >
-                <StyledIconButton sx={{ padding: 0 }}>
-                  <Info />
-                </StyledIconButton>
-              </Tooltip>
-            </Stack>
-            {touched.valorDiaria && errors.valorDiaria && (
-              <FormHelperText sx={{ color: 'red' }}>
-                {errors.valorDiaria}
-              </FormHelperText>
             )}
-            {touched.isDolar && errors.isDolar && (
-              <FormHelperText>{errors.isDolar}</FormHelperText>
-            )}
-          </FormControl>
-          <TextPreviewAlert
-            value={config.textoInformacaoValorDiaria}
-            links={config.resourceLinks?.filter(
-              (link) => link.fieldName == 'textoInformacaoValorDiaria',
-            )}
-            alertSeverity="info"
-          />
-        </Stack>
-      )}
-
-      {values.isDolar && (
-        <FormControl
-          error={Boolean(touched.countryGroup && errors.countryGroup)}
-        >
-          <StyledFormLabel>
-            Selecione o grupo de país de destino
-          </StyledFormLabel>
-          <Box sx={{ mb: 2 }}>
-            <Alert
-              severity={values.countryGroup ? 'success' : 'error'}
-              sx={{ maxWidth: '800px', mb: 1 }}
-            >
-              <Typography variant="body2">
-                Consulte a tabela de auxílio diário no exterior para identificar
-                o grupo do país de destino
-              </Typography>
-              <Button
-                variant="text"
-                size="small"
-                onClick={() => {
-                  setShowCountryGroupsDialog(true);
-                }}
-              >
-                Ver tabela de países
-              </Button>
-            </Alert>
           </Box>
-          <Field
-            as={Select}
-            sx={{ width: 200 }}
-            displayEmpty
-            name="countryGroup"
-            onChange={(e: any) => {
-              const selectedGroup = config.countryGroups?.find(
-                (group) => group.groupName === e.target.value,
-              );
-              if (selectedGroup) {
-                setFieldValue('valorDiaria', selectedGroup.valueUSD);
-              }
-              setFieldValue('countryGroup', e.target.value);
+
+          {values.quantidadeDiariasSolicitadas > 0 && (
+            <Box
+              sx={{
+                p: 2,
+                borderRadius: 1,
+                background: 'white',
+                border: `1px solid ${alpha(theme.palette.grey[300], 0.8)}`,
+              }}
+            >
+              <Grid container spacing={2} alignItems="center">
+                <Grid item xs={12} sm={6}>
+                  <FormControl
+                    error={Boolean(touched.valorDiaria && errors.valorDiaria)}
+                    fullWidth
+                  >
+                    <Typography
+                      variant="body2"
+                      fontWeight="medium"
+                      color="text.secondary"
+                      sx={{ mb: 1 }}
+                    >
+                      Moeda / Valor da diária
+                    </Typography>
+
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Field name="isDolar">
+                        {({ field }: any) => (
+                          <Select
+                            {...field}
+                            displayEmpty
+                            sx={{ width: '80px', bgcolor: 'white' }}
+                            size="small"
+                            defaultValue={false}
+                            onChange={(e: any) => {
+                              setFieldValue(
+                                'isDolar',
+                                e.target.value === 'true',
+                              );
+                            }}
+                          >
+                            <MenuItem value={'false'}>BRL</MenuItem>
+                            <MenuItem value={'true'}>USD</MenuItem>
+                          </Select>
+                        )}
+                      </Field>
+
+                      <Field name="valorDiaria">
+                        {({ field }: any) => (
+                          <StyledTextField
+                            {...field}
+                            disabled
+                            type="number"
+                            InputProps={{
+                              inputProps: { min: 0, step: 0.01 },
+                              startAdornment: (
+                                <InputAdornment position="start">
+                                  {values.isDolar ? '$' : 'R$'}
+                                </InputAdornment>
+                              ),
+                            }}
+                            error={Boolean(
+                              touched.valorDiaria && errors.valorDiaria,
+                            )}
+                            required
+                            size="small"
+                            sx={{
+                              background: alpha(theme.palette.grey[100], 0.5),
+                            }}
+                          />
+                        )}
+                      </Field>
+
+                      <Tooltip title="O valor é referente a uma diária">
+                        <IconButton size="small">
+                          <Info fontSize="small" color="action" />
+                        </IconButton>
+                      </Tooltip>
+                    </Box>
+
+                    {touched.valorDiaria && errors.valorDiaria && (
+                      <FormHelperText error>
+                        {errors.valorDiaria}
+                      </FormHelperText>
+                    )}
+
+                    {touched.isDolar && errors.isDolar && (
+                      <FormHelperText error>{errors.isDolar}</FormHelperText>
+                    )}
+                  </FormControl>
+
+                  {config.textoInformacaoValorDiaria && (
+                    <TextPreviewAlert
+                      value={config.textoInformacaoValorDiaria}
+                      links={config.resourceLinks?.filter(
+                        (link) =>
+                          link.fieldName == 'textoInformacaoValorDiaria',
+                      )}
+                      alertSeverity="info"
+                    />
+                  )}
+                </Grid>
+
+                {values.quantidadeDiariasSolicitadas > 1 && (
+                  <Grid item xs={12} sm={6}>
+                    <FormControl
+                      error={Boolean(
+                        touched.ultimaDiariaIntegral &&
+                          errors.ultimaDiariaIntegral,
+                      )}
+                      fullWidth
+                    >
+                      <Typography
+                        variant="body2"
+                        fontWeight="medium"
+                        color="text.secondary"
+                        sx={{ mb: 1 }}
+                      >
+                        Deseja que a última diária seja no valor integral?
+                      </Typography>
+
+                      <Field name="ultimaDiariaIntegral">
+                        {({ field }: { field: any }) => (
+                          <RadioGroup
+                            {...field}
+                            row
+                            value={field.value}
+                            onChange={(event) => {
+                              setFieldValue(
+                                field.name,
+                                event.target.value === 'true',
+                              );
+                            }}
+                          >
+                            <FormControlLabel
+                              value={true}
+                              control={<Radio color="primary" />}
+                              label={
+                                <Typography variant="body2">Sim</Typography>
+                              }
+                              sx={{ mr: 3 }}
+                            />
+                            <FormControlLabel
+                              value={false}
+                              control={<Radio color="primary" />}
+                              label={
+                                <Typography variant="body2">Não</Typography>
+                              }
+                            />
+                          </RadioGroup>
+                        )}
+                      </Field>
+
+                      {touched.ultimaDiariaIntegral &&
+                        errors.ultimaDiariaIntegral && (
+                          <FormHelperText>
+                            {errors.ultimaDiariaIntegral}
+                          </FormHelperText>
+                        )}
+                    </FormControl>
+                  </Grid>
+                )}
+              </Grid>
+            </Box>
+          )}
+        </Paper>
+
+        {/* País de destino para USD */}
+        {values.isDolar && (
+          <Paper
+            elevation={0}
+            sx={{
+              p: 2,
+              borderRadius: 1,
+              border: `1px solid ${alpha(theme.palette.grey[300], 0.8)}`,
             }}
           >
-            <MenuItem value="" disabled>
-              Selecione o grupo
-            </MenuItem>
-            {config.countryGroups?.map((group) => (
-              <MenuItem key={group.groupName} value={group.groupName}>
-                Grupo {group.groupName} - ${group.valueUSD}
-              </MenuItem>
-            ))}
-          </Field>
-          {touched.countryGroup && errors.countryGroup && (
-            <FormHelperText>{errors.countryGroup}</FormHelperText>
-          )}
-        </FormControl>
-      )}
-
-      {values.isDolar && (
-        <Stack direction={'row'}>
-          <Box sx={{ position: 'relative' }}>
-            <Stack direction={'row'}>
-              <Field
-                as={StyledTextField}
-                label="Valor da cotação do dólar americano (USD)"
-                sx={{ width: '200px' }}
-                name="cotacaoMoeda"
-                disabled
-                type="number"
-                InputProps={{
-                  inputProps: { min: 0, step: 0.01 },
-                  endAdornment: loadingDollarRate ? (
-                    <InputAdornment position="end">
-                      <CircularProgress size={20} />
-                    </InputAdornment>
-                  ) : null,
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+              <Public color="action" fontSize="small" sx={{ mr: 1 }} />
+              <StyledFormLabel
+                sx={{
+                  fontSize: '0.95rem',
+                  fontWeight: 'medium',
+                  color: 'text.primary',
+                  m: 0,
                 }}
-                error={Boolean(touched.cotacaoMoeda && errors.cotacaoMoeda)}
-                helperText={
-                  touched.cotacaoMoeda && errors.cotacaoMoeda
-                    ? errors.cotacaoMoeda
-                    : undefined
-                }
-                required
-              />
-              <IconButton
-                onClick={handleReload}
-                size="small"
-                sx={{ ml: 1, position: 'relative', top: '10px' }}
-                disabled={loadingDollarRate}
               >
-                {loadingDollarRate ? (
-                  <CircularProgress size={16} />
-                ) : (
-                  <Refresh fontSize="small" />
-                )}
-              </IconButton>
-            </Stack>
-            <Box sx={{ display: 'flex', alignItems: 'center', mt: 0.5, ml: 1 }}>
-              <Typography variant="caption" color="text.secondary">
-                {!loadingDollarRate && dollarRate?.updatedAt
-                  ? `Atualizado em ${new Date(parseInt(dollarRate.updatedAt)).toLocaleString()}`
-                  : ''}
-              </Typography>
+                Grupo de país de destino
+              </StyledFormLabel>
             </Box>
-          </Box>
-        </Stack>
-      )}
-      {values.quantidadeDiariasSolicitadas > 1 && (
-        <FormControl
-          error={Boolean(
-            touched.ultimaDiariaIntegral && errors.ultimaDiariaIntegral,
-          )}
-        >
-          <StyledFormLabel required>
-            Deseja que a última diária seja no valor integral?
-          </StyledFormLabel>
-          <Field name="ultimaDiariaIntegral">
-            {({ field }: { field: any }) => (
-              <RadioGroup
-                {...field}
-                row
-                value={field.value}
-                onChange={(event) => {
-                  setFieldValue(field.name, event.target.value === 'true');
+
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={6}>
+                <FormControl
+                  error={Boolean(touched.countryGroup && errors.countryGroup)}
+                  fullWidth
+                >
+                  <Alert
+                    severity={values.countryGroup ? 'success' : 'warning'}
+                    sx={{ mb: 2, borderRadius: 1 }}
+                    icon={values.countryGroup ? undefined : <Info />}
+                  >
+                    <Typography variant="body2">
+                      Consulte a tabela de auxílio diário no exterior para
+                      identificar o grupo do país de destino
+                    </Typography>
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      onClick={() => {
+                        setShowCountryGroupsDialog(true);
+                      }}
+                      sx={{ mt: 1, borderRadius: 1 }}
+                    >
+                      Ver tabela de países
+                    </Button>
+                  </Alert>
+
+                  <Field name="countryGroup">
+                    {({ field }: any) => (
+                      <Select
+                        {...field}
+                        displayEmpty
+                        sx={{ width: '100%', bgcolor: 'white' }}
+                        error={touched.countryGroup && !!errors.countryGroup}
+                        onChange={(e: any) => {
+                          const selectedGroup = config.countryGroups?.find(
+                            (group) => group.groupName === e.target.value,
+                          );
+                          if (selectedGroup) {
+                            setFieldValue(
+                              'valorDiaria',
+                              selectedGroup.valueUSD,
+                            );
+                          }
+                          setFieldValue('countryGroup', e.target.value);
+                        }}
+                      >
+                        <MenuItem value="" disabled>
+                          Selecione o grupo
+                        </MenuItem>
+                        {config.countryGroups?.map((group) => (
+                          <MenuItem
+                            key={group.groupName}
+                            value={group.groupName}
+                          >
+                            Grupo {group.groupName} - ${group.valueUSD}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    )}
+                  </Field>
+
+                  {touched.countryGroup && errors.countryGroup && (
+                    <FormHelperText error>{errors.countryGroup}</FormHelperText>
+                  )}
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <Box sx={{ position: 'relative' }}>
+                  <Typography
+                    variant="body2"
+                    fontWeight="medium"
+                    color="text.secondary"
+                    sx={{ mb: 1 }}
+                  >
+                    Cotação do dólar americano (USD)
+                  </Typography>
+
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Field name="cotacaoMoeda">
+                      {({ field }: any) => (
+                        <StyledTextField
+                          {...field}
+                          disabled
+                          type="number"
+                          fullWidth
+                          InputProps={{
+                            inputProps: { min: 0, step: 0.01 },
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                <CurrencyExchange
+                                  color="action"
+                                  fontSize="small"
+                                />
+                              </InputAdornment>
+                            ),
+                            endAdornment: loadingDollarRate ? (
+                              <InputAdornment position="end">
+                                <CircularProgress size={20} />
+                              </InputAdornment>
+                            ) : null,
+                          }}
+                          error={Boolean(
+                            touched.cotacaoMoeda && errors.cotacaoMoeda,
+                          )}
+                          helperText={
+                            touched.cotacaoMoeda && errors.cotacaoMoeda
+                              ? errors.cotacaoMoeda
+                              : undefined
+                          }
+                          required
+                          sx={{
+                            background: alpha(theme.palette.grey[100], 0.5),
+                          }}
+                        />
+                      )}
+                    </Field>
+
+                    <IconButton
+                      onClick={handleReload}
+                      size="small"
+                      disabled={loadingDollarRate}
+                      sx={{
+                        bgcolor: alpha(theme.palette.primary.main, 0.1),
+                        '&:hover': {
+                          bgcolor: alpha(theme.palette.primary.main, 0.2),
+                        },
+                      }}
+                    >
+                      {loadingDollarRate ? (
+                        <CircularProgress size={16} />
+                      ) : (
+                        <Refresh fontSize="small" color="primary" />
+                      )}
+                    </IconButton>
+                  </Box>
+
+                  <Typography
+                    variant="caption"
+                    color="text.secondary"
+                    sx={{ mt: 0.5, ml: 1, display: 'block' }}
+                  >
+                    {!loadingDollarRate && dollarRate?.updatedAt
+                      ? `Atualizado em ${new Date(parseInt(dollarRate.updatedAt)).toLocaleString()}`
+                      : 'Cotação não disponível'}
+                  </Typography>
+                </Box>
+              </Grid>
+            </Grid>
+          </Paper>
+        )}
+
+        {/* Passagem aérea para docentes */}
+        {values.solicitanteDocente && (
+          <Paper
+            elevation={0}
+            sx={{
+              p: 2,
+              borderRadius: 1,
+              border: `1px solid ${alpha(theme.palette.grey[300], 0.8)}`,
+            }}
+          >
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+              <Flight color="action" fontSize="small" sx={{ mr: 1 }} />
+              <StyledFormLabel
+                sx={{
+                  fontSize: '0.95rem',
+                  fontWeight: 'medium',
+                  color: 'text.primary',
+                  m: 0,
                 }}
-                aria-labelledby="demo-row-radio-buttons-group-label"
               >
-                <FormControlLabel
-                  value={true}
-                  control={<Radio />}
-                  label="Sim"
-                />
-                <FormControlLabel
-                  value={false}
-                  control={<Radio />}
-                  label="Não"
-                />
-              </RadioGroup>
-            )}
-          </Field>
-          {touched.ultimaDiariaIntegral && errors.ultimaDiariaIntegral && (
-            <FormHelperText>{errors.ultimaDiariaIntegral}</FormHelperText>
-          )}
-        </FormControl>
-      )}
-      {values.solicitanteDocente && (
-        <Stack>
-          <Stack direction={'row'}>
-            <Field
-              as={StyledTextField}
-              label="Informe o valor aproximado da passagem aérea (R$)"
-              sx={{ width: '200px' }}
-              name="valorPassagem"
-              type="number"
-              InputProps={{
-                inputProps: { min: 0, step: 0.01 },
-              }}
-              error={Boolean(touched.valorPassagem && errors.valorPassagem)}
-              helperText={touched.valorPassagem && errors.valorPassagem}
-              required
-            />
-            <Tooltip
-              sx={{ position: 'relative', top: '10px' }}
-              title="Informe 0 se não estiver solicitando apoio de passagem aérea."
+                Passagem Aérea
+              </StyledFormLabel>
+              <Tooltip title="Somente docentes podem solicitar passagem aérea">
+                <IconButton size="small" sx={{ ml: 1 }}>
+                  <Help fontSize="small" color="action" />
+                </IconButton>
+              </Tooltip>
+            </Box>
+
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={6}>
+                <Field name="valorPassagem">
+                  {({ field }: any) => (
+                    <StyledTextField
+                      {...field}
+                      label="Valor aproximado da passagem aérea (R$)"
+                      type="number"
+                      InputProps={{
+                        inputProps: { min: 0, step: 0.01 },
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <AttachMoney color="action" />
+                          </InputAdornment>
+                        ),
+                      }}
+                      error={Boolean(
+                        touched.valorPassagem && errors.valorPassagem,
+                      )}
+                      helperText={touched.valorPassagem && errors.valorPassagem}
+                      required
+                      fullWidth
+                      sx={{ background: 'white' }}
+                      placeholder="0.00"
+                    />
+                  )}
+                </Field>
+
+                {config.textoInformacaoValorPassagem && (
+                  <TextPreviewAlert
+                    value={config.textoInformacaoValorPassagem}
+                    links={config.resourceLinks?.filter(
+                      (link) =>
+                        link.fieldName == 'textoInformacaoValorPassagem',
+                    )}
+                    alertSeverity="info"
+                  />
+                )}
+              </Grid>
+            </Grid>
+          </Paper>
+        )}
+
+        {/* Valor total */}
+        <Paper
+          elevation={0}
+          sx={{
+            p: 2,
+            borderRadius: 1,
+            bgcolor: alpha(theme.palette.success.light, 0.1),
+            border: `1px solid ${alpha(theme.palette.success.main, 0.2)}`,
+          }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+            <Calculate color="success" fontSize="small" sx={{ mr: 1 }} />
+            <Typography
+              variant="subtitle1"
+              fontWeight="medium"
+              color="success.main"
             >
-              <StyledIconButton>
-                <Info />
-              </StyledIconButton>
-            </Tooltip>
-          </Stack>
-          <TextPreviewAlert
-            value={config.textoInformacaoValorPassagem}
-            links={config.resourceLinks?.filter(
-              (link) => link.fieldName == 'textoInformacaoValorPassagem',
-            )}
-            alertSeverity="info"
-          />
-        </Stack>
-      )}
+              Valor Total da Solicitação
+            </Typography>
+          </Box>
 
-      <Field
-        as={StyledTextField}
-        label="Valor total da solicitação (R$)"
-        sx={{ width: '200px' }}
-        disabled
-        value={values.valorTotal.toFixed(2)}
-        type="number"
-        InputProps={{
-          inputProps: { min: 0, step: 0.01 },
-        }}
-        required
-      />
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              bgcolor: 'white',
+              borderRadius: 1,
+              p: 2,
+              border: `1px solid ${alpha(theme.palette.success.main, 0.2)}`,
+            }}
+          >
+            <Typography variant="body1" sx={{ mr: 2, fontWeight: 'medium' }}>
+              Total:
+            </Typography>
 
+            <TextField
+              disabled
+              value={`R$ ${values.valorTotal.toFixed(2)}`}
+              variant="outlined"
+              size="medium"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <AttachMoney color="success" />
+                  </InputAdornment>
+                ),
+                readOnly: true,
+                sx: {
+                  fontWeight: 'bold',
+                  fontSize: '1.1rem',
+                  color: theme.palette.success.main,
+                  '& .MuiInputBase-input.Mui-disabled': {
+                    WebkitTextFillColor: theme.palette.success.main,
+                  },
+                },
+              }}
+              sx={{
+                width: '200px',
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor: alpha(theme.palette.success.main, 0.3),
+                  },
+                },
+              }}
+            />
+          </Box>
+        </Paper>
+      </Box>
+
+      {/* Dialog de grupos de países */}
       <Dialog
         open={showCountryGroupsDialog}
         onClose={() => setShowCountryGroupsDialog(false)}
         maxWidth="lg"
         fullWidth
       >
-        <DialogTitle>Tabela de Auxílio Diário no Exterior</DialogTitle>
+        <DialogTitle
+          sx={{
+            bgcolor: alpha(theme.palette.primary.main, 0.1),
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
+          <Public sx={{ mr: 1 }} />
+          Tabela de Auxílio Diário no Exterior
+        </DialogTitle>
+
         <DialogContent>
-          <TableContainer>
+          <TableContainer sx={{ mt: 2 }}>
             <Table>
               <TableHead>
-                <TableRow>
-                  <TableCell>Grupo</TableCell>
-                  <TableCell>Países</TableCell>
-                  <TableCell sx={{ minWidth: 150, textAlign: 'center' }}>
+                <TableRow
+                  sx={{ bgcolor: alpha(theme.palette.primary.main, 0.05) }}
+                >
+                  <TableCell sx={{ fontWeight: 'bold' }}>Grupo</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold' }}>Países</TableCell>
+                  <TableCell
+                    sx={{
+                      minWidth: 150,
+                      textAlign: 'center',
+                      fontWeight: 'bold',
+                    }}
+                  >
                     Valor Diário (USD)
                   </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {config.countryGroups?.map((group) => (
-                  <TableRow key={group.groupName}>
-                    <TableCell sx={{ textAlign: 'center' }}>
+                {config.countryGroups?.map((group, index) => (
+                  <TableRow
+                    key={group.groupName}
+                    sx={{
+                      bgcolor:
+                        index % 2 === 0
+                          ? 'white'
+                          : alpha(theme.palette.grey[100], 0.5),
+                    }}
+                  >
+                    <TableCell
+                      sx={{ textAlign: 'center', fontWeight: 'medium' }}
+                    >
                       {group.groupName}
                     </TableCell>
                     <TableCell>{group.countries.join(', ')}</TableCell>
-                    <TableCell sx={{ textAlign: 'center' }}>
-                      {group.valueUSD}
+                    <TableCell sx={{ textAlign: 'center', fontWeight: 'bold' }}>
+                      ${group.valueUSD}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -485,12 +872,17 @@ export default function FinancialDetailFormContainer() {
             </Table>
           </TableContainer>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setShowCountryGroupsDialog(false)}>
+
+        <DialogActions sx={{ p: 2 }}>
+          <Button
+            onClick={() => setShowCountryGroupsDialog(false)}
+            variant="contained"
+            color="primary"
+          >
             Fechar
           </Button>
         </DialogActions>
       </Dialog>
-    </Box>
+    </Paper>
   );
 }

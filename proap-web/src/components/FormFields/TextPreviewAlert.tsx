@@ -12,15 +12,21 @@ interface TextPreviewAlertProps {
   value: string;
   alertSeverity?: AlertColor;
   links?: UrlMapper[];
+  icon?: React.ReactNode;
 }
 
 export default function TextPreviewAlert({
   value,
   alertSeverity = 'warning',
   links = [],
+  icon,
 }: TextPreviewAlertProps) {
   return (
-    <Alert severity={alertSeverity} sx={{ maxWidth: '800px', mb: 1 }}>
+    <Alert
+      severity={alertSeverity}
+      sx={{ my: 1, fontSize: '0.8rem', borderRadius: 1 }}
+      icon={icon}
+    >
       {value}
       {links.length > 0 && (
         <Stack spacing={1} sx={{ mt: 1 }}>
