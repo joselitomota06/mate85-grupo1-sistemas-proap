@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -39,7 +40,7 @@ public class SystemConfigurationServiceTest {
         sampleConfig.setId(1L);
         sampleConfig.setQualisList(Arrays.asList("A1", "A2", "B1"));
         sampleConfig.setNumMaxDiarias(5);
-        sampleConfig.setValorDiariaBRL(320.0f);
+        sampleConfig.setValorDiariaBRL(BigDecimal.valueOf(320.0));
         sampleConfig.setSitePgcompURL("http://example.com/guia-qualis");
         sampleConfig.setResolucaoProapURL("http://example.com/resolucao-proap");
         sampleConfig.setTextoAvisoQualis("Aviso sobre Qualis");
@@ -60,7 +61,7 @@ public class SystemConfigurationServiceTest {
         assertEquals(1L, result.getId());
         assertEquals(Arrays.asList("A1", "A2", "B1"), result.getQualis());
         assertEquals(5, result.getNumMaxDiarias());
-        assertEquals(320.0f, result.getValorDiariaBRL());
+        assertEquals(BigDecimal.valueOf(320.0), result.getValorDiariaBRL());
     }
 
     @Test
@@ -92,7 +93,7 @@ public class SystemConfigurationServiceTest {
 
         SystemConfigurationDTO updateDTO = new SystemConfigurationDTO();
         updateDTO.setNumMaxDiarias(7);
-        updateDTO.setValorDiariaBRL(400.0f);
+        updateDTO.setValorDiariaBRL(BigDecimal.valueOf(400.0));
 
         // When
         SystemConfigurationDTO result = service.updateConfiguration(updateDTO);
@@ -115,7 +116,7 @@ public class SystemConfigurationServiceTest {
 
         SystemConfigurationDTO updateDTO = new SystemConfigurationDTO();
         updateDTO.setNumMaxDiarias(7);
-        updateDTO.setValorDiariaBRL(400.0f);
+        updateDTO.setValorDiariaBRL(BigDecimal.valueOf(400.0));
 
         // When
         SystemConfigurationDTO result = service.updateConfiguration(updateDTO);
@@ -124,7 +125,7 @@ public class SystemConfigurationServiceTest {
         assertNotNull(result);
         assertEquals(1L, result.getId());
         assertEquals(7, result.getNumMaxDiarias());
-        assertEquals(400.0f, result.getValorDiariaBRL());
+        assertEquals(BigDecimal.valueOf(400.0), result.getValorDiariaBRL());
     }
 
     @Test

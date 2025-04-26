@@ -1,5 +1,6 @@
 package br.ufba.proap.sysadminpanel.domain.dto;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class SystemConfigurationDTO {
     private String sitePgcompURL;
     private String resolucaoProapURL;
     private Integer numMaxDiarias;
-    private Float valorDiariaBRL;
+    private BigDecimal valorDiariaBRL;
     private String textoAvisoQualis;
     private String textoAvisoValorInscricao;
     private String textoInformacaoQtdDiarias;

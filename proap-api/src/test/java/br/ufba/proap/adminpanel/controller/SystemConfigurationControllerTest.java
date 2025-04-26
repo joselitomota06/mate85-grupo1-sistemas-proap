@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class SystemConfigurationControllerTest {
         sampleConfig.setId(1L);
         sampleConfig.setQualis(Arrays.asList("A1", "A2", "B1"));
         sampleConfig.setNumMaxDiarias(5);
-        sampleConfig.setValorDiariaBRL(320.0f);
+        sampleConfig.setValorDiariaBRL(BigDecimal.valueOf(320.0));
         sampleConfig.setSitePgcompURL("http://example.com/guia-qualis");
         sampleConfig.setResolucaoProapURL("http://example.com/resolucao-proap");
         sampleConfig.setTextoAvisoQualis("Aviso sobre Qualis");

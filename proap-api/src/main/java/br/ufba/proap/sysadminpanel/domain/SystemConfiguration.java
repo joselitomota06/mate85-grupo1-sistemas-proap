@@ -1,5 +1,6 @@
 package br.ufba.proap.sysadminpanel.domain;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,8 +50,8 @@ public class SystemConfiguration {
     @Column(nullable = true)
     private Integer numMaxDiarias;
 
-    @Column(nullable = true)
-    private Float valorDiariaBRL;
+    @Column(nullable = true, precision = 19, scale = 4)
+    private BigDecimal valorDiariaBRL;
 
     @Column(columnDefinition = "text", nullable = true)
     private String textoAvisoEnvioArquivoCarta;

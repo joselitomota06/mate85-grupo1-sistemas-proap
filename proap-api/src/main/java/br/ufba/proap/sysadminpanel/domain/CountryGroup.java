@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Getter
@@ -21,7 +22,8 @@ public class CountryGroup {
 
     private String groupName;
 
-    private Float valueUSD;
+    @Column(nullable = true, precision = 19, scale = 4)
+    private BigDecimal valueUSD;
 
     @Column(columnDefinition = "text")
     private String countries;
