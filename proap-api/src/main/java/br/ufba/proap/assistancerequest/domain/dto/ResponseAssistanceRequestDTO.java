@@ -1,5 +1,6 @@
 package br.ufba.proap.assistancerequest.domain.dto;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,15 +34,15 @@ public record ResponseAssistanceRequestDTO(
         String pais,
         String qualis,
         String modalidadeParticipacao,
-        Float valorInscricao,
+        BigDecimal valorInscricao,
         String linkPaginaInscricao,
         Integer quantidadeDiariasSolicitadas,
-        Float valorDiaria,
+        BigDecimal valorDiaria,
         Boolean ultimaDiariaIntegral,
         Boolean isDolar,
-        Float cotacaoMoeda,
-        Float valorPassagem,
-        Float valorTotal,
+        BigDecimal cotacaoMoeda,
+        BigDecimal valorPassagem,
+        BigDecimal valorTotal,
         String cartaAceite,
         String justificativa,
         Boolean aceiteFinal,
@@ -50,12 +51,12 @@ public record ResponseAssistanceRequestDTO(
         String numeroAta,
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy") LocalDate dataAvaliacaoProap,
         Integer numeroDiariasAprovadas,
-        Float valorAprovado,
+        BigDecimal valorAprovado,
         String observacao,
         String automaticDecText,
-        Float custoFinalCeapg,
+        BigDecimal custoFinalCeapg,
         String observacoesCeapg,
-        Float percentualOrcamentoAnual,
+        BigDecimal percentualOrcamentoAnual,
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy") LocalDateTime createdAt,
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy") LocalDateTime updatedAt) {
 

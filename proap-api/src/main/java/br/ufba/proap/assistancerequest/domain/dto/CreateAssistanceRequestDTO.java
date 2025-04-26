@@ -1,5 +1,6 @@
 package br.ufba.proap.assistancerequest.domain.dto;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -27,15 +28,15 @@ public record CreateAssistanceRequestDTO(
         String pais,
         String qualis,
         String modalidadeParticipacao,
-        Float valorInscricao,
+        BigDecimal valorInscricao,
         String linkPaginaInscricao,
         Integer quantidadeDiariasSolicitadas,
-        Float valorDiaria,
+        BigDecimal valorDiaria,
         Boolean ultimaDiariaIntegral,
         Boolean isDolar,
-        Float cotacaoMoeda,
-        Float valorPassagem,
-        Float valorTotal,
+        BigDecimal cotacaoMoeda,
+        BigDecimal valorPassagem,
+        BigDecimal valorTotal,
         String justificativa) {
 
     public static CreateAssistanceRequestDTO fromEntity(AssistanceRequest entity) {
