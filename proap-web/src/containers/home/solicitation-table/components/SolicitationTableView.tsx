@@ -61,8 +61,7 @@ const SolicitationTableView: React.FC<SolicitationTableViewProps> = ({
             sx={{
               '& th': {
                 fontWeight: 'bold',
-                backgroundColor: (theme) =>
-                  alpha(theme.palette.primary.main, 0.05),
+                backgroundColor: 'grey.50',
               },
             }}
           >

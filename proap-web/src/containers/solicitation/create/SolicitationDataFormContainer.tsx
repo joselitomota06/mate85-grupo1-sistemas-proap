@@ -393,44 +393,15 @@ export default function SolicitationDataFormContainer() {
               </FormHelperText>
             )}
           </FormControl>
+          {config.textoAvisoEnvioArquivoCarta && (
+            <TextPreviewAlert
+              value={config.textoAvisoEnvioArquivoCarta}
+              links={config.resourceLinks?.filter(
+                (link) => link.fieldName == 'textoAvisoEnvioArquivoCarta',
+              )}
+            />
+          )}
         </Paper>
-
-        {config.textoAvisoEnvioArquivoCarta && (
-          <Alert
-            severity="info"
-            sx={{
-              borderRadius: 1,
-              '& .MuiAlert-icon': {
-                alignItems: 'center',
-              },
-            }}
-          >
-            <Typography variant="body2">
-              {config.textoAvisoEnvioArquivoCarta}
-            </Typography>
-            {config.resourceLinks
-              ?.filter(
-                (link) => link.fieldName === 'textoAvisoEnvioArquivoCarta',
-              )
-              .map((link, index) => (
-                <Link
-                  key={index}
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener"
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    mt: 1,
-                    color: theme.palette.primary.main,
-                    fontWeight: 'medium',
-                  }}
-                >
-                  {link.url}
-                </Link>
-              ))}
-          </Alert>
-        )}
       </Box>
     </Paper>
   );

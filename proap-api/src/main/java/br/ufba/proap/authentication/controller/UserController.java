@@ -46,6 +46,10 @@ public class UserController {
 			logger.error(e.getMessage());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body(new StatusResponseDTO("Conta não criada", e.getMessage()));
+		} catch (ValidationException e) {
+			logger.error(e.getMessage());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(new StatusResponseDTO("Inválido", e.getMessage()));
 		}
 	}
 

@@ -12,8 +12,6 @@ import {
   Tooltip,
   MenuItem,
   Select,
-  Alert,
-  Link,
   Paper,
   Typography,
   Divider,
@@ -199,7 +197,7 @@ export default function EventDetailFormContainer() {
           </Grid>
 
           <Grid item xs={12} sm={6}>
-            <Box sx={{ position: 'relative' }}>
+            <Box sx={{ position: 'relative', display: 'flex' }}>
               <Field name="dataFim">
                 {({ field }: any) => (
                   <TextField
@@ -217,16 +215,12 @@ export default function EventDetailFormContainer() {
                         </InputAdornment>
                       ),
                     }}
-                    sx={{ background: 'white' }}
+                    sx={{ background: 'white', maxWidth: 'auto' }}
                   />
                 )}
               </Field>
               <Tooltip title="Se o evento for de um único dia, preencha a mesma data nos dois campos">
-                <IconButton
-                  size="small"
-                  sx={{ position: 'absolute', right: -10, top: 14 }}
-                  color="primary"
-                >
+                <IconButton size="small" sx={{ ml: 1, mt: 1 }} color="primary">
                   <Info fontSize="small" />
                 </IconButton>
               </Tooltip>
@@ -593,6 +587,21 @@ export default function EventDetailFormContainer() {
                 size="small"
               />
             )}
+
+            <TextPreviewAlert
+              value={config.textoInformacaoCalcularQualis}
+              links={config.resourceLinks?.filter(
+                (link) => link.fieldName == 'textoInformacaoCalcularQualis',
+              )}
+              alertSeverity="info"
+            />
+            <TextPreviewAlert
+              value={config.textoAvisoQualis}
+              links={config.resourceLinks?.filter(
+                (link) => link.fieldName == 'textoAvisoQualis',
+              )}
+              alertSeverity="warning"
+            />
           </Box>
         </Paper>
       </Box>

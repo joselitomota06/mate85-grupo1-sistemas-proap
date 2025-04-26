@@ -10,7 +10,6 @@ import {
   Box,
   Stack,
   Alert,
-  Link,
   RadioGroup,
   FormControlLabel,
   Radio,
@@ -184,12 +183,13 @@ export default function FinancialDetailFormContainer() {
               </Field>
 
               {config.textoAvisoValorInscricao && (
-                <Alert
-                  severity="warning"
-                  sx={{ mt: 1, fontSize: '0.8rem', borderRadius: 1 }}
-                >
-                  {config.textoAvisoValorInscricao}
-                </Alert>
+                <TextPreviewAlert
+                  value={config.textoAvisoValorInscricao}
+                  links={config.resourceLinks?.filter(
+                    (link) => link.fieldName == 'textoAvisoValorInscricao',
+                  )}
+                  alertSeverity="warning"
+                />
               )}
             </Grid>
 
@@ -314,12 +314,13 @@ export default function FinancialDetailFormContainer() {
               )}
 
             {config.textoInformacaoQtdDiarias && (
-              <Alert
-                severity="info"
-                sx={{ mt: 1, fontSize: '0.8rem', borderRadius: 1 }}
-              >
-                {config.textoInformacaoQtdDiarias}
-              </Alert>
+              <TextPreviewAlert
+                value={config.textoInformacaoQtdDiarias}
+                links={config.resourceLinks?.filter(
+                  (link) => link.fieldName == 'textoInformacaoQtdDiarias',
+                )}
+                alertSeverity="info"
+              />
             )}
           </Box>
 
@@ -414,12 +415,14 @@ export default function FinancialDetailFormContainer() {
                   </FormControl>
 
                   {config.textoInformacaoValorDiaria && (
-                    <Alert
-                      severity="info"
-                      sx={{ mt: 1, fontSize: '0.8rem', borderRadius: 1 }}
-                    >
-                      {config.textoInformacaoValorDiaria}
-                    </Alert>
+                    <TextPreviewAlert
+                      value={config.textoInformacaoValorDiaria}
+                      links={config.resourceLinks?.filter(
+                        (link) =>
+                          link.fieldName == 'textoInformacaoValorDiaria',
+                      )}
+                      alertSeverity="info"
+                    />
                   )}
                 </Grid>
 
@@ -722,13 +725,14 @@ export default function FinancialDetailFormContainer() {
                 </Field>
 
                 {config.textoInformacaoValorPassagem && (
-                  <Alert
-                    severity="info"
-                    sx={{ mt: 1, fontSize: '0.8rem', borderRadius: 1 }}
-                    icon={<Info fontSize="small" />}
-                  >
-                    {config.textoInformacaoValorPassagem}
-                  </Alert>
+                  <TextPreviewAlert
+                    value={config.textoInformacaoValorPassagem}
+                    links={config.resourceLinks?.filter(
+                      (link) =>
+                        link.fieldName == 'textoInformacaoValorPassagem',
+                    )}
+                    alertSeverity="info"
+                  />
                 )}
               </Grid>
             </Grid>
