@@ -8,7 +8,9 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import br.ufba.proap.mailsender.event.PasswordResetTokenEvent;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 public class EmailNotificationListener {
 
@@ -20,7 +22,7 @@ public class EmailNotificationListener {
 
     @EventListener
     public void handlePasswordResetEvent(PasswordResetTokenEvent event) {
-        System.out.println("Enviando Email de Recuperação de Senha");
+        log.info("Novo evento de Recuperação de Senha para {}", event.getEmail());
         String templateName = "password-reset";
         Map<String, Object> variables = Map.of(
                 "token", event.getToken(),
