@@ -1,212 +1,588 @@
 package br.ufba.proap.authentication.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import br.ufba.proap.authentication.domain.Perfil;
+import br.ufba.proap.authentication.domain.Permission;
 import br.ufba.proap.authentication.domain.User;
+import br.ufba.proap.authentication.domain.dto.UserUpdateDTO;
 import br.ufba.proap.authentication.repository.UserRepository;
+import br.ufba.proap.exception.DefaultProfileNotFoundException;
+import jakarta.validation.ValidationException;
 
-@Disabled
 class UserServiceTest {
 
-	private static final String NAME_PARAM = "Oracio Candido";
-	private static final String CPF_PARAM = "99999999999";
-	private static final String EMAIL_PARAM = "oracio@corp.com";
-	private static final String PASSWORD_PARAM = "123456";
-	private static final String PASSWOR_ENCODE_PARAM = "a54sa54";
-	private static final String REGISTRATION_PARAM = "1111111";
-	private static final String PHONE_PARAM = "7133333333";
+	private static final String NAME_PARAM = "João Silva";
+	private static final String CPF_PARAM = "12345678900";
+	private static final String EMAIL_PARAM = "joao.silva@example.com";
+	private static final String PASSWORD_PARAM = "senha12345";
+	private static final String PASSWORD_ENCODED = "$2a$10$abcdefghijklmnopqrstuv";
+	private static final String REGISTRATION_PARAM = "202301";
+	private static final String PHONE_PARAM = "71999998888";
+	private static final String ALT_PHONE_PARAM = "71999997777";
+	private static final Long USER_ID = 1L;
+	private static final Long PROFILE_ID = 2L;
 
 	@InjectMocks
-	private UserService service;
+	private UserService userService;
 
 	@Mock
-	private UserRepository repository;
+	private UserRepository userRepository;
+
+	@Mock
+	private PerfilService perfilService;
 
 	@Mock
 	private PasswordEncoder passwordEncoder;
 
 	@Mock
+	private UserRequestValidationService userRequestValidationService;
+
+	@Mock
 	private SecurityContext securityContext;
 
 	private User user;
-	private Optional<User> optionalUser;
-	private Authentication autheticatedUser;
+	private User adminUser;
+	private Perfil defaultPerfil;
+	private Perfil adminPerfil;
+	private Authentication authentication;
+	private UserUpdateDTO userUpdateDTO;
+	private List<User> userList;
 
 	@BeforeEach
-	void setUp() throws Exception {
+	void setUp() {
 		MockitoAnnotations.openMocks(this);
-		startUser();
-		starAuthentication();
-	}
-
-	@Test
-	void whenLoadUserByUsernameThenReturnAnUsernameNotFoundException() {
-		Mockito.when(repository.findByEmail(Mockito.anyString())).thenReturn(Optional.empty());
-
-		try {
-			service.loadUserByUsername(EMAIL_PARAM);
-		} catch (Exception e) {
-			assertEquals(UsernameNotFoundException.class, e.getClass());
-			assertEquals("Email user: " + EMAIL_PARAM + " not found", e.getMessage());
-		}
-
-	}
-
-	@Test
-	void whenLoadUserByUsernameThenReturnAnUserInstance() {
-		Mockito.when(repository.findByEmail(Mockito.anyString())).thenReturn(optionalUser);
-		UserDetails userByUsername = service.loadUserByUsername(EMAIL_PARAM);
-
-		assertNotNull(userByUsername);
-		assertEquals(User.class, userByUsername.getClass());
-		assertEquals(EMAIL_PARAM, userByUsername.getUsername());
-	}
-
-	@Test
-	void whenGetLoggedUserThenReturnAnUserInstance() {
-		Mockito.when(securityContext.getAuthentication()).thenReturn(autheticatedUser);
-		Mockito.when(repository.findByEmail(Mockito.anyString())).thenReturn(optionalUser);
 		SecurityContextHolder.setContext(securityContext);
 
-		User loggedUser = service.getLoggedUser();
-		assertNotNull(loggedUser);
-		assertEquals(User.class, loggedUser.getClass());
-		assertEquals(EMAIL_PARAM, loggedUser.getUsername());
+		setupUser();
+		setupAdminUser();
+		setupPerfis();
+		setupAuthentication();
+		setupUserUpdateDTO();
+		setupUserList();
 	}
 
 	@Test
-	@Disabled
-	void whenUpdateCustomerContactsThenReturnAnNotIllegalArgumentException() {
-		// Mockito.when(repository.findByEmailAndCPF(Mockito.anyString(),
-		// Mockito.anyString())).thenReturn(null);
+	void loadUserByUsername_WhenUserExists_ShouldReturnUser() {
+		when(userRepository.findByEmailWithPerfilAndPermissions(EMAIL_PARAM)).thenReturn(Optional.of(user));
 
-		// UpdatePasswordDTO updatePasswordDTO = new UpdatePasswordDTO();
-		// updatePasswordDTO.setCpf(CPF_PARAM);
-		// updatePasswordDTO.setEmail(EMAIL_PARAM);
-		// updatePasswordDTO.setPassword(PASSWORD_PARAM);
+		UserDetails result = userService.loadUserByUsername(EMAIL_PARAM);
 
-		// try {
-		// service.updateCustomerContacts(updatePasswordDTO);
-		// } catch (Exception e) {
-		// assertEquals(IllegalArgumentException.class, e.getClass());
-		// assertEquals("Algum parâmetro informado está incorreto. Favor verificar.",
-		// e.getMessage());
-		// }
-
+		assertNotNull(result);
+		assertEquals(user, result);
+		assertEquals(EMAIL_PARAM, result.getUsername());
+		verify(userRepository).findByEmailWithPerfilAndPermissions(EMAIL_PARAM);
 	}
 
 	@Test
-	@Disabled
-	void whenUpdateCustomerContactsAndPasswordIsNullThenReturnAnIllegalArgumentException() {
-		// Mockito.when(repository.findByEmailAndCPF(Mockito.anyString(),
-		// Mockito.anyString())).thenReturn(null);
+	void loadUserByUsername_WhenUserDoesNotExist_ShouldThrowException() {
+		when(userRepository.findByEmailWithPerfilAndPermissions(EMAIL_PARAM)).thenReturn(Optional.empty());
 
-		// UpdatePasswordDTO updatePasswordDTO = new UpdatePasswordDTO();
-		// updatePasswordDTO.setCpf(CPF_PARAM);
-		// updatePasswordDTO.setEmail(EMAIL_PARAM);
-		// updatePasswordDTO.setPassword(null);
+		UsernameNotFoundException exception = assertThrows(UsernameNotFoundException.class,
+				() -> userService.loadUserByUsername(EMAIL_PARAM));
 
-		// try {
-		// service.updateCustomerContacts(updatePasswordDTO);
-		// } catch (Exception e) {
-		// assertEquals(IllegalArgumentException.class, e.getClass());
-		// assertEquals("Algum parâmetro informado está incorreto. Favor verificar.",
-		// e.getMessage());
-		// }
-
+		assertEquals("Email user: " + EMAIL_PARAM + " not found", exception.getMessage());
+		verify(userRepository).findByEmailWithPerfilAndPermissions(EMAIL_PARAM);
 	}
 
 	@Test
-	@Disabled
-	void whenUpdateCustomerContactsThenReturnAnUserInstance() {
-		// Mockito.when(repository.findByEmailAndCPF(Mockito.anyString(),
-		// Mockito.anyString())).thenReturn(user);
-		// Mockito.when(passwordEncoder.encode(Mockito.anyString())).thenReturn(PASSWOR_ENCODE_PARAM);
-		// Mockito.when(repository.save(Mockito.any())).thenReturn(user);
+	void getLoggedUser_WhenPrincipalIsUserDetails_ShouldReturnLoggedUser() {
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(authentication.getPrincipal()).thenReturn(user);
+		when(userRepository.findByEmailWithPerfilAndPermissions(EMAIL_PARAM)).thenReturn(Optional.of(user));
 
-		// UpdatePasswordDTO updatePasswordDTO = new UpdatePasswordDTO();
-		// updatePasswordDTO.setCpf(CPF_PARAM);
-		// updatePasswordDTO.setEmail(EMAIL_PARAM);
-		// updatePasswordDTO.setPassword(PASSWORD_PARAM);
+		User result = userService.getLoggedUser();
 
-		// User updateCustomerContacts =
-		// service.updateCustomerContacts(updatePasswordDTO);
-
-		// assertNotNull(updateCustomerContacts);
-		// assertEquals(User.class, updateCustomerContacts.getClass());
-		// assertEquals(EMAIL_PARAM, updateCustomerContacts.getUsername());
-		// assertEquals(PASSWOR_ENCODE_PARAM, updateCustomerContacts.getPassword());
+		assertNotNull(result);
+		assertEquals(user, result);
+		verify(securityContext).getAuthentication();
+		verify(authentication).getPrincipal();
 	}
 
-	private void startUser() {
+	@Test
+	void getLoggedUser_WhenPrincipalIsString_ShouldReturnLoggedUser() {
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(authentication.getPrincipal()).thenReturn(EMAIL_PARAM);
+		when(userRepository.findByEmailWithPerfilAndPermissions(EMAIL_PARAM)).thenReturn(Optional.of(user));
+
+		User result = userService.getLoggedUser();
+
+		assertNotNull(result);
+		assertEquals(user, result);
+		verify(securityContext).getAuthentication();
+		verify(authentication).getPrincipal();
+	}
+
+	@Test
+	void create_WhenValidUser_ShouldCreateUser() {
+		when(perfilService.findByName(Perfil.getDefaultPerfilName())).thenReturn(Optional.of(defaultPerfil));
+		when(passwordEncoder.encode(PASSWORD_PARAM)).thenReturn(PASSWORD_ENCODED);
+		when(userRepository.saveAndFlush(any(User.class))).thenReturn(user);
+
+		User newUser = new User();
+		newUser.setName(NAME_PARAM);
+		newUser.setEmail(EMAIL_PARAM);
+		newUser.setPassword(PASSWORD_PARAM);
+
+		User result = userService.create(newUser);
+
+		assertNotNull(result);
+		assertEquals(user, result);
+		verify(perfilService).findByName(Perfil.getDefaultPerfilName());
+		verify(passwordEncoder).encode(PASSWORD_PARAM);
+		verify(userRepository).saveAndFlush(any(User.class));
+	}
+
+	@Test
+	void create_WhenDefaultProfileNotFound_ShouldThrowException() {
+		when(perfilService.findByName(Perfil.getDefaultPerfilName())).thenReturn(Optional.empty());
+
+		User newUser = new User();
+		newUser.setName(NAME_PARAM);
+		newUser.setEmail(EMAIL_PARAM);
+		newUser.setPassword(PASSWORD_PARAM);
+
+		DefaultProfileNotFoundException exception = assertThrows(DefaultProfileNotFoundException.class,
+				() -> userService.create(newUser));
+
+		assertEquals("Perfil padrão não encontrado. Contate o administrador do sistema.", exception.getMessage());
+		verify(perfilService).findByName(Perfil.getDefaultPerfilName());
+		verify(userRepository, never()).saveAndFlush(any(User.class));
+	}
+
+	@Test
+	void create_WhenPasswordTooShort_ShouldThrowException() {
+		User newUser = new User();
+		newUser.setName(NAME_PARAM);
+		newUser.setEmail(EMAIL_PARAM);
+		newUser.setPassword("123");
+
+		when(perfilService.findByName(Perfil.getDefaultPerfilName())).thenReturn(Optional.of(defaultPerfil));
+
+		ValidationException exception = assertThrows(ValidationException.class,
+				() -> userService.create(newUser));
+
+		assertEquals("A senha deve ter no mínimo 8 caracteres", exception.getMessage());
+		verify(userRepository, never()).saveAndFlush(any(User.class));
+	}
+
+	@Test
+	void update_WithAllFields_ShouldUpdateUser() {
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(authentication.getPrincipal()).thenReturn(user);
+		when(userRepository.findByEmailWithPerfilAndPermissions(EMAIL_PARAM)).thenReturn(Optional.of(user));
+		when(userRepository.save(any(User.class))).thenReturn(user);
+
+		User result = userService.update(userUpdateDTO);
+
+		assertNotNull(result);
+		assertEquals(userUpdateDTO.getName(), result.getName());
+		assertEquals(userUpdateDTO.getRegistrationNumber(), result.getRegistration());
+		assertEquals(userUpdateDTO.getPhone(), result.getPhone());
+		assertEquals(userUpdateDTO.getAlternativePhone(), result.getAlternativePhone());
+		verify(userRepository).save(any(User.class));
+	}
+
+	@Test
+	void findAll_ShouldReturnAllUsers() {
+		when(userRepository.findAll()).thenReturn(userList);
+
+		List<User> result = userService.findAll();
+
+		assertNotNull(result);
+		assertEquals(userList.size(), result.size());
+		assertEquals(userList, result);
+		verify(userRepository).findAll();
+	}
+
+	@Test
+	void getAllUsersWithPerfilAndPermissions_ShouldReturnAllUsers() {
+		when(userRepository.findAllWithPerfilAndPermissions()).thenReturn(userList);
+
+		List<User> result = userService.getAllUsersWithPerfilAndPermissions();
+
+		assertNotNull(result);
+		assertEquals(userList.size(), result.size());
+		assertEquals(userList, result);
+		verify(userRepository).findAllWithPerfilAndPermissions();
+	}
+
+	@Test
+	void findById_WhenUserExists_ShouldReturnUser() {
+		when(userRepository.findById(USER_ID)).thenReturn(Optional.of(user));
+
+		Optional<User> result = userService.findById(USER_ID);
+
+		assertTrue(result.isPresent());
+		assertEquals(user, result.get());
+		verify(userRepository).findById(USER_ID);
+	}
+
+	@Test
+	void findById_WhenUserDoesNotExist_ShouldReturnEmpty() {
+		when(userRepository.findById(USER_ID)).thenReturn(Optional.empty());
+
+		Optional<User> result = userService.findById(USER_ID);
+
+		assertFalse(result.isPresent());
+		verify(userRepository).findById(USER_ID);
+	}
+
+	@Test
+	void findByEmail_WhenUserExists_ShouldReturnUser() {
+		when(userRepository.findByEmail(EMAIL_PARAM)).thenReturn(Optional.of(user));
+
+		Optional<User> result = userService.findByEmail(EMAIL_PARAM);
+
+		assertTrue(result.isPresent());
+		assertEquals(user, result.get());
+		verify(userRepository).findByEmail(EMAIL_PARAM);
+	}
+
+	@Test
+	void findByEmail_WhenUserDoesNotExist_ShouldReturnEmpty() {
+		when(userRepository.findByEmail(EMAIL_PARAM)).thenReturn(Optional.empty());
+
+		Optional<User> result = userService.findByEmail(EMAIL_PARAM);
+
+		assertFalse(result.isPresent());
+		verify(userRepository).findByEmail(EMAIL_PARAM);
+	}
+
+	@Test
+	void delete_WhenNonAdminUser_ShouldThrowException() {
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(authentication.getPrincipal()).thenReturn(user);
+		when(userRepository.findByEmailWithPerfilAndPermissions(EMAIL_PARAM)).thenReturn(Optional.of(user));
+
+		ValidationException exception = assertThrows(ValidationException.class,
+				() -> userService.delete("other@example.com"));
+
+		assertEquals("Você não tem permissão para deletar um usuário", exception.getMessage());
+		verify(userRepository, never()).delete(any(User.class));
+	}
+
+	@Test
+	void delete_WhenUserNotFound_ShouldThrowException() {
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(authentication.getPrincipal()).thenReturn(adminUser);
+		when(userRepository.findByEmailWithPerfilAndPermissions(any())).thenReturn(Optional.of(adminUser));
+		when(userRepository.findByEmail("other@example.com")).thenReturn(Optional.empty());
+
+		ValidationException exception = assertThrows(ValidationException.class,
+				() -> userService.delete("other@example.com"));
+
+		assertEquals("Usuário não encontrado", exception.getMessage());
+		verify(userRepository, never()).delete(any(User.class));
+	}
+
+	@Test
+	void delete_WhenTryingToDeleteSelf_ShouldThrowException() {
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(authentication.getPrincipal()).thenReturn(adminUser);
+		when(userRepository.findByEmailWithPerfilAndPermissions(any())).thenReturn(Optional.of(adminUser));
+		when(userRepository.findByEmail(adminUser.getEmail())).thenReturn(Optional.of(adminUser));
+
+		ValidationException exception = assertThrows(ValidationException.class,
+				() -> userService.delete(adminUser.getEmail()));
+
+		assertEquals("Você não pode deletar seu próprio usuário", exception.getMessage());
+		verify(userRepository, never()).delete(any(User.class));
+	}
+
+	@Test
+	void delete_WhenTryingToDeleteAdmin_ShouldThrowException() {
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(authentication.getPrincipal()).thenReturn(adminUser);
+		when(userRepository.findByEmailWithPerfilAndPermissions(any())).thenReturn(Optional.of(adminUser));
+
+		User otherAdmin = new User();
+		otherAdmin.setEmail("other.admin@example.com");
+		otherAdmin.setPerfil(adminPerfil);
+		when(userRepository.findByEmail(otherAdmin.getEmail())).thenReturn(Optional.of(otherAdmin));
+
+		ValidationException exception = assertThrows(ValidationException.class,
+				() -> userService.delete(otherAdmin.getEmail()));
+
+		assertEquals("Você não pode deletar um usuário administrador", exception.getMessage());
+		verify(userRepository, never()).delete(any(User.class));
+	}
+
+	@Test
+	void delete_WhenUserHasSolicitationRequests_ShouldThrowException() {
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(authentication.getPrincipal()).thenReturn(adminUser);
+		when(userRepository.findByEmailWithPerfilAndPermissions(any())).thenReturn(Optional.of(adminUser));
+		when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+		when(userRequestValidationService.userHasAnySolicitationRequests(anyLong())).thenReturn(true);
+
+		ValidationException exception = assertThrows(ValidationException.class,
+				() -> userService.delete(user.getEmail()));
+
+		assertEquals("Você não pode deletar um usuário que possui solicitações de assistência", exception.getMessage());
+		verify(userRepository, never()).delete(any(User.class));
+	}
+
+	@Test
+	void delete_WhenUserHasExtraRequests_ShouldThrowException() {
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(authentication.getPrincipal()).thenReturn(adminUser);
+		when(userRepository.findByEmailWithPerfilAndPermissions(any())).thenReturn(Optional.of(adminUser));
+		when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+		when(userRequestValidationService.userHasAnySolicitationRequests(anyLong())).thenReturn(false);
+		when(userRequestValidationService.userHasAnyExtraRequests(anyLong())).thenReturn(true);
+
+		ValidationException exception = assertThrows(ValidationException.class,
+				() -> userService.delete(user.getEmail()));
+
+		assertEquals("Você não pode deletar um usuário que possui solicitações de demanda extra",
+				exception.getMessage());
+		verify(userRepository, never()).delete(any(User.class));
+	}
+
+	@Test
+	void delete_WhenValidRequest_ShouldDeleteUser() {
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(authentication.getPrincipal()).thenReturn(adminUser);
+		when(userRepository.findByEmailWithPerfilAndPermissions(any())).thenReturn(Optional.of(adminUser));
+		when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+		when(userRequestValidationService.userHasAnySolicitationRequests(anyLong())).thenReturn(false);
+		when(userRequestValidationService.userHasAnyExtraRequests(anyLong())).thenReturn(false);
+
+		userService.delete(user.getEmail());
+
+		verify(userRepository).delete(user);
+	}
+
+	@Test
+	void changePassword_WhenCurrentPasswordIsIncorrect_ShouldThrowException() {
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(authentication.getPrincipal()).thenReturn(user);
+		when(userRepository.findByEmailWithPerfilAndPermissions(EMAIL_PARAM)).thenReturn(Optional.of(user));
+		when(passwordEncoder.matches(anyString(), anyString())).thenReturn(false);
+
+		ValidationException exception = assertThrows(ValidationException.class,
+				() -> userService.changePassword("wrongpassword", "newpassword"));
+
+		assertEquals("Senha atual incorreta", exception.getMessage());
+		verify(userRepository, never()).saveAndFlush(any(User.class));
+	}
+
+	@Test
+	void changePassword_WhenNewPasswordSameAsOld_ShouldThrowException() {
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(authentication.getPrincipal()).thenReturn(user);
+		when(userRepository.findByEmailWithPerfilAndPermissions(EMAIL_PARAM)).thenReturn(Optional.of(user));
+		when(passwordEncoder.matches(PASSWORD_PARAM, user.getPassword())).thenReturn(true);
+
+		ValidationException exception = assertThrows(ValidationException.class,
+				() -> userService.changePassword(PASSWORD_PARAM, PASSWORD_PARAM));
+
+		assertEquals("A nova senha não pode ser igual a senha atual", exception.getMessage());
+		verify(userRepository, never()).saveAndFlush(any(User.class));
+	}
+
+	@Test
+	void changePassword_WhenValid_ShouldUpdatePassword() {
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(authentication.getPrincipal()).thenReturn(user);
+		when(userRepository.findByEmailWithPerfilAndPermissions(EMAIL_PARAM)).thenReturn(Optional.of(user));
+		when(passwordEncoder.matches(PASSWORD_PARAM, user.getPassword())).thenReturn(true);
+		when(passwordEncoder.encode(anyString())).thenReturn(PASSWORD_ENCODED);
+
+		userService.changePassword(PASSWORD_PARAM, "novasenha123");
+
+		verify(passwordEncoder).encode("novasenha123");
+		verify(userRepository).saveAndFlush(user);
+	}
+
+	@Test
+	void updatePassword_ShouldEncodeAndSavePassword() {
+		when(passwordEncoder.encode("novasenha123")).thenReturn(PASSWORD_ENCODED);
+
+		userService.updatePassword(user, "novasenha123");
+
+		assertEquals(PASSWORD_ENCODED, user.getPassword());
+		verify(passwordEncoder).encode("novasenha123");
+		verify(userRepository).saveAndFlush(user);
+	}
+
+	@Test
+	void updateProfile_WhenNonAdminUser_ShouldThrowException() {
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(authentication.getPrincipal()).thenReturn(user);
+		when(userRepository.findByEmailWithPerfilAndPermissions(EMAIL_PARAM)).thenReturn(Optional.of(user));
+
+		ValidationException exception = assertThrows(ValidationException.class,
+				() -> userService.updateProfile("other@example.com", PROFILE_ID));
+
+		assertEquals("Você não tem permissão para atualizar o perfil de outro usuário", exception.getMessage());
+		verify(perfilService, never()).findById(anyLong());
+	}
+
+	@Test
+	void updateProfile_WhenUserNotFound_ShouldThrowException() {
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(authentication.getPrincipal()).thenReturn(adminUser);
+		when(userRepository.findByEmailWithPerfilAndPermissions(any())).thenReturn(Optional.of(adminUser));
+		when(userRepository.findByEmail("other@example.com")).thenReturn(Optional.empty());
+
+		assertThrows(UsernameNotFoundException.class,
+				() -> userService.updateProfile("other@example.com", PROFILE_ID));
+
+		verify(perfilService, never()).findById(anyLong());
+	}
+
+	@Test
+	void updateProfile_WhenProfileNotFound_ShouldThrowException() {
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(authentication.getPrincipal()).thenReturn(adminUser);
+		when(userRepository.findByEmailWithPerfilAndPermissions(any())).thenReturn(Optional.of(adminUser));
+		when(userRepository.findByEmail("other@example.com")).thenReturn(Optional.of(user));
+		when(perfilService.findById(PROFILE_ID)).thenReturn(Optional.empty());
+
+		ValidationException exception = assertThrows(ValidationException.class,
+				() -> userService.updateProfile("other@example.com", PROFILE_ID));
+
+		assertEquals("Perfil não encontrado", exception.getMessage());
+		verify(userRepository, never()).saveAndFlush(any(User.class));
+	}
+
+	@Test
+	void updateProfile_WhenRemovingOwnAdminRole_ShouldThrowException() {
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(authentication.getPrincipal()).thenReturn(adminUser);
+		when(userRepository.findByEmailWithPerfilAndPermissions(any())).thenReturn(Optional.of(adminUser));
+		when(userRepository.findByEmail(adminUser.getEmail())).thenReturn(Optional.of(adminUser));
+		when(perfilService.findById(PROFILE_ID)).thenReturn(Optional.of(defaultPerfil));
+
+		ValidationException exception = assertThrows(ValidationException.class,
+				() -> userService.updateProfile(adminUser.getEmail(), PROFILE_ID));
+
+		assertEquals("Você não pode remover seu próprio papel de administrador", exception.getMessage());
+		verify(userRepository, never()).saveAndFlush(any(User.class));
+	}
+
+	@Test
+	void updateProfile_WhenValid_ShouldUpdateProfile() {
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(authentication.getPrincipal()).thenReturn(adminUser);
+		when(userRepository.findByEmailWithPerfilAndPermissions(any())).thenReturn(Optional.of(adminUser));
+		when(userRepository.findByEmail("other@example.com")).thenReturn(Optional.of(user));
+		when(perfilService.findById(PROFILE_ID)).thenReturn(Optional.of(adminPerfil));
+
+		userService.updateProfile("other@example.com", PROFILE_ID);
+
+		assertEquals(adminPerfil, user.getPerfil());
+		verify(userRepository).saveAndFlush(user);
+	}
+
+	private void setupUser() {
 		user = new User();
+		user.setName(NAME_PARAM);
 		user.setCpf(CPF_PARAM);
 		user.setEmail(EMAIL_PARAM);
-		user.setName(NAME_PARAM);
 		user.setPassword(PASSWORD_PARAM);
 		user.setRegistration(REGISTRATION_PARAM);
 		user.setPhone(PHONE_PARAM);
+		user.setAlternativePhone(ALT_PHONE_PARAM);
 
-		optionalUser = Optional.of(user);
+		when(userRepository.saveAndFlush(user)).thenAnswer(invocation -> {
+			User savedUser = invocation.getArgument(0);
+
+			setIdViaReflection(savedUser, USER_ID);
+			return savedUser;
+		});
+		setIdViaReflection(user, USER_ID);
 	}
 
-	private void starAuthentication() {
-		autheticatedUser = new Authentication() {
-			private static final long serialVersionUID = 1L;
+	private void setupAdminUser() {
+		adminUser = new User();
+		adminUser.setName("Admin User");
+		adminUser.setCpf("00000000000");
+		adminUser.setEmail("admin@example.com");
+		adminUser.setPassword(PASSWORD_PARAM);
 
-			@Override
-			public String getName() {
-				return user.getName();
-			}
+		when(userRepository.saveAndFlush(adminUser)).thenAnswer(invocation -> {
+			User savedUser = invocation.getArgument(0);
 
-			@Override
-			public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
-				// Empty method
-			}
+			setIdViaReflection(savedUser, 2L);
+			return savedUser;
+		});
+		setIdViaReflection(adminUser, 2L);
+	}
 
-			@Override
-			public boolean isAuthenticated() {
-				return true;
-			}
+	private void setIdViaReflection(User user, Long id) {
+		try {
+			java.lang.reflect.Field idField = User.class.getDeclaredField("id");
+			idField.setAccessible(true);
+			idField.set(user, id);
+		} catch (Exception e) {
+			throw new RuntimeException("Não foi possível definir o ID do usuário via reflection", e);
+		}
+	}
 
-			@Override
-			public Object getPrincipal() {
-				return user;
-			}
+	private void setupPerfis() {
+		defaultPerfil = new Perfil();
+		defaultPerfil.setId(1L);
+		defaultPerfil.setName("USER");
+		defaultPerfil.setPermissions(createPermissionSet("USER_ROLE"));
 
-			@Override
-			public Object getDetails() {
-				return null;
-			}
+		adminPerfil = new Perfil();
+		adminPerfil.setId(2L);
+		adminPerfil.setName("ADMIN");
+		adminPerfil.setPermissions(createPermissionSet("ADMIN_ROLE"));
 
-			@Override
-			public Object getCredentials() {
-				return null;
-			}
+		user.setPerfil(defaultPerfil);
+		adminUser.setPerfil(adminPerfil);
+	}
 
-			@Override
-			public Collection<? extends GrantedAuthority> getAuthorities() {
-				return null;
-			}
-		};
+	private Set<Permission> createPermissionSet(String... permissionKeys) {
+		Set<Permission> permissions = new java.util.HashSet<>();
+		for (String key : permissionKeys) {
+			Permission permission = new Permission();
+			permission.setId(permissions.size() + 1L);
+			permission.setKey(key);
+			permission.setDescription("Permissão " + key);
+			permission.setEnabled(true);
+			permissions.add(permission);
+		}
+		return permissions;
+	}
+
+	private void setupAuthentication() {
+		authentication = mock(Authentication.class);
+	}
+
+	private void setupUserUpdateDTO() {
+		userUpdateDTO = new UserUpdateDTO();
+		userUpdateDTO.setName("Nome Atualizado");
+		userUpdateDTO.setRegistrationNumber("202302");
+		userUpdateDTO.setPhone("71999995555");
+		userUpdateDTO.setAlternativePhone("71999994444");
+	}
+
+	private void setupUserList() {
+		userList = new ArrayList<>();
+		userList.add(user);
+		userList.add(adminUser);
 	}
 }

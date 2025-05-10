@@ -176,6 +176,8 @@ public class ExtraRequestController {
 		}
 	}
 
+	// TODO : Pendencia tecnica: Resolver este método de aprovação que não está
+	// sendo utilizado
 	@PutMapping("/approve/{requestId}")
 	public ResponseEntity<Review> approveRequest(@PathVariable String requestId, @RequestBody ReviewDTO reviewDTO) {
 		User currentUser = serviceUser.getLoggedUser();
@@ -183,7 +185,6 @@ public class ExtraRequestController {
 		if (currentUser == null)
 			return ResponseEntity.badRequest().build();
 
-		// TODO : Validar se o usuario pode aprovar
 		try {
 			return ResponseEntity.ok().body(reviewService.approve(reviewDTO));
 		} catch (Exception e) {
@@ -192,6 +193,8 @@ public class ExtraRequestController {
 		}
 	}
 
+	// TODO : Pendencia tecnica: Resolver este método de aprovação que não está
+	// sendo utilizado
 	@PutMapping("/reprove/{requestId}")
 	public ResponseEntity<Review> reproveRequest(@PathVariable String requestId, @RequestBody ReviewDTO reviewDTO) {
 		User currentUser = serviceUser.getLoggedUser();
@@ -199,7 +202,6 @@ public class ExtraRequestController {
 		if (currentUser == null)
 			return ResponseEntity.badRequest().build();
 
-		// TODO : Validar se o usuario pode aprovar
 		try {
 			return ResponseEntity.ok().body(reviewService.reprove(reviewDTO));
 		} catch (Exception e) {

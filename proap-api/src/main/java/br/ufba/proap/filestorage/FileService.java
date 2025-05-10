@@ -19,26 +19,21 @@ public class FileService {
     private static final String PDF_DIRECTORY = "/pdf";
 
     public String uploadPdf(MultipartFile file) throws IOException {
-        // Valida extensão
         String originalFileName = file.getOriginalFilename();
         if (!isPdfFile(originalFileName)) {
             throw new IllegalArgumentException("Somente arquivos PDF são permitidos.");
         }
 
-        // Gera filename único
         String fileName = generateUniqueFileName() + PDF_EXTENSION;
 
-        // Cria diretório se não existir
         File directory = new File(uploadDir + PDF_DIRECTORY);
         if (!directory.exists()) {
             directory.mkdirs();
         }
 
-        // Salva o arquivo
         File destFile = new File(directory, fileName);
         file.transferTo(destFile);
 
-        // Retorna o nome do arquivo salvo
         return fileName;
     }
 
