@@ -11,8 +11,10 @@ import org.springframework.stereotype.Service;
 import br.ufba.proap.mailsender.dto.EmailDTO;
 import br.ufba.proap.mailsender.template.EmailTemplateBuilder;
 import jakarta.mail.internet.MimeMessage;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class EmailService {
 
     @Autowired
@@ -46,11 +48,10 @@ public class EmailService {
             helper.setText(htmlContent, true); // HTML ativado
 
             mailSender.send(message);
-            System.out.println("E-mail enviado com sucesso para " + to);
+            log.info("E-mail enviado com sucesso para {}", to);
 
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Erro ao enviar e-mail");
+            log.error("Erro ao enviar e-mail: " + e.getMessage());
         }
     }
 
@@ -66,11 +67,10 @@ public class EmailService {
             helper.setText(htmlContent, true);
 
             mailSender.send(message);
-            System.out.println("E-mail enviado com sucesso para " + to);
+            log.info("E-mail enviado com sucesso para {}", to);
 
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Erro ao enviar e-mail");
+            log.error("Erro ao enviar e-mail: " + e.getMessage());
         }
     }
 
