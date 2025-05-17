@@ -49,7 +49,7 @@ public class EmailService {
             helper.setText(htmlContent, true); // HTML ativado
 
             mailSender.send(message);
-            log.info("E-mail enviado com sucesso para {}", to);
+            log.info("Enviando e-mail para {}", to);
 
         } catch (Exception e) {
             log.error("Erro ao enviar e-mail: " + e.getMessage());
@@ -69,7 +69,7 @@ public class EmailService {
             helper.setText(htmlContent, true);
 
             mailSender.send(message);
-            log.info("E-mail enviado com sucesso para {}", to);
+            log.info("Enviando e-mail para {}", to);
 
         } catch (Exception e) {
             log.error("Erro ao enviar e-mail: " + e.getMessage());
