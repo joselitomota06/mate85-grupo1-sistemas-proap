@@ -2,26 +2,8 @@ package br.ufba.proap.solicitationadminpanel.domain.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public record CeapgResponseDTO(Long id, BigDecimal valorAprovado, LocalDate dataAvaliacaoProap, String avaliadorProap,
         BigDecimal custoFinalCeapg, String observacoesCeapg, String avaliadorCeapg, LocalDate dataAvaliacaoCeapg) {
 
-    public static List<CeapgResponseDTO> convertPairsToDTOs(List<Object[]> data) {
-        return data.stream()
-                .map(objArray -> {
-                    Long id = (Long) objArray[0];
-                    BigDecimal valorAprovado = (BigDecimal) objArray[1];
-                    LocalDate dataAvaliacaoProap = (LocalDate) objArray[2];
-                    String avaliadorProap = (String) objArray[3];
-                    BigDecimal custoFinalCeapg = (BigDecimal) objArray[4];
-                    String observacoesCeapg = (String) objArray[5];
-                    String avaliadorCeapg = (String) objArray[6];
-                    LocalDate dataAvaliacaoCeapg = (LocalDate) objArray[7];
-                    return new CeapgResponseDTO(id, valorAprovado, dataAvaliacaoProap,
-                            avaliadorProap, custoFinalCeapg, observacoesCeapg, avaliadorCeapg, dataAvaliacaoCeapg);
-                })
-                .collect(Collectors.toList());
-    }
 }
