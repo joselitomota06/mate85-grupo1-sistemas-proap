@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.ArrayList;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import br.ufba.proap.sysadminpanel.domain.SystemConfiguration;
+import br.ufba.proap.sysadminpanel.domain.UrlMapper;
 import br.ufba.proap.sysadminpanel.domain.dto.SystemConfigurationDTO;
+import br.ufba.proap.sysadminpanel.domain.dto.UrlMapperDTO;
 import br.ufba.proap.sysadminpanel.repository.SystemConfigurationRepository;
 import br.ufba.proap.sysadminpanel.service.SystemConfigurationService;
 
@@ -32,9 +35,27 @@ public class SystemConfigurationServiceTest {
     private SystemConfigurationService service;
 
     private SystemConfiguration sampleConfig;
+    private List<UrlMapper> sampleUrls;
 
     @BeforeEach
     public void setup() {
+        // Configuração de exemplo para URLs
+        sampleUrls = new ArrayList<>();
+        UrlMapper url1 = new UrlMapper();
+        url1.setId(1L);
+        url1.setUrl("http://example.com/url1");
+        url1.setFieldName("Campo 1");
+        url1.setUrlTitle("Link 1");
+
+        UrlMapper url2 = new UrlMapper();
+        url2.setId(2L);
+        url2.setUrl("http://example.com/url2");
+        url2.setFieldName("Campo 2");
+        url2.setUrlTitle("Link 2");
+
+        sampleUrls.add(url1);
+        sampleUrls.add(url2);
+
         // Configuração de exemplo
         sampleConfig = new SystemConfiguration();
         sampleConfig.setId(1L);
@@ -46,6 +67,8 @@ public class SystemConfigurationServiceTest {
         sampleConfig.setTextoAvisoQualis("Aviso sobre Qualis");
         sampleConfig.setTextoAvisoValorInscricao("Aviso sobre inscrição");
         sampleConfig.setTextoInformacaoQtdDiarias("Informação sobre diárias");
+        sampleConfig.setResourceLinks(sampleUrls);
+        sampleConfig.setEnableSolicitation(true);
     }
 
     @Test
@@ -62,6 +85,9 @@ public class SystemConfigurationServiceTest {
         assertEquals(Arrays.asList("A1", "A2", "B1"), result.getQualis());
         assertEquals(5, result.getNumMaxDiarias());
         assertEquals(BigDecimal.valueOf(320.0), result.getValorDiariaBRL());
+        assertEquals(true, result.getEnableSolicitation());
+        assertEquals(2, result.getResourceLinks().size());
+        assertEquals("http://example.com/url1", result.getResourceLinks().get(0).getUrl());
     }
 
     @Test
@@ -89,7 +115,12 @@ public class SystemConfigurationServiceTest {
     public void testUpdateConfiguration_Exists() {
         // Given
         when(repository.findAll()).thenReturn(List.of(sampleConfig));
-        when(repository.save(any(SystemConfiguration.class))).thenReturn(sampleConfig);
+        when(repository.save(any(SystemConfiguration.class))).thenAnswer(invocation -> {
+            SystemConfiguration savedConfig = invocation.getArgument(0);
+            savedConfig.setNumMaxDiarias(7);
+            savedConfig.setValorDiariaBRL(BigDecimal.valueOf(400.0));
+            return savedConfig;
+        });
 
         SystemConfigurationDTO updateDTO = new SystemConfigurationDTO();
         updateDTO.setNumMaxDiarias(7);
@@ -102,6 +133,8 @@ public class SystemConfigurationServiceTest {
         assertNotNull(result);
         assertEquals(1L, result.getId());
         assertEquals(Arrays.asList("A1", "A2", "B1"), result.getQualis());
+        assertEquals(7, result.getNumMaxDiarias());
+        assertEquals(BigDecimal.valueOf(400.0), result.getValorDiariaBRL());
     }
 
     @Test
@@ -111,6 +144,8 @@ public class SystemConfigurationServiceTest {
         when(repository.save(any(SystemConfiguration.class))).thenAnswer(invocation -> {
             SystemConfiguration savedConfig = invocation.getArgument(0);
             savedConfig.setId(1L);
+            savedConfig.setNumMaxDiarias(7);
+            savedConfig.setValorDiariaBRL(BigDecimal.valueOf(400.0));
             return savedConfig;
         });
 
@@ -126,6 +161,31 @@ public class SystemConfigurationServiceTest {
         assertEquals(1L, result.getId());
         assertEquals(7, result.getNumMaxDiarias());
         assertEquals(BigDecimal.valueOf(400.0), result.getValorDiariaBRL());
+    }
+
+    @Test
+    public void testUpdateConfiguration_WithResourceLinks() {
+        // Given
+        when(repository.findAll()).thenReturn(List.of(sampleConfig));
+        when(repository.save(any(SystemConfiguration.class))).thenAnswer(invocation -> {
+            SystemConfiguration savedConfig = invocation.getArgument(0);
+            // Simula comportamento do repositório para atualizar os links de recursos
+            return savedConfig;
+        });
+
+        SystemConfigurationDTO updateDTO = new SystemConfigurationDTO();
+        List<UrlMapperDTO> newLinks = new ArrayList<>();
+        newLinks.add(new UrlMapperDTO(null, "http://example.com/new1", "Novo Campo 1", "Novo Link 1"));
+        newLinks.add(new UrlMapperDTO(null, "http://example.com/new2", "Novo Campo 2", "Novo Link 2"));
+        updateDTO.setResourceLinks(newLinks);
+
+        // When
+        SystemConfigurationDTO result = service.updateConfiguration(updateDTO);
+
+        // Then
+        assertNotNull(result);
+        assertNotNull(result.getResourceLinks());
+        assertEquals(2, result.getResourceLinks().size());
     }
 
     @Test
@@ -148,5 +208,90 @@ public class SystemConfigurationServiceTest {
         // Then
         assertNotNull(result);
         assertEquals(newQualisList, result);
+        assertEquals(5, result.size());
     }
+
+    @Test
+    public void testUpdateQualisList_EmptyList() {
+        // Given
+        when(repository.findAll()).thenReturn(List.of(sampleConfig));
+
+        List<String> newQualisList = Collections.emptyList();
+
+        // Configurando comportamento do repository.save
+        when(repository.save(any(SystemConfiguration.class))).thenAnswer(invocation -> {
+            SystemConfiguration savedConfig = invocation.getArgument(0);
+            savedConfig.setQualisList(newQualisList);
+            return savedConfig;
+        });
+
+        // When
+        List<String> result = service.updateQualisList(newQualisList);
+
+        // Then
+        assertNotNull(result);
+        assertEquals(0, result.size());
+    }
+
+    @Test
+    public void testUpdateResourceLinks() {
+        // Given
+        when(repository.findAll()).thenReturn(List.of(sampleConfig));
+
+        List<UrlMapperDTO> newLinks = new ArrayList<>();
+        newLinks.add(new UrlMapperDTO(null, "http://example.com/updated1", "Campo Atualizado 1", "Link Atualizado 1"));
+        newLinks.add(new UrlMapperDTO(null, "http://example.com/updated2", "Campo Atualizado 2", "Link Atualizado 2"));
+        newLinks.add(new UrlMapperDTO(null, "http://example.com/updated3", "Campo Atualizado 3", "Link Atualizado 3"));
+
+        // Configurando comportamento do repository.save
+        when(repository.save(any(SystemConfiguration.class))).thenAnswer(invocation -> {
+            SystemConfiguration savedConfig = invocation.getArgument(0);
+            List<UrlMapper> updatedLinks = new ArrayList<>();
+            for (int i = 0; i < newLinks.size(); i++) {
+                UrlMapperDTO dto = newLinks.get(i);
+                UrlMapper mapper = new UrlMapper();
+                mapper.setId((long) (i + 1));
+                mapper.setUrl(dto.getUrl());
+                mapper.setFieldName(dto.getFieldName());
+                mapper.setUrlTitle(dto.getUrlTitle());
+                mapper.setSystemConfiguration(savedConfig);
+                updatedLinks.add(mapper);
+            }
+            savedConfig.setResourceLinks(updatedLinks);
+            return savedConfig;
+        });
+
+        // When
+        List<UrlMapperDTO> result = service.updateResourceLinks(newLinks);
+
+        // Then
+        assertNotNull(result);
+        assertEquals(3, result.size());
+        assertEquals("http://example.com/updated1", result.get(0).getUrl());
+        assertEquals("Campo Atualizado 2", result.get(1).getFieldName());
+        assertEquals("Link Atualizado 3", result.get(2).getUrlTitle());
+    }
+
+    @Test
+    public void testUpdateResourceLinks_EmptyList() {
+        // Given
+        when(repository.findAll()).thenReturn(List.of(sampleConfig));
+
+        List<UrlMapperDTO> emptyLinks = new ArrayList<>();
+
+        // Configurando comportamento do repository.save
+        when(repository.save(any(SystemConfiguration.class))).thenAnswer(invocation -> {
+            SystemConfiguration savedConfig = invocation.getArgument(0);
+            savedConfig.setResourceLinks(new ArrayList<>());
+            return savedConfig;
+        });
+
+        // When
+        List<UrlMapperDTO> result = service.updateResourceLinks(emptyLinks);
+
+        // Then
+        assertNotNull(result);
+        assertEquals(0, result.size());
+    }
+
 }
