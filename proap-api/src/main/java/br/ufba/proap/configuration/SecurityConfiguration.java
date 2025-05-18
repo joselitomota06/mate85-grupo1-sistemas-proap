@@ -1,8 +1,10 @@
 package br.ufba.proap.configuration;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,7 +22,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import br.ufba.proap.authentication.service.UserService;
 import br.ufba.proap.security.JwtAuthenticationEntryPoint;
 import br.ufba.proap.security.JwtAuthenticationFilter;
-import jakarta.ws.rs.HttpMethod;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter.ReferrerPolicy;
 
 @Configuration
 @EnableWebSecurity
@@ -30,6 +33,9 @@ public class SecurityConfiguration {
 	private JwtAuthenticationEntryPoint unauthorizedHandler;
 
 	public static final long MAX_AGE_SECS = 3600;
+
+	@Value("${cors.allowed-origins}")
+	private List<String> allowedOrigins;
 
 	@Autowired
 	JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -46,19 +52,21 @@ public class SecurityConfiguration {
 				.exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(authorize -> authorize
-						.requestMatchers(HttpMethod.POST, "/authentication/**", "/user/create", "/actuator/**")
+						.requestMatchers(HttpMethod.POST, "/authentication/**", "/user/create")
 						.permitAll()
 						.requestMatchers(HttpMethod.GET, "/files/**").permitAll()
 						.requestMatchers(HttpMethod.GET, "/profile/**").authenticated()
-						.requestMatchers("/v3/api-docs/**", "/configuration/**",
-								"/swagger-resources/**",
-								"/**.html",
-								"/webjars/**",
-								"/swagger-ui/**")
+						.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/actuator/health/**")
 						.permitAll()
+						.requestMatchers("/actuator/**")
+						.hasAuthority("ADMIN_ROLE")
 						.requestMatchers(HttpMethod.GET, "/user/list").hasAuthority("VIEW_USER")
 						.anyRequest().authenticated())
-				.logout(logout -> logout.logoutUrl("/proap-api/authentication/logout"))
+				.logout(logout -> logout.logoutUrl("/api/authentication/logout"))
+				.headers(headers -> headers
+						.referrerPolicy(referrer -> referrer.policy(ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN))
+						.frameOptions(frame -> frame.sameOrigin()))
+
 				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 				.build();
 	}
@@ -72,9 +80,10 @@ public class SecurityConfiguration {
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(Arrays.asList("*"));
-		configuration.setAllowedMethods(Arrays.asList("HEAD", "OPTIONS", "GET", "POST", "PUT", "PATCH", "DELETE"));
-		configuration.setAllowedHeaders(Arrays.asList("*"));
+		configuration.setAllowedOriginPatterns(allowedOrigins);
+		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE"));
+		configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+		configuration.setExposedHeaders(Arrays.asList("Location"));
 		configuration.setMaxAge(MAX_AGE_SECS);
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);
