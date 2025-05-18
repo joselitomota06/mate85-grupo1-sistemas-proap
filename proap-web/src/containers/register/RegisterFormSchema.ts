@@ -45,8 +45,6 @@ export interface RegisterFormValues {
   confirmPassword: string;
   registration: string;
   alternativePhone: string;
-  login: string;
-  type: 'Comum' | 'Administrador';
 }
 
 export const INITIAL_FORM_VALUES: RegisterFormValues = {
@@ -58,6 +56,4 @@ export const INITIAL_FORM_VALUES: RegisterFormValues = {
   confirmPassword: '',
   registration: '',
   alternativePhone: '',
-  login: '',
-  type: 'Comum',
 };
