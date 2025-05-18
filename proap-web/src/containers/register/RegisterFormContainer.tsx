@@ -29,7 +29,6 @@ export default function RegisterFormContainer() {
 
   const handleSubmit = useCallback(
     (values: FormikValues) => {
-      values.login = values.email;
       return dispatch(registerUser(values as RegisterFormValues))
         .then(() => {
           Toast.success('Conta criada com sucesso!');
