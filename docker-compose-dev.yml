@@ -2,42 +2,42 @@ version: '3.8'
 
 services:
   proap_api:
-    build:
-      context: ./proap-api
-    container_name: proap_api
+    image: maven:3-eclipse-temurin-21-alpine
+    volumes:
+      - ./proap-api:/app
+    working_dir: /app
+    command: ["sh", "-c", "mvn clean -am install -DskipTests && mvn spring-boot:run"]
     environment:
-      - JWT_SECRET=${JWT_SECRET}
       - API_PORT=8080
-      - DB_HOST=proap_production_db
+      - DB_HOST=proap_dev_db
       - DB_PORT=5432
       - DB_NAME=proap
       - DB_USERNAME=proap
-      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_PASSWORD=password
       - FILE_UPLOAD_DIR=/app/uploads
       - FRONTEND_BASE_URL=${FRONTEND_BASE_URL}
       - MAIL_HOST=${MAIL_HOST}
       - MAIL_PORT=${MAIL_PORT}
       - MAIL_USERNAME=${MAIL_USERNAME}
       - MAIL_PASSWORD=${MAIL_PASSWORD}
-      - SPRING_PROFILES_ACTIVE=prod
       # - MAIL_FROM=${MAIL_FROM}
       # - MAIL_FROM_NAME=${MAIL_FROM_NAME}
     ports:
       - "8080:8080"
     depends_on:
-      - proap_production_db
+      - proap_dev_db
 
-  proap_production_db:
+  proap_dev_db:
     image: postgres:latest
-    container_name: proap_production_db
+    container_name: proap_dev_db
     environment:
       - POSTGRES_DB=proap
       - POSTGRES_USER=proap
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_PASSWORD=password
     ports:
       - "5432:5432"
     volumes:
-      - proap_db_data:/var/lib/postgresql/data
+      - proap_dev_db_data:/var/lib/postgresql/data
 
 volumes:
-  proap_db_data:
+  proap_dev_db_data:

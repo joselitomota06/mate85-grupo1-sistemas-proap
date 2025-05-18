@@ -13,10 +13,10 @@
 	<groupId>br.ufba</groupId>
 	<artifactId>proap-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 
 	<name>proap-api</name>
-	<description>MVP do trabalho da disciplina MATE85 - Tópicos em Sistemas de Informação e Web I</description>
+	<description>API do PROAP UFBA</description>
 
 	<properties>
 		<java.version>21</java.version>
@@ -50,7 +50,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
-			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
@@ -116,6 +115,11 @@
 		</dependency>
 
 		<dependency>
+    		<groupId>org.flywaydb</groupId>
+    		<artifactId>flyway-core</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>org.flywaydb</groupId>
 		    <artifactId>flyway-database-postgresql</artifactId>
 		</dependency>
@@ -144,7 +148,6 @@
 			<groupId>org.glassfish.jersey.core</groupId>
 			<artifactId>jersey-client</artifactId>
 			<version>3.1.9</version><!--$NO-MVN-MAN-VER$ -->
-			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
