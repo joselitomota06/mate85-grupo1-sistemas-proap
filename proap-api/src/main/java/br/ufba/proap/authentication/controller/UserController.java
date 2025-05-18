@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.ufba.proap.authentication.domain.User;
 import br.ufba.proap.authentication.domain.dto.ChangePasswordDTO;
+import br.ufba.proap.authentication.domain.dto.CreateUserDTO;
 import br.ufba.proap.authentication.domain.dto.StatusResponseDTO;
 import br.ufba.proap.authentication.domain.dto.UserResponseDTO;
 import br.ufba.proap.authentication.domain.dto.UserUpdateDTO;
@@ -40,9 +41,11 @@ public class UserController {
 	private UserService service;
 
 	@PostMapping("/create")
-	public ResponseEntity<?> create(@RequestBody User user) {
+	public ResponseEntity<?> create(@RequestBody @Valid CreateUserDTO user) {
 		try {
-			return ResponseEntity.ok().body(service.create(user));
+			service.create(user);
+			return ResponseEntity.status(HttpStatus.CREATED)
+					.body(new StatusResponseDTO("Sucesso", "Usuário criado com sucesso!"));
 		} catch (DefaultProfileNotFoundException e) {
 			logger.error(e.getMessage());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

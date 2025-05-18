@@ -31,6 +31,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import br.ufba.proap.authentication.domain.Perfil;
 import br.ufba.proap.authentication.domain.Permission;
 import br.ufba.proap.authentication.domain.User;
+import br.ufba.proap.authentication.domain.dto.CreateUserDTO;
 import br.ufba.proap.authentication.domain.dto.UserUpdateDTO;
 import br.ufba.proap.authentication.service.UserService;
 import br.ufba.proap.exception.DefaultProfileNotFoundException;
@@ -58,6 +59,8 @@ class UserControllerTest {
 	private static final String TEST_PASSWORD = "password123";
 	private static final String TEST_CPF = "12345678900";
 	private static final String TEST_PHONE = "71999887766";
+	private static final String TEST_REGISTRATION = "202312345";
+	private static final String TEST_ALT_PHONE = "71988776655";
 
 	@BeforeEach
 	void setUp() {
@@ -112,50 +115,57 @@ class UserControllerTest {
 
 	@Test
 	void create_withValidUser_shouldReturnCreatedUser() throws Exception {
-		when(userService.create(any(User.class))).thenReturn(testUser);
+		String jsonPayload = String.format(
+				"{\"email\":\"%s\",\"password\":\"%s\",\"name\":\"%s\",\"cpf\":\"%s\",\"registration\":\"%s\",\"phone\":\"%s\",\"alternativePhone\":\"%s\"}",
+				TEST_EMAIL, TEST_PASSWORD, TEST_NAME, TEST_CPF, TEST_REGISTRATION, TEST_PHONE, TEST_ALT_PHONE);
 
 		mockMvc.perform(post("/user/create")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content("{\"name\":\"" + TEST_NAME + "\",\"email\":\"" + TEST_EMAIL
-						+ "\",\"password\":\"" + TEST_PASSWORD + "\",\"cpf\":\"" + TEST_CPF
-						+ "\",\"phone\":\"" + TEST_PHONE + "\"}"))
-				.andExpect(status().isOk());
+				.content(jsonPayload))
+				.andExpect(status().isCreated()) // Alterado para isCreated()
+				.andExpect(jsonPath("$.status").value("Sucesso"))
+				.andExpect(jsonPath("$.message").value("Usuário criado com sucesso!"));
 
-		verify(userService).create(any(User.class));
+		verify(userService).create(any(CreateUserDTO.class));
 	}
 
 	@Test
 	void create_whenDefaultProfileNotFound_shouldReturnInternalServerError() throws Exception {
-		when(userService.create(any(User.class)))
-				.thenThrow(new DefaultProfileNotFoundException("Perfil padrão não encontrado"));
+		doThrow(new DefaultProfileNotFoundException("Perfil padrão não encontrado"))
+				.when(userService).create(any(CreateUserDTO.class));
+
+		String jsonPayload = String.format(
+				"{\"email\":\"%s\",\"password\":\"%s\",\"name\":\"%s\",\"cpf\":\"%s\",\"registration\":\"%s\",\"phone\":\"%s\",\"alternativePhone\":\"%s\"}",
+				TEST_EMAIL, TEST_PASSWORD, TEST_NAME, TEST_CPF, TEST_REGISTRATION, TEST_PHONE, TEST_ALT_PHONE);
 
 		mockMvc.perform(post("/user/create")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content("{\"name\":\"" + TEST_NAME + "\",\"email\":\"" + TEST_EMAIL
-						+ "\",\"password\":\"" + TEST_PASSWORD + "\",\"cpf\":\"" + TEST_CPF
-						+ "\",\"phone\":\"" + TEST_PHONE + "\"}"))
+				.content(jsonPayload))
 				.andExpect(status().isInternalServerError())
 				.andExpect(jsonPath("$.status").value("Conta não criada"))
 				.andExpect(jsonPath("$.message").value("Perfil padrão não encontrado"));
 
-		verify(userService).create(any(User.class));
+		verify(userService).create(any(CreateUserDTO.class));
 	}
 
 	@Test
 	void create_whenValidationFails_shouldReturnBadRequest() throws Exception {
-		when(userService.create(any(User.class)))
-				.thenThrow(new ValidationException("A senha deve ter no mínimo 8 caracteres"));
+		String shortPassword = "short";
+		doThrow(new ValidationException("A senha deve ter no mínimo 8 caracteres"))
+				.when(userService).create(any(CreateUserDTO.class));
+
+		String jsonPayload = String.format(
+				"{\"email\":\"%s\",\"password\":\"%s\",\"name\":\"%s\",\"cpf\":\"%s\",\"registration\":\"%s\",\"phone\":\"%s\",\"alternativePhone\":\"%s\"}",
+				TEST_EMAIL, shortPassword, TEST_NAME, TEST_CPF, TEST_REGISTRATION, TEST_PHONE, TEST_ALT_PHONE);
 
 		mockMvc.perform(post("/user/create")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content("{\"name\":\"" + TEST_NAME + "\",\"email\":\"" + TEST_EMAIL
-						+ "\",\"password\":\"short\",\"cpf\":\"" + TEST_CPF
-						+ "\",\"phone\":\"" + TEST_PHONE + "\"}"))
+				.content(jsonPayload))
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.status").value("Inválido"))
 				.andExpect(jsonPath("$.message").value("A senha deve ter no mínimo 8 caracteres"));
 
-		verify(userService).create(any(User.class));
+		verify(userService).create(any(CreateUserDTO.class));
 	}
 
 	@Test

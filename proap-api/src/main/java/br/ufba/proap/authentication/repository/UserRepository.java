@@ -15,6 +15,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	Optional<User> findByEmail(String email);
 
+	Optional<User> findByCpf(String cpf);
+
 	@Query("SELECT m FROM User m WHERE m.email = :email and m.cpf = :cpf")
 	User findByEmailAndCPF(String email, String cpf);
 

@@ -23,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import br.ufba.proap.authentication.domain.Perfil;
 import br.ufba.proap.authentication.domain.Permission;
 import br.ufba.proap.authentication.domain.User;
+import br.ufba.proap.authentication.domain.dto.CreateUserDTO;
 import br.ufba.proap.authentication.domain.dto.UserUpdateDTO;
 import br.ufba.proap.authentication.repository.UserRepository;
 import br.ufba.proap.exception.DefaultProfileNotFoundException;
@@ -66,6 +67,7 @@ class UserServiceTest {
 	private Authentication authentication;
 	private UserUpdateDTO userUpdateDTO;
 	private List<User> userList;
+	private CreateUserDTO createUserDTO;
 
 	@BeforeEach
 	void setUp() {
@@ -78,6 +80,109 @@ class UserServiceTest {
 		setupAuthentication();
 		setupUserUpdateDTO();
 		setupUserList();
+		setupCreateUserDTO();
+	}
+
+	private void setupUser() {
+		user = new User();
+		user.setName(NAME_PARAM);
+		user.setCpf(CPF_PARAM);
+		user.setEmail(EMAIL_PARAM);
+		user.setPassword(PASSWORD_PARAM);
+		user.setRegistration(REGISTRATION_PARAM);
+		user.setPhone(PHONE_PARAM);
+		user.setAlternativePhone(ALT_PHONE_PARAM);
+
+		when(userRepository.saveAndFlush(user)).thenAnswer(invocation -> {
+			User savedUser = invocation.getArgument(0);
+
+			setIdViaReflection(savedUser, USER_ID);
+			return savedUser;
+		});
+		setIdViaReflection(user, USER_ID);
+	}
+
+	private void setupAdminUser() {
+		adminUser = new User();
+		adminUser.setName("Admin User");
+		adminUser.setCpf("00000000000");
+		adminUser.setEmail("admin@example.com");
+		adminUser.setPassword(PASSWORD_PARAM);
+
+		when(userRepository.saveAndFlush(adminUser)).thenAnswer(invocation -> {
+			User savedUser = invocation.getArgument(0);
+
+			setIdViaReflection(savedUser, 2L);
+			return savedUser;
+		});
+		setIdViaReflection(adminUser, 2L);
+	}
+
+	private void setIdViaReflection(User user, Long id) {
+		try {
+			java.lang.reflect.Field idField = User.class.getDeclaredField("id");
+			idField.setAccessible(true);
+			idField.set(user, id);
+		} catch (Exception e) {
+			throw new RuntimeException("Não foi possível definir o ID do usuário via reflection", e);
+		}
+	}
+
+	private void setupPerfis() {
+		defaultPerfil = new Perfil();
+		defaultPerfil.setId(1L);
+		defaultPerfil.setName("USER");
+		defaultPerfil.setPermissions(createPermissionSet("USER_ROLE"));
+
+		adminPerfil = new Perfil();
+		adminPerfil.setId(2L);
+		adminPerfil.setName("ADMIN");
+		adminPerfil.setPermissions(createPermissionSet("ADMIN_ROLE"));
+
+		user.setPerfil(defaultPerfil);
+		adminUser.setPerfil(adminPerfil);
+	}
+
+	private Set<Permission> createPermissionSet(String... permissionKeys) {
+		Set<Permission> permissions = new java.util.HashSet<>();
+		for (String key : permissionKeys) {
+			Permission permission = new Permission();
+			permission.setId(permissions.size() + 1L);
+			permission.setKey(key);
+			permission.setDescription("Permissão " + key);
+			permission.setEnabled(true);
+			permissions.add(permission);
+		}
+		return permissions;
+	}
+
+	private void setupAuthentication() {
+		authentication = mock(Authentication.class);
+	}
+
+	private void setupUserUpdateDTO() {
+		userUpdateDTO = new UserUpdateDTO();
+		userUpdateDTO.setName("Nome Atualizado");
+		userUpdateDTO.setRegistrationNumber("202302");
+		userUpdateDTO.setPhone("71999995555");
+		userUpdateDTO.setAlternativePhone("71999994444");
+	}
+
+	private void setupUserList() {
+		userList = new ArrayList<>();
+		userList.add(user);
+		userList.add(adminUser);
+	}
+
+	private void setupCreateUserDTO() {
+		createUserDTO = new CreateUserDTO(
+				EMAIL_PARAM,
+				PASSWORD_PARAM,
+				NAME_PARAM,
+				CPF_PARAM,
+				REGISTRATION_PARAM,
+				PHONE_PARAM,
+				ALT_PHONE_PARAM);
 	}
 
 	@Test
@@ -132,55 +237,98 @@ class UserServiceTest {
 	}
 
 	@Test
-	void create_WhenValidUser_ShouldCreateUser() {
+	void create_WhenValidUser_ShouldCreateUserSuccessfully() {
+		when(userRepository.findByEmail(EMAIL_PARAM)).thenReturn(Optional.empty());
+		when(userRepository.findByCpf(CPF_PARAM)).thenReturn(Optional.empty());
 		when(perfilService.findByName(Perfil.getDefaultPerfilName())).thenReturn(Optional.of(defaultPerfil));
 		when(passwordEncoder.encode(PASSWORD_PARAM)).thenReturn(PASSWORD_ENCODED);
-		when(userRepository.saveAndFlush(any(User.class))).thenReturn(user);
+		when(userRepository.saveAndFlush(any(User.class))).thenAnswer(invocation -> {
+			User savedUserArgument = invocation.getArgument(0);
+			setIdViaReflection(savedUserArgument, USER_ID);
+			return savedUserArgument;
+		});
 
-		User newUser = new User();
-		newUser.setName(NAME_PARAM);
-		newUser.setEmail(EMAIL_PARAM);
-		newUser.setPassword(PASSWORD_PARAM);
+		userService.create(createUserDTO);
 
-		User result = userService.create(newUser);
-
-		assertNotNull(result);
-		assertEquals(user, result);
+		verify(userRepository).findByEmail(EMAIL_PARAM);
+		verify(userRepository).findByCpf(CPF_PARAM);
 		verify(perfilService).findByName(Perfil.getDefaultPerfilName());
 		verify(passwordEncoder).encode(PASSWORD_PARAM);
-		verify(userRepository).saveAndFlush(any(User.class));
+		verify(userRepository).saveAndFlush(argThat(savedUser -> savedUser.getEmail().equals(EMAIL_PARAM) &&
+				savedUser.getName().equals(NAME_PARAM) &&
+				savedUser.getCpf().equals(CPF_PARAM) &&
+				savedUser.getRegistration().equals(REGISTRATION_PARAM) &&
+				savedUser.getPhone().equals(PHONE_PARAM) &&
+				savedUser.getAlternativePhone().equals(ALT_PHONE_PARAM) &&
+				savedUser.getPerfil().equals(defaultPerfil) &&
+				savedUser.getPassword().equals(PASSWORD_ENCODED)));
 	}
 
 	@Test
-	void create_WhenDefaultProfileNotFound_ShouldThrowException() {
-		when(perfilService.findByName(Perfil.getDefaultPerfilName())).thenReturn(Optional.empty());
+	void create_WhenEmailAlreadyExists_ShouldThrowValidationException() {
+		when(userRepository.findByEmail(EMAIL_PARAM)).thenReturn(Optional.of(user));
 
-		User newUser = new User();
-		newUser.setName(NAME_PARAM);
-		newUser.setEmail(EMAIL_PARAM);
-		newUser.setPassword(PASSWORD_PARAM);
+		ValidationException exception = assertThrows(ValidationException.class,
+				() -> userService.create(createUserDTO));
 
-		DefaultProfileNotFoundException exception = assertThrows(DefaultProfileNotFoundException.class,
-				() -> userService.create(newUser));
-
-		assertEquals("Perfil padrão não encontrado. Contate o administrador do sistema.", exception.getMessage());
-		verify(perfilService).findByName(Perfil.getDefaultPerfilName());
+		assertEquals("Email já cadastrado", exception.getMessage());
+		verify(userRepository).findByEmail(EMAIL_PARAM);
+		verify(userRepository, never()).findByCpf(anyString());
+		verify(perfilService, never()).findByName(anyString());
+		verify(passwordEncoder, never()).encode(anyString());
 		verify(userRepository, never()).saveAndFlush(any(User.class));
 	}
 
 	@Test
-	void create_WhenPasswordTooShort_ShouldThrowException() {
-		User newUser = new User();
-		newUser.setName(NAME_PARAM);
-		newUser.setEmail(EMAIL_PARAM);
-		newUser.setPassword("123");
+	void create_WhenCpfAlreadyExists_ShouldThrowValidationException() {
+		when(userRepository.findByEmail(EMAIL_PARAM)).thenReturn(Optional.empty());
+		when(userRepository.findByCpf(CPF_PARAM)).thenReturn(Optional.of(user));
 
+		ValidationException exception = assertThrows(ValidationException.class,
+				() -> userService.create(createUserDTO));
+
+		assertEquals("CPF já cadastrado", exception.getMessage());
+		verify(userRepository).findByEmail(EMAIL_PARAM);
+		verify(userRepository).findByCpf(CPF_PARAM);
+		verify(perfilService, never()).findByName(anyString());
+		verify(passwordEncoder, never()).encode(anyString());
+		verify(userRepository, never()).saveAndFlush(any(User.class));
+	}
+
+	@Test
+	void create_WhenDefaultProfileNotFound_ShouldThrowDefaultProfileNotFoundException() {
+		when(userRepository.findByEmail(EMAIL_PARAM)).thenReturn(Optional.empty());
+		when(userRepository.findByCpf(CPF_PARAM)).thenReturn(Optional.empty());
+		when(perfilService.findByName(Perfil.getDefaultPerfilName())).thenReturn(Optional.empty());
+
+		DefaultProfileNotFoundException exception = assertThrows(DefaultProfileNotFoundException.class,
+				() -> userService.create(createUserDTO));
+
+		assertEquals("Perfil padrão não encontrado. Contate o administrador do sistema.", exception.getMessage());
+		verify(userRepository).findByEmail(EMAIL_PARAM);
+		verify(userRepository).findByCpf(CPF_PARAM);
+		verify(perfilService).findByName(Perfil.getDefaultPerfilName());
+		verify(passwordEncoder, never()).encode(anyString());
+		verify(userRepository, never()).saveAndFlush(any(User.class));
+	}
+
+	@Test
+	void create_WhenPasswordIsTooShort_ShouldThrowValidationException() {
+		CreateUserDTO shortPasswordDTO = new CreateUserDTO(
+				EMAIL_PARAM, "123", NAME_PARAM, CPF_PARAM, REGISTRATION_PARAM, PHONE_PARAM, ALT_PHONE_PARAM);
+
+		when(userRepository.findByEmail(EMAIL_PARAM)).thenReturn(Optional.empty());
+		when(userRepository.findByCpf(CPF_PARAM)).thenReturn(Optional.empty());
 		when(perfilService.findByName(Perfil.getDefaultPerfilName())).thenReturn(Optional.of(defaultPerfil));
 
 		ValidationException exception = assertThrows(ValidationException.class,
-				() -> userService.create(newUser));
+				() -> userService.create(shortPasswordDTO));
 
 		assertEquals("A senha deve ter no mínimo 8 caracteres", exception.getMessage());
+		verify(userRepository).findByEmail(EMAIL_PARAM);
+		verify(userRepository).findByCpf(CPF_PARAM);
+		verify(perfilService).findByName(Perfil.getDefaultPerfilName());
+		verify(passwordEncoder, never()).encode(anyString());
 		verify(userRepository, never()).saveAndFlush(any(User.class));
 	}
 
@@ -493,96 +641,5 @@ class UserServiceTest {
 
 		assertEquals(adminPerfil, user.getPerfil());
 		verify(userRepository).saveAndFlush(user);
-	}
-
-	private void setupUser() {
-		user = new User();
-		user.setName(NAME_PARAM);
-		user.setCpf(CPF_PARAM);
-		user.setEmail(EMAIL_PARAM);
-		user.setPassword(PASSWORD_PARAM);
-		user.setRegistration(REGISTRATION_PARAM);
-		user.setPhone(PHONE_PARAM);
-		user.setAlternativePhone(ALT_PHONE_PARAM);
-
-		when(userRepository.saveAndFlush(user)).thenAnswer(invocation -> {
-			User savedUser = invocation.getArgument(0);
-
-			setIdViaReflection(savedUser, USER_ID);
-			return savedUser;
-		});
-		setIdViaReflection(user, USER_ID);
-	}
-
-	private void setupAdminUser() {
-		adminUser = new User();
-		adminUser.setName("Admin User");
-		adminUser.setCpf("00000000000");
-		adminUser.setEmail("admin@example.com");
-		adminUser.setPassword(PASSWORD_PARAM);
-
-		when(userRepository.saveAndFlush(adminUser)).thenAnswer(invocation -> {
-			User savedUser = invocation.getArgument(0);
-
-			setIdViaReflection(savedUser, 2L);
-			return savedUser;
-		});
-		setIdViaReflection(adminUser, 2L);
-	}
-
-	private void setIdViaReflection(User user, Long id) {
-		try {
-			java.lang.reflect.Field idField = User.class.getDeclaredField("id");
-			idField.setAccessible(true);
-			idField.set(user, id);
-		} catch (Exception e) {
-			throw new RuntimeException("Não foi possível definir o ID do usuário via reflection", e);
-		}
-	}
-
-	private void setupPerfis() {
-		defaultPerfil = new Perfil();
-		defaultPerfil.setId(1L);
-		defaultPerfil.setName("USER");
-		defaultPerfil.setPermissions(createPermissionSet("USER_ROLE"));
-
-		adminPerfil = new Perfil();
-		adminPerfil.setId(2L);
-		adminPerfil.setName("ADMIN");
-		adminPerfil.setPermissions(createPermissionSet("ADMIN_ROLE"));
-
-		user.setPerfil(defaultPerfil);
-		adminUser.setPerfil(adminPerfil);
-	}
-
-	private Set<Permission> createPermissionSet(String... permissionKeys) {
-		Set<Permission> permissions = new java.util.HashSet<>();
-		for (String key : permissionKeys) {
-			Permission permission = new Permission();
-			permission.setId(permissions.size() + 1L);
-			permission.setKey(key);
-			permission.setDescription("Permissão " + key);
-			permission.setEnabled(true);
-			permissions.add(permission);
-		}
-		return permissions;
-	}
-
-	private void setupAuthentication() {
-		authentication = mock(Authentication.class);
-	}
-
-	private void setupUserUpdateDTO() {
-		userUpdateDTO = new UserUpdateDTO();
-		userUpdateDTO.setName("Nome Atualizado");
-		userUpdateDTO.setRegistrationNumber("202302");
-		userUpdateDTO.setPhone("71999995555");
-		userUpdateDTO.setAlternativePhone("71999994444");
-	}
-
-	private void setupUserList() {
-		userList = new ArrayList<>();
-		userList.add(user);
-		userList.add(adminUser);
 	}
 }

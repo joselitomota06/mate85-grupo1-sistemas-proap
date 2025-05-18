@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import br.ufba.proap.authentication.domain.Perfil;
 import br.ufba.proap.authentication.domain.User;
+import br.ufba.proap.authentication.domain.dto.CreateUserDTO;
 import br.ufba.proap.authentication.domain.dto.UserUpdateDTO;
 import br.ufba.proap.authentication.repository.UserRepository;
 import br.ufba.proap.exception.DefaultProfileNotFoundException;
@@ -56,16 +57,30 @@ public class UserService implements UserDetailsService {
 		return (User) this.loadUserByUsername(username);
 	}
 
-	public User create(User user) {
+	public void create(CreateUserDTO user) {
+		if (userRepository.findByEmail(user.email()).isPresent()) {
+			throw new ValidationException("Email já cadastrado");
+		}
+		if (userRepository.findByCpf(user.cpf()).isPresent()) {
+			throw new ValidationException("CPF já cadastrado");
+		}
+
 		Perfil defaultPerfil = perfilService.findByName(Perfil.getDefaultPerfilName()).orElseThrow(
 				() -> new DefaultProfileNotFoundException(
 						"Perfil padrão não encontrado. Contate o administrador do sistema."));
-		if (user.getPassword().length() < 8) {
+		if (user.password().length() < 8) {
 			throw new ValidationException("A senha deve ter no mínimo 8 caracteres");
 		}
-		user.setPerfil(defaultPerfil);
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		return userRepository.saveAndFlush(user);
+		User newUser = new User();
+		newUser.setEmail(user.email());
+		newUser.setName(user.name());
+		newUser.setCpf(user.cpf());
+		newUser.setRegistration(user.registration());
+		newUser.setPhone(user.phone());
+		newUser.setAlternativePhone(user.alternativePhone());
+		newUser.setPerfil(defaultPerfil);
+		newUser.setPassword(passwordEncoder.encode(user.password()));
+		userRepository.saveAndFlush(newUser);
 	}
 
 	public User update(UserUpdateDTO user) {
