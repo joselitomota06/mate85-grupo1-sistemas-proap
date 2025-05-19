@@ -58,4 +58,4 @@ jobs:
       - name: install & test
         run: |
           npm install
-          npm run build
+          npm test
