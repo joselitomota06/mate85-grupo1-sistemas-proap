@@ -54,7 +54,7 @@ public class SecurityConfiguration {
 				.authorizeHttpRequests(authorize -> authorize
 						.requestMatchers(HttpMethod.POST, "/authentication/**", "/user/create")
 						.permitAll()
-						.requestMatchers(HttpMethod.GET, "/files/**").permitAll()
+						.requestMatchers(HttpMethod.GET, "/files/**", "/authentication/**").permitAll()
 						.requestMatchers(HttpMethod.GET, "/profile/**").authenticated()
 						.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/actuator/health/**")
 						.permitAll()
