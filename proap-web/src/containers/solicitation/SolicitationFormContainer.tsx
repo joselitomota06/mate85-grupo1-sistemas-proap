@@ -20,8 +20,8 @@ import StepperForm, {
 } from '../../components/stepper-form/StepperForm';
 import SolicitantDetailFormContainer from './create/SolicitantDetailFormContainer';
 import ConfirmationFormContainer from './create/ConfirmationFormContainer';
-import FinancialDetailFormContainer from './create/FinancialDetailFormContainer';
 import EventDetailFormContainer from './create/EventDetailFormContainer';
+import FinancialDetailFormContainer from './create/FinancialDetailFormContainer';
 
 interface SolicitationFormContainerProps {
   onSubmit: (values: FormikValues) => void;

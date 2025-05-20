@@ -26,6 +26,7 @@ export const INITIAL_SYSTEM_CONFIG: SystemConfiguration = {
   textoInformacaoValorDiaria: '',
   textoInformacaoValorPassagem: '',
   resourceLinks: [],
+  enableSolicitation: false,
 };
 
 const initialState: SystemConfigState = {

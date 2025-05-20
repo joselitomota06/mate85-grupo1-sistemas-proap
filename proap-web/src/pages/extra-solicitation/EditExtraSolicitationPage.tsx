@@ -8,7 +8,7 @@ import ExtraSolicitationFormContainer from '../../containers/extra-solicitation/
 import useExtraSolicitation from '../../hooks/solicitation/useExtraSolicitation';
 import Toast from '../../helpers/notification';
 import { updateExtraAssistanceRequest } from '../../services/extraAssistanceRequestService';
-import { ExtraSolicitation } from '../../containers/extra-solicitation/ExtraSolicitationFormSchema';
+import { ExtraRequest } from '../../types';
 
 export default function EditExtraSolicitationPage() {
   const { id } = useParams();
@@ -20,7 +20,7 @@ export default function EditExtraSolicitationPage() {
   }, [hasError]);
 
   const handleSubmit = (values: FormikValues) => {
-    return updateExtraAssistanceRequest(values as ExtraSolicitation)
+    return updateExtraAssistanceRequest(values as ExtraRequest)
       .then(() => {
         Toast.success('Solicitação alterada com sucesso');
         navigate('/');
