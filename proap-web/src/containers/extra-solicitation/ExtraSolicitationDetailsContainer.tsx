@@ -1,14 +1,12 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import styled from '@emotion/styled';
-
-import { booleanToYesOrNo } from '../../helpers/conversion';
-import { ExtraRequest } from '../../types/requests-type/ExtraRequest';
 import { useAuth } from '../../hooks';
 import { formatNumberToBRL } from '../../helpers/formatter';
+import { ExtraSolicitationFormValues } from './ExtraSolicitationFormSchema';
 
 interface ExtraSolicitationDetailsContainerProps {
-  solicitation: ExtraRequest;
+  solicitation: ExtraSolicitationFormValues;
 }
 
 const StyledData = styled(Box)`
