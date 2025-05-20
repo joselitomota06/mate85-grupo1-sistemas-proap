@@ -55,7 +55,7 @@ jobs:
         with:
           node-version: '20'
 
-      - name: install & test
+      - name: ci & test
         run: |
-          npm install
+          npm ci
           npm test
