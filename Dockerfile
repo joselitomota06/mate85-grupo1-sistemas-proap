@@ -28,7 +28,7 @@ RUN apk add --no-cache nginx ca-certificates gettext
 
 # 2) artefatos
 WORKDIR /app
-RUN mkdir ./file_uploads
+RUN mkdir -p /app_storage
 COPY --from=frontend-build /workspace/front/dist /usr/share/nginx/html
 COPY --from=backend-build /workspace/back/target/*.jar app.jar
 COPY deploy/nginx.conf /etc/nginx/templates/default.conf.template
