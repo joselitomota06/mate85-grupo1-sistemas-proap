@@ -16,12 +16,13 @@ services:
       - DB_PASSWORD=password
       - FILE_UPLOAD_DIR=/app/uploads
       - FRONTEND_BASE_URL=${FRONTEND_BASE_URL}
+      - MAIL_ENABLED=${MAIL_ENABLED}
       - MAIL_HOST=${MAIL_HOST}
       - MAIL_PORT=${MAIL_PORT}
       - MAIL_USERNAME=${MAIL_USERNAME}
       - MAIL_PASSWORD=${MAIL_PASSWORD}
-      # - MAIL_FROM=${MAIL_FROM}
-      # - MAIL_FROM_NAME=${MAIL_FROM_NAME}
+      - MAIL_FROM=${MAIL_FROM}
+      - MAIL_FROM_NAME=${MAIL_FROM_NAME}
     ports:
       - "8080:8080"
     depends_on:
