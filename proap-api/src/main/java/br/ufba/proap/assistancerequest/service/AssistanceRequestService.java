@@ -42,8 +42,22 @@ public class AssistanceRequestService {
 		return assistanteRequestRepository.findByUser(user);
 	}
 
-	public Optional<AssistanceRequest> findById(Long id) {
-		return assistanteRequestRepository.findById(id);
+	@Transactional
+	public Optional<ResponseAssistanceRequestDTO> findById(Long id) {
+		User currentUser = userService.getLoggedUser();
+
+		Optional<AssistanceRequest> request = assistanteRequestRepository.findById(id);
+		if (!request.isPresent())
+			return Optional.empty();
+
+		boolean currentUserHasPermission = currentUser.getPerfil() != null && currentUser.getPerfil()
+				.hasPermission("VIEW_ALL_REQUESTS");
+
+		if (request.get().getUser().equals(currentUser) || currentUserHasPermission) {
+			return Optional.of(ResponseAssistanceRequestDTO.fromEntity(request.get()));
+		}
+
+		return Optional.empty();
 	}
 
 	public static class AssistanceRequestListFiltered {
@@ -107,13 +121,28 @@ public class AssistanceRequestService {
 		return assistanteRequestRepository.save(assistanceReques);
 	}
 
-	public void delete(AssistanceRequest assistanceRequestDTO) {
-		assistanteRequestRepository.delete(assistanceRequestDTO);
+	@Transactional
+	public void delete(Long id) {
+		User currentUser = userService.getLoggedUser();
+
+		AssistanceRequest existentRequest = assistanteRequestRepository.findById(id)
+				.orElseThrow(() -> new NotFoundException("Solicitação não encontrada"));
+
+		if (!existentRequest.getUser().equals(currentUser)
+				&& !currentUser.getPerfil().hasPermission("APPROVE_REQUEST")) {
+			throw new UnauthorizedException("Usuário não autorizado a deletar essa solicitação");
+		}
+		if (existentRequest.getUser().equals(currentUser) && existentRequest.getSituacao() != 0) {
+			throw new UnauthorizedException("Usuário não pode deletar uma solicitação já aprovada ou reprovada");
+		}
+
+		assistanteRequestRepository.delete(existentRequest);
 	}
 
 	@Transactional
 	public AssistanceRequest reviewSolicitation(AssistanceRequest assistanceRequest, User currentUser) {
-		Optional<AssistanceRequest> assistancePersisted = findById(assistanceRequest.getId());
+		Optional<AssistanceRequest> assistancePersisted = assistanteRequestRepository
+				.findById(assistanceRequest.getId());
 
 		if (!assistancePersisted.isPresent()) {
 			return null;

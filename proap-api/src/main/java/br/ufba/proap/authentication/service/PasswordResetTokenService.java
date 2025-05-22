@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.ufba.proap.authentication.domain.PasswordResetToken;
 import br.ufba.proap.authentication.domain.User;
@@ -35,6 +36,7 @@ public class PasswordResetTokenService {
         return UUID.randomUUID().toString();
     }
 
+    @Transactional
     public String createResetToken(String email) {
         Optional<User> userOpt = userService.findByEmail(email);
         if (userOpt.isEmpty()) {
@@ -85,6 +87,7 @@ public class PasswordResetTokenService {
         return true;
     }
 
+    @Transactional
     public void updatePassword(String token, String newPassword) {
         User user = tokenRepository.findByToken(token).get().getUser();
         try {
@@ -95,6 +98,7 @@ public class PasswordResetTokenService {
         }
     }
 
+    @Transactional
     public void deleteToken(String token) {
         Optional<PasswordResetToken> tokenOpt = tokenRepository.findByToken(token);
         if (tokenOpt.isEmpty()) {

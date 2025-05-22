@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +24,7 @@ public class ProfileController {
         @Autowired
         private UserService userService;
 
+        @Transactional
         @GetMapping("/user-permissions")
         public ResponseEntity<List<ProfileDTO>> getProfileByName() {
                 String currentPerfilLogged = userService.getLoggedUser().getPerfil().getName();
@@ -36,6 +38,7 @@ public class ProfileController {
                 return ResponseEntity.ok(perfisDTO);
         }
 
+        @Transactional
         @GetMapping("/list")
         public ResponseEntity<List<ProfileDTO>> getAll() {
                 User currentUser = userService.getLoggedUser();

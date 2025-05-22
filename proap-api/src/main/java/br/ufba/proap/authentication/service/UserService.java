@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.ufba.proap.authentication.domain.Perfil;
 import br.ufba.proap.authentication.domain.User;
@@ -117,6 +118,7 @@ public class UserService implements UserDetailsService {
 		return userRepository.findByEmail(email);
 	}
 
+	@Transactional
 	public void delete(String email) {
 		User loggedUser = getLoggedUser();
 		if (!loggedUser.getPerfil().hasPermission("ADMIN_ROLE")) {
@@ -140,6 +142,7 @@ public class UserService implements UserDetailsService {
 		userRepository.delete(user);
 	}
 
+	@Transactional
 	public void changePassword(String currentPassword, String newPassword) throws ValidationException {
 		User loggedUser = getLoggedUser();
 		if (!passwordEncoder.matches(currentPassword, loggedUser.getPassword())) {
@@ -157,6 +160,7 @@ public class UserService implements UserDetailsService {
 		userRepository.saveAndFlush(user);
 	}
 
+	@Transactional
 	public void updateProfile(String email, Long profileId) {
 		User loggedUser = getLoggedUser();
 		if (!loggedUser.getPerfil().hasPermission("ADMIN_ROLE")) {
