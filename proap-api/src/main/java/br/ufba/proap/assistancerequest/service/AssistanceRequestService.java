@@ -53,7 +53,7 @@ public class AssistanceRequestService {
 		boolean currentUserHasPermission = currentUser.getPerfil() != null && currentUser.getPerfil()
 				.hasPermission("VIEW_ALL_REQUESTS");
 
-		if (request.get().getUser() == currentUser || currentUserHasPermission) {
+		if (request.get().getUser().equals(currentUser) || currentUserHasPermission) {
 			return Optional.of(ResponseAssistanceRequestDTO.fromEntity(request.get()));
 		}
 
