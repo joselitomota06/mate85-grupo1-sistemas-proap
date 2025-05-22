@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:latest
+    environment:
+      - POSTGRES_DB=proap
+      - POSTGRES_USER=proap
+      - POSTGRES_PASSWORD=root
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  proap:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # Simula as vars que o Dokku injeta
+    environment:
+      - JWT_SECRET=secret
+      - API_PORT=8080
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=proap
+      - DB_USERNAME=proap
+      - DB_PASSWORD=root
+      - FILE_UPLOAD_DIR=/app/file_uploads
+      - FRONTEND_BASE_URL=${FRONTEND_BASE_URL}
+      - MAIL_ENABLED=false
+      - MAIL_HOST=${MAIL_HOST}
+      - MAIL_PORT=${MAIL_PORT}
+      - MAIL_USERNAME=${MAIL_USERNAME}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - SPRING_PROFILES_ACTIVE=prod
+    depends_on:
+      - db
+    ports:
+      - "3000:5000"                # expõe 5000 local → container
+    restart: on-failure
+
+volumes:
+  db-data:
