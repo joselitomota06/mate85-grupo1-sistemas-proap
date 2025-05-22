@@ -2,6 +2,7 @@ package br.ufba.proap.solicitationadminpanel.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.ufba.proap.assistancerequest.repository.AssistanceRequestRepository;
 import br.ufba.proap.solicitationadminpanel.domain.SolicitationAdmin;
@@ -22,6 +23,7 @@ public class BudgetService {
     @Autowired
     private AssistanceRequestRepository assistanteRequestRepository;
 
+    @Transactional
     public SolicitationAdmin setBudget(BigDecimal budget, Integer year) {
 
         SolicitationAdmin existingBudget = repository.findByYear(year).orElse(null);
@@ -44,11 +46,13 @@ public class BudgetService {
                 .orElseThrow(() -> new NotFoundException("Budget not found for year: " + year));
     }
 
+    @Transactional
     public List<AssistanceIdValueDTO> getTotalApprovedAssistanceRequestsValue(LocalDate startDate, LocalDate endDate) {
         return AssistanceIdValueDTO
                 .convertPairsToDTOs(assistanteRequestRepository.findTotalApprovedValueByDateRange(startDate, endDate));
     }
 
+    @Transactional
     public BigDecimal getRemainingBudget(Integer year) {
         BigDecimal totalBudget = repository.findByYear(year)
                 .map(SolicitationAdmin::getOrcamentoAnual)
@@ -60,6 +64,7 @@ public class BudgetService {
         return totalBudget.subtract(totalSpent);
     }
 
+    @Transactional
     public BigDecimal getUsedBudget(Integer year) {
         BigDecimal totalBudget = repository.findByYear(year)
                 .map(SolicitationAdmin::getOrcamentoAnual)
@@ -70,6 +75,7 @@ public class BudgetService {
         return totalBudget.subtract(remainingBudget);
     }
 
+    @Transactional
     public List<Integer> getAvailableYears() {
         List<Integer> years = repository.findAllAvailableYears();
 

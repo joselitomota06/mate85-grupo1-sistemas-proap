@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,6 +39,7 @@ import br.ufba.proap.authentication.service.UserService;
 import br.ufba.proap.exception.UnauthorizedException;
 import br.ufba.proap.filestorage.FileService;
 import jakarta.validation.Valid;
+import jakarta.ws.rs.NotFoundException;
 
 @RestController
 @RequestMapping("assistancerequest")
@@ -57,6 +59,8 @@ public class AssistanceRequestController {
 	@Autowired
 	private FileService fileUploadService;
 
+	// TODO: Débito técnico - Refatorar para service
+	@Transactional
 	@GetMapping("/list")
 	public ResponseEntity<AssistanceRequestListFiltered> list(
 			@RequestParam String sortBy,
@@ -87,6 +91,8 @@ public class AssistanceRequestController {
 		}
 	}
 
+	// TODO: Débito técnico - Refatorar para service
+	@Transactional
 	@GetMapping("/list/{userId}")
 	public List<AssistanceRequest> listById(@PathVariable Long userId) {
 		User currentUser = serviceUser.getLoggedUser();
@@ -103,32 +109,22 @@ public class AssistanceRequestController {
 
 	@GetMapping("/find/{id}")
 	public ResponseEntity<ResponseAssistanceRequestDTO> findById(@PathVariable Long id) {
-		User currentUser = serviceUser.getLoggedUser();
-
-		if (currentUser == null)
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-
 		try {
-			Optional<AssistanceRequest> request = service.findById(id);
+			Optional<ResponseAssistanceRequestDTO> request = service.findById(id);
 
-			if (!request.isPresent())
+			if (request.isEmpty()) {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-
-			boolean currentUserHasPermission = currentUser.getPerfil() != null
-					&& currentUser.getPerfil().hasPermission("VIEW_ALL_REQUESTS");
-
-			if (request.get().getUser() == currentUser || currentUserHasPermission) {
-				ResponseAssistanceRequestDTO response = ResponseAssistanceRequestDTO.fromEntity(request.get());
-				return ResponseEntity.ok().body(response);
 			}
+			return ResponseEntity.ok().body(request.get());
+
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
-
-		return null;
 	}
 
+	// TODO: Débito técnico - Refatorar para service
+	@Transactional
 	@PostMapping("/create")
 	public ResponseEntity<AssistanceRequest> create(@RequestBody AssistanceRequest assistanceReques) {
 
@@ -150,6 +146,8 @@ public class AssistanceRequestController {
 		}
 	}
 
+	// TODO: Débito técnico - Refatorar para service
+	@Transactional
 	@PostMapping(value = "/create-with-file", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<ResponseAssistanceRequestDTO> createWithFile(
 			@RequestPart("form") CreateAssistanceRequestDTO form,
@@ -186,27 +184,29 @@ public class AssistanceRequestController {
 		}
 	}
 
+	// TODO: Débito técnico - Refatorar para service
+	@Transactional
 	@PutMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<AssistanceRequest> update(@RequestPart("form") ResponseAssistanceRequestDTO assistanceRequest,
 			@RequestPart(value = "file", required = false) MultipartFile file) {
 		try {
 			User currentUser = serviceUser.getLoggedUser();
-			AssistanceRequest existingInstance = service.findById(assistanceRequest.id()).orElse(null);
+			ResponseAssistanceRequestDTO existingInstance = service.findById(assistanceRequest.id()).orElse(null);
 			if (existingInstance == null) {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 			}
-			boolean isNotOwner = !existingInstance.getUser().getEmail().equals(currentUser.getEmail());
+			boolean isNotOwner = !existingInstance.user().email().equals(currentUser.getEmail());
 			boolean cannotApprove = !currentUser.getPerfil().hasPermission("APPROVE_REQUEST");
-			boolean isNotPending = existingInstance.getSituacao() != 0;
+			boolean isNotPending = existingInstance.situacao() != 0;
 
 			if ((isNotOwner && cannotApprove) || (isNotPending && cannotApprove)) {
 				return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 			}
 
 			AssistanceRequest updatedAssistanceRequest = assistanceRequest.toEntity();
-			updatedAssistanceRequest.setId(existingInstance.getId());
-			updatedAssistanceRequest.setUser(existingInstance.getUser());
-			updatedAssistanceRequest.setCreatedAt(existingInstance.getCreatedAt());
+			updatedAssistanceRequest.setId(existingInstance.id());
+			updatedAssistanceRequest.setUser(serviceUser.findByEmail(existingInstance.user().email()).orElse(null));
+			updatedAssistanceRequest.setCreatedAt(existingInstance.createdAt());
 			if (file != null) {
 				String savedFileName = fileUploadService.uploadPdf(file);
 				updatedAssistanceRequest.setCartaAceite(savedFileName);
@@ -224,6 +224,8 @@ public class AssistanceRequestController {
 		}
 	}
 
+	// TODO: Débito técnico - Refatorar para service
+	@Transactional
 	@PutMapping("/reviewsolicitation")
 	public ResponseEntity<AssistanceRequest> reviewsolicitation(
 			@RequestBody AssistanceRequest assistanceRequest) {
@@ -244,25 +246,20 @@ public class AssistanceRequestController {
 	}
 
 	@DeleteMapping("/remove/{id}")
-	public ResponseEntity<String> remove(@PathVariable Long id) {
-		User currentUser = serviceUser.getLoggedUser();
-
-		if (currentUser == null)
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+	public ResponseEntity<StatusResponseDTO> remove(@PathVariable Long id) {
 
 		try {
-			Optional<AssistanceRequest> assistanceReques = service.findById(id);
 
-			if (assistanceReques.isPresent()) {
-				service.delete(assistanceReques.get());
-				return ResponseEntity.ok().body("Successfully removed");
-			}
+			service.delete(id);
 
-			return ResponseEntity.notFound().build();
+			return ResponseEntity.ok().body(new StatusResponseDTO("success", "Successfully removed"));
 
-		} catch (Exception e) {
+		} catch (NotFoundException e) {
 			logger.error(e.getMessage());
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new StatusResponseDTO("error", e.getMessage()));
+		} catch (UnauthorizedException e) {
+			logger.error(e.getMessage());
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new StatusResponseDTO("error", e.getMessage()));
 		}
 	}
 
@@ -301,6 +298,8 @@ public class AssistanceRequestController {
 		}
 	}
 
+	// TODO: Débito técnico - Refatorar para service
+	@Transactional
 	@PutMapping("/{id}/ceapg")
 	public ResponseEntity<?> updateCeapgFields(
 			@PathVariable Long id,
