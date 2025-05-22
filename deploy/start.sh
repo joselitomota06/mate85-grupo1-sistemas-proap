@@ -1,5 +1,4 @@
-#!/usr/bin/env bash
-set -e
+#!/usr/bin/env sh
 
 # Função para repassar o sinal ao Java
 term_handler() {
@@ -16,10 +15,11 @@ trap 'term_handler' SIGTERM SIGINT
 java -jar /app/app.jar --server.port="$API_PORT" &
 SPRING_PID=$!
 
-# 2) gera nginx.conf substituindo variáveis do template
+# 2) gera nginx.conf substituindo variáveis do template e o coloca como o arquivo principal
 envsubst '${PORT} ${API_PORT}' \
   < /etc/nginx/templates/default.conf.template \
-  > /etc/nginx/conf.d/default.conf
+  > /etc/nginx/nginx.conf # Sobrescreve o nginx.conf principal
 
 # 3) Nginx em foreground (vira PID 1)
-exec nginx -g "daemon off;"
+# O -c /etc/nginx/nginx.conf é implícito, mas pode ser explicitado se necessário
+exec nginx -g "daemon off;" # -c /etc/nginx/nginx.conf
