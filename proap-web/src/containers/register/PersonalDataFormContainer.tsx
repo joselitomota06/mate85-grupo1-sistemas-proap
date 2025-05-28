@@ -87,7 +87,7 @@ export default function PersonalDataFormContainer() {
                 {...field}
                 fullWidth
                 label="Matrícula"
-                placeholder="Digite seu número de matrícula"
+                placeholder="Digite sua matrícula ou SIAPE"
                 variant="outlined"
                 required
                 error={Boolean(touched.registration && errors.registration)}

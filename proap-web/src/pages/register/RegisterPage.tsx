@@ -14,6 +14,7 @@ import React from 'react';
 import RegisterFormContainer from '../../containers/register/RegisterFormContainer';
 import { RegisterGrid, RegisterPaperContainer } from './RegisterPage.style';
 import { PersonAdd as PersonAddIcon, School } from '@mui/icons-material';
+import logo from '../../assets/logo_ic_grande.png';
 
 export default function RegisterPage() {
   const theme = useTheme();
@@ -62,6 +63,20 @@ export default function RegisterPage() {
           }}
         >
           <Box sx={{ position: 'relative', zIndex: 1, mr: 2 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                mb: 2,
+                mt: isMobile ? 8 : 0,
+              }}
+            >
+              <img
+                src={logo}
+                height={isMobile ? 150 : 200}
+                alt="Logo Instituto de Computação UFBA"
+              />
+            </Box>
             <Typography variant="h4" fontWeight="bold" gutterBottom mt={2}>
               PROAP
             </Typography>

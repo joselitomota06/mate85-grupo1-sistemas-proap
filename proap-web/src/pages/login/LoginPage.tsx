@@ -13,6 +13,7 @@ import {
 import LoginFormContainer from '../../containers/login/LoginFormContainer';
 import { LoginGrid, LoginPaperContainer } from './LoginPage.style';
 import { Lock as LockIcon } from '@mui/icons-material';
+import logo from '../../assets/logo_ic_grande.png';
 
 export default function LoginPage() {
   const theme = useTheme();
@@ -61,6 +62,13 @@ export default function LoginPage() {
           }}
         >
           <Box sx={{ position: 'relative', zIndex: 1, mr: 2 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', my: 2 }}>
+              <img
+                src={logo}
+                height={isMobile ? 150 : 200}
+                alt="Logo Instituto de Computação UFBA"
+              />
+            </Box>
             <Typography variant="h4" fontWeight="bold" gutterBottom mt={2}>
               PROAP
             </Typography>
