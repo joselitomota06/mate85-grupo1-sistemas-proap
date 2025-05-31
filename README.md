@@ -2,7 +2,7 @@
 
 ## Links importantes
 
-[1. Aplicação PROAP Produção](https://proap-ufba.netlify.app/)
+[1. Aplicação PROAP Produção](https://proap.app.ic.ufba.br/)
 
 [2. Documento de visão e Requisitos](https://docs.google.com/document/d/1m9wSqd6X_1-cIYyQlSkXVTLkZj8PFWPeTRYjBZ5t95s/edit?usp=sharing)
 
