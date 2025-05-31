@@ -109,6 +109,7 @@ Júlio César
 
 Matheus Sandes 
 
+Wallace Mendes
 
 # Informações da API
 
