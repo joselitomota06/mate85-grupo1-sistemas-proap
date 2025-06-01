@@ -28,6 +28,8 @@ services:
       - FILE_UPLOAD_DIR=/app/file_uploads
       - FRONTEND_BASE_URL=${FRONTEND_BASE_URL}
       - MAIL_ENABLED=false
+      - MAIL_FROM=${MAIL_FROM}
+      - MAIL_FROM_ALIAS=${MAIL_FROM_ALIAS}
       - MAIL_HOST=${MAIL_HOST}
       - MAIL_PORT=${MAIL_PORT}
       - MAIL_USERNAME=${MAIL_USERNAME}

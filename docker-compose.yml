@@ -22,7 +22,7 @@ services:
       - MAIL_PASSWORD=${MAIL_PASSWORD}
       - SPRING_PROFILES_ACTIVE=prod
       # - MAIL_FROM=${MAIL_FROM}
-      # - MAIL_FROM_NAME=${MAIL_FROM_NAME}
+      # - MAIL_FROM_ALIAS=${MAIL_FROM_ALIAS}
     ports:
       - "8080:8080"
     depends_on:
