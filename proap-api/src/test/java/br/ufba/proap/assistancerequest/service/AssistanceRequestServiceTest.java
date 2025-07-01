@@ -139,7 +139,7 @@ class AssistanceRequestServiceTest {
         ar.setEventoInternacional(Boolean.TRUE);
         ar.setDataInicio(LocalDate.now());
         ar.setDataFim(LocalDate.now().plusDays(1));
-        ar.setAfastamentoParaParticipacao(Boolean.TRUE);
+        ar.setQtdDiasEvento(1);
         ar.setCidade("Salvador");
         ar.setPais("BR");
         ar.setModalidadeParticipacao("Apresentação");

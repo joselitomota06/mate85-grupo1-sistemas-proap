@@ -400,22 +400,14 @@ export default function SolicitationReviewContainer() {
             </Box>
 
             <StyledData>
-              <Typography variant="subtitle2" color="text.secondary">
-                Necessário afastamento?
-              </Typography>
               <Typography>
-                {booleanToYesOrNo(values.afastamentoParaParticipacao!)}
+                Quantos dias de evento?
+                <span style={{ color: 'red' }}> *</span>
               </Typography>
+              <TruncatedText variant="subtitle2">
+                {`${values.qtdDiasEvento} dia${values.qtdDiasEvento === 1 ? '' : 's'}`}
+              </TruncatedText>
             </StyledData>
-
-            {values.afastamentoParaParticipacao && (
-              <StyledData>
-                <Typography variant="subtitle2" color="text.secondary">
-                  Dias de afastamento
-                </Typography>
-                <Typography>{values.diasAfastamento} dias</Typography>
-              </StyledData>
-            )}
 
             <StyledData>
               <Typography variant="subtitle2" color="text.secondary">

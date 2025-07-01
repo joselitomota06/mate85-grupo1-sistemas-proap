@@ -188,12 +188,20 @@ export default function SolicitationTableRequests() {
 
   const handleClickRemoveRequest = () => {
     if (solicitationToDelete) {
-      removeAssistanceRequestById(solicitationToDelete).then(() => {
-        updateAssistanceRequestListWithCurrentParameters();
-        toast.success('Solicitação removida com sucesso');
-        setOpenDeleteConfirmation(false);
-        setSolicitationToDelete(null);
-      });
+      removeAssistanceRequestById(solicitationToDelete)
+        .then(() => {
+          updateAssistanceRequestListWithCurrentParameters();
+          toast.success('Solicitação removida com sucesso');
+        })
+        .catch((error) => {
+          toast.error(
+            `Erro ao remover solicitação: ${error.response?.data?.message || 'Ocorreu um erro inesperado'}`,
+          );
+        })
+        .finally(() => {
+          setOpenDeleteConfirmation(false);
+          setSolicitationToDelete(null);
+        });
     }
   };
 

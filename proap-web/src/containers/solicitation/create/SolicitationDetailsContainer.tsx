@@ -193,25 +193,13 @@ export default function SolicitationDetailsContainer({
           </StyledData>
           <StyledData>
             <Typography>
-              Será necessário afastamento para participação do Evento?{' '}
-              <span style={{ color: 'red' }}>*</span>
+              Quantos dias de evento?
+              <span style={{ color: 'red' }}> *</span>
             </Typography>
             <TruncatedText variant="subtitle2">
-              {booleanToYesOrNo(solicitation.afastamentoParaParticipacao!)}
+              {`${solicitation.qtdDiasEvento} dia${solicitation.qtdDiasEvento === 1 ? '' : 's'}`}
             </TruncatedText>
           </StyledData>
-
-          {solicitation.afastamentoParaParticipacao && (
-            <StyledData>
-              <Typography>
-                Quantos dias de afastamento?
-                <span style={{ color: 'red' }}> *</span>
-              </Typography>
-              <TruncatedText variant="subtitle2">
-                {solicitation.diasAfastamento} dias
-              </TruncatedText>
-            </StyledData>
-          )}
 
           <StyledData>
             <Typography>

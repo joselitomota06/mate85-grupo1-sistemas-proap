@@ -382,17 +382,9 @@ export default function SolicitationViewContainer({ id }: { id: string }) {
                 value={solicitation.modalidadeParticipacao}
               />
               <InfoItem
-                label="Afastamento para participação no evento"
-                value={booleanToYesOrNo(
-                  solicitation.afastamentoParaParticipacao!,
-                )}
+                label="Quantidade de Dias do Evento"
+                value={`${solicitation.qtdDiasEvento} dia${solicitation.qtdDiasEvento === 1 ? '' : 's'}`}
               />
-              {solicitation.afastamentoParaParticipacao && (
-                <InfoItem
-                  label="Dias de afastamento"
-                  value={solicitation.diasAfastamento}
-                />
-              )}
               <InfoItem
                 label="Link da Homepage do Evento"
                 value={

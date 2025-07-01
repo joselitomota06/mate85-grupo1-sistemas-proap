@@ -105,7 +105,7 @@ class AssistanceRequestControllerTest {
                 mockResponse = new ResponseAssistanceRequestDTO(
                                 1L, ownerUserResponseDTO, null, null, "Teste", Collections.emptyList(), false, false,
                                 null, null,
-                                false, 0, null, false, null, null, false, 0, null, null, null, null, null,
+                                false, 0, null, false, null, null, 1,  null, null, null, null, null,
                                 BigDecimal.ZERO, null, 0, BigDecimal.ZERO, false, false, BigDecimal.ZERO,
                                 BigDecimal.ZERO, BigDecimal.ZERO, null, "Justificativa Original", false, 0,
                                 null, null, null, 0, BigDecimal.ZERO, null, null, BigDecimal.ZERO, null,
@@ -200,8 +200,7 @@ class AssistanceRequestControllerTest {
                                 mockResponse.discenteNoPrazoDoCurso(), mockResponse.mesesAtrasoCurso(),
                                 mockResponse.nomeEvento(), mockResponse.eventoInternacional(),
                                 mockResponse.dataInicio(), mockResponse.dataFim(),
-                                mockResponse.afastamentoParaParticipacao(), mockResponse.diasAfastamento(),
-                                mockResponse.linkHomePageEvento(),
+                                mockResponse.qtdDiasEvento(), mockResponse.linkHomePageEvento(),
                                 mockResponse.cidade(), mockResponse.pais(), mockResponse.qualis(),
                                 mockResponse.modalidadeParticipacao(),
                                 mockResponse.valorInscricao(), mockResponse.linkPaginaInscricao(),
@@ -292,7 +291,7 @@ class AssistanceRequestControllerTest {
                 CreateAssistanceRequestDTO dto = new CreateAssistanceRequestDTO(
                                 "Titulo", List.of(), false, true, "Prof", "Disc",
                                 true, 0, "CONF", false, LocalDate.now(), LocalDate.now().plusDays(2),
-                                false, 0, "", "Cidade", "BR", "", "Modal",
+                                1, "", "Cidade", "BR", "", "Modal",
                                 BigDecimal.ZERO, "", 0, BigDecimal.ZERO, false, false,
                                 BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, "Just");
 
@@ -321,7 +320,7 @@ class AssistanceRequestControllerTest {
                 CreateAssistanceRequestDTO dto = new CreateAssistanceRequestDTO(
                                 "Titulo", List.of(), false, true, "Prof", "Disc",
                                 true, 0, "CONF", false, LocalDate.now(), LocalDate.now().plusDays(2),
-                                false, 0, "", "Cidade", "BR", "", "Modal",
+                                1,  "", "Cidade", "BR", "", "Modal",
                                 BigDecimal.ZERO, "", 0, BigDecimal.ZERO, false, false,
                                 BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, "Just");
 
@@ -354,8 +353,7 @@ class AssistanceRequestControllerTest {
                                 mockResponse.mesesAtrasoCurso(), mockResponse.nomeEvento(),
                                 mockResponse.eventoInternacional(),
                                 mockResponse.dataInicio(), mockResponse.dataFim(),
-                                mockResponse.afastamentoParaParticipacao(),
-                                mockResponse.diasAfastamento(), mockResponse.linkHomePageEvento(),
+                                mockResponse.qtdDiasEvento(), mockResponse.linkHomePageEvento(),
                                 mockResponse.cidade(),
                                 mockResponse.pais(), mockResponse.qualis(), mockResponse.modalidadeParticipacao(),
                                 mockResponse.valorInscricao(), mockResponse.linkPaginaInscricao(),
@@ -422,7 +420,7 @@ class AssistanceRequestControllerTest {
                 ResponseAssistanceRequestDTO requestBodyDto = new ResponseAssistanceRequestDTO(
                                 1L, null, null, null, "Título Atualizado", Collections.emptyList(), false, false, null,
                                 null,
-                                false, 0, null, false, null, null, false, 0, null, null, null, null, null,
+                                false, 0, null, false, null, null, 1, null, null, null, null, null,
                                 BigDecimal.ZERO, null, 0, BigDecimal.ZERO, false, false, BigDecimal.ZERO,
                                 BigDecimal.ZERO, BigDecimal.ZERO, null, null, false, 1,
                                 null, null, null, 0, BigDecimal.ZERO, null, null, BigDecimal.ZERO, null,
@@ -449,7 +447,7 @@ class AssistanceRequestControllerTest {
                 ResponseAssistanceRequestDTO existingApprovedRequestDto = new ResponseAssistanceRequestDTO(
                                 1L, ownerUserResponseDTO, null, null, "Teste Aprovado", Collections.emptyList(), false,
                                 false, null, null,
-                                false, 0, null, false, null, null, false, 0, null, null, null, null, null,
+                                false, 0, null, false, null, null, 1, null, null, null, null, null,
                                 BigDecimal.ZERO, null, 0, BigDecimal.ZERO, false, false, BigDecimal.ZERO,
                                 BigDecimal.ZERO, BigDecimal.ZERO, null, null, false, 1,
                                 null, null, null, 0, BigDecimal.ZERO, null, null, BigDecimal.ZERO, null,
@@ -460,7 +458,7 @@ class AssistanceRequestControllerTest {
                 ResponseAssistanceRequestDTO requestBodyDto = new ResponseAssistanceRequestDTO(
                                 1L, null, null, null, "Título Atualizado de Aprovada", Collections.emptyList(), false,
                                 false, null, null,
-                                false, 0, null, false, null, null, false, 0, null, null, null, null, null,
+                                false, 0, null, false, null, null, 1, null, null, null, null, null,
                                 BigDecimal.ZERO, null, 0, BigDecimal.ZERO, false, false, BigDecimal.ZERO,
                                 BigDecimal.ZERO, BigDecimal.ZERO, null, null, false, 2,
                                 null, null, null, 0, BigDecimal.ZERO, null, null, BigDecimal.ZERO, null,
@@ -496,8 +494,7 @@ class AssistanceRequestControllerTest {
                                 mockResponse.mesesAtrasoCurso(), mockResponse.nomeEvento(),
                                 mockResponse.eventoInternacional(),
                                 mockResponse.dataInicio(), mockResponse.dataFim(),
-                                mockResponse.afastamentoParaParticipacao(),
-                                mockResponse.diasAfastamento(), mockResponse.linkHomePageEvento(),
+                                mockResponse.qtdDiasEvento(), mockResponse.linkHomePageEvento(),
                                 mockResponse.cidade(),
                                 mockResponse.pais(), mockResponse.qualis(), mockResponse.modalidadeParticipacao(),
                                 mockResponse.valorInscricao(), mockResponse.linkPaginaInscricao(),
@@ -552,7 +549,7 @@ class AssistanceRequestControllerTest {
                 ResponseAssistanceRequestDTO requestBodyDto = new ResponseAssistanceRequestDTO(
                                 1L, null, null, null, "Título com Arquivo", Collections.emptyList(), false, false, null,
                                 null,
-                                false, 0, null, false, null, null, false, 0, null, null, null, null, null,
+                                false, 0, null, false, null, null, 1, null, null, null, null, null,
                                 BigDecimal.ZERO, null, 0, BigDecimal.ZERO, false, false, BigDecimal.ZERO,
                                 BigDecimal.ZERO, BigDecimal.ZERO, null, "Justificativa com arquivo", false, 0,
                                 null, null, null, 0, BigDecimal.ZERO, null, null, BigDecimal.ZERO, null,
@@ -596,7 +593,7 @@ class AssistanceRequestControllerTest {
 
                 ResponseAssistanceRequestDTO requestBodyDto = new ResponseAssistanceRequestDTO(
                                 1L, null, null, null, "Qualquer", Collections.emptyList(), false, false, null, null,
-                                false, 0, null, false, null, null, false, 0, null, null, null, null, null,
+                                false, 0, null, false, null, null, 1,  null, null, null, null, null,
                                 BigDecimal.ZERO, null, 0, BigDecimal.ZERO, false, false, BigDecimal.ZERO,
                                 BigDecimal.ZERO, BigDecimal.ZERO, null, null, false, 0,
                                 null, null, null, 0, BigDecimal.ZERO, null, null, BigDecimal.ZERO, null,
@@ -626,7 +623,7 @@ class AssistanceRequestControllerTest {
                 ResponseAssistanceRequestDTO requestBodyDto = new ResponseAssistanceRequestDTO(
                                 1L, null, null, null, "Tentativa com TXT", Collections.emptyList(), false, false, null,
                                 null,
-                                false, 0, null, false, null, null, false, 0, null, null, null, null, null,
+                                false, 0, null, false, null, null, 1, null, null, null, null, null,
                                 BigDecimal.ZERO, null, 0, BigDecimal.ZERO, false, false, BigDecimal.ZERO,
                                 BigDecimal.ZERO, BigDecimal.ZERO, null, null, false, 0,
                                 null, null, null, 0, BigDecimal.ZERO, null, null, BigDecimal.ZERO, null,

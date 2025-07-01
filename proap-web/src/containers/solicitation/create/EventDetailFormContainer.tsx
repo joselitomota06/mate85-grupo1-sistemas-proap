@@ -8,7 +8,6 @@ import {
   FormControl,
   FormHelperText,
   Box,
-  Stack,
   Tooltip,
   MenuItem,
   Select,
@@ -25,19 +24,18 @@ import {
 import {
   StyledTextField,
   StyledFormLabel,
-  StyledIconButton,
 } from '../SolicitationFormContainer.style';
 import {
   Info,
   Event,
   Public,
-  FlightTakeoff,
   Language,
   LocationOn,
   Star,
   CalendarMonth,
   AssignmentInd,
   Help,
+  CalendarToday,
 } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 import { useSysConfig } from '../../../hooks/admin/useSysConfig';
@@ -237,7 +235,7 @@ export default function EventDetailFormContainer() {
           }}
         >
           <Box sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
-            <FlightTakeoff color="action" fontSize="small" sx={{ mr: 1 }} />
+            <CalendarToday color="action" fontSize="small" sx={{ mr: 1 }} />
             <StyledFormLabel
               required
               sx={{
@@ -247,113 +245,37 @@ export default function EventDetailFormContainer() {
                 m: 0,
               }}
             >
-              Será necessário afastamento para participação do Evento?
+              Quantidade de dias de duração do evento
             </StyledFormLabel>
-            <Tooltip title="Indique se precisará de afastamento oficial para participar do evento">
-              <IconButton size="small" sx={{ ml: 1 }}>
-                <Help fontSize="small" color="action" />
-              </IconButton>
-            </Tooltip>
           </Box>
 
-          <Stack
-            direction={{ xs: 'column', sm: 'row' }}
-            sx={{
-              alignItems: { xs: 'start', sm: 'center' },
-              justifyContent: 'space-between',
-              width: '100%',
-            }}
-            spacing={2}
-          >
-            <FormControl
-              error={Boolean(
-                touched.afastamentoParaParticipacao &&
-                  errors.afastamentoParaParticipacao,
-              )}
-            >
-              <Field name="afastamentoParaParticipacao">
-                {({ field }: { field: any }) => (
-                  <RadioGroup
-                    {...field}
-                    row
-                    value={String(field.value)}
-                    onChange={(event) => {
-                      setFieldValue(field.name, event.target.value === 'true');
-                      setFieldValue('diasAfastamento', undefined);
-                    }}
-                    aria-labelledby="demo-row-radio-buttons-group-label"
-                  >
-                    <FormControlLabel
-                      value={true}
-                      control={<Radio color="primary" />}
-                      label={<Typography variant="body1">Sim</Typography>}
-                      sx={{ mr: 3 }}
-                    />
-                    <FormControlLabel
-                      value={false}
-                      control={<Radio color="primary" />}
-                      label={<Typography variant="body1">Não</Typography>}
-                    />
-                  </RadioGroup>
-                )}
-              </Field>
-              {touched.afastamentoParaParticipacao &&
-                errors.afastamentoParaParticipacao && (
-                  <FormHelperText>
-                    {errors.afastamentoParaParticipacao}
-                  </FormHelperText>
-                )}
-            </FormControl>
-
-            {values.afastamentoParaParticipacao && (
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: { xs: 'column', sm: 'row' },
-                  alignItems: { xs: 'start', sm: 'center' },
-                  gap: 2,
-                  bgcolor: alpha(theme.palette.info.light, 0.1),
-                  p: 1.5,
-                  borderRadius: 1,
-                  width: { xs: '100%', sm: 'auto' },
+          <Field name="qtdDiasEvento">
+            {({ field }: any) => (
+              <TextField
+                {...field}
+                id="text-field"
+                sx={{ maxWidth: '180px', m: 0 }}
+                type="number"
+                InputProps={{
+                  inputProps: { min: 0, step: 1 },
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <CalendarToday color="action" fontSize="small" />
+                    </InputAdornment>
+                  ),
                 }}
-              >
-                <StyledFormLabel
-                  required
-                  htmlFor="text-field"
-                  sx={{ m: 0, minWidth: 'max-content' }}
-                >
-                  Quantos dias de afastamento?
-                </StyledFormLabel>
-                <Field name="diasAfastamento">
-                  {({ field }: any) => (
-                    <StyledTextField
-                      {...field}
-                      id="text-field"
-                      sx={{ maxWidth: '180px', m: 0 }}
-                      type="number"
-                      InputProps={{
-                        inputProps: { min: 1, step: 1 },
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <CalendarMonth color="action" fontSize="small" />
-                          </InputAdornment>
-                        ),
-                      }}
-                      error={
-                        touched.diasAfastamento && !!errors.diasAfastamento
-                      }
-                      helperText={
-                        touched.diasAfastamento && errors.diasAfastamento
-                      }
-                      size="small"
-                      placeholder="Nº de dias"
-                    />
-                  )}
-                </Field>
-              </Box>
+                error={touched.qtdDiasEvento && !!errors.qtdDiasEvento}
+                helperText={touched.qtdDiasEvento && errors.qtdDiasEvento}
+                size="small"
+                placeholder="Nº de dias"
+              />
             )}
-          </Stack>
+          </Field>
+          <Tooltip title="Informe 0 caso a solicitação não se aplique a um evento com dias de duração">
+            <IconButton size="small" sx={{ ml: 1, mt: 1 }} color="primary">
+              <Info fontSize="small" />
+            </IconButton>
+          </Tooltip>
         </Paper>
 
         <Field name="linkHomePageEvento">

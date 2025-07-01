@@ -86,10 +86,7 @@ public class AssistanceRequest {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	private LocalDate dataFim;
 
-	@Column(nullable = false)
-	private Boolean afastamentoParaParticipacao;
-
-	private Integer diasAfastamento;
+	private Integer qtdDiasEvento;
 
 	private String linkHomePageEvento;
 

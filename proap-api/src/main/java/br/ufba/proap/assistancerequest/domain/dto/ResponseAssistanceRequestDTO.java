@@ -27,8 +27,7 @@ public record ResponseAssistanceRequestDTO(
         Boolean eventoInternacional,
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy") LocalDate dataInicio,
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy") LocalDate dataFim,
-        Boolean afastamentoParaParticipacao,
-        Integer diasAfastamento,
+        Integer qtdDiasEvento,
         String linkHomePageEvento,
         String cidade,
         String pais,
@@ -74,8 +73,7 @@ public record ResponseAssistanceRequestDTO(
         entity.setEventoInternacional(this.eventoInternacional());
         entity.setDataInicio(this.dataInicio());
         entity.setDataFim(this.dataFim());
-        entity.setAfastamentoParaParticipacao(this.afastamentoParaParticipacao());
-        entity.setDiasAfastamento(this.diasAfastamento());
+        entity.setQtdDiasEvento(this.qtdDiasEvento());
         entity.setLinkHomePageEvento(this.linkHomePageEvento());
         entity.setCidade(this.cidade());
         entity.setPais(this.pais());
@@ -124,8 +122,7 @@ public record ResponseAssistanceRequestDTO(
                 entity.getEventoInternacional(),
                 entity.getDataInicio(),
                 entity.getDataFim(),
-                entity.getAfastamentoParaParticipacao(),
-                entity.getDiasAfastamento(),
+                entity.getQtdDiasEvento(),
                 entity.getLinkHomePageEvento(),
                 entity.getCidade(),
                 entity.getPais(),
