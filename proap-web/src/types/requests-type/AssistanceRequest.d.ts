@@ -16,8 +16,7 @@ export interface AssistanceRequest {
   eventoInternacional: boolean;
   dataInicio: string;
   dataFim: string;
-  afastamentoParaParticipacao: boolean | null;
-  diasAfastamento: number | null;
+  qtdDiasEvento: number | null;
   linkHomePageEvento: string;
   cidade: string;
   pais: string;

@@ -56,12 +56,7 @@ export const eventDetailFormSchema = Yup.object({
         return value && dataInicio && new Date(value) >= new Date(dataInicio);
       },
     ),
-  afastamentoParaParticipacao: Yup.boolean().required('Campo obrigatório'),
-  diasAfastamento: Yup.number().when('afastamentoParaParticipacao', {
-    is: true,
-    then: () => Yup.number().required('Campo obrigatório'),
-    otherwise: () => Yup.number().notRequired(),
-  }),
+  qtdDiasEvento: Yup.number().min(0, 'Insira um valor válido').nullable(),
   linkHomePageEvento: Yup.string()
     .url('Insira uma URL válida')
     .max(255, 'O link deve ter no máximo 255 caracteres'),
@@ -160,8 +155,7 @@ export type InitialSolicitationFormValues = Pick<
   | 'eventoInternacional'
   | 'dataInicio'
   | 'dataFim'
-  | 'afastamentoParaParticipacao'
-  | 'diasAfastamento'
+  | 'qtdDiasEvento'
   | 'linkHomePageEvento'
   | 'cidade'
   | 'pais'
@@ -188,8 +182,7 @@ export const INITIAL_FORM_VALUES: InitialSolicitationFormValues = {
   tituloPublicacao: '',
   coautores: [],
   eventoInternacional: false,
-  afastamentoParaParticipacao: null,
-  diasAfastamento: null,
+  qtdDiasEvento: 0,
   linkHomePageEvento: '',
   modalidadeParticipacao: '',
   linkPaginaInscricao: '',
@@ -225,8 +218,7 @@ export const INITIAL_REVIEW_FORM_VALUES: SolicitationFormValues = {
   tituloPublicacao: '',
   coautores: [],
   eventoInternacional: false,
-  afastamentoParaParticipacao: null,
-  diasAfastamento: null,
+  qtdDiasEvento: null,
   linkHomePageEvento: '',
   modalidadeParticipacao: '',
   linkPaginaInscricao: '',
