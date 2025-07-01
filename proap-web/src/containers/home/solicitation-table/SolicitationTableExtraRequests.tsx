@@ -159,11 +159,17 @@ export default function SolicitationTableExtraRequests() {
 
   const handleClickRemoveRequest = () => {
     if (solicitationToDelete) {
-      deleteExtraAssistanceRequest(solicitationToDelete).then(() => {
-        updateRequestListWithCurrentParameters();
-        toast.success('Solicitação extra removida com sucesso');
-        closeDeleteDialog();
-      });
+      deleteExtraAssistanceRequest(solicitationToDelete)
+        .then(() => {
+          updateRequestListWithCurrentParameters();
+          toast.success('Solicitação extra removida com sucesso');
+          closeDeleteDialog();
+        })
+        .catch((error) => {
+          console.error('Erro ao remover solicitação extra:', error);
+          toast.error('Erro ao remover solicitação extra');
+          closeDeleteDialog();
+        });
     }
   };
 
