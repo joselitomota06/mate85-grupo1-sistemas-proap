@@ -56,7 +56,7 @@ export const eventDetailFormSchema = Yup.object({
         return value && dataInicio && new Date(value) >= new Date(dataInicio);
       },
     ),
-  qtdDiasEvento: Yup.number().min(0, 'Insira um valor válido').nullable(),
+  qtdDiasEvento: Yup.number().min(0, 'Insira um valor válido').required('Campo obrigatório').nullable(),
   linkHomePageEvento: Yup.string()
     .url('Insira uma URL válida')
     .max(255, 'O link deve ter no máximo 255 caracteres'),
